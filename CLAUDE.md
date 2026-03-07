@@ -74,3 +74,10 @@ If you encounter a decision marked GATE:
 
 ## Current Phase
 Phase 0 — Foundation — See PHASE-0-SETUP.md for task list.
+
+## Behaviour Rules
+- Never ask for yes/no confirmation — proceed with the most conservative, reversible option
+- Never ask "should I proceed?" — proceed
+- Never present options and wait — pick the safest option, document the decision, move on
+- When in doubt, choose the option that is easiest to undo
+- Only stop for: missing credentials, GATE decisions, irreversible financial or legal actions
