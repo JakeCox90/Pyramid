@@ -136,6 +136,8 @@ If all remaining players are eliminated in the same gameweek:
 
 ## 5. Prize Distribution
 
+> This section applies to **paid public matchmaking leagues** only. Free leagues have no prize pot.
+
 ### 5.1 Top 3 Split
 
 The prize pot (after platform fee) is distributed to the **top 3 surviving players**:
@@ -155,7 +157,8 @@ The prize pot (after platform fee) is distributed to the **top 3 surviving playe
 
 ### 5.3 Joint Winners (Paid Leagues)
 
-- If multiple players survive to the end of the season (GW38), they are **joint 1st place winners**
+- If multiple players survive to the **end of the round**, they are **joint 1st place winners**
+- GW38 (the final gameweek of the PL season) acts as the hard cut-off — if no single survivor emerges by GW38, all remaining players are joint 1st place winners
 - Their combined share (65%) is split equally between them
 - If the split does not divide evenly to the penny, the remainder goes to the 2nd place finishers
 
@@ -268,7 +271,7 @@ Each user has two wallet balance states:
 - Any change to pick rules, elimination rules, or prize rules after Gate 0 requires:
   1. Human owner approval
   2. Existing players in active leagues must be notified
-  3. Changes take effect from the next season only (never mid-season)
+  3. Changes take effect from the next round only (never mid-round)
 - Settlement logic changes always require human review regardless of phase
 
 ---
