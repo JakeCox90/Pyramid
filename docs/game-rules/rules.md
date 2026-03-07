@@ -114,7 +114,7 @@ A player **survives** the gameweek if:
 
 A player is **eliminated** if any of the following occur:
 - Their team **loses**
-- They did not submit a valid pick before their chosen match kicked off (auto-eliminated)
+- They had no valid pending pick when the gameweek pick deadline was reached (auto-eliminated)
 
 ### 4.3 Result Source of Truth
 
@@ -263,7 +263,8 @@ Each user has two wallet balance states:
 | All remaining players eliminated same GW | Mass elimination — all reinstated, continue; picked teams counted as used this round |
 | VAR changes result after FT logged | Use corrected FT result (API-Football returns official score) |
 | Player forgets to pick | Auto-eliminated at deadline |
-| Multiple players survive to GW38 | Joint 1st place, split 65% equally |
+| Multiple players survive to GW38 (with prior eliminations) | Joint 1st place — split 65% equally; 2nd/3rd paid normally |
+| Multiple players survive to GW38 (no eliminations ever) | All joint 1st — split 100% of pot equally (no 2nd/3rd exists) |
 | Multiple players eliminated same GW | Share that position's prize split equally |
 | Match result API data is ambiguous | Hold settlement, alert Orchestrator, human review before proceeding |
 | Settlement function runs twice (idempotency test) | Second run is a no-op — no double-elimination |
