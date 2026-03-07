@@ -1,0 +1,31 @@
+# ─── Secrets (NEVER commit) ──────────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+*.secret
+secrets/
+
+# ─── Supabase ────────────────────────────────────────────────────────────────
+.supabase/
+
+# ─── Xcode ───────────────────────────────────────────────────────────────────
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcuserdata/
+build/
+DerivedData/
+*.ipa
+*.dSYM.zip
+*.dSYM
+*.xcconfig.local
+
+# ─── Swift Package Manager ───────────────────────────────────────────────────
+.build/
+.swiftpm/
+
+# ─── macOS ───────────────────────────────────────────────────────────────────
+.DS_Store
+*.swp
+
+# ─── Node (for local Supabase tooling) ───────────────────────────────────────
+node_modules/

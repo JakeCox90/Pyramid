@@ -1,0 +1,71 @@
+name: Pyramid
+options:
+  bundleIdPrefix: com.pyramid
+  deploymentTarget:
+    iOS: "16.0"
+  xcodeVersion: "15"
+  createIntermediateGroups: true
+  generateEmptyDirectories: true
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "1"
+    SWIFT_STRICT_CONCURRENCY: complete
+    ENABLE_TESTABILITY: YES
+
+packages:
+  Supabase:
+    url: https://github.com/supabase/supabase-swift
+    from: "2.0.0"
+
+targets:
+  Pyramid:
+    type: application
+    platform: iOS
+    sources:
+      - path: Pyramid/Sources
+      - path: Pyramid/Resources
+        buildPhase: resources
+        excludes:
+          - "Info.plist"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.pyramid.app
+        INFOPLIST_FILE: Pyramid/Resources/Info.plist
+        DEVELOPMENT_TEAM: ""  # set to your Apple Team ID
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+    dependencies:
+      - package: Supabase
+        product: Supabase
+    scheme:
+      environmentVariables:
+        SUPABASE_URL:
+          value: ""   # set in scheme or xcconfig — never hardcode
+          isEnabled: true
+        SUPABASE_ANON_KEY:
+          value: ""
+          isEnabled: true
+
+  PyramidTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: PyramidTests
+    dependencies:
+      - target: Pyramid
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.pyramid.tests
+
+  PyramidUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: PyramidUITests
+    dependencies:
+      - target: Pyramid
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.pyramid.uitests
