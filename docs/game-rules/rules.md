@@ -74,8 +74,9 @@ Two league types are supported:
 
 ### 3.3 No Valid Pick
 
-- If a player fails to submit a valid pick before any match in the gameweek kicks off, they are **eliminated** from that league
-- No grace period — the system hard-locks submissions at each match's kick-off
+- If a player has no valid pending pick when the **gameweek pick deadline** is reached, they are **eliminated** from that league
+- The pick deadline is the kick-off time of the **first match of the gameweek** — this is the cutoff, regardless of which match the player intended to pick
+- No grace period — auto-elimination fires at the deadline, not when the match reaches FT
 
 ### 3.4 Pick Change Window
 
@@ -86,7 +87,7 @@ Two league types are supported:
 ### 3.5 Pick Visibility
 
 - Picks are **hidden from other players until the deadline passes** (first kick-off of the gameweek)
-- After the first match of the gameweek kicks off, all locks picks become visible to league members
+- After the first match of the gameweek kicks off, all locked picks become visible to league members
 - This prevents copycat picks
 
 ### 3.6 Eligible Teams
@@ -199,7 +200,7 @@ Each user has two wallet balance states:
 - The player's pick for that gameweek is **voided**
 - The player must **repick** from matches in the same gameweek that **have not yet kicked off**
 - The repick locks at the replacement match's kick-off
-- The repick follows normal rules — the player cannot pick a team they have already used this season
+- The repick follows normal rules — the player cannot pick a team they have already used this round
 
 **No repick possible (all remaining gameweek fixtures have started):**
 - If a postponement is announced after all remaining gameweek fixtures have already kicked off, no repick is possible
@@ -280,7 +281,7 @@ Each user has two wallet balance states:
 | Gameweek (GW) | A round of Premier League fixtures, typically Saturday–Monday |
 | Pick | A player's selection of one PL team for a gameweek |
 | Survivor | A player who has not yet been eliminated |
-| Eliminated | A player whose team did not win in their active gameweek |
+| Eliminated | A player whose team lost in their active gameweek, or who failed to submit a valid pick by the gameweek deadline |
 | Mass elimination | All remaining players eliminated in the same gameweek |
 | Prize pot | Entry fees collected in a paid league, minus platform fee |
 | Settlement | The process of determining which players survive or are eliminated after a result |
