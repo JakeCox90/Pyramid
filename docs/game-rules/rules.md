@@ -31,6 +31,7 @@ Two league types are supported:
 - Creator becomes the league admin
 - League has a unique join code (6 characters, alphanumeric)
 - Players join via join code before the league's start gameweek deadline
+- Minimum **5 players** required before a free league round can begin
 - Maximum **50 players** per free league
 - Full player identities are visible to all members in free leagues
 
@@ -42,8 +43,10 @@ Two league types are supported:
 - Minimum **5 players** required before a paid league round can begin
 - Maximum **30 players** per paid league
 - Prize pot = £5 × number of players, minus the 8% platform fee (§5.4)
-- Users may join up to **5 paid public matchmaking leagues per gameweek**
+- Users may be active in up to **5 paid public matchmaking leagues at any one time**
 - Each join requires sufficient wallet funds for the stake amount
+- Stakes are **held** once a player joins — they are not refunded or accessible until the league round begins or is cancelled
+- If minimum player count is not reached before the gameweek start, stakes continue to be held until enough players join; the round begins as soon as the minimum is met
 - Joining a new round of a paid league requires a fresh £5 stake — previous stakes are not rolled over
 - **Purpose:** a single stake tier ensures all players can be matched; prevents league-hopping and coordinated stacking
 
