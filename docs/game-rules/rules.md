@@ -31,12 +31,15 @@ Two league types are supported:
 - Creator becomes the league admin
 - League has a unique join code (6 characters, alphanumeric)
 - Players join via join code before the league's start gameweek deadline
+- Maximum **50 players** per free league
 - Full player identities are visible to all members in free leagues
 
 ### 2.2 Public Paid Matchmaking Leagues
 
 - Public paid leagues are formed via **random allocation** — users cannot browse or select a specific paid public league
 - Users enter a stake amount and are randomly placed into a league with other users at the same stake level
+- Minimum **5 players** required before a paid league round can begin
+- Maximum **30 players** per paid league
 - Users may join up to **5 paid public matchmaking leagues per gameweek**
 - Each join requires sufficient wallet funds for the stake amount
 - Joining a new round of a paid league requires a fresh stake — previous stakes are not rolled over
