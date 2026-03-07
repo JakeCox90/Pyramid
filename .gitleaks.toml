@@ -1,0 +1,5 @@
+[allowlist]
+  description = "Allowlist for known non-secret test stubs"
+  paths = [
+    '''ios/Config/Test.xcconfig''',
+  ]
