@@ -85,7 +85,7 @@ struct LeaguesView: View {
         ScrollView {
             LazyVStack(spacing: DS.Spacing.s3) {
                 ForEach(viewModel.leagues) { league in
-                    NavigationLink(destination: PicksView(leagueId: league.id)) {
+                    NavigationLink(destination: LeagueDetailView(league: league)) {
                         LeagueRowView(league: league)
                     }
                     .buttonStyle(.plain)
