@@ -2,7 +2,8 @@ import SwiftUI
 
 struct CreateLeagueView: View {
     @StateObject private var viewModel = CreateLeagueViewModel()
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.dismiss)
+    private var dismiss
 
     var onLeagueCreated: ((CreateLeagueResponse) -> Void)?
 
