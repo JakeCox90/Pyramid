@@ -51,14 +51,14 @@ Deno.test("eliminated: picked away team that lost", () => {
   assertEquals(determinePickResult(makePick(AWAY_TEAM_ID), fixture), "eliminated");
 });
 
-Deno.test("eliminated: draw — home picker", () => {
+Deno.test("survived: draw — home picker (draws do not eliminate, §4.1)", () => {
   const fixture = makeFixture({ home_score: 1, away_score: 1 });
-  assertEquals(determinePickResult(makePick(HOME_TEAM_ID), fixture), "eliminated");
+  assertEquals(determinePickResult(makePick(HOME_TEAM_ID), fixture), "survived");
 });
 
-Deno.test("eliminated: draw — away picker", () => {
+Deno.test("survived: draw — away picker (draws do not eliminate, §4.1)", () => {
   const fixture = makeFixture({ home_score: 2, away_score: 2 });
-  assertEquals(determinePickResult(makePick(AWAY_TEAM_ID), fixture), "eliminated");
+  assertEquals(determinePickResult(makePick(AWAY_TEAM_ID), fixture), "survived");
 });
 
 Deno.test("void: postponed match (PST)", () => {
@@ -91,9 +91,9 @@ Deno.test("survived: high-scoring home win", () => {
   assertEquals(determinePickResult(makePick(HOME_TEAM_ID), fixture), "survived");
 });
 
-Deno.test("eliminated: 0-0 draw", () => {
+Deno.test("survived: 0-0 draw (draws do not eliminate, §4.1)", () => {
   const fixture = makeFixture({ home_score: 0, away_score: 0 });
-  assertEquals(determinePickResult(makePick(HOME_TEAM_ID), fixture), "eliminated");
+  assertEquals(determinePickResult(makePick(HOME_TEAM_ID), fixture), "survived");
 });
 
 // ─── isMassElimination ────────────────────────────────────────────────────────
