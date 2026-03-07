@@ -4,7 +4,7 @@
 import {
   assertEquals,
 } from "https://deno.land/std@0.224.0/assert/mod.ts";
-import { determinePickResult, isMassElimination } from "./settlement.ts";
+import { determinePickResult, findNoPickMemberIds, isMassElimination } from "./settlement.ts";
 import type { DbFixture, DbPick } from "./settlement.ts";
 
 // ─── Fixtures ─────────────────────────────────────────────────────────────────
@@ -112,4 +112,28 @@ Deno.test("not mass elimination: 0 active but 0 new eliminations", () => {
 
 Deno.test("not mass elimination: all survived (no eliminations)", () => {
   assertEquals(isMassElimination(3, 0), false);
+});
+
+// ─── findNoPickMemberIds ──────────────────────────────────────────────────────
+
+Deno.test("no-pick: member with no pick is returned", () => {
+  assertEquals(findNoPickMemberIds(["u1", "u2"], ["u1"]), ["u2"]);
+});
+
+Deno.test("no-pick: all members have pending picks — none returned", () => {
+  assertEquals(findNoPickMemberIds(["u1", "u2"], ["u1", "u2"]), []);
+});
+
+Deno.test("no-pick: no members have pending picks — all returned", () => {
+  assertEquals(findNoPickMemberIds(["u1", "u2", "u3"], []), ["u1", "u2", "u3"]);
+});
+
+Deno.test("no-pick: empty active members — none returned", () => {
+  assertEquals(findNoPickMemberIds([], ["u1"]), []);
+});
+
+Deno.test("no-pick: member with only a void PST pick (no pending pick) — returned", () => {
+  // u2 has a void pick (PST) but no pending pick for another fixture.
+  // They did not repick, so they should be auto-eliminated (§3.3).
+  assertEquals(findNoPickMemberIds(["u1", "u2"], ["u1"]), ["u2"]);
 });

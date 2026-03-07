@@ -58,3 +58,18 @@ export function isMassElimination(
 ): boolean {
   return activeMemberCount === 0 && newEliminationCount > 0;
 }
+
+/**
+ * Returns the user IDs of active members who have no pending pick for the
+ * current gameweek and should be auto-eliminated (rules §3.3).
+ *
+ * @param activeMemberIds  IDs of members currently active in the league
+ * @param memberIdsWithPendingPick  IDs of members who have a pending pick for the GW
+ */
+export function findNoPickMemberIds(
+  activeMemberIds: string[],
+  memberIdsWithPendingPick: string[],
+): string[] {
+  const safeSet = new Set(memberIdsWithPendingPick);
+  return activeMemberIds.filter((id) => !safeSet.has(id));
+}

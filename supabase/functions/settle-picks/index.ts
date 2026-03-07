@@ -13,12 +13,15 @@
 // Settlement rules (docs/game-rules/rules.md §4):
 //   FT:  win → survived | draw/loss → eliminated
 //   PST or ABD: pick voided → player survives, team not marked as used
+//   No pick submitted (§3.3): player auto-eliminated when any GW match reaches FT.
+//     Safety net — kick-off auto-elimination should fire in poll-live-scores first.
+//     Members with a voided PST pick who did not repick are also caught here.
 //   Mass elimination (§4.5): if all remaining active members in a league are
 //   eliminated in the same GW → reinstate all, continue to next GW.
 //   Picks keep result "survived" so that team counts as used this season.
 
 import { getServiceClient } from "../_shared/supabase.ts";
-import { determinePickResult } from "./settlement.ts";
+import { determinePickResult, findNoPickMemberIds } from "./settlement.ts";
 import type { DbFixture, DbPick } from "./settlement.ts";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -73,6 +76,52 @@ async function settleLeague(
         .neq("status", "eliminated"); // idempotent guard
     } else {
       counts.voids++;
+    }
+  }
+
+  // ── Auto-eliminate members with no valid GW pick (rules §3.3) ───────────────
+  // Members who never submitted a pick, or who had a PST pick voided and did
+  // not repick, have no pending pick for any GW fixture. They are eliminated.
+  // This is a safety net — poll-live-scores should fire this at kick-off time.
+  {
+    const { data: stillActive } = await db
+      .from("league_members")
+      .select("user_id")
+      .eq("league_id", leagueId)
+      .eq("status", "active");
+
+    if (stillActive && stillActive.length > 0) {
+      const activeIds = (stillActive as { user_id: string }[]).map((m) => m.user_id);
+
+      // A pending pick for any GW fixture means the member is not yet overdue.
+      const { data: gwPendingPicks } = await db
+        .from("picks")
+        .select("user_id")
+        .eq("league_id", leagueId)
+        .eq("gameweek_id", gameweekId)
+        .eq("result", "pending")
+        .in("user_id", activeIds);
+
+      const pendingIds = (gwPendingPicks ?? []).map((p: { user_id: string }) => p.user_id);
+      const noPickIds = findNoPickMemberIds(activeIds, pendingIds);
+
+      for (const userId of noPickIds) {
+        console.log(
+          `Auto-eliminating ${userId} in league ${leagueId} — no valid pick for GW${gameweekId} (§3.3)`,
+        );
+        await db
+          .from("league_members")
+          .update({
+            status: "eliminated",
+            eliminated_at: new Date().toISOString(),
+            eliminated_in_gameweek_id: gameweekId,
+          })
+          .eq("league_id", leagueId)
+          .eq("user_id", userId)
+          .neq("status", "eliminated");
+        counts.eliminations++;
+        eliminatedUserIds.push(userId);
+      }
     }
   }
 
@@ -236,7 +285,10 @@ Deno.serve(async (req) => {
   }
 
   // ── 5. Mark fixture settled ───────────────────────────────────────────────
-  if (summary.leaguesSettled > 0) {
+  // Include skipped leagues (idempotency) — if every league was already settled
+  // on a prior run, we still need to mark settled_at or poll-live-scores retries
+  // forever (§4.4).
+  if (summary.leaguesSettled + summary.leaguesSkipped > 0) {
     await db.from("fixtures").update({ settled_at: new Date().toISOString() }).eq("id", fixtureId);
   }
 
