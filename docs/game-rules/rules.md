@@ -37,13 +37,15 @@ Two league types are supported:
 ### 2.2 Public Paid Matchmaking Leagues
 
 - Public paid leagues are formed via **random allocation** — users cannot browse or select a specific paid public league
-- Users enter a stake amount and are randomly placed into a league with other users at the same stake level
+- The stake is fixed at **£5 per entry** — all paid league players compete at the same level
+- Players confirm their £5 stake and are randomly allocated to an available league
 - Minimum **5 players** required before a paid league round can begin
 - Maximum **30 players** per paid league
+- Prize pot = £5 × number of players, minus the 8% platform fee (§5.4)
 - Users may join up to **5 paid public matchmaking leagues per gameweek**
 - Each join requires sufficient wallet funds for the stake amount
-- Joining a new round of a paid league requires a fresh stake — previous stakes are not rolled over
-- **Purpose:** prevents users coordinating to stack the same league, and reduces league-hopping
+- Joining a new round of a paid league requires a fresh £5 stake — previous stakes are not rolled over
+- **Purpose:** a single stake tier ensures all players can be matched; prevents league-hopping and coordinated stacking
 
 ### 2.3 Identity and Visibility in Paid Leagues
 
