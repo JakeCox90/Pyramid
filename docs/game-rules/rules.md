@@ -13,7 +13,9 @@
 
 ## 1. Overview
 
-Pyramid is a Premier League Last Man Standing competition. Players pick one Premier League team to win each gameweek. If their team wins, they survive. If their team draws or loses, they are eliminated. The top 3 surviving players share the prize pot.
+Pyramid is a Premier League Last Man Standing competition. Players pick one Premier League team each gameweek. If their team wins or draws, they survive. If their team loses, they are eliminated. The top 3 surviving players share the prize pot.
+
+A single Premier League season contains multiple **rounds**. Each round runs from its start gameweek until one or more players are the last survivors. Once a round ends, players may opt in to a new round (and re-stake for paid leagues). No-repeat pick rules are scoped per round.
 
 Two league types are supported:
 - **Free leagues** — no entry fee, no prize pot, bragging rights only
@@ -29,15 +31,24 @@ Two league types are supported:
 - Creator becomes the league admin
 - League has a unique join code (6 characters, alphanumeric)
 - Players join via join code before the league's start gameweek deadline
+- Minimum **5 players** required before a free league round can begin
+- Maximum **50 players** per free league
 - Full player identities are visible to all members in free leagues
 
 ### 2.2 Public Paid Matchmaking Leagues
 
 - Public paid leagues are formed via **random allocation** — users cannot browse or select a specific paid public league
-- Users enter a stake amount and are randomly placed into a league with other users at the same stake level
-- Users may join up to **5 paid public matchmaking leagues per gameweek**
+- The stake is fixed at **£5 per entry** — all paid league players compete at the same level
+- Players confirm their £5 stake and are randomly allocated to an available league
+- Minimum **5 players** required before a paid league round can begin
+- Maximum **30 players** per paid league
+- Prize pot = £5 × number of players, minus the 8% platform fee (§5.4)
+- Users may be active in up to **5 paid public matchmaking leagues at any one time**
 - Each join requires sufficient wallet funds for the stake amount
-- **Purpose:** prevents users coordinating to stack the same league, and reduces league-hopping
+- Stakes are **held** once a player joins — they are not refunded or accessible until the league round begins or is cancelled
+- If minimum player count is not reached before the gameweek start, stakes continue to be held until enough players join; the round begins as soon as the minimum is met
+- Joining a new round of a paid league requires a fresh £5 stake — previous stakes are not rolled over
+- **Purpose:** a single stake tier ensures all players can be matched; prevents league-hopping and coordinated stacking
 
 ### 2.3 Identity and Visibility in Paid Leagues
 
@@ -45,10 +56,13 @@ Two league types are supported:
 - Participant profiles are **revealed only when the league ends**
 - **Purpose:** reduces collusion and targeted abuse while keeping play fair
 
-### 2.4 Season
+### 2.4 Rounds and Seasons
 
-- One season = one Premier League season (August to May)
-- 38 gameweeks
+- One **season** = one Premier League season (August to May), 38 gameweeks
+- One **round** = one full competition within a league, running from its start gameweek until a winner (or joint winners) is declared
+- Multiple rounds can take place within a single PL season
+- When a round ends, a new round opens — players must explicitly opt in and re-stake (for paid leagues) to participate in the next round
+- No-repeat pick restrictions (§3.1) are scoped **per round**, not per season — a player's used-team list resets at the start of each new round they join
 
 ---
 
@@ -57,8 +71,8 @@ Two league types are supported:
 ### 3.1 One Pick Per Gameweek
 
 - Each surviving player must select exactly one Premier League team per gameweek
-- A player can only pick each team **once per season** (no repeat picks within a paid league)
-- Exception: if a player has used all 20 teams (extremely unlikely in practice), repeats are permitted
+- A player can only pick each team **once per round** (no repeat picks within the same round)
+- Exception: if a player has used all 20 teams within a round (extremely unlikely in practice), repeats are permitted
 
 ### 3.2 Pick Deadline
 
@@ -68,8 +82,9 @@ Two league types are supported:
 
 ### 3.3 No Valid Pick
 
-- If a player fails to submit a valid pick before any match in the gameweek kicks off, they are **eliminated** from that league
-- No grace period — the system hard-locks submissions at each match's kick-off
+- If a player has no valid pending pick when the **gameweek pick deadline** is reached, they are **eliminated** from that league
+- The pick deadline is the kick-off time of the **first match of the gameweek** — this is the cutoff, regardless of which match the player intended to pick
+- No grace period — auto-elimination fires at the deadline, not when the match reaches FT
 
 ### 3.4 Pick Change Window
 
@@ -80,7 +95,7 @@ Two league types are supported:
 ### 3.5 Pick Visibility
 
 - Picks are **hidden from other players until the deadline passes** (first kick-off of the gameweek)
-- After the first match of the gameweek kicks off, all locks picks become visible to league members
+- After the first match of the gameweek kicks off, all locked picks become visible to league members
 - This prevents copycat picks
 
 ### 3.6 Eligible Teams
@@ -92,17 +107,17 @@ Two league types are supported:
 
 ## 4. Result and Elimination Rules
 
-### 4.1 Win Condition
+### 4.1 Survive Condition
 
 A player **survives** the gameweek if:
-- The team they picked **wins** their match (home or away)
+- The team they picked **wins** their match (home or away), OR
+- The team they picked **draws** their match
 
 ### 4.2 Elimination Conditions
 
 A player is **eliminated** if any of the following occur:
-- Their team **draws**
 - Their team **loses**
-- They did not submit a valid pick before their chosen match kicked off (auto-eliminated)
+- They had no valid pending pick when the gameweek pick deadline was reached (auto-eliminated)
 
 ### 4.3 Result Source of Truth
 
@@ -122,11 +137,14 @@ A player is **eliminated** if any of the following occur:
 If all remaining players are eliminated in the same gameweek:
 - **No winner** is declared for that gameweek
 - All eliminated players are **reinstated** as survivors and continue to the next gameweek
+- Their pick for that gameweek counts as **used** — they cannot pick the same team again this round
 - This is called a "mass elimination" event
 
 ---
 
 ## 5. Prize Distribution
+
+> This section applies to **paid public matchmaking leagues** only. Free leagues have no prize pot.
 
 ### 5.1 Top 3 Split
 
@@ -144,10 +162,12 @@ The prize pot (after platform fee) is distributed to the **top 3 surviving playe
 - **2nd place:** the player(s) eliminated in the gameweek immediately before 1st place was decided
 - **3rd place:** the player(s) eliminated in the gameweek before 2nd place
 - If multiple players share a position (eliminated in the same gameweek), they split that position's share equally
+- If fewer than 3 positions are filled (e.g. a league ends with only 1 or 2 distinct finishing positions), the prize pot is redistributed **proportionally** among the filled positions using the original percentage weights (65/25/10). Unfilled position shares are not retained by the platform.
 
 ### 5.3 Joint Winners (Paid Leagues)
 
-- If multiple players survive to the end of the season (GW38), they are **joint 1st place winners**
+- If multiple players survive to the **end of the round**, they are **joint 1st place winners**
+- GW38 (the final gameweek of the PL season) acts as the hard cut-off — if no single survivor emerges by GW38, all remaining players are joint 1st place winners
 - Their combined share (65%) is split equally between them
 - If the split does not divide evenly to the penny, the remainder goes to the 2nd place finishers
 
@@ -192,7 +212,7 @@ Each user has two wallet balance states:
 - The player's pick for that gameweek is **voided**
 - The player must **repick** from matches in the same gameweek that **have not yet kicked off**
 - The repick locks at the replacement match's kick-off
-- The repick follows normal rules — the player cannot pick a team they have already used this season
+- The repick follows normal rules — the player cannot pick a team they have already used this round
 
 **No repick possible (all remaining gameweek fixtures have started):**
 - If a postponement is announced after all remaining gameweek fixtures have already kicked off, no repick is possible
@@ -243,10 +263,11 @@ Each user has two wallet balance states:
 | Player picks a postponed team (repick available) | Pick voided, must repick from remaining GW fixtures |
 | Player picks a postponed team (no repick possible) | Pick voided, player survives, team not used |
 | Player picks an abandoned match team | Same as postponed |
-| All remaining players eliminated same GW | Mass elimination — all reinstated, continue |
+| All remaining players eliminated same GW | Mass elimination — all reinstated, continue; picked teams counted as used this round |
 | VAR changes result after FT logged | Use corrected FT result (API-Football returns official score) |
 | Player forgets to pick | Auto-eliminated at deadline |
-| Multiple players survive to GW38 | Joint 1st place, split 65% equally |
+| Multiple players survive to GW38 (with prior eliminations) | Joint 1st place — split 65% equally; 2nd/3rd paid normally |
+| Multiple players survive to GW38 (no eliminations ever) | All joint 1st — split 100% of pot equally (no 2nd/3rd exists) |
 | Multiple players eliminated same GW | Share that position's prize split equally |
 | Match result API data is ambiguous | Hold settlement, alert Orchestrator, human review before proceeding |
 | Settlement function runs twice (idempotency test) | Second run is a no-op — no double-elimination |
@@ -260,7 +281,7 @@ Each user has two wallet balance states:
 - Any change to pick rules, elimination rules, or prize rules after Gate 0 requires:
   1. Human owner approval
   2. Existing players in active leagues must be notified
-  3. Changes take effect from the next season only (never mid-season)
+  3. Changes take effect from the next round only (never mid-round)
 - Settlement logic changes always require human review regardless of phase
 
 ---
@@ -269,10 +290,11 @@ Each user has two wallet balance states:
 
 | Term | Definition |
 |---|---|
+| Round | One full competition within a league from its start gameweek until a winner is declared. Multiple rounds can occur within a PL season. No-repeat pick rules reset at the start of each round. |
 | Gameweek (GW) | A round of Premier League fixtures, typically Saturday–Monday |
 | Pick | A player's selection of one PL team for a gameweek |
 | Survivor | A player who has not yet been eliminated |
-| Eliminated | A player whose team did not win in their active gameweek |
+| Eliminated | A player whose team lost in their active gameweek, or who failed to submit a valid pick by the gameweek deadline |
 | Mass elimination | All remaining players eliminated in the same gameweek |
 | Prize pot | Entry fees collected in a paid league, minus platform fee |
 | Settlement | The process of determining which players survive or are eliminated after a result |
