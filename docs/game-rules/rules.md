@@ -159,6 +159,7 @@ The prize pot (after platform fee) is distributed to the **top 3 surviving playe
 - **2nd place:** the player(s) eliminated in the gameweek immediately before 1st place was decided
 - **3rd place:** the player(s) eliminated in the gameweek before 2nd place
 - If multiple players share a position (eliminated in the same gameweek), they split that position's share equally
+- If fewer than 3 positions are filled (e.g. a league ends with only 1 or 2 distinct finishing positions), the prize pot is redistributed **proportionally** among the filled positions using the original percentage weights (65/25/10). Unfilled position shares are not retained by the platform.
 
 ### 5.3 Joint Winners (Paid Leagues)
 
