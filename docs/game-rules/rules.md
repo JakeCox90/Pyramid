@@ -15,6 +15,8 @@
 
 Pyramid is a Premier League Last Man Standing competition. Players pick one Premier League team each gameweek. If their team wins or draws, they survive. If their team loses, they are eliminated. The top 3 surviving players share the prize pot.
 
+A single Premier League season contains multiple **rounds**. Each round runs from its start gameweek until one or more players are the last survivors. Once a round ends, players may opt in to a new round (and re-stake for paid leagues). No-repeat pick rules are scoped per round.
+
 Two league types are supported:
 - **Free leagues** — no entry fee, no prize pot, bragging rights only
 - **Paid public matchmaking leagues** — random allocation, pseudonymous play, prize pot split between top 3 finishers
@@ -37,6 +39,7 @@ Two league types are supported:
 - Users enter a stake amount and are randomly placed into a league with other users at the same stake level
 - Users may join up to **5 paid public matchmaking leagues per gameweek**
 - Each join requires sufficient wallet funds for the stake amount
+- Joining a new round of a paid league requires a fresh stake — previous stakes are not rolled over
 - **Purpose:** prevents users coordinating to stack the same league, and reduces league-hopping
 
 ### 2.3 Identity and Visibility in Paid Leagues
@@ -45,10 +48,13 @@ Two league types are supported:
 - Participant profiles are **revealed only when the league ends**
 - **Purpose:** reduces collusion and targeted abuse while keeping play fair
 
-### 2.4 Season
+### 2.4 Rounds and Seasons
 
-- One season = one Premier League season (August to May)
-- 38 gameweeks
+- One **season** = one Premier League season (August to May), 38 gameweeks
+- One **round** = one full competition within a league, running from its start gameweek until a winner (or joint winners) is declared
+- Multiple rounds can take place within a single PL season
+- When a round ends, a new round opens — players must explicitly opt in and re-stake (for paid leagues) to participate in the next round
+- No-repeat pick restrictions (§3.1) are scoped **per round**, not per season — a player's used-team list resets at the start of each new round they join
 
 ---
 
@@ -57,8 +63,8 @@ Two league types are supported:
 ### 3.1 One Pick Per Gameweek
 
 - Each surviving player must select exactly one Premier League team per gameweek
-- A player can only pick each team **once per season** (no repeat picks within a paid league)
-- Exception: if a player has used all 20 teams (extremely unlikely in practice), repeats are permitted
+- A player can only pick each team **once per round** (no repeat picks within the same round)
+- Exception: if a player has used all 20 teams within a round (extremely unlikely in practice), repeats are permitted
 
 ### 3.2 Pick Deadline
 
@@ -244,7 +250,7 @@ Each user has two wallet balance states:
 | Player picks a postponed team (repick available) | Pick voided, must repick from remaining GW fixtures |
 | Player picks a postponed team (no repick possible) | Pick voided, player survives, team not used |
 | Player picks an abandoned match team | Same as postponed |
-| All remaining players eliminated same GW | Mass elimination — all reinstated, continue |
+| All remaining players eliminated same GW | Mass elimination — all reinstated, continue; picked teams counted as used this round |
 | VAR changes result after FT logged | Use corrected FT result (API-Football returns official score) |
 | Player forgets to pick | Auto-eliminated at deadline |
 | Multiple players survive to GW38 | Joint 1st place, split 65% equally |
@@ -270,6 +276,7 @@ Each user has two wallet balance states:
 
 | Term | Definition |
 |---|---|
+| Round | One full competition within a league from its start gameweek until a winner is declared. Multiple rounds can occur within a PL season. No-repeat pick rules reset at the start of each round. |
 | Gameweek (GW) | A round of Premier League fixtures, typically Saturday–Monday |
 | Pick | A player's selection of one PL team for a gameweek |
 | Survivor | A player who has not yet been eliminated |
