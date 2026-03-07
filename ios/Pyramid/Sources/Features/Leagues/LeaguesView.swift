@@ -3,6 +3,7 @@ import SwiftUI
 struct LeaguesView: View {
     @StateObject private var viewModel = LeaguesViewModel()
     @State private var showCreateLeague = false
+    @State private var showJoinLeague = false
 
     var body: some View {
         NavigationStack {
@@ -19,8 +20,17 @@ struct LeaguesView: View {
             .toolbar {
                 if !viewModel.leagues.isEmpty {
                     ToolbarItem(placement: .primaryAction) {
-                        Button {
-                            showCreateLeague = true
+                        Menu {
+                            Button {
+                                showCreateLeague = true
+                            } label: {
+                                Label("Create League", systemImage: "plus.circle")
+                            }
+                            Button {
+                                showJoinLeague = true
+                            } label: {
+                                Label("Join League", systemImage: "person.badge.plus")
+                            }
                         } label: {
                             Image(systemName: "plus")
                         }
@@ -30,6 +40,11 @@ struct LeaguesView: View {
             .sheet(isPresented: $showCreateLeague) {
                 CreateLeagueView { created in
                     Task { await viewModel.leagueAdded(created) }
+                }
+            }
+            .sheet(isPresented: $showJoinLeague) {
+                JoinLeagueView { _ in
+                    Task { await viewModel.fetchLeagues() }
                 }
             }
             .task {
@@ -69,10 +84,17 @@ struct LeaguesView: View {
                 }
             }
 
-            Button("Create a League") {
-                showCreateLeague = true
+            VStack(spacing: DS.Spacing.s3) {
+                Button("Create a League") {
+                    showCreateLeague = true
+                }
+                .dsStyle(.primary)
+
+                Button("Join with Code") {
+                    showJoinLeague = true
+                }
+                .dsStyle(.secondary)
             }
-            .dsStyle(.primary)
             .padding(.horizontal, DS.Spacing.pageMargin)
 
             Spacer()
