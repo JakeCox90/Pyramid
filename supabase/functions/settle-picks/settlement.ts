@@ -25,8 +25,9 @@ export type PickResult = "survived" | "eliminated" | "void";
  * Rules (docs/game-rules/rules.md §4):
  *   - PST / ABD → void (player survives, team not marked used)
  *   - FT + null scores → void (data guard)
- *   - FT + draw (home_score === away_score) → eliminated
+ *   - FT + team not in fixture → void (data guard)
  *   - FT + picked team won → survived
+ *   - FT + draw → survived (draw does not eliminate — §4.1)
  *   - FT + picked team lost → eliminated
  */
 export function determinePickResult(pick: DbPick, fixture: DbFixture): PickResult {
@@ -41,7 +42,7 @@ export function determinePickResult(pick: DbPick, fixture: DbFixture): PickResul
 
   if (!pickedHome && !pickedAway) return "void"; // team not in fixture — data guard
 
-  if (home_score === away_score) return "eliminated"; // draw
+  if (home_score === away_score) return "survived"; // draw — player survives (§4.1)
 
   const homeWon = home_score > away_score;
   const pickedTeamWon = (pickedHome && homeWon) || (pickedAway && !homeWon);

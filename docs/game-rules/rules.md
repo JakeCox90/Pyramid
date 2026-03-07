@@ -13,7 +13,7 @@
 
 ## 1. Overview
 
-Pyramid is a Premier League Last Man Standing competition. Players pick one Premier League team to win each gameweek. If their team wins, they survive. If their team draws or loses, they are eliminated. The top 3 surviving players share the prize pot.
+Pyramid is a Premier League Last Man Standing competition. Players pick one Premier League team each gameweek. If their team wins or draws, they survive. If their team loses, they are eliminated. The top 3 surviving players share the prize pot.
 
 Two league types are supported:
 - **Free leagues** — no entry fee, no prize pot, bragging rights only
@@ -92,15 +92,15 @@ Two league types are supported:
 
 ## 4. Result and Elimination Rules
 
-### 4.1 Win Condition
+### 4.1 Survive Condition
 
 A player **survives** the gameweek if:
-- The team they picked **wins** their match (home or away)
+- The team they picked **wins** their match (home or away), OR
+- The team they picked **draws** their match
 
 ### 4.2 Elimination Conditions
 
 A player is **eliminated** if any of the following occur:
-- Their team **draws**
 - Their team **loses**
 - They did not submit a valid pick before their chosen match kicked off (auto-eliminated)
 
