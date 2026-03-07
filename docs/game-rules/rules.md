@@ -122,7 +122,7 @@ A player is **eliminated** if any of the following occur:
 If all remaining players are eliminated in the same gameweek:
 - **No winner** is declared for that gameweek
 - All eliminated players are **reinstated** as survivors and continue to the next gameweek
-- Their pick for that gameweek counts as **used** — they cannot pick the same team again this season
+- Their pick for that gameweek counts as **used** — they cannot pick the same team again this round
 - This is called a "mass elimination" event
 
 ---

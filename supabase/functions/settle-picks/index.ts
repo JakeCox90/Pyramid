@@ -18,7 +18,7 @@
 //     Members with a voided PST pick who did not repick are also caught here.
 //   Mass elimination (§4.5): if all remaining active members in a league are
 //   eliminated in the same GW → reinstate all, continue to next GW.
-//   Picks keep result "survived" so that team counts as used this season.
+//   Picks keep result "survived" so that team counts as used this round.
 
 import { getServiceClient } from "../_shared/supabase.ts";
 import { determinePickResult, findNoPickMemberIds } from "./settlement.ts";
@@ -146,7 +146,7 @@ async function settleLeague(
         .eq("eliminated_in_gameweek_id", gameweekId);
 
       // Mark reinstated picks as "survived" so the team IS counted as used (rules §4.5).
-      // Players cannot pick the same team again this season even after a mass elimination.
+      // Players cannot pick the same team again this round even after a mass elimination.
       await db
         .from("picks")
         .update({ result: "survived" })
