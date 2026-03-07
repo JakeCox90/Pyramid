@@ -6,13 +6,13 @@ import SwiftUI
 
 enum DS {
     enum Spacing {
-        static let s1:  CGFloat = 4   // micro — icon gaps, tight groupings
-        static let s2:  CGFloat = 8   // small — within components
-        static let s3:  CGFloat = 12
-        static let s4:  CGFloat = 16  // default — standard padding
-        static let s5:  CGFloat = 20
-        static let s6:  CGFloat = 24  // section gaps
-        static let s8:  CGFloat = 32
+        static let s1: CGFloat = 4   // micro — icon gaps, tight groupings
+        static let s2: CGFloat = 8   // small — within components
+        static let s3: CGFloat = 12
+        static let s4: CGFloat = 16  // default — standard padding
+        static let s5: CGFloat = 20
+        static let s6: CGFloat = 24  // section gaps
+        static let s8: CGFloat = 32
         static let s10: CGFloat = 40
         static let s12: CGFloat = 48
         static let s16: CGFloat = 64
