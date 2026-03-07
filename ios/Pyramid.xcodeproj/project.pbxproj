@@ -7,16 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		01DD6DAA1AB77AEBEB9E9445 /* Gameweek.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C8CA520C03B704C80A9EE64 /* Gameweek.swift */; };
 		07D4065B76C454F135FBEEF6 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6F92FE092EC760C205458A7 /* ProfileView.swift */; };
 		0964CB7A29F85812D575494A /* Spacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7F420042D2976B7F28384F /* Spacing.swift */; };
 		0D4C0C6EB925B28A65785DE7 /* League.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4517097C58F3AB9DB59A38 /* League.swift */; };
 		18E72417EAA25C39CDB7DA80 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 9BBCF177D8E7D14FC85A2F79 /* Supabase */; };
+		233E9BC5A265936419B27800 /* PicksViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45FA7FC994C841B0871B333 /* PicksViewModelTests.swift */; };
 		2BC557CC3EADA62F50338CCA /* DSCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DF242F38270F8CEB654549 /* DSCard.swift */; };
 		319A129B56079D021616A322 /* LeaguesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C85AC94E06CB38EE15F06FBD /* LeaguesViewModel.swift */; };
 		3D493E78B785A7D3FD97BF35 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C1BE5AB66D75DBBC1C9404F7 /* Assets.xcassets */; };
 		4668BAF70224B38BF6FF3B73 /* CreateLeagueViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EADF3F67687936B1B06DE55 /* CreateLeagueViewModelTests.swift */; };
+		56C22940504502DFFEBBB4BE /* Pick.swift in Sources */ = {isa = PBXBuildFile; fileRef = F15233A6AC65D121675A236F /* Pick.swift */; };
 		56CC2E236030EE4F473EB416 /* DSTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4AD36135713033ED1110B6 /* DSTextField.swift */; };
 		5B1D3BD5BF64D0868A40FD12 /* CreateLeagueViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63B37BEFCB4682687939E4D /* CreateLeagueViewModel.swift */; };
+		6CDC076973D537CE150C8EA8 /* PickService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF21542E7A38A26F09257F8 /* PickService.swift */; };
 		7148A25510275A0026B45C25 /* AuthViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A13501440E745127E554365 /* AuthViewModelTests.swift */; };
 		877E9354D98CD419291A1C2C /* PyramidUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2439413A5D89DC3B0FB2B44B /* PyramidUITests.swift */; };
 		88159AEE668C70F7B75700E9 /* SupabaseDependency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1058DD31F7E446B643331071 /* SupabaseDependency.swift */; };
@@ -26,12 +30,15 @@
 		AC0A276F0B440FD3ACEFAD82 /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054F468904D721E525EB09FF /* Typography.swift */; };
 		AE50172FE0206CEECC9A36E9 /* LeagueCreatedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2485ABB28B60E960F5EF2DBD /* LeagueCreatedView.swift */; };
 		C982F902B95FEA0B5AADDDC8 /* AuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC95918095D0EA3F4C29A0AA /* AuthView.swift */; };
+		CEF0F8A07CD6478394576A7F /* PicksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4DE569154E88F8F744FA9EE /* PicksView.swift */; };
 		D21DBEA23D9F0317191D8415 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1157CEFF33FEBE3B474AD1 /* MainTabView.swift */; };
 		E19D354135AFF1048D946323 /* PyramidApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57CD810A22A171F8ABC04150 /* PyramidApp.swift */; };
 		E2E8101EE8A36E77B918555A /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0FCC08CF3FA0B871AD1842 /* AppState.swift */; };
+		E4740370A7568165D66364B7 /* Fixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D4BC8659B5CE1A855BE310 /* Fixture.swift */; };
 		EA57A2E5E39C664FBA18C87D /* CreateLeagueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C387D07BEAC18E4F601DE2EF /* CreateLeagueView.swift */; };
 		ECCFB5B40F1C0FDC80E94869 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92D006D5D7CA358114130A85 /* RootView.swift */; };
 		F00FD2B545BABFBACE1D27B5 /* LeagueService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 334B3F95F52FDB1F1BDD29CE /* LeagueService.swift */; };
+		F5A1A1424F425CEAEF7F3E85 /* PicksViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7446A3311FC4D09B53500705 /* PicksViewModel.swift */; };
 		F6504DC2917B2393B1424950 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A911BFB5165DD1BE7BBBE84 /* Colors.swift */; };
 		FBB9430147FB54171E83FFCD /* DSButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 733C2CAA42033AF98772CA35 /* DSButton.swift */; };
 /* End PBXBuildFile section */
@@ -63,6 +70,7 @@
 		21B4F0E8C24BE1594C483E0B /* LeaguesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaguesView.swift; sourceTree = "<group>"; };
 		2439413A5D89DC3B0FB2B44B /* PyramidUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PyramidUITests.swift; sourceTree = "<group>"; };
 		2485ABB28B60E960F5EF2DBD /* LeagueCreatedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeagueCreatedView.swift; sourceTree = "<group>"; };
+		2AF21542E7A38A26F09257F8 /* PickService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickService.swift; sourceTree = "<group>"; };
 		2E4517097C58F3AB9DB59A38 /* League.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = League.swift; sourceTree = "<group>"; };
 		334B3F95F52FDB1F1BDD29CE /* LeagueService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeagueService.swift; sourceTree = "<group>"; };
 		42379DA3E6430A94B9D0CCDB /* PyramidUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = PyramidUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -71,17 +79,23 @@
 		5A911BFB5165DD1BE7BBBE84 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		6EADF3F67687936B1B06DE55 /* CreateLeagueViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateLeagueViewModelTests.swift; sourceTree = "<group>"; };
 		733C2CAA42033AF98772CA35 /* DSButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSButton.swift; sourceTree = "<group>"; };
+		7446A3311FC4D09B53500705 /* PicksViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PicksViewModel.swift; sourceTree = "<group>"; };
 		82F47822297EAF10E0237AC5 /* Pyramid.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Pyramid.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		85D4BC8659B5CE1A855BE310 /* Fixture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fixture.swift; sourceTree = "<group>"; };
 		8A13501440E745127E554365 /* AuthViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModelTests.swift; sourceTree = "<group>"; };
+		8C8CA520C03B704C80A9EE64 /* Gameweek.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gameweek.swift; sourceTree = "<group>"; };
 		92D006D5D7CA358114130A85 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		A9DF242F38270F8CEB654549 /* DSCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSCard.swift; sourceTree = "<group>"; };
 		BBF8340D3551DE2055CE9810 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		C1BE5AB66D75DBBC1C9404F7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C387D07BEAC18E4F601DE2EF /* CreateLeagueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateLeagueView.swift; sourceTree = "<group>"; };
+		C4DE569154E88F8F744FA9EE /* PicksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PicksView.swift; sourceTree = "<group>"; };
 		C85AC94E06CB38EE15F06FBD /* LeaguesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaguesViewModel.swift; sourceTree = "<group>"; };
 		CC95918095D0EA3F4C29A0AA /* AuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthView.swift; sourceTree = "<group>"; };
+		D45FA7FC994C841B0871B333 /* PicksViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PicksViewModelTests.swift; sourceTree = "<group>"; };
 		D6F92FE092EC760C205458A7 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		EE1157CEFF33FEBE3B474AD1 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		F15233A6AC65D121675A236F /* Pick.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pick.swift; sourceTree = "<group>"; };
 		F63B37BEFCB4682687939E4D /* CreateLeagueViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateLeagueViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -114,6 +128,7 @@
 			children = (
 				8A13501440E745127E554365 /* AuthViewModelTests.swift */,
 				6EADF3F67687936B1B06DE55 /* CreateLeagueViewModelTests.swift */,
+				D45FA7FC994C841B0871B333 /* PicksViewModelTests.swift */,
 			);
 			path = PyramidTests;
 			sourceTree = "<group>";
@@ -133,7 +148,10 @@
 		40402C39E59DFD3975DF64C8 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				85D4BC8659B5CE1A855BE310 /* Fixture.swift */,
+				8C8CA520C03B704C80A9EE64 /* Gameweek.swift */,
 				2E4517097C58F3AB9DB59A38 /* League.swift */,
+				F15233A6AC65D121675A236F /* Pick.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -214,6 +232,7 @@
 			children = (
 				BBF8340D3551DE2055CE9810 /* AuthService.swift */,
 				334B3F95F52FDB1F1BDD29CE /* LeagueService.swift */,
+				2AF21542E7A38A26F09257F8 /* PickService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -221,6 +240,8 @@
 		DE76900BD73EEF3FA83B9089 /* Picks */ = {
 			isa = PBXGroup;
 			children = (
+				C4DE569154E88F8F744FA9EE /* PicksView.swift */,
+				7446A3311FC4D09B53500705 /* PicksViewModel.swift */,
 			);
 			path = Picks;
 			sourceTree = "<group>";
@@ -402,12 +423,18 @@
 				FBB9430147FB54171E83FFCD /* DSButton.swift in Sources */,
 				2BC557CC3EADA62F50338CCA /* DSCard.swift in Sources */,
 				56CC2E236030EE4F473EB416 /* DSTextField.swift in Sources */,
+				E4740370A7568165D66364B7 /* Fixture.swift in Sources */,
+				01DD6DAA1AB77AEBEB9E9445 /* Gameweek.swift in Sources */,
 				0D4C0C6EB925B28A65785DE7 /* League.swift in Sources */,
 				AE50172FE0206CEECC9A36E9 /* LeagueCreatedView.swift in Sources */,
 				F00FD2B545BABFBACE1D27B5 /* LeagueService.swift in Sources */,
 				9CD37873BEEB5DC6E7ADBA05 /* LeaguesView.swift in Sources */,
 				319A129B56079D021616A322 /* LeaguesViewModel.swift in Sources */,
 				D21DBEA23D9F0317191D8415 /* MainTabView.swift in Sources */,
+				56C22940504502DFFEBBB4BE /* Pick.swift in Sources */,
+				6CDC076973D537CE150C8EA8 /* PickService.swift in Sources */,
+				CEF0F8A07CD6478394576A7F /* PicksView.swift in Sources */,
+				F5A1A1424F425CEAEF7F3E85 /* PicksViewModel.swift in Sources */,
 				07D4065B76C454F135FBEEF6 /* ProfileView.swift in Sources */,
 				E19D354135AFF1048D946323 /* PyramidApp.swift in Sources */,
 				ECCFB5B40F1C0FDC80E94869 /* RootView.swift in Sources */,
@@ -431,6 +458,7 @@
 			files = (
 				7148A25510275A0026B45C25 /* AuthViewModelTests.swift in Sources */,
 				4668BAF70224B38BF6FF3B73 /* CreateLeagueViewModelTests.swift in Sources */,
+				233E9BC5A265936419B27800 /* PicksViewModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

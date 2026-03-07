@@ -85,8 +85,11 @@ struct LeaguesView: View {
         ScrollView {
             LazyVStack(spacing: DS.Spacing.s3) {
                 ForEach(viewModel.leagues) { league in
-                    LeagueRowView(league: league)
-                        .padding(.horizontal, DS.Spacing.pageMargin)
+                    NavigationLink(destination: PicksView(leagueId: league.id)) {
+                        LeagueRowView(league: league)
+                    }
+                    .buttonStyle(.plain)
+                    .padding(.horizontal, DS.Spacing.pageMargin)
                 }
             }
             .padding(.vertical, DS.Spacing.s4)
