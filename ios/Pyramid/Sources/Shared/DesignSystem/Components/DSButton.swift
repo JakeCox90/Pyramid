@@ -40,7 +40,8 @@ struct DSButtonStyle: ButtonStyle {
     var isLoading: Bool = false
     var isFullWidth: Bool = true
 
-    @Environment(\.isEnabled) private var isEnabled
+    @Environment(\.isEnabled)
+    private var isEnabled
 
     func makeBody(configuration: Configuration) -> some View {
         ZStack {

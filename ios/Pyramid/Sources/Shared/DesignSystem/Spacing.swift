@@ -18,16 +18,16 @@ enum DS {
         static let s16: CGFloat = 64
 
         // Semantic layout constants
-        static let pageMargin:    CGFloat = 16
-        static let cardPadding:   CGFloat = 16
-        static let sectionGap:    CGFloat = 24
+        static let pageMargin: CGFloat = 16
+        static let cardPadding: CGFloat = 16
+        static let sectionGap: CGFloat = 24
     }
 
     enum Radius {
-        static let sm:   CGFloat = 6    // tags, badges
-        static let md:   CGFloat = 10   // cards, inputs
-        static let lg:   CGFloat = 16   // sheets, modals
-        static let xl:   CGFloat = 24   // large feature cards
+        static let sm: CGFloat = 6    // tags, badges
+        static let md: CGFloat = 10   // cards, inputs
+        static let lg: CGFloat = 16   // sheets, modals
+        static let xl: CGFloat = 24   // large feature cards
         static let full: CGFloat = 9999 // pills, avatars
     }
 
@@ -39,8 +39,8 @@ enum DS {
             let y: CGFloat
         }
 
-        static let sm = Style(color: .black.opacity(0.06), radius: 2,  x: 0, y: 1)
-        static let md = Style(color: .black.opacity(0.10), radius: 8,  x: 0, y: 2)
+        static let sm = Style(color: .black.opacity(0.06), radius: 2, x: 0, y: 1)
+        static let md = Style(color: .black.opacity(0.10), radius: 8, x: 0, y: 2)
         static let lg = Style(color: .black.opacity(0.12), radius: 16, x: 0, y: 4)
     }
 }

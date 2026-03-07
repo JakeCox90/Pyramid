@@ -5,7 +5,9 @@ excluded:
   - Pyramid/Sources/App/PyramidApp.swift  # @main requires minimal body
 
 disabled_rules:
-  - todo  # TODOs allowed during early development
+  - todo    # TODOs allowed during early development
+  - nesting # DS namespace intentionally nests Color.DS.Brand etc.
+  - implicit_optional_initialization
 
 opt_in_rules:
   - empty_count
@@ -34,7 +36,7 @@ function_body_length:
   error: 80
 
 identifier_name:
-  min_length: 2
+  min_length: 1
 
 type_name:
   min_length: 2
