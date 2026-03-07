@@ -115,6 +115,9 @@ final class CreateLeagueViewModelTests: XCTestCase {
 final class MockLeagueService: LeagueServiceProtocol {
     var createLeagueCalled = false
     var lastCreatedName: String?
+    var previewLeagueCalled = false
+    var joinLeagueCalled = false
+    var lastJoinedCode: String?
     var shouldFail: Bool
 
     init(shouldFail: Bool = false) {
@@ -126,6 +129,19 @@ final class MockLeagueService: LeagueServiceProtocol {
         lastCreatedName = name
         if shouldFail { throw URLError(.badServerResponse) }
         return CreateLeagueResponse(leagueId: "test-id", joinCode: "ABC123", name: name)
+    }
+
+    func previewLeague(code: String) async throws -> LeaguePreview {
+        previewLeagueCalled = true
+        if shouldFail { throw URLError(.badServerResponse) }
+        return LeaguePreview(leagueId: "test-id", name: "Test League", memberCount: 3, status: "pending", season: 2025)
+    }
+
+    func joinLeague(code: String) async throws -> JoinLeagueResponse {
+        joinLeagueCalled = true
+        lastJoinedCode = code
+        if shouldFail { throw URLError(.badServerResponse) }
+        return JoinLeagueResponse(leagueId: "test-id", name: "Test League")
     }
 
     func fetchMyLeagues() async throws -> [League] {
