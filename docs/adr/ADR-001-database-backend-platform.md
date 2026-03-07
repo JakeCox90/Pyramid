@@ -1,6 +1,6 @@
 # ADR-001: Database and Backend Platform Choice
 
-**Status:** Proposed — Pending GATE 0 approval
+**Status:** APPROVED — Gate 0 signed off 2026-03-07
 **Date:** 2026-03-07
 **Deciders:** Architect Agent, Orchestrator
 **Approver:** Human owner (GATE 0)

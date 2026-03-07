@@ -1,6 +1,6 @@
 # Pyramid — Game Rules Specification
 
-**Status:** Draft — Pending GATE 0 approval
+**Status:** APPROVED — Gate 0 signed off 2026-03-07
 **Date:** 2026-03-07
 **Author:** PM Agent / Orchestrator
 **Approver:** Human owner (GATE 0)
@@ -13,39 +13,42 @@
 
 ## 1. Overview
 
-Pyramid is a Premier League Last Man Standing competition. Players pick one Premier League team to win each gameweek. If their team wins, they survive. If their team draws or loses, they are eliminated. The last player (or players) standing wins.
+Pyramid is a Premier League Last Man Standing competition. Players pick one Premier League team to win each gameweek. If their team wins, they survive. If their team draws or loses, they are eliminated. The top 3 surviving players share the prize pot.
 
 Two league types are supported:
 - **Free leagues** — no entry fee, no prize pot, bragging rights only
-- **Paid staking leagues** — entry fee collected, prize pot distributed to winner(s)
+- **Paid public matchmaking leagues** — random allocation, pseudonymous play, prize pot split between top 3 finishers
 
 ---
 
 ## 2. League Structure
 
-### 2.1 Creating a League
+### 2.1 Free Leagues
 
-- Any registered user can create a league
+- Any registered user can create a free league
 - Creator becomes the league admin
 - League has a unique join code (6 characters, alphanumeric)
-- League settings set at creation and cannot be changed after the first gameweek begins:
-  - League name
-  - League type (free / paid)
-  - Entry fee (paid leagues only)
-  - Maximum players (optional cap)
-  - Start gameweek (default: Gameweek 1 of current season)
-
-### 2.2 Joining a League
-
 - Players join via join code before the league's start gameweek deadline
-- No joining after the start gameweek pick deadline has passed
-- Paid leagues: entry fee must be paid at join time (payment integration: GATE — pending Phase 2)
+- Full player identities are visible to all members in free leagues
 
-### 2.3 Season
+### 2.2 Public Paid Matchmaking Leagues
+
+- Public paid leagues are formed via **random allocation** — users cannot browse or select a specific paid public league
+- Users enter a stake amount and are randomly placed into a league with other users at the same stake level
+- Users may join up to **5 paid public matchmaking leagues per gameweek**
+- Each join requires sufficient wallet funds for the stake amount
+- **Purpose:** prevents users coordinating to stack the same league, and reduces league-hopping
+
+### 2.3 Identity and Visibility in Paid Leagues
+
+- In paid public matchmaking leagues, participants are shown as **pseudonyms** during the league
+- Participant profiles are **revealed only when the league ends**
+- **Purpose:** reduces collusion and targeted abuse while keeping play fair
+
+### 2.4 Season
 
 - One season = one Premier League season (August to May)
 - 38 gameweeks
-- A league runs until one player remains or all players are eliminated (see consolation rules)
 
 ---
 
@@ -54,32 +57,36 @@ Two league types are supported:
 ### 3.1 One Pick Per Gameweek
 
 - Each surviving player must select exactly one Premier League team per gameweek
-- A player can only pick each team **once per season** across all gameweeks (no repeat picks)
+- A player can only pick each team **once per season** (no repeat picks within a paid league)
 - Exception: if a player has used all 20 teams (extremely unlikely in practice), repeats are permitted
 
 ### 3.2 Pick Deadline
 
-- The pick deadline for each gameweek is **kick-off of the first match in that gameweek**
-- Example: if GW12 starts with Man City vs Arsenal at 12:30 on Saturday, the deadline is 12:30 Saturday
-- Picks cannot be changed or submitted after the deadline — the system hard-locks submissions
-- If a player has not submitted a pick by the deadline, they are auto-eliminated (no grace period)
+- A pick is valid only if submitted **before the kick-off time of the selected match**
+- Once the selected match kicks off, the pick is **locked** and cannot be changed
+- Players may change their pick to a different match (one that has not yet kicked off) at any time before that match's kick-off
 
-### 3.3 Pick Change Window
+### 3.3 No Valid Pick
 
-- Players may change their pick any number of times **before the deadline**
+- If a player fails to submit a valid pick before any match in the gameweek kicks off, they are **eliminated** from that league
+- No grace period — the system hard-locks submissions at each match's kick-off
+
+### 3.4 Pick Change Window
+
+- Players may change their pick any number of times before the selected match kicks off
 - Only the last submitted pick counts
 - Pick changes are logged with timestamps for audit purposes
 
-### 3.4 Pick Visibility
+### 3.5 Pick Visibility
 
-- Picks are **hidden from other players until the deadline passes**
-- After the deadline, all picks for that gameweek become visible to all league members
+- Picks are **hidden from other players until the deadline passes** (first kick-off of the gameweek)
+- After the first match of the gameweek kicks off, all locks picks become visible to league members
 - This prevents copycat picks
 
-### 3.5 Eligible Teams
+### 3.6 Eligible Teams
 
-- Only teams currently in the Premier League for that season are eligible to pick
-- Relegated/promoted teams update at season start; the fixture list is the source of truth
+- Only teams currently in the Premier League for that season are eligible
+- The fixture list sourced from API-Football is the source of truth
 
 ---
 
@@ -95,126 +102,159 @@ A player **survives** the gameweek if:
 A player is **eliminated** if any of the following occur:
 - Their team **draws**
 - Their team **loses**
-- They did not submit a pick before the deadline (auto-eliminated)
+- They did not submit a valid pick before their chosen match kicked off (auto-eliminated)
 
-### 4.3 Result Source
+### 4.3 Result Source of Truth
 
-- Results are sourced from API-Football (see ADR-003)
+- Match outcomes are determined by API-Football (see ADR-003)
 - Only `FT` (full time) status triggers settlement — never live, half-time, or extra time scores
-- Settlement runs automatically after each match reaches `FT` status
+- Corrections to results are applied only within the **24-hour correction window** (aligned with the dispute window)
+- After the correction window ends, results are final and not changed retroactively
 
 ### 4.4 Settlement Timing
 
 - Settlement is processed match-by-match as results come in
 - A player's fate is determined when their picked team's match reaches `FT`
-- Players who picked teams playing early in a gameweek may be eliminated before the gameweek's final matches are played — this is by design (information asymmetry is part of the game)
 - Final elimination list for a gameweek is locked once all matches in that gameweek are `FT`
 
-### 4.5 Multi-Match Gameweeks
+### 4.5 Mass Elimination
 
-- Some gameweeks span multiple days (e.g., matches on Saturday, Sunday, and Monday)
-- A player survives as long as their team's match result was a win — regardless of when in the gameweek it was played
-- Results from other matches do not affect a player's result
-
----
-
-## 5. Consolation Rules
-
-### 5.1 All Players Eliminated in Same Gameweek
-
-If all remaining players are eliminated in the same gameweek (all their teams drew or lost):
+If all remaining players are eliminated in the same gameweek:
 - **No winner** is declared for that gameweek
 - All eliminated players are **reinstated** as survivors and continue to the next gameweek
-- This is called a "mass elimination" event — it is rare but possible (e.g., all remaining players picked teams that drew)
-
-### 5.2 Final Gameweek (GW38)
-
-If multiple players survive until Gameweek 38 and all survive GW38:
-- **Joint winners** are declared
-- In paid leagues: prize pot split equally between joint winners (rounded to pence; any remainder donated to a specified charity — GATE: charity designation requires human approval)
-
-### 5.3 Tiebreaker
-
-- There is no tiebreaker. Joint winners share the prize.
-- This prevents any unfair secondary competition that players did not sign up for.
+- This is called a "mass elimination" event
 
 ---
 
-## 6. Postponed and Abandoned Matches
+## 5. Prize Distribution
 
-### 6.1 Postponed Match (`PST`)
+### 5.1 Top 3 Split
 
-If a player's picked team's match is postponed (e.g., weather, bereavement fixture, stadium issues):
+The prize pot (after platform fee) is distributed to the **top 3 surviving players**:
+
+| Position | Share |
+|----------|-------|
+| 1st (last survivor, or last surviving group) | 65% |
+| 2nd | 25% |
+| 3rd | 10% |
+
+### 5.2 Determining Positions
+
+- **1st place:** the last player(s) surviving when all others are eliminated
+- **2nd place:** the player(s) eliminated in the gameweek immediately before 1st place was decided
+- **3rd place:** the player(s) eliminated in the gameweek before 2nd place
+- If multiple players share a position (eliminated in the same gameweek), they split that position's share equally
+
+### 5.3 Joint Winners (Paid Leagues)
+
+- If multiple players survive to the end of the season (GW38), they are **joint 1st place winners**
+- Their combined share (65%) is split equally between them
+- If the split does not divide evenly to the penny, the remainder goes to the 2nd place finishers
+
+### 5.4 Platform Fee
+
+- Platform take rate: **8%** of gross prize pot
+- Fee is deducted before distribution and displayed clearly to users at join time
+
+---
+
+## 6. Wallet System
+
+### 6.1 Wallet Balances
+
+Each user has two wallet balance states:
+
+| Balance type | Description |
+|---|---|
+| **Available to play** | Winnings credited immediately after league settlement. Can be used to join new leagues. Cannot be withdrawn until dispute window expires. |
+| **Withdrawable** | Funds available for withdrawal. Requires 24-hour dispute window to have passed. |
+
+### 6.2 Dispute Window
+
+- Winnings are credited as **Available to play** immediately after league outcome is settled
+- Winnings become **Withdrawable** after a **24-hour dispute window**
+- During the dispute window, users may use "Available to play" funds to join other leagues
+
+### 6.3 Corrections During Dispute Window
+
+- If a result is corrected within the 24-hour dispute window, wallet balances may be adjusted accordingly
+- If a user has already re-staked corrected funds and their balance becomes negative:
+  - They cannot join new paid leagues or withdraw until the balance is restored
+  - Free-to-play participation remains available
+
+---
+
+## 7. Postponed and Abandoned Matches
+
+### 7.1 Postponed Match (`PST`)
+
+**Postponed before kick-off:**
 - The player's pick for that gameweek is **voided**
-- The player **survives** the gameweek (no penalty for a postponed match)
-- The player receives a **wildcard pick** for the gameweek in which the postponed match is rescheduled:
-  - They may pick any team (including one already used) for that specific gameweek only
-  - This is a one-off exception — their used-teams list is not affected
+- The player must **repick** from matches in the same gameweek that **have not yet kicked off**
+- The repick locks at the replacement match's kick-off
+- The repick follows normal rules — the player cannot pick a team they have already used this season
 
-> **GATE:** The exact wildcard pick rule for postponements requires human approval at Gate 0.
+**No repick possible (all remaining gameweek fixtures have started):**
+- If a postponement is announced after all remaining gameweek fixtures have already kicked off, no repick is possible
+- The player **survives** that gameweek and the team is **not marked as used**
+- The player picks normally in the next gameweek
 
-### 6.2 Abandoned Match (`ABD`)
+### 7.2 Abandoned Match (`ABD`)
 
-If a match is abandoned after kick-off (e.g., crowd trouble, floodlight failure):
 - Treat as postponed — pick is voided, player survives
 - Settlement is held until the match is replayed and reaches `FT`
 - If the match is not replayed within the same season: treat as a void result, player survives
 
-### 6.3 VAR Overturns
+### 7.3 VAR Overturns
 
-- VAR decisions that change the final score are reflected in the official result
-- API-Football returns the correct final score including VAR overturns
+- VAR decisions are reflected in the official result returned by API-Football
 - Settlement always uses the final official `FT` result — never a provisional score
 
 ---
 
-## 7. Staking and Prize Pool Rules
+## 8. Withdrawals
 
-> **GATE:** All payment processing and staking rules require human approval and compliance review before Phase 2 implementation.
-
-### 7.1 Free Leagues
-
-- No entry fee
-- No prize pot
-- League is purely competitive — eliminations and survival are the game
-
-### 7.2 Paid Staking Leagues
-
-- Entry fee set by league creator at creation (minimum: £1, maximum: £100 — GATE: limits require human approval)
-- Entry fee collected at join time
-- Prize pot = (entry fee × number of players) minus platform fee (GATE: fee % requires human approval)
-- Prize pot is held in escrow until a winner is declared
-- Winner receives prize pot directly to their registered payment method
-
-### 7.3 Refund Policy
-
-- If a league fails to start (e.g., fewer than 2 players join by start gameweek): full refund to all players
-- If a league is cancelled by admin before Gameweek 1: full refund to all players
-- No refunds once Gameweek 1 pick deadline has passed
-
-### 7.4 Platform Fee
-
-- GATE: Platform fee percentage requires human approval
-- Fee is deducted from prize pot before distribution
+- Minimum withdrawal: **£20**
+- Maximum withdrawal frequency: **1 per day**
+- Withdrawal fees are **passed through to the user** at cost, shown clearly before confirmation
+- Withdrawals can only be made from **Withdrawable** balance (post 24-hour dispute window)
 
 ---
 
-## 8. Edge Cases Summary
+## 9. Anti-Collusion and Integrity Policy
+
+### 9.1 Prohibited Behaviour
+
+- Coordinating with others to manipulate outcomes or unfairly increase chances of winning
+- Using multiple accounts or allowing others to use your account
+- Attempting to enter the same paid public league through repeated joining across accounts
+
+### 9.2 Enforcement
+
+- The platform may take action including warnings, restricting paid entry, suspending accounts, reversing winnings, or banning accounts where prohibited behaviour is detected
+- Decisions use internal integrity signals (device, payment, and behavioural patterns) and audit logs
+
+---
+
+## 10. Edge Cases Summary
 
 | Scenario | Outcome |
 |---|---|
-| Player picks a postponed team | Pick voided, player survives, wildcard for rescheduled GW |
+| Player picks a postponed team (repick available) | Pick voided, must repick from remaining GW fixtures |
+| Player picks a postponed team (no repick possible) | Pick voided, player survives, team not used |
 | Player picks an abandoned match team | Same as postponed |
 | All remaining players eliminated same GW | Mass elimination — all reinstated, continue |
 | VAR changes result after FT logged | Use corrected FT result (API-Football returns official score) |
 | Player forgets to pick | Auto-eliminated at deadline |
-| Two players survive to end of season | Joint winners, split prize equally |
+| Multiple players survive to GW38 | Joint 1st place, split 65% equally |
+| Multiple players eliminated same GW | Share that position's prize split equally |
 | Match result API data is ambiguous | Hold settlement, alert Orchestrator, human review before proceeding |
 | Settlement function runs twice (idempotency test) | Second run is a no-op — no double-elimination |
+| User's balance goes negative after correction | Cannot join paid leagues or withdraw until restored; free play unaffected |
 
 ---
 
-## 9. Rules Change Policy
+## 11. Rules Change Policy
 
 - These rules are locked at Gate 0 approval
 - Any change to pick rules, elimination rules, or prize rules after Gate 0 requires:
@@ -225,7 +265,7 @@ If a match is abandoned after kick-off (e.g., crowd trouble, floodlight failure)
 
 ---
 
-## 10. Glossary
+## 12. Glossary
 
 | Term | Definition |
 |---|---|
@@ -234,9 +274,11 @@ If a match is abandoned after kick-off (e.g., crowd trouble, floodlight failure)
 | Survivor | A player who has not yet been eliminated |
 | Eliminated | A player whose team did not win in their active gameweek |
 | Mass elimination | All remaining players eliminated in the same gameweek |
-| Wildcard | A one-off exception allowing a repeat team pick |
-| Prize pot | The total entry fees collected in a paid league, minus platform fee |
+| Prize pot | Entry fees collected in a paid league, minus platform fee |
 | Settlement | The process of determining which players survive or are eliminated after a result |
+| Correction window | 24-hour window after settlement during which results can be corrected |
+| Available to play | Wallet funds credited post-settlement, usable for new leagues, not yet withdrawable |
+| Withdrawable | Wallet funds available for withdrawal (post 24-hour dispute window) |
 | FT | Full Time — the only result status that triggers settlement |
 | PST | Postponed — match has not been played, pick is void |
 | ABD | Abandoned — match was started but not completed |

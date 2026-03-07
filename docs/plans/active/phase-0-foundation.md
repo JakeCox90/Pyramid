@@ -4,7 +4,7 @@
 **Linear project:** Pyramid
 **Created:** 2026-03-07
 **Owner:** Orchestrator
-**Status:** IN PROGRESS
+**Status:** COMPLETE — Gate 0 approved 2026-03-07
 
 ---
 
@@ -36,7 +36,7 @@ Establish all infrastructure, tooling, documentation, and decisions required bef
 | 7 | Create Notion workspace structure | PYR-11 / LMS-007 | Orchestrator | DONE | Completed 2026-03-07 |
 | 8 | Configure API-Football account + test fixtures | PYR-12 / LMS-008 | Backend | DONE | API validated (380 fixtures, 20 teams, 38 rounds). Free tier covers dev (2022–2024). Basic tier (~£8/mo) needed for 2025 season in production. |
 | 9 | Write game rules specification | PYR-13 / LMS-009 | Orchestrator | DONE | docs/game-rules/rules.md |
-| 10 | [GATE 0] Human review: Decision log sign-off | PYR-14 / LMS-010 | Human | BLOCKED | Blocked on steps 4, 5, 6, 9 (now unblocked) |
+| 10 | [GATE 0] Human review: Decision log sign-off | PYR-14 / LMS-010 | Human | DONE | APPROVED 2026-03-07 |
 
 ---
 
