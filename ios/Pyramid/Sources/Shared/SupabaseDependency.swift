@@ -14,7 +14,9 @@ final class SupabaseDependency: @unchecked Sendable {
         let anonKey = Bundle.main.object(forInfoDictionaryKey: "SUPABASE_ANON_KEY") as? String ?? ""
 
         guard !scheme.isEmpty, !host.isEmpty, let url = URL(string: "\(scheme)://\(host)"), !anonKey.isEmpty else {
-            fatalError("SUPABASE_URL_SCHEME, SUPABASE_URL_HOST and SUPABASE_ANON_KEY must be set in Info.plist via xcconfig")
+            fatalError(
+                "SUPABASE_URL_SCHEME, SUPABASE_URL_HOST and SUPABASE_ANON_KEY must be set in Info.plist via xcconfig"
+            )
         }
 
         client = SupabaseClient(supabaseURL: url, supabaseKey: anonKey)
