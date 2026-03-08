@@ -32,16 +32,17 @@ Enable paid matchmaking leagues with a £5 fixed entry fee, a wallet system for 
 | 2 | PRD: Wallet System | PYR-22 | Orchestrator/PM | DONE | docs/prd/PRD-001-wallet-system.md |
 | 3 | PRD: Paid Matchmaking Leagues | PYR-23 | Orchestrator/PM | DONE | docs/prd/PRD-002-paid-matchmaking-leagues.md |
 | 4 | PRD: Push Notifications | PYR-24 | Orchestrator/PM | DONE | docs/prd/PRD-003-push-notifications.md |
-| 5 | ADR-004: Payment provider choice | PYR-25 | Architect | TODO | Stripe is default choice; human review on cost |
+| 5 | ADR-004: Payment provider choice | PYR-25 | Architect | DONE | Stripe approved — ADR-004 |
 | 6 | [GATE] Compliance: UKGC / KYC spec | PYR-26 | Compliance | BLOCKED | Human must define KYC provider and UKGC approach |
-| 7 | Backend: Wallet Edge Functions | PYR-27 | Backend | TODO | top-up, balance, withdrawal — blocked on PYR-25 payment ADR |
-| 8 | Backend: Paid league matchmaking | PYR-28 | Backend | TODO | allocation, stake locking, league formation |
-| 9 | Backend: Prize distribution | PYR-29 | Backend | TODO | round end detection, payout calculation, wallet credit |
-| 10 | iOS: Wallet UI | PYR-30 | iOS | TODO | balance display, top-up flow, withdrawal request |
-| 11 | iOS: Paid league join flow | PYR-31 | iOS | TODO | stake confirmation, matchmaking queue, league entry |
-| 12 | iOS: Push notifications | PYR-32 | iOS | TODO | APNs registration, deadline reminders, result alerts |
-| 13 | Backend: Push notification Edge Functions | PYR-33 | Backend | TODO | register-device-token, send-notification utility, schedulers |
-| 14 | [GATE 2] Human review: paid features sign-off | PYR-34 | Human | BLOCKED | Review before any paid feature goes to prod |
+| 7 | Backend: Wallet Edge Functions | PYR-27 | Backend | DONE | PR #10 merged |
+| 8 | Backend: Paid league matchmaking | PYR-28 | Backend | DONE | PR #11 merged |
+| 9 | Backend: Prize distribution | PYR-29 | Backend | DONE | PR #13 merged (human reviewed) |
+| 10 | iOS: Wallet UI | PYR-30 | iOS | IN REVIEW | PR #14 — CI green, awaiting merge |
+| 11 | iOS: Paid league join flow | PYR-31 | iOS | IN REVIEW | PR #16 — fixing SwiftLint |
+| 12 | iOS: Push notifications | PYR-32 | iOS | IN REVIEW | PR #15 — fixing SwiftLint |
+| 13 | Backend: Push notification Edge Functions | PYR-33 | Backend | DONE | PR #12 merged |
+| 14 | Design: Phase 2 screens | PYR-35 | Design | DONE | Skipped for MVP — build SwiftUI directly |
+| 15 | [GATE 2] Human review: paid features sign-off | PYR-34 | Human | BLOCKED | Review before any paid feature goes to prod |
 
 ---
 
@@ -53,6 +54,7 @@ Enable paid matchmaking leagues with a £5 fixed entry fee, a wallet system for 
 | Notification provider | APNs direct via Supabase Edge Functions — no third-party provider needed at this scale | 2026-03-07 |
 | Phase 2 scope | Wallet + paid leagues + notifications. Dark mode deferred to Phase 3. | 2026-03-07 |
 | PRD authorship | Orchestrator writes PRDs — no PM Agent spawned yet, same precedent as Phase 0 ADRs | 2026-03-07 |
+| Figma designs skipped | Build SwiftUI directly with SF Symbols + dark theme for MVP. "No design = no build" rule suspended for Phase 2. | 2026-03-08 |
 
 ---
 
