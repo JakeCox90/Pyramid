@@ -6,7 +6,8 @@ private typealias Colors = JoinPaidLeagueColors
 
 struct JoinPaidLeagueView: View {
     @StateObject var viewModel = JoinPaidLeagueViewModel()
-    @Environment(\.dismiss) var dismiss
+    @Environment(\.dismiss)
+    var dismiss
 
     var onJoined: ((JoinPaidLeagueResponse) -> Void)?
 
