@@ -12,6 +12,17 @@ struct ProfileView: View {
                 Text("Your profile will appear here.")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
+
+                NavigationLink(destination: NotificationPreferencesView()) {
+                    Label("Notifications", systemImage: "bell")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding()
+                        .background(Color(.systemGroupedBackground))
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                }
+                .buttonStyle(.plain)
+                .padding(.horizontal)
+                .padding(.top, 8)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .navigationTitle("Profile")
