@@ -40,7 +40,8 @@ Enable paid matchmaking leagues with a £5 fixed entry fee, a wallet system for 
 | 10 | iOS: Wallet UI | PYR-30 | iOS | TODO | balance display, top-up flow, withdrawal request |
 | 11 | iOS: Paid league join flow | PYR-31 | iOS | TODO | stake confirmation, matchmaking queue, league entry |
 | 12 | iOS: Push notifications | PYR-32 | iOS | TODO | APNs registration, deadline reminders, result alerts |
-| 13 | [GATE 2] Human review: paid features sign-off | PYR-33 | Human | BLOCKED | Review before any paid feature goes to prod |
+| 13 | Backend: Push notification Edge Functions | PYR-33 | Backend | TODO | register-device-token, send-notification utility, schedulers |
+| 14 | [GATE 2] Human review: paid features sign-off | PYR-34 | Human | BLOCKED | Review before any paid feature goes to prod |
 
 ---
 
