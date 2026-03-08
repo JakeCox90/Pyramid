@@ -4,6 +4,7 @@ struct LeaguesView: View {
     @StateObject private var viewModel = LeaguesViewModel()
     @State private var showCreateLeague = false
     @State private var showJoinLeague = false
+    @State private var showJoinPaidLeague = false
 
     var body: some View {
         NavigationStack {
@@ -31,6 +32,11 @@ struct LeaguesView: View {
                             } label: {
                                 Label("Join League", systemImage: "person.badge.plus")
                             }
+                            Button {
+                                showJoinPaidLeague = true
+                            } label: {
+                                Label("Join Paid League", systemImage: "creditcard")
+                            }
                         } label: {
                             Image(systemName: "plus")
                         }
@@ -44,6 +50,11 @@ struct LeaguesView: View {
             }
             .sheet(isPresented: $showJoinLeague) {
                 JoinLeagueView { _ in
+                    Task { await viewModel.fetchLeagues() }
+                }
+            }
+            .sheet(isPresented: $showJoinPaidLeague) {
+                JoinPaidLeagueView { _ in
                     Task { await viewModel.fetchLeagues() }
                 }
             }
