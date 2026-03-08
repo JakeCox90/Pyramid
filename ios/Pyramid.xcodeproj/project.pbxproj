@@ -96,7 +96,9 @@
 		7446A3311FC4D09B53500705 /* PicksViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PicksViewModel.swift; sourceTree = "<group>"; };
 		80B986FB70A636F5DD70A708 /* LeagueDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeagueDetailView.swift; sourceTree = "<group>"; };
 		82F47822297EAF10E0237AC5 /* Pyramid.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Pyramid.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		83A1FC8F1E2D276FAA656066 /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
 		85D4BC8659B5CE1A855BE310 /* Fixture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fixture.swift; sourceTree = "<group>"; };
+		8747EAC5112573C7139AF8D1 /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 		8A13501440E745127E554365 /* AuthViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModelTests.swift; sourceTree = "<group>"; };
 		8C8CA520C03B704C80A9EE64 /* Gameweek.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gameweek.swift; sourceTree = "<group>"; };
 		92D006D5D7CA358114130A85 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
@@ -211,6 +213,15 @@
 			path = Results;
 			sourceTree = "<group>";
 		};
+		B1B20088E7E897DDC1A96BD5 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				83A1FC8F1E2D276FAA656066 /* Debug.xcconfig */,
+				8747EAC5112573C7139AF8D1 /* Release.xcconfig */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
 		BAAC3223EB509AF9671AEBAE /* Pyramid */ = {
 			isa = PBXGroup;
 			children = (
@@ -317,6 +328,7 @@
 		F17C7339A213A5A583380444 = {
 			isa = PBXGroup;
 			children = (
+				B1B20088E7E897DDC1A96BD5 /* Config */,
 				BAAC3223EB509AF9671AEBAE /* Pyramid */,
 				0EA48DC6097B7B24699A8899 /* PyramidTests */,
 				C0ACFA7DE285E16736ECC097 /* PyramidUITests */,
@@ -582,6 +594,7 @@
 		};
 		87599863032FB039E47ABC3F /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8747EAC5112573C7139AF8D1 /* Release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -642,6 +655,7 @@
 		};
 		D91568C719E58D1392893EDF /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 83A1FC8F1E2D276FAA656066 /* Debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;

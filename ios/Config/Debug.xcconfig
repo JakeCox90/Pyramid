@@ -1,8 +1,7 @@
 // Debug xcconfig — Dev environment
 // DO NOT commit real values. This file is a template.
 // Real values are injected by CI (GitHub Secrets) or set locally by each developer.
-// Add to .gitignore if you populate with real keys locally.
 
-SUPABASE_URL = https://qvmzmeizluqcdkcjsqyd.supabase.co
-SUPABASE_ANON_KEY =
-// Set SUPABASE_ANON_KEY locally — see .env.example
+SUPABASE_URL_SCHEME = https
+SUPABASE_URL_HOST = qvmzmeizluqcdkcjsqyd.supabase.co
+SUPABASE_ANON_KEY = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2bXptZWl6bHVxY2RrY2pzcXlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5MDUxNzQsImV4cCI6MjA4ODQ4MTE3NH0.qi76NTlrxrW9CTHn7Y8pahEC0bpnkjF_R9u8eoIVaoo

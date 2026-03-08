@@ -20,6 +20,10 @@ packages:
     url: https://github.com/supabase/supabase-swift
     from: "2.0.0"
 
+configFiles:
+  Debug: Config/Debug.xcconfig
+  Release: Config/Release.xcconfig
+
 targets:
   Pyramid:
     type: application

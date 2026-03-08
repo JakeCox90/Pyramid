@@ -9,11 +9,12 @@ final class SupabaseDependency: @unchecked Sendable {
     let client: SupabaseClient
 
     private init() {
-        let urlString = Bundle.main.object(forInfoDictionaryKey: "SUPABASE_URL") as? String ?? ""
+        let scheme = Bundle.main.object(forInfoDictionaryKey: "SUPABASE_URL_SCHEME") as? String ?? ""
+        let host = Bundle.main.object(forInfoDictionaryKey: "SUPABASE_URL_HOST") as? String ?? ""
         let anonKey = Bundle.main.object(forInfoDictionaryKey: "SUPABASE_ANON_KEY") as? String ?? ""
 
-        guard let url = URL(string: urlString), !anonKey.isEmpty else {
-            fatalError("SUPABASE_URL and SUPABASE_ANON_KEY must be set in Info.plist via xcconfig")
+        guard !scheme.isEmpty, !host.isEmpty, let url = URL(string: "\(scheme)://\(host)"), !anonKey.isEmpty else {
+            fatalError("SUPABASE_URL_SCHEME, SUPABASE_URL_HOST and SUPABASE_ANON_KEY must be set in Info.plist via xcconfig")
         }
 
         client = SupabaseClient(supabaseURL: url, supabaseKey: anonKey)

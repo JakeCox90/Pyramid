@@ -3,5 +3,6 @@
 // without fatalError so unit tests can run with injected mocks.
 // The app will not make real network calls during unit tests.
 
-SUPABASE_URL = https://qvmzmeizluqcdkcjsqyd.supabase.co
+SUPABASE_URL_SCHEME = https
+SUPABASE_URL_HOST = qvmzmeizluqcdkcjsqyd.supabase.co
 SUPABASE_ANON_KEY = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRlc3QiLCJyb2xlIjoiYW5vbiIsImlhdCI6MTYwMDAwMDAwMCwiZXhwIjo5OTk5OTk5OTk5fQ.stub-test-key-not-real

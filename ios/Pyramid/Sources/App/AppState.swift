@@ -8,26 +8,12 @@ final class AppState: ObservableObject {
     @Published var session: Session?
     @Published var isLoading = true
 
-    let supabase: SupabaseClient
-
-    init() {
-        guard
-            let urlString = Bundle.main.object(forInfoDictionaryKey: "SUPABASE_URL") as? String,
-            let url = URL(string: urlString),
-            let anonKey = Bundle.main.object(forInfoDictionaryKey: "SUPABASE_ANON_KEY") as? String
-        else {
-            fatalError("SUPABASE_URL and SUPABASE_ANON_KEY must be set in Info.plist")
-        }
-
-        self.supabase = SupabaseClient(supabaseURL: url, supabaseKey: anonKey)
-    }
+    let supabase: SupabaseClient = SupabaseDependency.shared.client
 
     func loadSession() async {
-        do {
-            session = try await supabase.auth.session
-        } catch {
-            session = nil
+        for await (_, session) in supabase.auth.authStateChanges {
+            self.session = session
+            self.isLoading = false
         }
-        isLoading = false
     }
 }

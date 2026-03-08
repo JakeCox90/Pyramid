@@ -31,8 +31,10 @@
         <string>UIInterfaceOrientationPortrait</string>
     </array>
     <!-- Supabase config — values injected via xcconfig per scheme, never hardcoded -->
-    <key>SUPABASE_URL</key>
-    <string>$(SUPABASE_URL)</string>
+    <key>SUPABASE_URL_SCHEME</key>
+    <string>$(SUPABASE_URL_SCHEME)</string>
+    <key>SUPABASE_URL_HOST</key>
+    <string>$(SUPABASE_URL_HOST)</string>
     <key>SUPABASE_ANON_KEY</key>
     <string>$(SUPABASE_ANON_KEY)</string>
 </dict>
