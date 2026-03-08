@@ -1,0 +1,36 @@
+name: Seed Dev Database
+
+on:
+  workflow_dispatch:
+
+jobs:
+  seed:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Seed gameweeks
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL_DEV }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY_DEV }}
+        run: |
+          # Extract scheme and host from URL
+          URL_SCHEME="${SUPABASE_URL%%://*}"
+          URL_HOST="${SUPABASE_URL#*://}"
+          BASE_URL="${URL_SCHEME}://${URL_HOST}"
+
+          curl -s -X POST "${BASE_URL}/rest/v1/gameweeks" \
+            -H "apikey: ${SUPABASE_SERVICE_ROLE_KEY}" \
+            -H "Authorization: Bearer ${SUPABASE_SERVICE_ROLE_KEY}" \
+            -H "Content-Type: application/json" \
+            -H "Prefer: return=representation,resolution=merge-duplicates" \
+            -d '[
+              {"season":2025,"round_number":1,"name":"Gameweek 1","deadline_at":"2025-08-16T11:30:00+00:00","is_current":false,"is_finished":true},
+              {"season":2025,"round_number":2,"name":"Gameweek 2","deadline_at":"2025-08-23T11:30:00+00:00","is_current":false,"is_finished":true},
+              {"season":2025,"round_number":3,"name":"Gameweek 3","deadline_at":"2025-08-30T11:30:00+00:00","is_current":false,"is_finished":false},
+              {"season":2025,"round_number":4,"name":"Gameweek 4","deadline_at":"2025-09-13T11:30:00+00:00","is_current":true,"is_finished":false}
+            ]'
+          echo ""
+          echo "Seed complete. Verifying..."
+
+          curl -s "${BASE_URL}/rest/v1/gameweeks?select=id,season,round_number,name&order=round_number" \
+            -H "apikey: ${SUPABASE_SERVICE_ROLE_KEY}" \
+            -H "Authorization: Bearer ${SUPABASE_SERVICE_ROLE_KEY}"
