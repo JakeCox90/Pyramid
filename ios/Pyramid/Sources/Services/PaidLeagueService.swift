@@ -49,7 +49,7 @@ final class PaidLeagueService: PaidLeagueServiceProtocol {
                 if code == 402 {
                     throw PaidLeagueServiceError.insufficientBalance
                 }
-                if code == 409, let data,
+                if code == 409,
                    let body = String(data: data, encoding: .utf8),
                    body.contains("LEAGUE_CAP_REACHED") {
                     throw PaidLeagueServiceError.leagueCapReached

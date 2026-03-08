@@ -96,8 +96,8 @@ struct TopUpSheet: View {
                                 .font(.headline)
                                 .foregroundStyle(textPrimary)
                                 .focused($isCustomFieldFocused)
-                                .onChange(of: customAmountText) { _, _ in
-                                    if !customAmountText.isEmpty {
+                                .onChange(of: customAmountText) { newValue in
+                                    if !newValue.isEmpty {
                                         selectedAmountPence = nil
                                     }
                                 }

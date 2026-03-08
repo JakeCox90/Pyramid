@@ -56,11 +56,11 @@ struct NotificationPreferencesView: View {
                 Text("Notifications are turned off")
                     .font(.subheadline)
                     .fontWeight(.semibold)
-                    .foregroundStyle(.textPrimary)
+                    .foregroundStyle(Color.white)
             }
             Text("Enable notifications in Settings to receive pick reminders and result alerts.")
                 .font(.caption)
-                .foregroundStyle(.textSecondary)
+                .foregroundStyle(Color.white.opacity(0.6))
 
             Button {
                 if let url = URL(string: UIApplication.openSettingsURLString) {
@@ -89,7 +89,7 @@ struct NotificationPreferencesView: View {
             Text("NOTIFY ME WHEN…")
                 .font(.caption)
                 .fontWeight(.semibold)
-                .foregroundStyle(.textSecondary)
+                .foregroundStyle(Color.white.opacity(0.6))
                 .padding(.horizontal, 16)
                 .padding(.bottom, 8)
 
