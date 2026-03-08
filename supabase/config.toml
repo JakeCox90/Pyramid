@@ -38,6 +38,55 @@ enable_signup = true
 double_confirm_changes = true
 enable_confirmations = true
 
+# Edge Functions — disable gateway JWT verification.
+# Our functions validate auth internally via getUser(), which supports ES256 JWTs.
+# The gateway only verifies HS256 (anon/service-role), rejecting user JWTs signed with ES256.
+[functions.create-league]
+verify_jwt = false
+
+[functions.join-league]
+verify_jwt = false
+
+[functions.join-paid-league]
+verify_jwt = false
+
+[functions.submit-pick]
+verify_jwt = false
+
+[functions.get-wallet]
+verify_jwt = false
+
+[functions.top-up]
+verify_jwt = false
+
+[functions.request-withdrawal]
+verify_jwt = false
+
+[functions.register-device-token]
+verify_jwt = false
+
+# Service-role-only functions — these also validate auth internally
+[functions.settle-picks]
+verify_jwt = false
+
+[functions.credit-winnings]
+verify_jwt = false
+
+[functions.distribute-prizes]
+verify_jwt = false
+
+[functions.refund-stake]
+verify_jwt = false
+
+[functions.process-dispute-window]
+verify_jwt = false
+
+[functions.poll-live-scores]
+verify_jwt = false
+
+[functions.sync-fixtures]
+verify_jwt = false
+
 # Project references (not secret — safe to commit)
 # Dev:  qvmzmeizluqcdkcjsqyd  → https://qvmzmeizluqcdkcjsqyd.supabase.co
 # Prod: cracvbokmvryhhclzxxw  → https://cracvbokmvryhhclzxxw.supabase.co
