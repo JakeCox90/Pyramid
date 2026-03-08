@@ -7,30 +7,84 @@ jobs:
   seed:
     runs-on: ubuntu-latest
     steps:
-      - name: Seed gameweeks
+      - uses: actions/checkout@v4
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Set API Football key as Supabase secret
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          echo "API_FOOTBALL_KEY=${{ secrets.API_FOOTBALL_KEY }}" | \
+            supabase secrets set --project-ref qvmzmeizluqcdkcjsqyd
+
+      - name: Seed gameweeks and fixtures
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL_DEV }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY_DEV }}
         run: |
-          # Extract scheme and host from URL
           URL_SCHEME="${SUPABASE_URL%%://*}"
           URL_HOST="${SUPABASE_URL#*://}"
           BASE_URL="${URL_SCHEME}://${URL_HOST}"
+          AUTH="Authorization: Bearer ${SUPABASE_SERVICE_ROLE_KEY}"
+          API="apikey: ${SUPABASE_SERVICE_ROLE_KEY}"
 
-          curl -s -X POST "${BASE_URL}/rest/v1/gameweeks" \
-            -H "apikey: ${SUPABASE_SERVICE_ROLE_KEY}" \
-            -H "Authorization: Bearer ${SUPABASE_SERVICE_ROLE_KEY}" \
+          echo "=== Seeding gameweeks ==="
+          curl -sf -X POST "${BASE_URL}/rest/v1/gameweeks" \
+            -H "$AUTH" -H "$API" \
             -H "Content-Type: application/json" \
             -H "Prefer: return=representation,resolution=merge-duplicates" \
             -d '[
               {"season":2025,"round_number":1,"name":"Gameweek 1","deadline_at":"2025-08-16T11:30:00+00:00","is_current":false,"is_finished":true},
               {"season":2025,"round_number":2,"name":"Gameweek 2","deadline_at":"2025-08-23T11:30:00+00:00","is_current":false,"is_finished":true},
-              {"season":2025,"round_number":3,"name":"Gameweek 3","deadline_at":"2025-08-30T11:30:00+00:00","is_current":false,"is_finished":false},
+              {"season":2025,"round_number":3,"name":"Gameweek 3","deadline_at":"2025-08-30T11:30:00+00:00","is_current":false,"is_finished":true},
               {"season":2025,"round_number":4,"name":"Gameweek 4","deadline_at":"2025-09-13T11:30:00+00:00","is_current":true,"is_finished":false}
             ]'
           echo ""
-          echo "Seed complete. Verifying..."
 
-          curl -s "${BASE_URL}/rest/v1/gameweeks?select=id,season,round_number,name&order=round_number" \
-            -H "apikey: ${SUPABASE_SERVICE_ROLE_KEY}" \
-            -H "Authorization: Bearer ${SUPABASE_SERVICE_ROLE_KEY}"
+          echo "=== Getting GW4 ID ==="
+          GW4_ID=$(curl -sf "${BASE_URL}/rest/v1/gameweeks?season=eq.2025&round_number=eq.4&select=id" \
+            -H "$AUTH" -H "$API" | python3 -c "import sys,json; print(json.load(sys.stdin)[0]['id'])")
+          echo "GW4 ID: $GW4_ID"
+
+          echo "=== Seeding GW4 fixtures ==="
+          curl -sf -X POST "${BASE_URL}/rest/v1/fixtures" \
+            -H "$AUTH" -H "$API" \
+            -H "Content-Type: application/json" \
+            -H "Prefer: return=representation,resolution=merge-duplicates" \
+            -d "[
+              {\"id\":1001,\"gameweek_id\":${GW4_ID},\"home_team_id\":33,\"home_team_name\":\"Manchester United\",\"home_team_short\":\"MUN\",\"away_team_id\":40,\"away_team_name\":\"Liverpool\",\"away_team_short\":\"LIV\",\"kickoff_at\":\"2026-09-13T14:00:00+00:00\",\"status\":\"NS\"},
+              {\"id\":1002,\"gameweek_id\":${GW4_ID},\"home_team_id\":50,\"home_team_name\":\"Manchester City\",\"home_team_short\":\"MCI\",\"away_team_id\":47,\"away_team_name\":\"Tottenham\",\"away_team_short\":\"TOT\",\"kickoff_at\":\"2026-09-13T14:00:00+00:00\",\"status\":\"NS\"},
+              {\"id\":1003,\"gameweek_id\":${GW4_ID},\"home_team_id\":42,\"home_team_name\":\"Arsenal\",\"home_team_short\":\"ARS\",\"away_team_id\":49,\"away_team_name\":\"Chelsea\",\"away_team_short\":\"CHE\",\"kickoff_at\":\"2026-09-13T16:30:00+00:00\",\"status\":\"NS\"},
+              {\"id\":1004,\"gameweek_id\":${GW4_ID},\"home_team_id\":66,\"home_team_name\":\"Aston Villa\",\"home_team_short\":\"AVL\",\"away_team_id\":34,\"away_team_name\":\"Newcastle\",\"away_team_short\":\"NEW\",\"kickoff_at\":\"2026-09-14T13:00:00+00:00\",\"status\":\"NS\"},
+              {\"id\":1005,\"gameweek_id\":${GW4_ID},\"home_team_id\":51,\"home_team_name\":\"Brighton\",\"home_team_short\":\"BHA\",\"away_team_id\":39,\"away_team_name\":\"Wolves\",\"away_team_short\":\"WOL\",\"kickoff_at\":\"2026-09-14T13:00:00+00:00\",\"status\":\"NS\"},
+              {\"id\":1006,\"gameweek_id\":${GW4_ID},\"home_team_id\":63,\"home_team_name\":\"Fulham\",\"home_team_short\":\"FUL\",\"away_team_id\":52,\"away_team_name\":\"Crystal Palace\",\"away_team_short\":\"CRY\",\"kickoff_at\":\"2026-09-14T13:00:00+00:00\",\"status\":\"NS\"},
+              {\"id\":1007,\"gameweek_id\":${GW4_ID},\"home_team_id\":48,\"home_team_name\":\"West Ham\",\"home_team_short\":\"WHU\",\"away_team_id\":45,\"away_team_name\":\"Everton\",\"away_team_short\":\"EVE\",\"kickoff_at\":\"2026-09-14T15:00:00+00:00\",\"status\":\"NS\"},
+              {\"id\":1008,\"gameweek_id\":${GW4_ID},\"home_team_id\":65,\"home_team_name\":\"Nottm Forest\",\"home_team_short\":\"NFO\",\"away_team_id\":55,\"away_team_name\":\"Brentford\",\"away_team_short\":\"BRE\",\"kickoff_at\":\"2026-09-14T15:00:00+00:00\",\"status\":\"NS\"},
+              {\"id\":1009,\"gameweek_id\":${GW4_ID},\"home_team_id\":46,\"home_team_name\":\"Leicester\",\"home_team_short\":\"LEI\",\"away_team_id\":35,\"away_team_name\":\"Bournemouth\",\"away_team_short\":\"BOU\",\"kickoff_at\":\"2026-09-14T15:00:00+00:00\",\"status\":\"NS\"},
+              {\"id\":1010,\"gameweek_id\":${GW4_ID},\"home_team_id\":41,\"home_team_name\":\"Southampton\",\"home_team_short\":\"SOU\",\"away_team_id\":36,\"away_team_name\":\"Ipswich\",\"away_team_short\":\"IPS\",\"kickoff_at\":\"2026-09-14T15:00:00+00:00\",\"status\":\"NS\"}
+            ]"
+          echo ""
+
+          echo "=== Activating all pending leagues ==="
+          curl -sf -X PATCH "${BASE_URL}/rest/v1/leagues?status=eq.pending" \
+            -H "$AUTH" -H "$API" \
+            -H "Content-Type: application/json" \
+            -H "Prefer: return=representation" \
+            -d '{"status":"active"}'
+          echo ""
+
+          echo "=== Verification ==="
+          echo "Gameweeks:"
+          curl -sf "${BASE_URL}/rest/v1/gameweeks?select=id,season,round_number,name,is_current&order=round_number" \
+            -H "$AUTH" -H "$API"
+          echo ""
+          echo "Fixtures:"
+          curl -sf "${BASE_URL}/rest/v1/fixtures?select=id,home_team_short,away_team_short,status,kickoff_at&order=kickoff_at" \
+            -H "$AUTH" -H "$API"
+          echo ""
+          echo "Leagues:"
+          curl -sf "${BASE_URL}/rest/v1/leagues?select=id,name,status&order=created_at" \
+            -H "$AUTH" -H "$API"
