@@ -103,13 +103,26 @@ Deno.serve(async (req) => {
 
   const db = getServiceClient();
 
-  // Resolve start gameweek (GW1 of current season, fallback to id=1)
-  const { data: gameweek } = await db
+  // Resolve start gameweek (GW1 of current season)
+  let { data: gameweek } = await db
     .from("gameweeks")
     .select("id")
     .eq("season", CURRENT_SEASON)
     .eq("round_number", 1)
     .maybeSingle();
+
+  // Auto-create GW1 if it doesn't exist (dev convenience)
+  if (!gameweek) {
+    const { data: created } = await db
+      .from("gameweeks")
+      .upsert(
+        { season: CURRENT_SEASON, round_number: 1, name: "Gameweek 1", is_current: true, is_finished: false },
+        { onConflict: "season,round_number" }
+      )
+      .select("id")
+      .single();
+    gameweek = created;
+  }
 
   const startGameweekId: number = gameweek?.id ?? 1;
 

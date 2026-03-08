@@ -36,5 +36,5 @@ struct PaidMemberExtras: Codable, Sendable {
 
     // Simple in-memory store populated by the standings service.
     // Not persisted; refreshed on every load() call.
-    @MainActor static var store: [String: PaidMemberExtras] = [:]
+    nonisolated(unsafe) static var store: [String: PaidMemberExtras] = [:]
 }
