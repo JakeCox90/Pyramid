@@ -1,6 +1,6 @@
 import SwiftUI
 
-private typealias C = JoinPaidLeagueColors
+private typealias Colors = JoinPaidLeagueColors
 
 // MARK: - JoinPaidLeagueView state views
 

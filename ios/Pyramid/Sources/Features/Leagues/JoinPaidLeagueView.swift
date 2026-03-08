@@ -15,7 +15,7 @@ enum JoinPaidLeagueColors {
     static let separator = Color(hex: "38383A")
 }
 
-private typealias C = JoinPaidLeagueColors
+private typealias Colors = JoinPaidLeagueColors
 
 // MARK: - JoinPaidLeagueView
 
@@ -29,7 +29,7 @@ struct JoinPaidLeagueView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                C.bgPrimary.ignoresSafeArea()
+                Colors.bgPrimary.ignoresSafeArea()
 
                 if let result = viewModel.joinResult {
                     switch result.status {
@@ -52,7 +52,7 @@ struct JoinPaidLeagueView: View {
                 ToolbarItem(placement: .cancellationAction) {
                     if viewModel.joinResult == nil {
                         Button("Cancel") { dismiss() }
-                            .foregroundStyle(C.textSecondary)
+                            .foregroundStyle(Colors.textSecondary)
                     }
                 }
             }
@@ -107,16 +107,16 @@ struct JoinPaidLeagueView: View {
         VStack(alignment: .leading, spacing: DS.Spacing.s3) {
             Text("Prize Pot")
                 .font(.DS.headline)
-                .foregroundStyle(C.textPrimary)
+                .foregroundStyle(Colors.textPrimary)
 
-            Divider().background(C.separator)
+            Divider().background(Colors.separator)
 
             infoRow(label: "Entry fee", value: "£5.00")
             infoRow(label: "Prize pot", value: viewModel.estimatedPrizePot)
             infoRow(label: "Top 3 split", value: "65% / 25% / 10%")
         }
         .padding(DS.Spacing.s4)
-        .background(C.bgCard)
+        .background(Colors.bgCard)
         .clipShape(RoundedRectangle(cornerRadius: DS.Radius.md))
     }
 
@@ -124,14 +124,14 @@ struct JoinPaidLeagueView: View {
         HStack {
             Text("Your wallet")
                 .font(.DS.subheadline)
-                .foregroundStyle(C.textSecondary)
+                .foregroundStyle(Colors.textSecondary)
             Spacer()
             Text(viewModel.walletBalanceFormatted)
                 .font(.DS.headline)
-                .foregroundStyle(viewModel.hasInsufficientFunds ? C.errorRed : C.successGreen)
+                .foregroundStyle(viewModel.hasInsufficientFunds ? Colors.errorRed : Colors.successGreen)
         }
         .padding(DS.Spacing.s4)
-        .background(C.bgCard)
+        .background(Colors.bgCard)
         .clipShape(RoundedRectangle(cornerRadius: DS.Radius.md))
     }
 
@@ -139,14 +139,14 @@ struct JoinPaidLeagueView: View {
         VStack(alignment: .leading, spacing: DS.Spacing.s2) {
             Text("Rules")
                 .font(.DS.caption1)
-                .foregroundStyle(C.textSecondary)
+                .foregroundStyle(Colors.textSecondary)
 
             ruleItem(icon: "theatermasks", text: "You play pseudonymously — your identity is hidden")
             ruleItem(icon: "arrow.triangle.2.circlepath", text: "No repeat picks — each team can only be chosen once")
             ruleItem(icon: "person.2", text: "League starts when 5 players have joined")
         }
         .padding(DS.Spacing.s4)
-        .background(C.bgCard)
+        .background(Colors.bgCard)
         .clipShape(RoundedRectangle(cornerRadius: DS.Radius.md))
     }
 
