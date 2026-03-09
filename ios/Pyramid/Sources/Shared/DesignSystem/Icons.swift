@@ -1,54 +1,73 @@
 import Foundation
 
-enum SFSymbol {
+// MARK: - Theme Icon Tokens
 
-    // MARK: - Navigation
+// Usage: Theme.Icon.status.success, Theme.Icon.navigation.leagues, etc.
+// All icon values are SF Symbol system names.
 
-    static let leaguesTab = "trophy"
-    static let profileTab = "person.circle"
-    static let notifications = "bell"
-    static let notificationsDisabled = "bell.slash.fill"
-    static let disclosure = "chevron.right"
+enum Theme {
+    enum Icon {
 
-    // MARK: - Leagues
+        // MARK: - Navigation
 
-    static let trophy = "trophy"
-    static let trophyFill = "trophy.fill"
-    static let trophyCircleFill = "trophy.circle.fill"
-    static let members = "person.2"
-    static let joinLeague = "person.badge.plus"
-    static let createLeague = "plus.circle"
-    static let addButton = "plus"
-    static let paidLeague = "creditcard"
+        enum Navigation {
+            static let leagues = "trophy"
+            static let profile = "person.circle"
+            static let notifications = "bell"
+            static let notificationsDisabled = "bell.slash.fill"
+            static let disclosure = "chevron.right"
+            static let add = "plus"
+        }
 
-    // MARK: - Picks
+        // MARK: - League
 
-    static let gameweek = "calendar"
-    static let picksDeadline = "calendar.badge.clock"
-    static let timeRemaining = "clock"
-    static let lockedPick = "lock.fill"
-    static let pseudonymous = "theatermasks"
-    static let noRepeatPicks = "arrow.triangle.2.circlepath"
+        enum League {
+            static let trophy = "trophy"
+            static let trophyFill = "trophy.fill"
+            static let trophyCircle = "trophy.circle.fill"
+            static let members = "person.2"
+            static let join = "person.badge.plus"
+            static let create = "plus.circle"
+            static let paid = "creditcard"
+        }
 
-    // MARK: - Wallet
+        // MARK: - Pick
 
-    static let walletEmpty = "creditcard"
-    static let topUp = "arrow.down.circle.fill"
-    static let withdrawal = "arrow.up.circle.fill"
-    static let refund = "arrow.counterclockwise.circle.fill"
-    static let winnings = "star.circle.fill"
+        enum Pick {
+            static let gameweek = "calendar"
+            static let deadline = "calendar.badge.clock"
+            static let timeRemaining = "clock"
+            static let locked = "lock.fill"
+            static let pseudonymous = "theatermasks"
+            static let noRepeat = "arrow.triangle.2.circlepath"
+        }
 
-    // MARK: - Actions
+        // MARK: - Wallet
 
-    static let copyToClipboard = "doc.on.doc"
-    static let share = "square.and.arrow.up"
-    static let copyConfirmed = "checkmark"
+        enum Wallet {
+            static let empty = "creditcard"
+            static let topUp = "arrow.down.circle.fill"
+            static let withdrawal = "arrow.up.circle.fill"
+            static let refund = "arrow.counterclockwise.circle.fill"
+            static let winnings = "star.circle.fill"
+        }
 
-    // MARK: - Status
+        // MARK: - Action
 
-    static let success = "checkmark.circle.fill"
-    static let failure = "xmark.circle.fill"
-    static let error = "exclamationmark.triangle"
-    static let errorFill = "exclamationmark.triangle.fill"
-    static let info = "info.circle.fill"
+        enum Action {
+            static let copy = "doc.on.doc"
+            static let copied = "checkmark"
+            static let share = "square.and.arrow.up"
+        }
+
+        // MARK: - Status
+
+        enum Status {
+            static let success = "checkmark.circle.fill"
+            static let failure = "xmark.circle.fill"
+            static let error = "exclamationmark.triangle"
+            static let errorFill = "exclamationmark.triangle.fill"
+            static let info = "info.circle.fill"
+        }
+    }
 }

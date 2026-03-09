@@ -33,7 +33,7 @@ extension JoinPaidLeagueView {
                 Circle()
                     .fill(Colors.successGreen.opacity(0.15))
                     .frame(width: 96, height: 96)
-                Image(systemName: SFSymbol.success)
+                Image(systemName: Theme.Icon.Status.success)
                     .font(.system(size: 56))
                     .foregroundStyle(Colors.successGreen)
                     .pulsing()
@@ -112,7 +112,7 @@ extension JoinPaidLeagueView {
         VStack(spacing: DS.Spacing.s6) {
             Spacer()
 
-            Image(systemName: SFSymbol.trophyFill)
+            Image(systemName: Theme.Icon.League.trophyFill)
                 .font(.system(size: 64))
                 .foregroundStyle(Colors.warningYellow)
 
@@ -181,7 +181,7 @@ extension JoinPaidLeagueView {
 
     func errorBanner(message: String) -> some View {
         HStack(spacing: DS.Spacing.s2) {
-            Image(systemName: SFSymbol.errorFill)
+            Image(systemName: Theme.Icon.Status.errorFill)
                 .foregroundStyle(Colors.errorRed)
             Text(message)
                 .font(.DS.caption1)

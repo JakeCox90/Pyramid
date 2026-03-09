@@ -28,20 +28,20 @@ struct LeaguesView: View {
                             Button {
                                 showCreateLeague = true
                             } label: {
-                                Label("Create League", systemImage: SFSymbol.createLeague)
+                                Label("Create League", systemImage: Theme.Icon.League.create)
                             }
                             Button {
                                 showJoinLeague = true
                             } label: {
-                                Label("Join League", systemImage: SFSymbol.joinLeague)
+                                Label("Join League", systemImage: Theme.Icon.League.join)
                             }
                             Button {
                                 showJoinPaidLeague = true
                             } label: {
-                                Label("Join Paid League", systemImage: SFSymbol.paidLeague)
+                                Label("Join Paid League", systemImage: Theme.Icon.League.paid)
                             }
                         } label: {
-                            Image(systemName: SFSymbol.addButton)
+                            Image(systemName: Theme.Icon.Navigation.add)
                         }
                     }
                 }
@@ -94,7 +94,7 @@ struct LeaguesView: View {
             Spacer()
 
             VStack(spacing: DS.Spacing.s4) {
-                Image(systemName: SFSymbol.error)
+                Image(systemName: Theme.Icon.Status.error)
                     .font(.system(size: 56))
                     .foregroundStyle(Color.DS.Neutral.n300)
 
@@ -127,7 +127,7 @@ struct LeaguesView: View {
             Spacer()
 
             VStack(spacing: DS.Spacing.s4) {
-                Image(systemName: SFSymbol.trophy)
+                Image(systemName: Theme.Icon.League.trophy)
                     .font(.system(size: 56))
                     .foregroundStyle(Color.DS.Neutral.n300)
 
@@ -198,7 +198,7 @@ struct LeagueRowView: View {
 
                 Spacer()
 
-                Image(systemName: SFSymbol.disclosure)
+                Image(systemName: Theme.Icon.Navigation.disclosure)
                     .font(.caption)
                     .foregroundStyle(Color.DS.Neutral.n300)
             }

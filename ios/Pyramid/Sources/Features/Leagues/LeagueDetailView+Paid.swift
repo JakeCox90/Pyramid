@@ -7,7 +7,7 @@ import SwiftUI
 struct PaidLeagueBadge: View {
     var body: some View {
         HStack(spacing: 6) {
-            Image(systemName: SFSymbol.trophyFill)
+            Image(systemName: Theme.Icon.League.trophyFill)
                 .font(.caption)
             Text("Paid League")
                 .font(.DS.caption1)
@@ -51,13 +51,13 @@ struct PaidMemberRow: View {
     @ViewBuilder private var statusIcon: some View {
         switch member.status {
         case .winner:
-            Image(systemName: SFSymbol.trophyFill)
+            Image(systemName: Theme.Icon.League.trophyFill)
                 .foregroundStyle(Color.DS.Semantic.warning)
         case .active:
-            Image(systemName: SFSymbol.success)
+            Image(systemName: Theme.Icon.Status.success)
                 .foregroundStyle(Color.DS.Semantic.success)
         case .eliminated:
-            Image(systemName: SFSymbol.failure)
+            Image(systemName: Theme.Icon.Status.failure)
                 .foregroundStyle(Color.DS.Semantic.error)
         }
     }
@@ -87,7 +87,7 @@ struct PaidMemberRow: View {
                     .foregroundStyle(Color.DS.Neutral.n500)
             }
         } else if !deadlinePassed {
-            Image(systemName: SFSymbol.lockedPick)
+            Image(systemName: Theme.Icon.Pick.locked)
                 .font(.DS.caption1)
                 .foregroundStyle(Color.DS.Neutral.n300)
         }
