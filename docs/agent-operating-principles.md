@@ -82,7 +82,7 @@ The fix: **weekly garbage collection** (Orchestrator-run).
 
 For tasks that span multiple sessions or involve 2+ agents: create an Execution Plan.
 
-File: `docs/plans/active/LMS-{id}-{name}.md`
+File: `docs/plans/active/phase-{number}-{short-description}.md`
 
 Required sections: Goal | Context | Steps (TODO/IN PROGRESS/DONE/BLOCKED) | Decision Log | Open Questions | Definition of Done
 
