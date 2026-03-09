@@ -1,10 +1,10 @@
 # Execution Plan: Phase 1 — Core Game (Pick & Play)
 
-**File:** docs/plans/active/phase-1-core-mvp.md
+**File:** docs/plans/completed/phase-1-core-mvp.md
 **Linear parent:** PYR-15
 **Created:** 2026-03-07
 **Owner:** Orchestrator
-**Status:** IN PROGRESS
+**Status:** COMPLETED
 
 ---
 
@@ -30,11 +30,11 @@ This is the playable MVP — no payments, no live scoring cron, free leagues onl
 
 | ID | Task | Linear | Agent | Status | Notes |
 |---|---|---|---|---|---|
-| 1 | PRD: League Creation | PYR-16 | iOS + Backend | TODO | Acceptance criteria written in Linear |
-| 2 | PRD: League Joining | PYR-17 | iOS + Backend | TODO | Acceptance criteria written in Linear |
-| 3 | PRD: Pick Submission | PYR-18 | iOS + Backend | TODO | Acceptance criteria written in Linear |
-| 4 | PRD: League Standings | PYR-19 | iOS | TODO | Acceptance criteria written in Linear |
-| 5 | Backend: settle-picks | PYR-20 | Backend | TODO | **Human review before prod deploy** |
+| 1 | PRD: League Creation | PYR-16 | iOS + Backend | DONE | Acceptance criteria written in Linear |
+| 2 | PRD: League Joining | PYR-17 | iOS + Backend | DONE | Acceptance criteria written in Linear |
+| 3 | PRD: Pick Submission | PYR-18 | iOS + Backend | DONE | Acceptance criteria written in Linear |
+| 4 | PRD: League Standings | PYR-19 | iOS | DONE | Acceptance criteria written in Linear |
+| 5 | Backend: settle-picks | PYR-20 | Backend | DONE | **Human review before prod deploy** |
 
 ---
 
@@ -75,14 +75,14 @@ None at Phase 1 start. Refer to game-rules/rules.md §6–8 for staking/wallet �
 
 ## Definition of Done (Gate 1)
 
-- [ ] Create free league flow works end-to-end
-- [ ] Join league via code works end-to-end
-- [ ] Pick submission: select team, lock at kick-off, change before deadline
-- [ ] Settlement: picks settled correctly for win/draw/loss/void/mass-elimination
-- [ ] League standings: correct visibility (pre/post deadline), correct order
-- [ ] CI passes on all PRs
-- [ ] 80% coverage on all new Edge Functions and ViewModels
-- [ ] settle-picks reviewed by human before prod deployment
+- [x] Create free league flow works end-to-end
+- [x] Join league via code works end-to-end
+- [x] Pick submission: select team, lock at kick-off, change before deadline
+- [x] Settlement: picks settled correctly for win/draw/loss/void/mass-elimination
+- [x] League standings: correct visibility (pre/post deadline), correct order
+- [x] CI passes on all PRs
+- [x] 80% coverage on all new Edge Functions and ViewModels
+- [x] settle-picks reviewed by human before prod deployment
 
 ---
 
@@ -90,4 +90,4 @@ None at Phase 1 start. Refer to game-rules/rules.md §6–8 for staking/wallet �
 
 | Blocker | Affects | Owner | Status |
 |---|---|---|---|
-| PR #1 not yet merged to main | All Phase 1 branches | Human | Waiting for 1 approval on GitHub PR #1 |
+| PR #1 not yet merged to main | All Phase 1 branches | Human | Resolved |
