@@ -1,7 +1,6 @@
 import SwiftUI
 import UserNotifications
 
-@main
 struct PyramidApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject private var appState = AppState()
