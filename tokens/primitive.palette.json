@@ -1,14 +1,5 @@
-/**
- * Primitive Palette Tokens
- * Source: Figma "Core - Theme" (D0hIZP7fHnn37d8EfXGJoM)
- * Collection: Primitives → Palette/*
- *
- * Raw colour values only — no semantic meaning at this layer.
- * All values extracted from Figma Variables API.
- */
-
-export const palette = {
-  amber: {
+{
+  "amber": {
     "10": "#EEE4DB",
     "20": "#E4CEBA",
     "30": "#DFB794",
@@ -18,9 +9,9 @@ export const palette = {
     "70": "#C76E1D",
     "80": "#A85C19",
     "90": "#894B15",
-    "100": "#693A10",
+    "100": "#693A10"
   },
-  blackTint: {
+  "blackTint": {
     "0": "rgba(32, 39, 59, 0)",
     "10": "rgba(32, 39, 59, 0.1)",
     "20": "rgba(32, 39, 59, 0.2)",
@@ -31,9 +22,9 @@ export const palette = {
     "70": "rgba(32, 39, 59, 0.7)",
     "80": "rgba(32, 39, 59, 0.8)",
     "90": "rgba(32, 39, 59, 0.9)",
-    "100": "#20273B",
+    "100": "#20273B"
   },
-  blue: {
+  "blue": {
     "10": "#EFF3FF",
     "20": "#DEE3F0",
     "30": "#C0CBEB",
@@ -43,9 +34,9 @@ export const palette = {
     "70": "#3B62D0",
     "80": "#2D4DA8",
     "90": "#20387D",
-    "100": "#142452",
+    "100": "#142452"
   },
-  cyan: {
+  "cyan": {
     "10": "#E0F2F1",
     "20": "#B2DFDB",
     "30": "#80CBC4",
@@ -55,9 +46,9 @@ export const palette = {
     "70": "#00897B",
     "80": "#00796B",
     "90": "#00695C",
-    "100": "#004D40",
+    "100": "#004D40"
   },
-  green: {
+  "green": {
     "10": "#FAF7F7",
     "20": "#DDE9E2",
     "30": "#C0DDCD",
@@ -67,9 +58,9 @@ export const palette = {
     "70": "#46AB72",
     "80": "#36895B",
     "90": "#276743",
-    "100": "#19442C",
+    "100": "#19442C"
   },
-  grey: {
+  "grey": {
     "10": "#FFFFFF",
     "20": "#F3F3F3",
     "30": "#E3E3E3",
@@ -79,9 +70,9 @@ export const palette = {
     "70": "#6C6C6C",
     "80": "#4D4D4D",
     "90": "#313131",
-    "100": "#1D1D1B",
+    "100": "#1D1D1B"
   },
-  indigo: {
+  "indigo": {
     "0": "rgba(44, 51, 84, 0)",
     "10": "#F1F3FB",
     "20": "#D7DCF3",
@@ -92,9 +83,9 @@ export const palette = {
     "70": "#3F52A9",
     "80": "#2C3A77",
     "90": "#2C3354",
-    "100": "#20273B",
+    "100": "#20273B"
   },
-  lightBlue: {
+  "lightBlue": {
     "10": "#F1F3F8",
     "20": "#D3DEEB",
     "30": "#AEC1DA",
@@ -104,9 +95,9 @@ export const palette = {
     "70": "#4A596E",
     "80": "#343F4F",
     "90": "#29303B",
-    "100": "#161A20",
+    "100": "#161A20"
   },
-  lightGreen: {
+  "lightGreen": {
     "10": "#C9FEF4",
     "20": "#5CF3DD",
     "30": "#00D6C0",
@@ -116,9 +107,9 @@ export const palette = {
     "70": "#006559",
     "80": "#00473F",
     "90": "#003730",
-    "100": "#001D19",
+    "100": "#001D19"
   },
-  lightPurple: {
+  "lightPurple": {
     "10": "#FCEFFF",
     "20": "#F5CDFF",
     "30": "#E7A9F6",
@@ -128,9 +119,9 @@ export const palette = {
     "70": "#8C2A9C",
     "80": "#661E72",
     "90": "#2B0631",
-    "100": "#210026",
+    "100": "#210026"
   },
-  mauve: {
+  "mauve": {
     "10": "#F9F2F5",
     "20": "#ECD7E1",
     "30": "#DBB3C6",
@@ -140,9 +131,9 @@ export const palette = {
     "70": "#913B61",
     "80": "#672A46",
     "90": "#4F2035",
-    "100": "#2A111C",
+    "100": "#2A111C"
   },
-  pink: {
+  "pink": {
     "10": "#FFF0F6",
     "20": "#FFD0E3",
     "30": "#FFA3C8",
@@ -152,9 +143,9 @@ export const palette = {
     "70": "#B30047",
     "80": "#820034",
     "90": "#660029",
-    "100": "#3B0018",
+    "100": "#3B0018"
   },
-  purple: {
+  "purple": {
     "10": "#FAF9FC",
     "20": "#EAE7F5",
     "30": "#D7D1F2",
@@ -164,9 +155,9 @@ export const palette = {
     "70": "#7963D4",
     "80": "#5F4DA8",
     "90": "#46387D",
-    "100": "#2D2452",
+    "100": "#2D2452"
   },
-  red: {
+  "red": {
     "10": "#FFF5F5",
     "20": "#FFEBEB",
     "30": "#FFDEDE",
@@ -176,9 +167,9 @@ export const palette = {
     "70": "#D43A3C",
     "80": "#A82C2D",
     "90": "#7D1F20",
-    "100": "#521314",
+    "100": "#521314"
   },
-  teal: {
+  "teal": {
     "10": "#ECF5F7",
     "20": "#C7E2E6",
     "30": "#95C7D0",
@@ -188,9 +179,9 @@ export const palette = {
     "70": "#22616C",
     "80": "#19444D",
     "90": "#13343B",
-    "100": "#1D1D1B",
+    "100": "#1D1D1B"
   },
-  whiteTint: {
+  "whiteTint": {
     "0": "rgba(255, 255, 255, 0)",
     "10": "rgba(255, 255, 255, 0.1)",
     "20": "rgba(255, 255, 255, 0.2)",
@@ -201,9 +192,9 @@ export const palette = {
     "70": "rgba(255, 255, 255, 0.7)",
     "80": "rgba(255, 255, 255, 0.8)",
     "90": "rgba(255, 255, 255, 0.9)",
-    "100": "#FFFFFF",
+    "100": "#FFFFFF"
   },
-  yellow: {
+  "yellow": {
     "10": "#FFFCEC",
     "20": "#FFF6CB",
     "30": "#FFEFAC",
@@ -213,6 +204,6 @@ export const palette = {
     "70": "#DCBD47",
     "80": "#BFA33B",
     "90": "#9F892F",
-    "100": "#806E24",
-  },
-} as const;
+    "100": "#806E24"
+  }
+}
