@@ -1,0 +1,17 @@
+import SwiftUI
+
+extension Theme {
+    enum Typography {
+        static let display = Font.system(size: 40, weight: .bold)
+        static let title1 = Font.system(size: 28, weight: .bold)
+        static let title2 = Font.system(size: 24, weight: .semibold)
+        static let title3 = Font.system(size: 20, weight: .semibold)
+        static let headline = Font.system(size: 18, weight: .semibold)
+        static let body = Font.system(size: 16, weight: .regular)
+        static let callout = Font.system(size: 16, weight: .regular)
+        static let subheadline = Font.system(size: 14, weight: .regular)
+        static let footnote = Font.system(size: 14, weight: .regular)
+        static let caption1 = Font.system(size: 12, weight: .regular)
+        static let caption2 = Font.system(size: 12, weight: .regular)
+    }
+}

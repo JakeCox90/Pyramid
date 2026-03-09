@@ -39,22 +39,22 @@ struct LeagueDetailView: View {
     // MARK: - Subviews
 
     private func errorView(message: String) -> some View {
-        VStack(spacing: DS.Spacing.s4) {
+        VStack(spacing: Theme.Spacing.s40) {
             Image(systemName: Theme.Icon.Status.error)
                 .font(.system(size: 48))
-                .foregroundStyle(Color.DS.Neutral.n300)
+                .foregroundStyle(Theme.Color.Border.default)
             Text(message)
-                .font(.DS.subheadline)
-                .foregroundStyle(Color.DS.Neutral.n500)
+                .font(Theme.Typography.subheadline)
+                .foregroundStyle(Theme.Color.Content.Text.disabled)
                 .multilineTextAlignment(.center)
         }
-        .padding(.horizontal, DS.Spacing.pageMargin)
+        .padding(.horizontal, Theme.Spacing.s40)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     private var standingsContent: some View {
         ScrollView {
-            VStack(spacing: DS.Spacing.s4) {
+            VStack(spacing: Theme.Spacing.s40) {
                 statsHeader
                 if viewModel.members.isEmpty {
                     emptyMembersView
@@ -62,76 +62,76 @@ struct LeagueDetailView: View {
                     membersList
                 }
             }
-            .padding(.vertical, DS.Spacing.s4)
+            .padding(.vertical, Theme.Spacing.s40)
         }
     }
 
     private var statsHeader: some View {
-        HStack(spacing: DS.Spacing.s3) {
+        HStack(spacing: Theme.Spacing.s30) {
             statBadge(
                 label: "Alive",
                 value: "\(viewModel.activeCount)",
-                color: Color.DS.Semantic.success
+                color: Theme.Color.Status.Success.resting
             )
             statBadge(
                 label: "Eliminated",
                 value: "\(viewModel.eliminatedCount)",
-                color: Color.DS.Semantic.error
+                color: Theme.Color.Status.Error.resting
             )
             if let gw = viewModel.currentGameweek {
                 statBadge(
                     label: "Gameweek",
                     value: "\(gw.roundNumber)",
-                    color: Color.DS.Neutral.n500
+                    color: Theme.Color.Content.Text.disabled
                 )
             }
         }
-        .padding(.horizontal, DS.Spacing.pageMargin)
+        .padding(.horizontal, Theme.Spacing.s40)
     }
 
     private func statBadge(label: String, value: String, color: Color) -> some View {
         DSCard {
-            VStack(spacing: DS.Spacing.s1) {
+            VStack(spacing: Theme.Spacing.s10) {
                 Text(value)
-                    .font(.DS.title2)
+                    .font(Theme.Typography.title2)
                     .foregroundStyle(color)
                 Text(label)
-                    .font(.DS.caption1)
-                    .foregroundStyle(Color.DS.Neutral.n500)
+                    .font(Theme.Typography.caption1)
+                    .foregroundStyle(Theme.Color.Content.Text.disabled)
             }
             .frame(maxWidth: .infinity)
         }
     }
 
     private var emptyMembersView: some View {
-        VStack(spacing: DS.Spacing.s4) {
+        VStack(spacing: Theme.Spacing.s40) {
             Image(systemName: Theme.Icon.League.members)
                 .font(.system(size: 48))
-                .foregroundStyle(Color.DS.Neutral.n300)
+                .foregroundStyle(Theme.Color.Border.default)
             Text("No other members yet")
-                .font(.DS.title3)
-                .foregroundStyle(Color.DS.Neutral.n900)
+                .font(Theme.Typography.title3)
+                .foregroundStyle(Theme.Color.Content.Text.default)
             Text("Share the join code to invite players.")
-                .font(.DS.subheadline)
-                .foregroundStyle(Color.DS.Neutral.n500)
+                .font(Theme.Typography.subheadline)
+                .foregroundStyle(Theme.Color.Content.Text.disabled)
                 .multilineTextAlignment(.center)
         }
-        .padding(.horizontal, DS.Spacing.pageMargin)
-        .padding(.top, DS.Spacing.s8)
+        .padding(.horizontal, Theme.Spacing.s40)
+        .padding(.top, Theme.Spacing.s70)
     }
 
     private var membersList: some View {
-        VStack(spacing: DS.Spacing.s2) {
+        VStack(spacing: Theme.Spacing.s20) {
             if !viewModel.isDeadlinePassed() {
                 HStack {
                     Image(systemName: Theme.Icon.Pick.locked)
-                        .foregroundStyle(Color.DS.Neutral.n500)
+                        .foregroundStyle(Theme.Color.Content.Text.disabled)
                     Text("Picks are hidden until kick-off")
-                        .font(.DS.caption1)
-                        .foregroundStyle(Color.DS.Neutral.n500)
+                        .font(Theme.Typography.caption1)
+                        .foregroundStyle(Theme.Color.Content.Text.disabled)
                     Spacer()
                 }
-                .padding(.horizontal, DS.Spacing.pageMargin)
+                .padding(.horizontal, Theme.Spacing.s40)
             }
 
             ForEach(viewModel.sortedMembers) { member in
@@ -140,7 +140,7 @@ struct LeagueDetailView: View {
                     pick: viewModel.pick(for: member),
                     deadlinePassed: viewModel.isDeadlinePassed()
                 )
-                .padding(.horizontal, DS.Spacing.pageMargin)
+                .padding(.horizontal, Theme.Spacing.s40)
             }
         }
     }
@@ -155,18 +155,18 @@ struct MemberRow: View {
 
     var body: some View {
         DSCard {
-            HStack(spacing: DS.Spacing.s3) {
+            HStack(spacing: Theme.Spacing.s30) {
                 statusIcon
 
-                VStack(alignment: .leading, spacing: DS.Spacing.s1) {
+                VStack(alignment: .leading, spacing: Theme.Spacing.s10) {
                     Text(member.profiles.displayLabel)
-                        .font(.DS.headline)
-                        .foregroundStyle(Color.DS.Neutral.n900)
+                        .font(Theme.Typography.headline)
+                        .foregroundStyle(Theme.Color.Content.Text.default)
 
                     if let eliminatedGw = member.eliminatedInGameweekId {
                         Text("Eliminated GW\(eliminatedGw)")
-                            .font(.DS.caption1)
-                            .foregroundStyle(Color.DS.Semantic.error)
+                            .font(Theme.Typography.caption1)
+                            .foregroundStyle(Theme.Color.Status.Error.resting)
                     }
                 }
 
@@ -181,32 +181,32 @@ struct MemberRow: View {
         switch member.status {
         case .winner:
             Image(systemName: Theme.Icon.League.trophyFill)
-                .foregroundStyle(Color.DS.Semantic.warning)
+                .foregroundStyle(Theme.Color.Status.Warning.resting)
         case .active:
             Image(systemName: Theme.Icon.Status.success)
-                .foregroundStyle(Color.DS.Semantic.success)
+                .foregroundStyle(Theme.Color.Status.Success.resting)
         case .eliminated:
             Image(systemName: Theme.Icon.Status.failure)
-                .foregroundStyle(Color.DS.Semantic.error)
+                .foregroundStyle(Theme.Color.Status.Error.resting)
         }
     }
 
     @ViewBuilder private var pickView: some View {
         if !deadlinePassed {
             Image(systemName: Theme.Icon.Pick.locked)
-                .font(.DS.caption1)
-                .foregroundStyle(Color.DS.Neutral.n300)
+                .font(Theme.Typography.caption1)
+                .foregroundStyle(Theme.Color.Border.default)
         } else if let pick {
             VStack(alignment: .trailing, spacing: 2) {
                 Text(pick.teamName)
-                    .font(.DS.subheadline)
-                    .foregroundStyle(Color.DS.Neutral.n900)
+                    .font(Theme.Typography.subheadline)
+                    .foregroundStyle(Theme.Color.Content.Text.default)
                 resultBadge(for: pick.result)
             }
         } else {
             Text("No pick")
-                .font(.DS.caption1)
-                .foregroundStyle(Color.DS.Neutral.n300)
+                .font(Theme.Typography.caption1)
+                .foregroundStyle(Theme.Color.Border.default)
         }
     }
 
@@ -215,20 +215,20 @@ struct MemberRow: View {
         switch result {
         case .survived:
             Text("Survived")
-                .font(.DS.caption2)
-                .foregroundStyle(Color.DS.Semantic.success)
+                .font(Theme.Typography.caption2)
+                .foregroundStyle(Theme.Color.Status.Success.resting)
         case .eliminated:
             Text("Eliminated")
-                .font(.DS.caption2)
-                .foregroundStyle(Color.DS.Semantic.error)
+                .font(Theme.Typography.caption2)
+                .foregroundStyle(Theme.Color.Status.Error.resting)
         case .pending:
             Text("Pending")
-                .font(.DS.caption2)
-                .foregroundStyle(Color.DS.Neutral.n500)
+                .font(Theme.Typography.caption2)
+                .foregroundStyle(Theme.Color.Content.Text.disabled)
         case .void:
             Text("Void")
-                .font(.DS.caption2)
-                .foregroundStyle(Color.DS.Semantic.warning)
+                .font(Theme.Typography.caption2)
+                .foregroundStyle(Theme.Color.Status.Warning.resting)
         }
     }
 }

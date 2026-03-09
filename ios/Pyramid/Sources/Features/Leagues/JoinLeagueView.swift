@@ -10,7 +10,7 @@ struct JoinLeagueView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Color.DS.Background.primary.ignoresSafeArea()
+                Theme.Color.Surface.Background.page.ignoresSafeArea()
 
                 switch viewModel.step {
                 case .enterCode:
@@ -40,10 +40,10 @@ struct JoinLeagueView: View {
     // MARK: - Step: Enter Code
 
     private var enterCodeView: some View {
-        VStack(spacing: DS.Spacing.s6) {
+        VStack(spacing: Theme.Spacing.s60) {
             Spacer()
 
-            VStack(alignment: .leading, spacing: DS.Spacing.s3) {
+            VStack(alignment: .leading, spacing: Theme.Spacing.s30) {
                 DSTextField(
                     label: "Join Code",
                     text: $viewModel.code,
@@ -58,8 +58,8 @@ struct JoinLeagueView: View {
                 }
 
                 Text("Ask the league creator for the 6-character code.")
-                    .font(.DS.caption1)
-                    .foregroundStyle(Color.DS.Neutral.n500)
+                    .font(Theme.Typography.caption1)
+                    .foregroundStyle(Theme.Color.Content.Text.disabled)
             }
 
             Button("Find League") {
@@ -71,45 +71,45 @@ struct JoinLeagueView: View {
             Spacer()
             Spacer()
         }
-        .padding(.horizontal, DS.Spacing.pageMargin)
+        .padding(.horizontal, Theme.Spacing.s40)
     }
 
     // MARK: - Step: Preview
 
     private func previewView(_ preview: LeaguePreview) -> some View {
-        VStack(spacing: DS.Spacing.s6) {
+        VStack(spacing: Theme.Spacing.s60) {
             Spacer()
 
-            VStack(spacing: DS.Spacing.s4) {
+            VStack(spacing: Theme.Spacing.s40) {
                 Image(systemName: Theme.Icon.League.trophy)
                     .font(.system(size: 48))
-                    .foregroundStyle(Color.DS.Brand.primary)
+                    .foregroundStyle(Theme.Color.Primary.resting)
 
                 DSCard {
-                    VStack(alignment: .leading, spacing: DS.Spacing.s3) {
+                    VStack(alignment: .leading, spacing: Theme.Spacing.s30) {
                         Text(preview.name)
-                            .font(.DS.title3)
-                            .foregroundStyle(Color.DS.Neutral.n900)
+                            .font(Theme.Typography.title3)
+                            .foregroundStyle(Theme.Color.Content.Text.default)
 
-                        HStack(spacing: DS.Spacing.s4) {
+                        HStack(spacing: Theme.Spacing.s40) {
                             Label("\(preview.memberCount) members", systemImage: Theme.Icon.League.members)
                             Label("Season \(preview.season)", systemImage: Theme.Icon.Pick.gameweek)
                         }
-                        .font(.DS.subheadline)
-                        .foregroundStyle(Color.DS.Neutral.n500)
+                        .font(Theme.Typography.subheadline)
+                        .foregroundStyle(Theme.Color.Content.Text.disabled)
                     }
                 }
-                .padding(.horizontal, DS.Spacing.pageMargin)
+                .padding(.horizontal, Theme.Spacing.s40)
             }
 
             if let error = viewModel.errorMessage {
                 Text(error)
-                    .font(.DS.caption1)
-                    .foregroundStyle(Color.DS.Semantic.error)
-                    .padding(.horizontal, DS.Spacing.pageMargin)
+                    .font(Theme.Typography.caption1)
+                    .foregroundStyle(Theme.Color.Status.Error.resting)
+                    .padding(.horizontal, Theme.Spacing.s40)
             }
 
-            VStack(spacing: DS.Spacing.s3) {
+            VStack(spacing: Theme.Spacing.s30) {
                 Button("Join League") {
                     Task { await viewModel.confirmJoin() }
                 }
@@ -122,7 +122,7 @@ struct JoinLeagueView: View {
                 .dsStyle(.ghost)
                 .disabled(viewModel.isLoading)
             }
-            .padding(.horizontal, DS.Spacing.pageMargin)
+            .padding(.horizontal, Theme.Spacing.s40)
 
             Spacer()
         }
@@ -131,21 +131,21 @@ struct JoinLeagueView: View {
     // MARK: - Step: Joined
 
     private func joinedView(_ response: JoinLeagueResponse) -> some View {
-        VStack(spacing: DS.Spacing.s8) {
+        VStack(spacing: Theme.Spacing.s70) {
             Spacer()
 
             Image(systemName: Theme.Icon.Status.success)
                 .font(.system(size: 64))
-                .foregroundStyle(Color.DS.Semantic.success)
+                .foregroundStyle(Theme.Color.Status.Success.resting)
 
-            VStack(spacing: DS.Spacing.s2) {
+            VStack(spacing: Theme.Spacing.s20) {
                 Text("You're in!")
-                    .font(.DS.title1)
-                    .foregroundStyle(Color.DS.Neutral.n900)
+                    .font(Theme.Typography.title1)
+                    .foregroundStyle(Theme.Color.Content.Text.default)
 
                 Text(response.name)
-                    .font(.DS.headline)
-                    .foregroundStyle(Color.DS.Neutral.n700)
+                    .font(Theme.Typography.headline)
+                    .foregroundStyle(Theme.Color.Content.Text.subtle)
             }
 
             Button("Done") {
@@ -153,7 +153,7 @@ struct JoinLeagueView: View {
                 dismiss()
             }
             .dsStyle(.primary)
-            .padding(.horizontal, DS.Spacing.pageMargin)
+            .padding(.horizontal, Theme.Spacing.s40)
 
             Spacer()
         }

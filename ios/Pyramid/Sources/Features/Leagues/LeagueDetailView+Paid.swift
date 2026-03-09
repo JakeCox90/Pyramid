@@ -10,11 +10,11 @@ struct PaidLeagueBadge: View {
             Image(systemName: Theme.Icon.League.trophyFill)
                 .font(.caption)
             Text("Paid League")
-                .font(.DS.caption1)
+                .font(Theme.Typography.caption1)
         }
         .foregroundStyle(Color(hex: "FFD60A"))
-        .padding(.horizontal, DS.Spacing.s3)
-        .padding(.vertical, DS.Spacing.s1)
+        .padding(.horizontal, Theme.Spacing.s30)
+        .padding(.vertical, Theme.Spacing.s10)
         .background(Color(hex: "FFD60A").opacity(0.15))
         .clipShape(Capsule())
     }
@@ -30,7 +30,7 @@ struct PaidMemberRow: View {
 
     var body: some View {
         DSCard {
-            HStack(spacing: DS.Spacing.s3) {
+            HStack(spacing: Theme.Spacing.s30) {
                 positionBadge
                 memberInfo
                 Spacer()
@@ -52,44 +52,44 @@ struct PaidMemberRow: View {
         switch member.status {
         case .winner:
             Image(systemName: Theme.Icon.League.trophyFill)
-                .foregroundStyle(Color.DS.Semantic.warning)
+                .foregroundStyle(Theme.Color.Status.Warning.resting)
         case .active:
             Image(systemName: Theme.Icon.Status.success)
-                .foregroundStyle(Color.DS.Semantic.success)
+                .foregroundStyle(Theme.Color.Status.Success.resting)
         case .eliminated:
             Image(systemName: Theme.Icon.Status.failure)
-                .foregroundStyle(Color.DS.Semantic.error)
+                .foregroundStyle(Theme.Color.Status.Error.resting)
         }
     }
 
     private var memberInfo: some View {
-        VStack(alignment: .leading, spacing: DS.Spacing.s1) {
+        VStack(alignment: .leading, spacing: Theme.Spacing.s10) {
             Text(member.pseudonym ?? member.profiles.displayLabel)
-                .font(.DS.headline)
-                .foregroundStyle(Color.DS.Neutral.n900)
+                .font(Theme.Typography.headline)
+                .foregroundStyle(Theme.Color.Content.Text.default)
 
             if let eliminatedGw = member.eliminatedInGameweekId {
                 Text("Eliminated GW\(eliminatedGw)")
-                    .font(.DS.caption1)
-                    .foregroundStyle(Color.DS.Semantic.error)
+                    .font(Theme.Typography.caption1)
+                    .foregroundStyle(Theme.Color.Status.Error.resting)
             }
         }
     }
 
     @ViewBuilder private var prizeInfo: some View {
         if let prizePence = member.prizePence, prizePence > 0 {
-            VStack(alignment: .trailing, spacing: DS.Spacing.s1) {
+            VStack(alignment: .trailing, spacing: Theme.Spacing.s10) {
                 Text(formatPence(prizePence))
-                    .font(.DS.headline)
+                    .font(Theme.Typography.headline)
                     .foregroundStyle(Color(hex: "30D158"))
                 Text("Prize")
-                    .font(.DS.caption2)
-                    .foregroundStyle(Color.DS.Neutral.n500)
+                    .font(Theme.Typography.caption2)
+                    .foregroundStyle(Theme.Color.Content.Text.disabled)
             }
         } else if !deadlinePassed {
             Image(systemName: Theme.Icon.Pick.locked)
-                .font(.DS.caption1)
-                .foregroundStyle(Color.DS.Neutral.n300)
+                .font(Theme.Typography.caption1)
+                .foregroundStyle(Theme.Color.Border.default)
         }
     }
 

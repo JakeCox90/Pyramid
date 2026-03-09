@@ -1,0 +1,57 @@
+import SwiftUI
+
+extension Theme {
+    enum Spacing {
+        static let s0: CGFloat = 0
+        static let s10: CGFloat = 4
+        static let s20: CGFloat = 8
+        static let s30: CGFloat = 12
+        static let s40: CGFloat = 16
+        static let s50: CGFloat = 20
+        static let s60: CGFloat = 24
+        static let s70: CGFloat = 32
+        static let s80: CGFloat = 44
+        static let s90: CGFloat = 48
+        static let s100: CGFloat = 64
+        static let s110: CGFloat = 80
+        static let s120: CGFloat = 120
+        static let s130: CGFloat = 160
+    }
+}
+
+extension Theme {
+    enum Radius {
+        static let none: CGFloat = 0
+        static let r05: CGFloat = 2
+        static let r10: CGFloat = 4
+        static let r20: CGFloat = 8
+        static let r30: CGFloat = 12
+        static let r40: CGFloat = 16
+        static let r45: CGFloat = 20
+        static let r50: CGFloat = 24
+        static let r60: CGFloat = 32
+        static let `default`: CGFloat = 12
+        static let pill: CGFloat = 80
+        static let full: CGFloat = 160
+    }
+}
+
+extension Theme {
+    enum Shadow {
+        struct Style {
+            let color: SwiftUI.Color
+            let radius: CGFloat
+            let x: CGFloat
+            let y: CGFloat
+        }
+        static let sm = Style(color: .black.opacity(0.06), radius: 2, x: 0, y: 1)
+        static let md = Style(color: .black.opacity(0.10), radius: 8, x: 0, y: 2)
+        static let lg = Style(color: .black.opacity(0.12), radius: 16, x: 0, y: 4)
+    }
+}
+
+extension View {
+    func themeShadow(_ style: Theme.Shadow.Style) -> some View {
+        self.shadow(color: style.color, radius: style.radius, x: style.x, y: style.y)
+    }
+}
