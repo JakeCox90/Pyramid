@@ -1,8 +1,9 @@
 # Pyramid — Design System Specification
 
-**Status:** In Progress — PYR-7 / LMS-003
-**Date:** 2026-03-07
-**For:** Figma Design System file
+**Status:** Active — Phase 2 complete. Dark theme implemented. Light theme deferred.
+**Original task:** PYR-7 / LMS-003 (Phase 0). Updated by PYR-60 (Phase 2).
+**Date:** 2026-03-09
+**For:** Figma Design System file + iOS implementation
 
 > This document is the source of truth for all design tokens.
 > Every value here must exist as a named style or variable in Figma.
@@ -12,14 +13,38 @@
 
 ## Figma File Structure
 
-Create one Figma file: **"Pyramid — Design System"**
+### Core Theme file (tokens — source of truth)
 
-Pages:
-1. `🎨 Foundations` — colours, typography, spacing, shadows, radius
-2. `🧩 Components` — buttons, inputs, cards, tags, avatars, nav
-3. `📐 Layout` — grid, safe areas, screen templates
-4. `♿ Accessibility` — contrast checks, touch targets
-5. `📖 Changelog` — version history
+- **URL:** https://www.figma.com/design/D0hIZP7fHnn37d8EfXGJoM/Core---Theme
+- **File key:** `D0hIZP7fHnn37d8EfXGJoM`
+- **API:** Tokens are maintained via the Figma Variables API: `GET /v1/files/D0hIZP7fHnn37d8EfXGJoM/variables/local`
+- **531 variables** across collections: Primitives (palette, sizing, opacity), Colour (semantic), Borders, Space, Fonts, Icon Size, Platform, Sub-Theming, Sub-Features, Sub-Components
+
+> **Warning:** The Design System file (`5JZASzg6YxpCSatQyuZreo`) is empty and must NOT be used for token extraction. Only the Core Theme file above contains tokens.
+
+### Exported token files
+
+Tokens extracted from the Figma Variables API are stored at the repo root:
+
+- `tokens/primitive/primitive.palette.json` — colour palette primitives
+- `tokens/primitive/primitive.sizing.json` — sizing primitives
+- `tokens/primitive/primitive.icons.json` — icon size primitives
+- `tokens/primitive/primitive.logo.json` — logo primitives
+- `tokens/semantic/semantic.color.json` — semantic colour mappings
+- `tokens/semantic/semantic.border.json` — border tokens
+- `tokens/semantic/semantic.spacing.json` — spacing tokens
+- `tokens/semantic/semantic.elevation.json` — elevation/shadow tokens
+- `tokens/semantic/semantic.typography.json` — typography tokens
+
+### Figma pages
+
+1. `Foundations` — colours, typography, spacing, shadows, radius
+2. `Components` — buttons, inputs, cards, tags, avatars, nav
+3. `Layout` — grid, safe areas, screen templates
+4. `Accessibility` — contrast checks, touch targets
+5. `Changelog` — version history
+
+> **Note:** PYR-35 (Phase 2 design screens) was intentionally skipped for MVP. Phase 2 UI was built directly in SwiftUI using the token values below.
 
 ---
 
@@ -66,6 +91,26 @@ Pages:
 | `background/elevated` | `#FFFFFF` | Cards, sheets (with shadow) |
 
 > **WCAG AA requirement:** All text colours must achieve minimum 4.5:1 contrast ratio against their background. Verify in the Accessibility page.
+
+### Dark Theme (current default)
+
+Dark mode is the current default for the app. Light mode is deferred to a future phase. All Phase 2 screens use this palette.
+
+| Token Name | Value | Usage |
+|---|---|---|
+| `dark/background-primary` | `#0A0A0A` | Main screen background |
+| `dark/background-secondary` | `#1C1C1E` | Grouped sections, cards |
+| `dark/background-elevated` | `#2C2C2E` | Modals, sheets |
+| `dark/text-primary` | `#FFFFFF` | Primary text |
+| `dark/text-secondary` | `#EBEBF5` 60% opacity | Secondary text |
+| `dark/text-tertiary` | `#EBEBF5` 30% opacity | Tertiary text, captions |
+| `dark/brand` | `#1A56DB` | Primary actions (unchanged from light) |
+| `dark/success` | `#30D158` | Win / survived (dark-mode adjusted) |
+| `dark/error` | `#FF453A` | Loss / eliminated (dark-mode adjusted) |
+| `dark/warning` | `#FFD60A` | Upcoming deadline, caution |
+| `dark/separator` | `#38383A` | Dividers, borders |
+
+> **Implementation:** Apply `.preferredColorScheme(.dark)` on root views until app-wide theme switching is implemented.
 
 ---
 
@@ -215,9 +260,9 @@ Key symbols used:
 
 ## 8. Figma Variables Setup
 
-Create a **Variable Collection** called `Pyramid Tokens` with modes: `Light` (Phase 0 only — dark mode Phase 2).
+The Figma Variables API serves 531 variables across multiple collections (see "Figma File Structure" above for details). The variable collection supports both Light and Dark modes.
 
-Map all colour tokens as Figma Variables. Map spacing as Number variables. This enables design token export for iOS engineers.
+All colour tokens are mapped as Figma Variables. Spacing tokens are mapped as Number variables. Exported JSON files live in `tokens/primitive/` and `tokens/semantic/` at the repo root.
 
 ---
 
