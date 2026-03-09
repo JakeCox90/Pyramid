@@ -3,6 +3,7 @@ import SwiftUI
 struct LeagueDetailView: View {
     @StateObject private var viewModel: LeagueDetailViewModel
     @State private var showPicks = false
+    @State private var showResults = false
 
     init(league: League) {
         _viewModel = StateObject(wrappedValue: LeagueDetailViewModel(league: league))
@@ -23,14 +24,27 @@ struct LeagueDetailView: View {
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
-                if viewModel.league.status == .active {
-                    Button("My Pick") { showPicks = true }
-                        .buttonStyle(.borderedProminent)
+                HStack(spacing: Theme.Spacing.s20) {
+                    Button {
+                        showResults = true
+                    } label: {
+                        Image(systemName: Theme.Icon.Pick.gameweek)
+                    }
+                    if viewModel.league.status == .active {
+                        Button("My Pick") { showPicks = true }
+                            .buttonStyle(.borderedProminent)
+                    }
                 }
             }
         }
         .navigationDestination(isPresented: $showPicks) {
             PicksView(leagueId: viewModel.league.id)
+        }
+        .navigationDestination(isPresented: $showResults) {
+            ResultsView(
+                leagueId: viewModel.league.id,
+                season: viewModel.league.season
+            )
         }
         .task { await viewModel.load() }
         .refreshable { await viewModel.load() }
