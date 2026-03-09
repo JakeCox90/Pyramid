@@ -1,0 +1,70 @@
+{
+  "radius": {
+    "default": {
+      "value": "{sizing.30}",
+      "type": "dimension"
+    },
+    "pill": {
+      "value": "{sizing.110}",
+      "type": "dimension"
+    },
+    "full": {
+      "value": "{sizing.130}",
+      "type": "dimension"
+    },
+    "0": {
+      "value": "{sizing.0}",
+      "type": "dimension"
+    },
+    "05": {
+      "value": "{sizing.05}",
+      "type": "dimension"
+    },
+    "10": {
+      "value": "{sizing.10}",
+      "type": "dimension"
+    },
+    "20": {
+      "value": "{sizing.20}",
+      "type": "dimension"
+    },
+    "30": {
+      "value": "{sizing.30}",
+      "type": "dimension"
+    },
+    "40": {
+      "value": "{sizing.40}",
+      "type": "dimension"
+    },
+    "45": {
+      "value": "{sizing.50}",
+      "type": "dimension"
+    },
+    "50": {
+      "value": "{sizing.60}",
+      "type": "dimension"
+    },
+    "60": {
+      "value": "{sizing.70}",
+      "type": "dimension"
+    }
+  },
+  "width": {
+    "0": {
+      "value": "{sizing.0}",
+      "type": "dimension"
+    },
+    "10": {
+      "value": "{sizing.025}",
+      "type": "dimension"
+    },
+    "20": {
+      "value": "{sizing.05}",
+      "type": "dimension"
+    },
+    "30": {
+      "value": "{sizing.10}",
+      "type": "dimension"
+    }
+  }
+}

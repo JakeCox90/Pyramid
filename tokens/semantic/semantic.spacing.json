@@ -1,0 +1,200 @@
+{
+  "space": {
+    "0": {
+      "default": {
+        "value": "{sizing.0}",
+        "type": "dimension"
+      },
+      "cosy": {
+        "value": "{sizing.0}",
+        "type": "dimension"
+      },
+      "spacious": {
+        "value": "{sizing.0}",
+        "type": "dimension"
+      }
+    },
+    "10": {
+      "default": {
+        "value": "{sizing.10}",
+        "type": "dimension"
+      },
+      "cosy": {
+        "value": "{sizing.05}",
+        "type": "dimension"
+      },
+      "spacious": {
+        "value": "{sizing.20}",
+        "type": "dimension"
+      }
+    },
+    "20": {
+      "default": {
+        "value": "{sizing.20}",
+        "type": "dimension"
+      },
+      "cosy": {
+        "value": "{sizing.10}",
+        "type": "dimension"
+      },
+      "spacious": {
+        "value": "{sizing.30}",
+        "type": "dimension"
+      }
+    },
+    "30": {
+      "default": {
+        "value": "{sizing.30}",
+        "type": "dimension"
+      },
+      "cosy": {
+        "value": "{sizing.20}",
+        "type": "dimension"
+      },
+      "spacious": {
+        "value": "{sizing.40}",
+        "type": "dimension"
+      }
+    },
+    "40": {
+      "default": {
+        "value": "{sizing.40}",
+        "type": "dimension"
+      },
+      "cosy": {
+        "value": "{sizing.30}",
+        "type": "dimension"
+      },
+      "spacious": {
+        "value": "{sizing.50}",
+        "type": "dimension"
+      }
+    },
+    "50": {
+      "default": {
+        "value": "{sizing.50}",
+        "type": "dimension"
+      },
+      "cosy": {
+        "value": "{sizing.40}",
+        "type": "dimension"
+      },
+      "spacious": {
+        "value": "{sizing.60}",
+        "type": "dimension"
+      }
+    },
+    "60": {
+      "default": {
+        "value": "{sizing.60}",
+        "type": "dimension"
+      },
+      "cosy": {
+        "value": "{sizing.50}",
+        "type": "dimension"
+      },
+      "spacious": {
+        "value": "{sizing.70}",
+        "type": "dimension"
+      }
+    },
+    "70": {
+      "default": {
+        "value": "{sizing.70}",
+        "type": "dimension"
+      },
+      "cosy": {
+        "value": "{sizing.60}",
+        "type": "dimension"
+      },
+      "spacious": {
+        "value": "{sizing.80}",
+        "type": "dimension"
+      }
+    },
+    "80": {
+      "default": {
+        "value": "{sizing.80}",
+        "type": "dimension"
+      },
+      "cosy": {
+        "value": "{sizing.70}",
+        "type": "dimension"
+      },
+      "spacious": {
+        "value": "{sizing.90}",
+        "type": "dimension"
+      }
+    },
+    "90": {
+      "default": {
+        "value": "{sizing.90}",
+        "type": "dimension"
+      },
+      "cosy": {
+        "value": "{sizing.80}",
+        "type": "dimension"
+      },
+      "spacious": {
+        "value": "{sizing.100}",
+        "type": "dimension"
+      }
+    },
+    "100": {
+      "default": {
+        "value": "{sizing.100}",
+        "type": "dimension"
+      },
+      "cosy": {
+        "value": "{sizing.90}",
+        "type": "dimension"
+      },
+      "spacious": {
+        "value": "{sizing.110}",
+        "type": "dimension"
+      }
+    },
+    "110": {
+      "default": {
+        "value": "{sizing.110}",
+        "type": "dimension"
+      },
+      "cosy": {
+        "value": "{sizing.100}",
+        "type": "dimension"
+      },
+      "spacious": {
+        "value": "{sizing.120}",
+        "type": "dimension"
+      }
+    },
+    "120": {
+      "default": {
+        "value": "{sizing.120}",
+        "type": "dimension"
+      },
+      "cosy": {
+        "value": "{sizing.110}",
+        "type": "dimension"
+      },
+      "spacious": {
+        "value": "{sizing.130}",
+        "type": "dimension"
+      }
+    },
+    "130": {
+      "default": {
+        "value": "{sizing.130}",
+        "type": "dimension"
+      },
+      "cosy": {
+        "value": "{sizing.120}",
+        "type": "dimension"
+      },
+      "spacious": {
+        "value": "{sizing.130}",
+        "type": "dimension"
+      }
+    }
+  }
+}
