@@ -81,7 +81,7 @@ struct JoinLeagueView: View {
             Spacer()
 
             VStack(spacing: DS.Spacing.s4) {
-                Image(systemName: "trophy")
+                Image(systemName: SFSymbol.trophy)
                     .font(.system(size: 48))
                     .foregroundStyle(Color.DS.Brand.primary)
 
@@ -92,8 +92,8 @@ struct JoinLeagueView: View {
                             .foregroundStyle(Color.DS.Neutral.n900)
 
                         HStack(spacing: DS.Spacing.s4) {
-                            Label("\(preview.memberCount) members", systemImage: "person.2")
-                            Label("Season \(preview.season)", systemImage: "calendar")
+                            Label("\(preview.memberCount) members", systemImage: SFSymbol.members)
+                            Label("Season \(preview.season)", systemImage: SFSymbol.gameweek)
                         }
                         .font(.DS.subheadline)
                         .foregroundStyle(Color.DS.Neutral.n500)
@@ -134,7 +134,7 @@ struct JoinLeagueView: View {
         VStack(spacing: DS.Spacing.s8) {
             Spacer()
 
-            Image(systemName: "checkmark.circle.fill")
+            Image(systemName: SFSymbol.success)
                 .font(.system(size: 64))
                 .foregroundStyle(Color.DS.Semantic.success)
 

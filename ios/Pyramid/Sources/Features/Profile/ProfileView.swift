@@ -4,7 +4,7 @@ struct ProfileView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 12) {
-                Image(systemName: "person.circle")
+                Image(systemName: SFSymbol.profileTab)
                     .font(.system(size: 48))
                     .foregroundStyle(.secondary)
                 Text("Profile")
@@ -14,7 +14,7 @@ struct ProfileView: View {
                     .foregroundStyle(.secondary)
 
                 NavigationLink(destination: NotificationPreferencesView()) {
-                    Label("Notifications", systemImage: "bell")
+                    Label("Notifications", systemImage: SFSymbol.notifications)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding()
                         .background(Color(.systemGroupedBackground))

@@ -140,15 +140,15 @@ struct JoinPaidLeagueView: View {
                 .foregroundStyle(Colors.textSecondary)
 
             ruleItem(
-                icon: "theatermasks",
+                icon: SFSymbol.pseudonymous,
                 text: "You play pseudonymously"
             )
             ruleItem(
-                icon: "arrow.triangle.2.circlepath",
+                icon: SFSymbol.noRepeatPicks,
                 text: "No repeat picks per round"
             )
             ruleItem(
-                icon: "person.2",
+                icon: SFSymbol.members,
                 text: "League starts when 5 players join"
             )
         }

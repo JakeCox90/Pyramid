@@ -14,7 +14,7 @@ struct LeagueCreatedView: View {
         VStack(spacing: DS.Spacing.s8) {
             Spacer()
 
-            Image(systemName: "trophy.fill")
+            Image(systemName: SFSymbol.trophyFill)
                 .font(.system(size: 56))
                 .foregroundStyle(Color.DS.Brand.primary)
 
@@ -60,13 +60,13 @@ struct LeagueCreatedView: View {
                 } label: {
                     Label(
                         didCopy ? "Copied!" : "Copy Code",
-                        systemImage: didCopy ? "checkmark" : "doc.on.doc"
+                        systemImage: didCopy ? SFSymbol.copyConfirmed : SFSymbol.copyToClipboard
                     )
                 }
                 .dsStyle(.secondary, fullWidth: false)
 
                 ShareLink(item: shareText) {
-                    Label("Share", systemImage: "square.and.arrow.up")
+                    Label("Share", systemImage: SFSymbol.share)
                 }
                 .buttonStyle(DSButtonStyle(variant: .secondary, size: .large, isFullWidth: false))
             }

@@ -86,8 +86,8 @@ struct LeagueCard: View {
                 }
 
                 HStack(spacing: DS.Spacing.s3) {
-                    Label("\(memberCount) players", systemImage: "person.2")
-                    Label("GW\(gameweek)", systemImage: "calendar")
+                    Label("\(memberCount) players", systemImage: SFSymbol.members)
+                    Label("GW\(gameweek)", systemImage: SFSymbol.gameweek)
                 }
                 .font(.DS.subheadline)
                 .foregroundStyle(Color.DS.Neutral.n500)

@@ -40,7 +40,7 @@ struct LeagueDetailView: View {
 
     private func errorView(message: String) -> some View {
         VStack(spacing: DS.Spacing.s4) {
-            Image(systemName: "exclamationmark.triangle")
+            Image(systemName: SFSymbol.error)
                 .font(.system(size: 48))
                 .foregroundStyle(Color.DS.Neutral.n300)
             Text(message)
@@ -105,7 +105,7 @@ struct LeagueDetailView: View {
 
     private var emptyMembersView: some View {
         VStack(spacing: DS.Spacing.s4) {
-            Image(systemName: "person.2")
+            Image(systemName: SFSymbol.members)
                 .font(.system(size: 48))
                 .foregroundStyle(Color.DS.Neutral.n300)
             Text("No other members yet")
@@ -124,7 +124,7 @@ struct LeagueDetailView: View {
         VStack(spacing: DS.Spacing.s2) {
             if !viewModel.isDeadlinePassed() {
                 HStack {
-                    Image(systemName: "lock.fill")
+                    Image(systemName: SFSymbol.lockedPick)
                         .foregroundStyle(Color.DS.Neutral.n500)
                     Text("Picks are hidden until kick-off")
                         .font(.DS.caption1)
@@ -180,20 +180,20 @@ struct MemberRow: View {
     @ViewBuilder private var statusIcon: some View {
         switch member.status {
         case .winner:
-            Image(systemName: "trophy.fill")
+            Image(systemName: SFSymbol.trophyFill)
                 .foregroundStyle(Color.DS.Semantic.warning)
         case .active:
-            Image(systemName: "checkmark.circle.fill")
+            Image(systemName: SFSymbol.success)
                 .foregroundStyle(Color.DS.Semantic.success)
         case .eliminated:
-            Image(systemName: "xmark.circle.fill")
+            Image(systemName: SFSymbol.failure)
                 .foregroundStyle(Color.DS.Semantic.error)
         }
     }
 
     @ViewBuilder private var pickView: some View {
         if !deadlinePassed {
-            Image(systemName: "lock.fill")
+            Image(systemName: SFSymbol.lockedPick)
                 .font(.DS.caption1)
                 .foregroundStyle(Color.DS.Neutral.n300)
         } else if let pick {

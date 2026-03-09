@@ -28,20 +28,20 @@ struct LeaguesView: View {
                             Button {
                                 showCreateLeague = true
                             } label: {
-                                Label("Create League", systemImage: "plus.circle")
+                                Label("Create League", systemImage: SFSymbol.createLeague)
                             }
                             Button {
                                 showJoinLeague = true
                             } label: {
-                                Label("Join League", systemImage: "person.badge.plus")
+                                Label("Join League", systemImage: SFSymbol.joinLeague)
                             }
                             Button {
                                 showJoinPaidLeague = true
                             } label: {
-                                Label("Join Paid League", systemImage: "creditcard")
+                                Label("Join Paid League", systemImage: SFSymbol.paidLeague)
                             }
                         } label: {
-                            Image(systemName: "plus")
+                            Image(systemName: SFSymbol.addButton)
                         }
                     }
                 }
@@ -94,7 +94,7 @@ struct LeaguesView: View {
             Spacer()
 
             VStack(spacing: DS.Spacing.s4) {
-                Image(systemName: "exclamationmark.triangle")
+                Image(systemName: SFSymbol.error)
                     .font(.system(size: 56))
                     .foregroundStyle(Color.DS.Neutral.n300)
 
@@ -127,7 +127,7 @@ struct LeaguesView: View {
             Spacer()
 
             VStack(spacing: DS.Spacing.s4) {
-                Image(systemName: "trophy")
+                Image(systemName: SFSymbol.trophy)
                     .font(.system(size: 56))
                     .foregroundStyle(Color.DS.Neutral.n300)
 
@@ -198,7 +198,7 @@ struct LeagueRowView: View {
 
                 Spacer()
 
-                Image(systemName: "chevron.right")
+                Image(systemName: SFSymbol.disclosure)
                     .font(.caption)
                     .foregroundStyle(Color.DS.Neutral.n300)
             }

@@ -177,7 +177,7 @@ struct WalletView: View {
 
     private var emptyTransactionsView: some View {
         VStack(spacing: 12) {
-            Image(systemName: "creditcard")
+            Image(systemName: SFSymbol.walletEmpty)
                 .font(.system(size: 40))
                 .foregroundStyle(textTertiary)
             Text("No transactions yet")
@@ -236,15 +236,15 @@ private struct TransactionRow: View {
     private var iconName: String {
         switch transaction.type {
         case .topUp:
-            return "arrow.down.circle.fill"
+            return SFSymbol.topUp
         case .stake:
-            return "trophy.circle.fill"
+            return SFSymbol.trophyCircleFill
         case .stakeRefund:
-            return "arrow.counterclockwise.circle.fill"
+            return SFSymbol.refund
         case .winnings:
-            return "star.circle.fill"
+            return SFSymbol.winnings
         case .withdrawal:
-            return "arrow.up.circle.fill"
+            return SFSymbol.withdrawal
         }
     }
 

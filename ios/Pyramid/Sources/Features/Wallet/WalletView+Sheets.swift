@@ -42,7 +42,7 @@ struct TopUpSheet: View {
                 VStack(spacing: 24) {
                     // Stripe GATE banner
                     HStack(spacing: 8) {
-                        Image(systemName: "info.circle.fill")
+                        Image(systemName: SFSymbol.info)
                             .foregroundStyle(warningYellow)
                         Text("Payment processing coming soon — Stripe integration pending (PYR-25)")
                             .font(.caption)
