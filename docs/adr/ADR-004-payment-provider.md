@@ -1,6 +1,6 @@
 # ADR-004: Payment Provider Choice
 
-**Status:** Proposed — awaiting GATE approval
+**Status:** APPROVED — Gate 0 signed off 2026-03-07
 **Date:** 2026-03-08
 **Author:** Orchestrator
 **Linear:** PYR-25

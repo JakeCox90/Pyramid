@@ -74,7 +74,7 @@ If you encounter a decision marked GATE:
 - chore/* — non-feature changes
 
 ## Current Phase
-Phase 0 — Foundation — See PHASE-0-SETUP.md for task list.
+Phase 2 — Development Complete. Awaiting GATE decisions (PYR-26: Compliance, PYR-34: Sign-off). See docs/plans/active/ for current execution plans.
 
 ## Behaviour Rules
 - Never ask for yes/no confirmation — proceed with the most conservative, reversible option
