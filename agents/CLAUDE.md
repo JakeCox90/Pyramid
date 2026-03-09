@@ -63,7 +63,6 @@ Find/create Linear task → In Progress
 
 ## Branch Naming
 - `main` — production, protected, 1 human approval
-- `develop` — integration, CI required
 - `feature/LMS-{id}-{desc}` | `fix/LMS-{id}-{desc}` | `chore/LMS-{id}-{desc}`
 
 ## Current Phase
