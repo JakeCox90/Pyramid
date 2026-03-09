@@ -8,6 +8,7 @@
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders, getServiceClient } from "../_shared/supabase.ts";
+import { createLogger } from "../_shared/logger.ts";
 
 const CURRENT_SEASON = 2025;
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -58,6 +59,8 @@ Deno.serve(async (req) => {
   if (req.method !== "POST") {
     return errorResponse("Method not allowed", "METHOD_NOT_ALLOWED", 405, origin);
   }
+
+  const log = createLogger("create-league", req);
 
   // Authenticate user via JWT
   const authHeader = req.headers.get("Authorization");
@@ -155,7 +158,7 @@ Deno.serve(async (req) => {
       ) {
         continue;
       }
-      console.error("Failed to insert league:", insertError);
+      log.error("Failed to insert league", insertError);
       return errorResponse("Failed to create league", "CREATE_FAILED", 500, origin);
     }
 
@@ -181,7 +184,7 @@ Deno.serve(async (req) => {
 
   if (memberError) {
     // Log but don't fail — league was created; member insert can be retried
-    console.error("Failed to add creator as member:", memberError);
+    log.error("Failed to add creator as member", memberError);
   }
 
   const response: CreateLeagueResponse = { league_id: leagueId, join_code: joinCode, name };

@@ -11,6 +11,7 @@
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders, getServiceClient } from "../_shared/supabase.ts";
+import { createLogger } from "../_shared/logger.ts";
 
 interface TopUpBody {
   stripe_payment_intent_id: string;
@@ -50,6 +51,8 @@ Deno.serve(async (req) => {
   if (req.method !== "POST") {
     return errorResponse("Method not allowed", "METHOD_NOT_ALLOWED", 405, origin);
   }
+
+  const log = createLogger("top-up", req);
 
   // Authenticate user via JWT
   const authHeader = req.headers.get("Authorization");
@@ -120,9 +123,9 @@ Deno.serve(async (req) => {
   //   3. Assert pi.amount === amount_pence.
   //   4. Assert pi.currency === 'gbp'.
   //   5. Assert pi.metadata.user_id === user.id (set by iOS at intent creation time).
-  console.log(
-    `TODO: validate against Stripe API once PYR-25 GATE resolved. ` +
-      `stripe_payment_intent_id=${stripe_payment_intent_id} amount_pence=${amount_pence}`,
+  log.info(
+    "TODO: validate against Stripe API once PYR-25 GATE resolved",
+    { stripe_payment_intent_id, amount_pence },
   );
 
   const db = getServiceClient();
@@ -195,7 +198,7 @@ Deno.serve(async (req) => {
         { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders(origin) } },
       );
     }
-    console.error("Failed to write wallet_transaction:", txError);
+    log.error("Failed to write wallet_transaction", txError);
     return errorResponse("Failed to process top-up", "TOP_UP_FAILED", 500, origin);
   }
 

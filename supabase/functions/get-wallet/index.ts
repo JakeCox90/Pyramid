@@ -10,6 +10,7 @@
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders, getServiceClient } from "../_shared/supabase.ts";
+import { createLogger } from "../_shared/logger.ts";
 
 interface WalletBalanceResponse {
   available_to_play_pence: number;
@@ -46,6 +47,8 @@ Deno.serve(async (req) => {
     return errorResponse("Method not allowed", "METHOD_NOT_ALLOWED", 405, origin);
   }
 
+  const log = createLogger("get-wallet", req);
+
   // Authenticate user via JWT
   const authHeader = req.headers.get("Authorization");
   if (!authHeader) {
@@ -79,7 +82,7 @@ Deno.serve(async (req) => {
     .maybeSingle();
 
   if (walletError) {
-    console.error("Failed to fetch wallet balances:", walletError);
+    log.error("Failed to fetch wallet balances", walletError);
     return errorResponse("Failed to fetch wallet", "FETCH_FAILED", 500, origin);
   }
 

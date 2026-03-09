@@ -1,4 +1,5 @@
 import Foundation
+import os
 import Supabase
 
 // MARK: - Error
@@ -61,12 +62,15 @@ final class LeagueService: LeagueServiceProtocol {
 
     func createLeague(name: String) async throws -> CreateLeagueResponse {
         do {
+            Log.leagues.info("Creating league: \(name)")
             let response: CreateLeagueResponse = try await client.functions.invoke(
                 "create-league",
                 options: FunctionInvokeOptions(body: ["name": name])
             )
+            Log.leagues.info("League created: \(response.leagueId)")
             return response
         } catch {
+            Log.leagues.error("League creation failed: \(error.localizedDescription)")
             throw LeagueServiceError.createFailed(error.localizedDescription)
         }
     }
@@ -88,12 +92,15 @@ final class LeagueService: LeagueServiceProtocol {
 
     func joinLeague(code: String) async throws -> JoinLeagueResponse {
         do {
+            Log.leagues.info("Joining league with code")
             let response: JoinLeagueResponse = try await client.functions.invoke(
                 "join-league",
                 options: FunctionInvokeOptions(body: ["code": code])
             )
+            Log.leagues.info("Joined league: \(response.leagueId)")
             return response
         } catch {
+            Log.leagues.error("Join league failed: \(error.localizedDescription)")
             throw LeagueServiceError.joinFailed(error.localizedDescription)
         }
     }

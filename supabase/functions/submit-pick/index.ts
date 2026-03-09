@@ -12,6 +12,7 @@
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders, getServiceClient } from "../_shared/supabase.ts";
+import { createLogger } from "../_shared/logger.ts";
 
 interface SubmitPickBody {
   league_id: string;
@@ -55,6 +56,8 @@ Deno.serve(async (req) => {
   if (req.method !== "POST") {
     return errorResponse("Method not allowed", "METHOD_NOT_ALLOWED", 405, origin);
   }
+
+  const log = createLogger("submit-pick", req);
 
   // Authenticate user
   const authHeader = req.headers.get("Authorization");
@@ -207,7 +210,7 @@ Deno.serve(async (req) => {
     .single();
 
   if (upsertError || !upsertedPick) {
-    console.error("Failed to upsert pick:", upsertError);
+    log.error("Failed to upsert pick", upsertError);
     return errorResponse("Failed to submit pick", "SUBMIT_FAILED", 500, origin);
   }
 

@@ -8,6 +8,7 @@
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders, getServiceClient } from "../_shared/supabase.ts";
+import { createLogger } from "../_shared/logger.ts";
 
 interface LeaguePreview {
   league_id: string;
@@ -61,6 +62,8 @@ Deno.serve(async (req) => {
     return new Response(null, { status: 204, headers: corsHeaders(origin) });
   }
 
+  const log = createLogger("join-league", req);
+
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
   const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY");
 
@@ -101,7 +104,7 @@ Deno.serve(async (req) => {
       .eq("league_id", league.id);
 
     if (countError) {
-      console.error("Failed to count members:", countError);
+      log.error("Failed to count members", countError);
     }
 
     const preview: LeaguePreview = {
@@ -183,7 +186,7 @@ Deno.serve(async (req) => {
           origin
         );
       }
-      console.error("Failed to insert member:", insertError);
+      log.error("Failed to insert member", insertError);
       return errorResponse("Failed to join league", "JOIN_FAILED", 500, origin);
     }
 

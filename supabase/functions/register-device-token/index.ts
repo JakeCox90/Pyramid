@@ -10,6 +10,7 @@
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders, getServiceClient } from "../_shared/supabase.ts";
+import { createLogger } from "../_shared/logger.ts";
 
 interface RequestBody {
   token: string;
@@ -33,6 +34,8 @@ Deno.serve(async (req) => {
   if (req.method !== "POST") {
     return json({ error: "Method not allowed" }, 405, origin);
   }
+
+  const log = createLogger("register-device-token", req);
 
   // Authenticate user via JWT
   const authHeader = req.headers.get("Authorization");
@@ -86,7 +89,7 @@ Deno.serve(async (req) => {
   );
 
   if (upsertErr) {
-    console.error("register-device-token: upsert failed:", upsertErr);
+    log.error("Upsert failed", upsertErr);
     return json({ error: "Failed to register device token" }, 500, origin);
   }
 
@@ -106,7 +109,7 @@ Deno.serve(async (req) => {
 
   if (prefErr) {
     // Non-fatal: log and continue — token registration succeeded
-    console.warn("register-device-token: notification_preferences upsert failed:", prefErr);
+    log.warn("notification_preferences upsert failed", { error: String(prefErr) });
   }
 
   return json({ registered: true }, 200, origin);

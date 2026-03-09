@@ -1,3 +1,4 @@
+import os
 import SwiftUI
 import Supabase
 
@@ -25,7 +26,9 @@ final class AppState: ObservableObject {
     func loadSession() async {
         do {
             session = try await supabase.auth.session
+            Log.auth.info("Session loaded: user=\(self.session?.user.id.uuidString.prefix(8) ?? "nil")")
         } catch {
+            Log.auth.error("Session load failed: \(error.localizedDescription)")
             session = nil
         }
         isLoading = false

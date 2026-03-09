@@ -1,4 +1,5 @@
 import Foundation
+import os
 import Supabase
 
 // MARK: - Errors
@@ -37,11 +38,13 @@ final class PaidLeagueService: PaidLeagueServiceProtocol {
     }
 
     func joinPaidLeague() async throws -> JoinPaidLeagueResponse {
+        Log.leagues.info("Joining paid league")
         do {
             let response: JoinPaidLeagueResponse = try await client.functions.invoke(
                 "join-paid-league",
                 options: FunctionInvokeOptions(body: EmptyBody())
             )
+            Log.leagues.info("Joined paid league: \(response.leagueId)")
             return response
         } catch let error as FunctionsError {
             switch error {

@@ -30,6 +30,8 @@
 //   Proportional redistribution when fewer than 3 positions filled.
 //   Joint positions split evenly; penny remainder goes to next-better position.
 
+import { createLogger } from "../_shared/logger.ts";
+import { alertSlack } from "../_shared/alert.ts";
 import { getServiceClient } from "../_shared/supabase.ts";
 import {
   computePrizeAllocations,
@@ -73,6 +75,8 @@ Deno.serve(async (req) => {
     return json({ error: "Method not allowed" }, 405);
   }
 
+  const log = createLogger("distribute-prizes", req);
+
   // Internal-only: require service role key
   const authHeader = req.headers.get("Authorization") ?? "";
   const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
@@ -104,7 +108,7 @@ Deno.serve(async (req) => {
     .maybeSingle();
 
   if (existingLog) {
-    console.log(`distribute-prizes: already processed for league ${leagueId} — returning cached result`);
+    log.info("already processed — returning cached result", { leagueId });
     const cached = existingLog.payload ? JSON.parse(existingLog.payload as string) : [];
     return json({ leagueId, allocations: cached, cached: true }, 200);
   }
@@ -198,10 +202,11 @@ Deno.serve(async (req) => {
   if (logError) {
     if (logError.code === "23505") {
       // Concurrent run already wrote the log — return safely
-      console.log(`distribute-prizes: concurrent idempotency conflict for league ${leagueId} — returning early`);
+      log.info("concurrent idempotency conflict — returning early", { leagueId });
       return json({ leagueId, allocations, cached: true }, 200);
     }
-    console.error("distribute-prizes: failed to write settlement_log:", logError);
+    log.error("failed to write settlement_log", logError, { leagueId });
+    await alertSlack("distribute-prizes: settlement log write failed", { leagueId });
     return json({ error: "Failed to write settlement log" }, 500);
   }
 
@@ -238,7 +243,7 @@ Deno.serve(async (req) => {
 
     if (txError && txError.code !== "23505") {
       // 23505 = already credited on a prior partial run — safe to continue
-      console.error(`distribute-prizes: wallet_transactions insert failed for ${allocation.userId}:`, txError);
+      log.error("wallet_transactions insert failed", txError, { leagueId, userId: allocation.userId });
       errors.push(`wallet write failed for user ${allocation.userId}: ${txError.message}`);
     }
   }
@@ -246,7 +251,8 @@ Deno.serve(async (req) => {
   if (errors.length > 0) {
     // Partial failure — log for ops investigation but do not fail the response.
     // The idempotency key is already written, so a retry will not double-pay.
-    console.error("distribute-prizes: partial wallet write failures:", errors);
+    log.error("partial wallet write failures", null, { leagueId, errors });
+    await alertSlack("distribute-prizes: partial wallet write failures", { leagueId, errors });
   }
 
   // ── 7. Update league_members (finishing positions and prize amounts) ────────
@@ -261,10 +267,7 @@ Deno.serve(async (req) => {
       .eq("user_id", allocation.userId);
 
     if (memberErr) {
-      console.error(
-        `distribute-prizes: failed to update league_member for user ${allocation.userId}:`,
-        memberErr,
-      );
+      log.error("failed to update league_member", memberErr, { leagueId, userId: allocation.userId });
     }
   }
 
@@ -279,10 +282,10 @@ Deno.serve(async (req) => {
     .eq("id", leagueId);
 
   if (leagueUpdateErr) {
-    console.error("distribute-prizes: failed to update league status:", leagueUpdateErr);
+    log.error("failed to update league status", leagueUpdateErr, { leagueId });
   }
 
-  console.log(`distribute-prizes: completed for league ${leagueId}, ${allocations.length} allocations, net pot ${netPot}p`);
+  log.complete("ok", { leagueId, allocations: allocations.length, netPot });
 
   return json({ leagueId, allocations }, 200);
 });

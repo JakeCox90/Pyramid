@@ -11,6 +11,7 @@
 // dispute_window_expires_at = now() + 24 hours (rules §6.2)
 
 import { getServiceClient } from "../_shared/supabase.ts";
+import { createLogger } from "../_shared/logger.ts";
 
 interface CreditWinningsBody {
   user_id: string;
@@ -36,6 +37,8 @@ Deno.serve(async (req) => {
   if (req.method !== "POST") {
     return json({ error: "Method not allowed" }, 405);
   }
+
+  const log = createLogger("credit-winnings", req);
 
   // Internal-only: require service role key
   const authHeader = req.headers.get("Authorization") ?? "";
@@ -136,7 +139,7 @@ Deno.serve(async (req) => {
         dispute_window_expires_at: disputeWindowExpiresAt,
       } satisfies CreditWinningsResponse, 200);
     }
-    console.error("Failed to write winnings transaction:", txError);
+    log.error("Failed to write winnings transaction", txError);
     return json({ error: "Failed to credit winnings" }, 500);
   }
 
