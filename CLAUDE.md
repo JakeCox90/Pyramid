@@ -39,7 +39,7 @@ Each agent has its own CLAUDE.md in agents/{role}/CLAUDE.md. Read yours before s
 4. Read relevant PRD in Notion before writing any code
 
 ### Completing Work
-1. All code changes go via Pull Request — NEVER push directly to main or develop
+1. All code changes go via Pull Request — NEVER push directly to main
 2. PR template must be filled out completely
 3. CI must pass before requesting review
 4. Move Linear task to "In Review" when PR is raised
@@ -67,8 +67,7 @@ If you encounter a decision marked GATE:
 - No secrets in source code — use environment variables only
 
 ## Branch Strategy
-- main — production only, protected, requires 1 approval
-- develop — integration branch, requires passing CI
+- main — production, protected, requires 1 approval
 - feature/* — all feature work
 - fix/* — bug fixes
 - chore/* — non-feature changes
