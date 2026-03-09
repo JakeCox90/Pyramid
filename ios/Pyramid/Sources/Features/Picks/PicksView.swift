@@ -39,39 +39,39 @@ struct PicksView: View {
     }
 
     private func errorView(message: String) -> some View {
-        VStack(spacing: DS.Spacing.s4) {
+        VStack(spacing: Theme.Spacing.s40) {
             Image(systemName: Theme.Icon.Status.error)
                 .font(.system(size: 48))
-                .foregroundStyle(Color.DS.Neutral.n300)
+                .foregroundStyle(Theme.Color.Border.default)
             Text(message)
-                .font(.DS.subheadline)
-                .foregroundStyle(Color.DS.Neutral.n500)
+                .font(Theme.Typography.subheadline)
+                .foregroundStyle(Theme.Color.Content.Text.disabled)
                 .multilineTextAlignment(.center)
         }
-        .padding(.horizontal, DS.Spacing.pageMargin)
+        .padding(.horizontal, Theme.Spacing.s40)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     private var emptyStateView: some View {
-        VStack(spacing: DS.Spacing.s4) {
+        VStack(spacing: Theme.Spacing.s40) {
             Image(systemName: Theme.Icon.Pick.deadline)
                 .font(.system(size: 56))
-                .foregroundStyle(Color.DS.Neutral.n300)
+                .foregroundStyle(Theme.Color.Border.default)
             Text("No fixtures this week")
-                .font(.DS.title3)
-                .foregroundStyle(Color.DS.Neutral.n900)
+                .font(Theme.Typography.title3)
+                .foregroundStyle(Theme.Color.Content.Text.default)
             Text("Check back when the gameweek schedule is available.")
-                .font(.DS.subheadline)
-                .foregroundStyle(Color.DS.Neutral.n500)
+                .font(Theme.Typography.subheadline)
+                .foregroundStyle(Theme.Color.Content.Text.disabled)
                 .multilineTextAlignment(.center)
         }
-        .padding(.horizontal, DS.Spacing.pageMargin)
+        .padding(.horizontal, Theme.Spacing.s40)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     private var fixturesList: some View {
         ScrollView {
-            VStack(spacing: DS.Spacing.s3) {
+            VStack(spacing: Theme.Spacing.s30) {
                 if let pick = viewModel.currentPick {
                     currentPickBanner(pick: pick)
                 }
@@ -85,19 +85,19 @@ struct PicksView: View {
                 if let deadline = viewModel.deadlineText {
                     HStack {
                         Image(systemName: Theme.Icon.Pick.timeRemaining)
-                            .foregroundStyle(Color.DS.Semantic.warning)
+                            .foregroundStyle(Theme.Color.Status.Warning.resting)
                         Text(deadline)
-                            .font(.DS.subheadline.bold())
-                            .foregroundStyle(Color.DS.Semantic.warning)
+                            .font(Theme.Typography.subheadline.bold())
+                            .foregroundStyle(Theme.Color.Status.Warning.resting)
                     }
-                    .padding(.horizontal, DS.Spacing.pageMargin)
+                    .padding(.horizontal, Theme.Spacing.s40)
                 }
 
                 Text("Tap a team to submit your pick. Teams already used this season are greyed out.")
-                    .font(.DS.caption1)
-                    .foregroundStyle(Color.DS.Neutral.n500)
+                    .font(Theme.Typography.caption1)
+                    .foregroundStyle(Theme.Color.Content.Text.disabled)
                     .multilineTextAlignment(.center)
-                    .padding(.horizontal, DS.Spacing.pageMargin)
+                    .padding(.horizontal, Theme.Spacing.s40)
 
                 ForEach(viewModel.fixtures) { fixture in
                     FixturePickRow(
@@ -109,63 +109,63 @@ struct PicksView: View {
                     ) { teamId, teamName in
                         Task { await viewModel.submitPick(fixtureId: fixture.id, teamId: teamId, teamName: teamName) }
                     }
-                    .padding(.horizontal, DS.Spacing.pageMargin)
+                    .padding(.horizontal, Theme.Spacing.s40)
                 }
             }
-            .padding(.vertical, DS.Spacing.s4)
+            .padding(.vertical, Theme.Spacing.s40)
         }
     }
 
     private func currentPickBanner(pick: Pick) -> some View {
         HStack {
             Image(systemName: pick.isLocked ? Theme.Icon.Pick.locked : Theme.Icon.Status.success)
-                .foregroundStyle(pick.isLocked ? Color.DS.Neutral.n500 : Color.DS.Semantic.success)
+                .foregroundStyle(pick.isLocked ? Theme.Color.Content.Text.disabled : Theme.Color.Status.Success.resting)
             VStack(alignment: .leading, spacing: 2) {
                 Text(pick.isLocked ? "Pick locked: \(pick.teamName)" : "Current pick: \(pick.teamName)")
-                    .font(.DS.subheadline.bold())
-                    .foregroundStyle(Color.DS.Neutral.n900)
+                    .font(Theme.Typography.subheadline.bold())
+                    .foregroundStyle(Theme.Color.Content.Text.default)
                 if !pick.isLocked {
                     Text("You can change your pick until kick-off.")
-                        .font(.DS.caption1)
-                        .foregroundStyle(Color.DS.Neutral.n500)
+                        .font(Theme.Typography.caption1)
+                        .foregroundStyle(Theme.Color.Content.Text.disabled)
                 }
             }
             Spacer()
         }
-        .padding(DS.Spacing.s3)
-        .background(Color.DS.Neutral.n100)
+        .padding(Theme.Spacing.s30)
+        .background(Theme.Color.Surface.Background.page)
         .clipShape(RoundedRectangle(cornerRadius: 10))
-        .padding(.horizontal, DS.Spacing.pageMargin)
+        .padding(.horizontal, Theme.Spacing.s40)
     }
 
     private func successBanner(message: String) -> some View {
         HStack {
             Image(systemName: Theme.Icon.Status.success)
-                .foregroundStyle(Color.DS.Semantic.success)
+                .foregroundStyle(Theme.Color.Status.Success.resting)
             Text(message)
-                .font(.DS.subheadline)
-                .foregroundStyle(Color.DS.Neutral.n900)
+                .font(Theme.Typography.subheadline)
+                .foregroundStyle(Theme.Color.Content.Text.default)
             Spacer()
         }
-        .padding(DS.Spacing.s3)
-        .background(Color.DS.Semantic.successSubtle)
+        .padding(Theme.Spacing.s30)
+        .background(Theme.Color.Status.Success.subtle)
         .clipShape(RoundedRectangle(cornerRadius: 10))
-        .padding(.horizontal, DS.Spacing.pageMargin)
+        .padding(.horizontal, Theme.Spacing.s40)
     }
 
     private func errorBanner(message: String) -> some View {
         HStack {
             Image(systemName: Theme.Icon.Status.errorFill)
-                .foregroundStyle(Color.DS.Semantic.error)
+                .foregroundStyle(Theme.Color.Status.Error.resting)
             Text(message)
-                .font(.DS.subheadline)
-                .foregroundStyle(Color.DS.Neutral.n900)
+                .font(Theme.Typography.subheadline)
+                .foregroundStyle(Theme.Color.Content.Text.default)
             Spacer()
         }
-        .padding(DS.Spacing.s3)
-        .background(Color.DS.Semantic.errorSubtle)
+        .padding(Theme.Spacing.s30)
+        .background(Theme.Color.Status.Error.subtle)
         .clipShape(RoundedRectangle(cornerRadius: 10))
-        .padding(.horizontal, DS.Spacing.pageMargin)
+        .padding(.horizontal, Theme.Spacing.s40)
     }
 }
 
@@ -187,13 +187,13 @@ struct FixturePickRow: View {
 
     var body: some View {
         DSCard {
-            VStack(spacing: DS.Spacing.s3) {
+            VStack(spacing: Theme.Spacing.s30) {
                 Text(kickoffText)
-                    .font(.DS.caption1)
-                    .foregroundStyle(Color.DS.Neutral.n500)
+                    .font(Theme.Typography.caption1)
+                    .foregroundStyle(Theme.Color.Content.Text.disabled)
                     .frame(maxWidth: .infinity)
 
-                HStack(spacing: DS.Spacing.s3) {
+                HStack(spacing: Theme.Spacing.s30) {
                     teamButton(
                         teamId: fixture.homeTeamId,
                         teamName: fixture.homeTeamName,
@@ -201,19 +201,19 @@ struct FixturePickRow: View {
                         score: fixture.homeScore
                     )
 
-                    VStack(spacing: DS.Spacing.s1) {
+                    VStack(spacing: Theme.Spacing.s10) {
                         if fixture.status.isLive || fixture.status.isFinished {
                             Text(fixture.status.displayLabel)
-                                .font(.DS.caption1.bold())
+                                .font(Theme.Typography.caption1.bold())
                                 .foregroundStyle(
                                     fixture.status.isLive
-                                        ? Color.DS.Semantic.error
-                                        : Color.DS.Neutral.n500
+                                        ? Theme.Color.Status.Error.resting
+                                        : Theme.Color.Content.Text.disabled
                                 )
                         } else {
                             Text("vs")
-                                .font(.DS.caption1)
-                                .foregroundStyle(Color.DS.Neutral.n500)
+                                .font(Theme.Typography.caption1)
+                                .foregroundStyle(Theme.Color.Content.Text.disabled)
                         }
                     }
 
@@ -238,33 +238,33 @@ struct FixturePickRow: View {
             guard !isDisabled else { return }
             onPick(teamId, teamName)
         } label: {
-            VStack(spacing: DS.Spacing.s1) {
+            VStack(spacing: Theme.Spacing.s10) {
                 if let score {
                     Text("\(score)")
-                        .font(.DS.title2.bold())
-                        .foregroundStyle(Color.DS.Neutral.n900)
+                        .font(Theme.Typography.title2.bold())
+                        .foregroundStyle(Theme.Color.Content.Text.default)
                 }
                 Text(shortName)
-                    .font(.DS.headline)
-                    .foregroundStyle(isPicked ? Color.white : Color.DS.Neutral.n900)
+                    .font(Theme.Typography.headline)
+                    .foregroundStyle(isPicked ? Color.white : Theme.Color.Content.Text.default)
                 Text(teamName)
-                    .font(.DS.caption2)
-                    .foregroundStyle(isPicked ? Color.white.opacity(0.8) : Color.DS.Neutral.n500)
+                    .font(Theme.Typography.caption2)
+                    .foregroundStyle(isPicked ? Color.white.opacity(0.8) : Theme.Color.Content.Text.disabled)
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
                 if isUsed {
                     Text("Used")
-                        .font(.DS.caption2)
-                        .foregroundStyle(Color.DS.Semantic.error)
+                        .font(Theme.Typography.caption2)
+                        .foregroundStyle(Theme.Color.Status.Error.resting)
                 }
             }
             .frame(maxWidth: .infinity)
-            .padding(.vertical, DS.Spacing.s3)
-            .background(isPicked ? Color.DS.Neutral.n900 : Color.DS.Neutral.n100)
+            .padding(.vertical, Theme.Spacing.s30)
+            .background(isPicked ? Theme.Color.Content.Text.default : Theme.Color.Surface.Background.page)
             .clipShape(RoundedRectangle(cornerRadius: 8))
             .overlay(
                 RoundedRectangle(cornerRadius: 8)
-                    .stroke(isPicked ? Color.DS.Neutral.n900 : Color.DS.Neutral.n300, lineWidth: 1)
+                    .stroke(isPicked ? Theme.Color.Content.Text.default : Theme.Color.Border.default, lineWidth: 1)
             )
             .opacity(isDisabled && !isPicked ? 0.5 : 1.0)
         }

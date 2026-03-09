@@ -12,10 +12,10 @@ struct DSTextField: View {
     @FocusState private var isFocused: Bool
 
     var body: some View {
-        VStack(alignment: .leading, spacing: DS.Spacing.s1) {
+        VStack(alignment: .leading, spacing: Theme.Spacing.s10) {
             Text(label)
-                .font(.DS.subheadline)
-                .foregroundStyle(Color.DS.Neutral.n700)
+                .font(Theme.Typography.subheadline)
+                .foregroundStyle(Theme.Color.Content.Text.subtle)
 
             Group {
                 if isSecure {
@@ -24,29 +24,29 @@ struct DSTextField: View {
                     TextField(placeholder, text: $text)
                 }
             }
-            .font(.DS.body)
-            .foregroundStyle(Color.DS.Neutral.n900)
-            .padding(.horizontal, DS.Spacing.s3)
+            .font(Theme.Typography.body)
+            .foregroundStyle(Theme.Color.Content.Text.default)
+            .padding(.horizontal, Theme.Spacing.s30)
             .frame(height: 48)
-            .background(Color.DS.Neutral.n000)
-            .clipShape(RoundedRectangle(cornerRadius: DS.Radius.md))
+            .background(Theme.Color.Surface.Background.container)
+            .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.default))
             .overlay(
-                RoundedRectangle(cornerRadius: DS.Radius.md)
+                RoundedRectangle(cornerRadius: Theme.Radius.default)
                     .strokeBorder(borderColor, lineWidth: 1.5)
             )
             .focused($isFocused)
 
             if let error = errorMessage {
                 Text(error)
-                    .font(.DS.caption1)
-                    .foregroundStyle(Color.DS.Semantic.error)
+                    .font(Theme.Typography.caption1)
+                    .foregroundStyle(Theme.Color.Status.Error.resting)
             }
         }
     }
 
     private var borderColor: Color {
-        if errorMessage != nil { return .DS.Semantic.error }
-        if isFocused { return .DS.Brand.primary }
-        return .DS.Neutral.n300
+        if errorMessage != nil { return Theme.Color.Status.Error.resting }
+        if isFocused { return Theme.Color.Primary.resting }
+        return Theme.Color.Border.default
     }
 }

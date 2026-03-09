@@ -11,10 +11,10 @@ struct DSCard<Content: View>: View {
 
     var body: some View {
         content()
-            .padding(DS.Spacing.cardPadding)
-            .background(Color.DS.Background.elevated)
-            .clipShape(RoundedRectangle(cornerRadius: DS.Radius.lg))
-            .dsShadow(DS.Shadow.md)
+            .padding(Theme.Spacing.s40)
+            .background(Theme.Color.Surface.Background.container)
+            .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.r40))
+            .themeShadow(Theme.Shadow.md)
     }
 }
 
@@ -34,19 +34,19 @@ enum PickStatus {
 
     var foreground: Color {
         switch self {
-        case .survived:   return .DS.Semantic.success
-        case .eliminated: return .DS.Semantic.error
-        case .pending:    return .DS.Neutral.n700
-        case .void:       return .DS.Semantic.warning
+        case .survived:   return Theme.Color.Status.Success.resting
+        case .eliminated: return Theme.Color.Status.Error.resting
+        case .pending:    return Theme.Color.Content.Text.subtle
+        case .void:       return Theme.Color.Status.Warning.resting
         }
     }
 
     var background: Color {
         switch self {
-        case .survived:   return .DS.Semantic.successSubtle
-        case .eliminated: return .DS.Semantic.errorSubtle
-        case .pending:    return .DS.Neutral.n100
-        case .void:       return .DS.Semantic.warningSubtle
+        case .survived:   return Theme.Color.Status.Success.subtle
+        case .eliminated: return Theme.Color.Status.Error.subtle
+        case .pending:    return Theme.Color.Surface.Background.page
+        case .void:       return Theme.Color.Status.Warning.subtle
         }
     }
 }
@@ -56,11 +56,11 @@ struct PickStatusBadge: View {
 
     var body: some View {
         Text(status.label)
-            .font(.DS.caption1)
+            .font(Theme.Typography.caption1)
             .fontWeight(.semibold)
             .foregroundStyle(status.foreground)
-            .padding(.vertical, DS.Spacing.s1)
-            .padding(.horizontal, DS.Spacing.s2)
+            .padding(.vertical, Theme.Spacing.s10)
+            .padding(.horizontal, Theme.Spacing.s20)
             .background(status.background)
             .clipShape(Capsule())
     }
@@ -76,21 +76,21 @@ struct LeagueCard: View {
 
     var body: some View {
         DSCard {
-            VStack(alignment: .leading, spacing: DS.Spacing.s3) {
+            VStack(alignment: .leading, spacing: Theme.Spacing.s30) {
                 HStack {
                     Text(leagueName)
-                        .font(.DS.title3)
-                        .foregroundStyle(Color.DS.Neutral.n900)
+                        .font(Theme.Typography.title3)
+                        .foregroundStyle(Theme.Color.Content.Text.default)
                     Spacer()
                     PickStatusBadge(status: pickStatus)
                 }
 
-                HStack(spacing: DS.Spacing.s3) {
+                HStack(spacing: Theme.Spacing.s30) {
                     Label("\(memberCount) players", systemImage: Theme.Icon.League.members)
                     Label("GW\(gameweek)", systemImage: Theme.Icon.Pick.gameweek)
                 }
-                .font(.DS.subheadline)
-                .foregroundStyle(Color.DS.Neutral.n500)
+                .font(Theme.Typography.subheadline)
+                .foregroundStyle(Theme.Color.Content.Text.disabled)
             }
         }
     }

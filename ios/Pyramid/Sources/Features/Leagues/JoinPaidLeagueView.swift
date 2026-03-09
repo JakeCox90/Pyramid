@@ -53,10 +53,10 @@ struct JoinPaidLeagueView: View {
 
     private var confirmationView: some View {
         ScrollView {
-            VStack(spacing: DS.Spacing.s6) {
-                Spacer(minLength: DS.Spacing.s8)
+            VStack(spacing: Theme.Spacing.s60) {
+                Spacer(minLength: Theme.Spacing.s70)
 
-                VStack(spacing: DS.Spacing.s4) {
+                VStack(spacing: Theme.Spacing.s40) {
                     prizePotCard
                     walletBalanceRow
                     rulesCard
@@ -66,7 +66,7 @@ struct JoinPaidLeagueView: View {
                     errorBanner(message: error)
                 }
 
-                VStack(spacing: DS.Spacing.s3) {
+                VStack(spacing: Theme.Spacing.s30) {
                     Button("Confirm — Pay £5") {
                         Task { await viewModel.joinLeague() }
                     }
@@ -86,16 +86,16 @@ struct JoinPaidLeagueView: View {
                         .dsStyle(.secondary)
                     }
                 }
-                .padding(.bottom, DS.Spacing.s8)
+                .padding(.bottom, Theme.Spacing.s70)
             }
-            .padding(.horizontal, DS.Spacing.pageMargin)
+            .padding(.horizontal, Theme.Spacing.s40)
         }
     }
 
     private var prizePotCard: some View {
-        VStack(alignment: .leading, spacing: DS.Spacing.s3) {
+        VStack(alignment: .leading, spacing: Theme.Spacing.s30) {
             Text("Prize Pot")
-                .font(.DS.headline)
+                .font(Theme.Typography.headline)
                 .foregroundStyle(Colors.textPrimary)
 
             Divider().background(Colors.separator)
@@ -110,33 +110,33 @@ struct JoinPaidLeagueView: View {
                 value: "65% / 25% / 10%"
             )
         }
-        .padding(DS.Spacing.s4)
+        .padding(Theme.Spacing.s40)
         .background(Colors.bgCard)
-        .clipShape(RoundedRectangle(cornerRadius: DS.Radius.md))
+        .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.default))
     }
 
     private var walletBalanceRow: some View {
         HStack {
             Text("Your wallet")
-                .font(.DS.subheadline)
+                .font(Theme.Typography.subheadline)
                 .foregroundStyle(Colors.textSecondary)
             Spacer()
             Text(viewModel.walletBalanceFormatted)
-                .font(.DS.headline)
+                .font(Theme.Typography.headline)
                 .foregroundStyle(
                     viewModel.hasInsufficientFunds
                         ? Colors.errorRed : Colors.successGreen
                 )
         }
-        .padding(DS.Spacing.s4)
+        .padding(Theme.Spacing.s40)
         .background(Colors.bgCard)
-        .clipShape(RoundedRectangle(cornerRadius: DS.Radius.md))
+        .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.default))
     }
 
     private var rulesCard: some View {
-        VStack(alignment: .leading, spacing: DS.Spacing.s2) {
+        VStack(alignment: .leading, spacing: Theme.Spacing.s20) {
             Text("Rules")
-                .font(.DS.caption1)
+                .font(Theme.Typography.caption1)
                 .foregroundStyle(Colors.textSecondary)
 
             ruleItem(
@@ -152,8 +152,8 @@ struct JoinPaidLeagueView: View {
                 text: "League starts when 5 players join"
             )
         }
-        .padding(DS.Spacing.s4)
+        .padding(Theme.Spacing.s40)
         .background(Colors.bgCard)
-        .clipShape(RoundedRectangle(cornerRadius: DS.Radius.md))
+        .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.default))
     }
 }

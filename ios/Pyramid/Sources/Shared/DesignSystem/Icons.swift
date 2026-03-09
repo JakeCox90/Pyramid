@@ -1,11 +1,11 @@
-import Foundation
+import SwiftUI
 
 // MARK: - Theme Icon Tokens
 
 // Usage: Theme.Icon.status.success, Theme.Icon.navigation.leagues, etc.
 // All icon values are SF Symbol system names.
 
-enum Theme {
+extension Theme {
     enum Icon {
 
         // MARK: - Navigation

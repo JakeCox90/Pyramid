@@ -11,45 +11,45 @@ struct LeagueCreatedView: View {
     }
 
     var body: some View {
-        VStack(spacing: DS.Spacing.s8) {
+        VStack(spacing: Theme.Spacing.s70) {
             Spacer()
 
             Image(systemName: Theme.Icon.League.trophyFill)
                 .font(.system(size: 56))
-                .foregroundStyle(Color.DS.Brand.primary)
+                .foregroundStyle(Theme.Color.Primary.resting)
 
-            VStack(spacing: DS.Spacing.s2) {
+            VStack(spacing: Theme.Spacing.s20) {
                 Text("League Created!")
-                    .font(.DS.title1)
-                    .foregroundStyle(Color.DS.Neutral.n900)
+                    .font(Theme.Typography.title1)
+                    .foregroundStyle(Theme.Color.Content.Text.default)
 
                 Text(response.name)
-                    .font(.DS.headline)
-                    .foregroundStyle(Color.DS.Neutral.n700)
+                    .font(Theme.Typography.headline)
+                    .foregroundStyle(Theme.Color.Content.Text.subtle)
             }
 
             DSCard {
-                VStack(spacing: DS.Spacing.s3) {
+                VStack(spacing: Theme.Spacing.s30) {
                     Text("Join Code")
-                        .font(.DS.caption1)
-                        .foregroundStyle(Color.DS.Neutral.n500)
+                        .font(Theme.Typography.caption1)
+                        .foregroundStyle(Theme.Color.Content.Text.disabled)
                         .frame(maxWidth: .infinity, alignment: .center)
 
                     Text(response.joinCode)
                         .font(.system(size: 40, weight: .bold, design: .monospaced))
-                        .foregroundStyle(Color.DS.Brand.primary)
+                        .foregroundStyle(Theme.Color.Primary.resting)
                         .tracking(8)
                         .frame(maxWidth: .infinity, alignment: .center)
 
                     Text("Share this code with friends so they can join")
-                        .font(.DS.caption1)
-                        .foregroundStyle(Color.DS.Neutral.n500)
+                        .font(Theme.Typography.caption1)
+                        .foregroundStyle(Theme.Color.Content.Text.disabled)
                         .multilineTextAlignment(.center)
                 }
             }
-            .padding(.horizontal, DS.Spacing.pageMargin)
+            .padding(.horizontal, Theme.Spacing.s40)
 
-            HStack(spacing: DS.Spacing.s3) {
+            HStack(spacing: Theme.Spacing.s30) {
                 Button {
                     UIPasteboard.general.string = response.joinCode
                     didCopy = true
@@ -70,15 +70,15 @@ struct LeagueCreatedView: View {
                 }
                 .buttonStyle(DSButtonStyle(variant: .secondary, size: .large, isFullWidth: false))
             }
-            .padding(.horizontal, DS.Spacing.pageMargin)
+            .padding(.horizontal, Theme.Spacing.s40)
 
             Button("Done") { onDone() }
                 .dsStyle(.primary)
-                .padding(.horizontal, DS.Spacing.pageMargin)
+                .padding(.horizontal, Theme.Spacing.s40)
 
             Spacer()
         }
         .frame(maxWidth: .infinity)
-        .background(Color.DS.Background.primary.ignoresSafeArea())
+        .background(Theme.Color.Surface.Background.page.ignoresSafeArea())
     }
 }

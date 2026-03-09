@@ -90,22 +90,22 @@ struct LeaguesView: View {
     }
 
     private func errorStateView(message: String) -> some View {
-        VStack(spacing: DS.Spacing.s6) {
+        VStack(spacing: Theme.Spacing.s60) {
             Spacer()
 
-            VStack(spacing: DS.Spacing.s4) {
+            VStack(spacing: Theme.Spacing.s40) {
                 Image(systemName: Theme.Icon.Status.error)
                     .font(.system(size: 56))
-                    .foregroundStyle(Color.DS.Neutral.n300)
+                    .foregroundStyle(Theme.Color.Border.default)
 
-                VStack(spacing: DS.Spacing.s2) {
+                VStack(spacing: Theme.Spacing.s20) {
                     Text("Something went wrong")
-                        .font(.DS.title3)
-                        .foregroundStyle(Color.DS.Neutral.n900)
+                        .font(Theme.Typography.title3)
+                        .foregroundStyle(Theme.Color.Content.Text.default)
 
                     Text(message)
-                        .font(.DS.subheadline)
-                        .foregroundStyle(Color.DS.Neutral.n500)
+                        .font(Theme.Typography.subheadline)
+                        .foregroundStyle(Theme.Color.Content.Text.disabled)
                         .multilineTextAlignment(.center)
                 }
             }
@@ -114,36 +114,36 @@ struct LeaguesView: View {
                 Task { await viewModel.fetchLeagues() }
             }
             .dsStyle(.primary)
-            .padding(.horizontal, DS.Spacing.pageMargin)
+            .padding(.horizontal, Theme.Spacing.s40)
 
             Spacer()
             Spacer()
         }
-        .padding(.horizontal, DS.Spacing.pageMargin)
+        .padding(.horizontal, Theme.Spacing.s40)
     }
 
     private var emptyStateView: some View {
-        VStack(spacing: DS.Spacing.s6) {
+        VStack(spacing: Theme.Spacing.s60) {
             Spacer()
 
-            VStack(spacing: DS.Spacing.s4) {
+            VStack(spacing: Theme.Spacing.s40) {
                 Image(systemName: Theme.Icon.League.trophy)
                     .font(.system(size: 56))
-                    .foregroundStyle(Color.DS.Neutral.n300)
+                    .foregroundStyle(Theme.Color.Border.default)
 
-                VStack(spacing: DS.Spacing.s2) {
+                VStack(spacing: Theme.Spacing.s20) {
                     Text("No leagues yet")
-                        .font(.DS.title3)
-                        .foregroundStyle(Color.DS.Neutral.n900)
+                        .font(Theme.Typography.title3)
+                        .foregroundStyle(Theme.Color.Content.Text.default)
 
                     Text("Create a league and invite friends, or join one with a code.")
-                        .font(.DS.subheadline)
-                        .foregroundStyle(Color.DS.Neutral.n500)
+                        .font(Theme.Typography.subheadline)
+                        .foregroundStyle(Theme.Color.Content.Text.disabled)
                         .multilineTextAlignment(.center)
                 }
             }
 
-            VStack(spacing: DS.Spacing.s3) {
+            VStack(spacing: Theme.Spacing.s30) {
                 Button("Create a League") {
                     showCreateLeague = true
                 }
@@ -154,26 +154,26 @@ struct LeaguesView: View {
                 }
                 .dsStyle(.secondary)
             }
-            .padding(.horizontal, DS.Spacing.pageMargin)
+            .padding(.horizontal, Theme.Spacing.s40)
 
             Spacer()
             Spacer()
         }
-        .padding(.horizontal, DS.Spacing.pageMargin)
+        .padding(.horizontal, Theme.Spacing.s40)
     }
 
     private var leaguesList: some View {
         ScrollView {
-            LazyVStack(spacing: DS.Spacing.s3) {
+            LazyVStack(spacing: Theme.Spacing.s30) {
                 ForEach(viewModel.leagues) { league in
                     NavigationLink(destination: LeagueDetailView(league: league)) {
                         LeagueRowView(league: league)
                     }
                     .buttonStyle(.plain)
-                    .padding(.horizontal, DS.Spacing.pageMargin)
+                    .padding(.horizontal, Theme.Spacing.s40)
                 }
             }
-            .padding(.vertical, DS.Spacing.s4)
+            .padding(.vertical, Theme.Spacing.s40)
         }
     }
 }
@@ -186,21 +186,21 @@ struct LeagueRowView: View {
     var body: some View {
         DSCard {
             HStack {
-                VStack(alignment: .leading, spacing: DS.Spacing.s1) {
+                VStack(alignment: .leading, spacing: Theme.Spacing.s10) {
                     Text(league.name)
-                        .font(.DS.headline)
-                        .foregroundStyle(Color.DS.Neutral.n900)
+                        .font(Theme.Typography.headline)
+                        .foregroundStyle(Theme.Color.Content.Text.default)
 
                     Text(league.status.displayName)
-                        .font(.DS.caption1)
-                        .foregroundStyle(Color.DS.Neutral.n500)
+                        .font(Theme.Typography.caption1)
+                        .foregroundStyle(Theme.Color.Content.Text.disabled)
                 }
 
                 Spacer()
 
                 Image(systemName: Theme.Icon.Navigation.disclosure)
                     .font(.caption)
-                    .foregroundStyle(Color.DS.Neutral.n300)
+                    .foregroundStyle(Theme.Color.Border.default)
             }
         }
     }

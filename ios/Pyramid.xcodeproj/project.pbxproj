@@ -10,7 +10,6 @@
 		01DD6DAA1AB77AEBEB9E9445 /* Gameweek.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C8CA520C03B704C80A9EE64 /* Gameweek.swift */; };
 		036DD3A47815789A75D32912 /* JoinPaidLeagueView+Subviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90E51A69C9956AE38B5BC50D /* JoinPaidLeagueView+Subviews.swift */; };
 		07D4065B76C454F135FBEEF6 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6F92FE092EC760C205458A7 /* ProfileView.swift */; };
-		0964CB7A29F85812D575494A /* Spacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7F420042D2976B7F28384F /* Spacing.swift */; };
 		0C2DC6ACB464002B41FEA8BC /* Icons.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20EEF6DF0971C84B2752983 /* Icons.swift */; };
 		0D4C0C6EB925B28A65785DE7 /* League.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4517097C58F3AB9DB59A38 /* League.swift */; };
 		0D79E4579CB7F23AA8175EB9 /* LeagueDetailView+Paid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2439FBEE2B6C2E0BDCAD79 /* LeagueDetailView+Paid.swift */; };
@@ -19,6 +18,7 @@
 		18E72417EAA25C39CDB7DA80 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 9BBCF177D8E7D14FC85A2F79 /* Supabase */; };
 		221D54F9C05D7B44FFAB4AC0 /* NotificationPreferencesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91C9DFA9DF708B041B1E1F5E /* NotificationPreferencesView.swift */; };
 		233E9BC5A265936419B27800 /* PicksViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45FA7FC994C841B0871B333 /* PicksViewModelTests.swift */; };
+		24F3BAACAB43A7F520A0BA26 /* ThemeSpacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75F26D06C3C9C88A1D2D1492 /* ThemeSpacing.swift */; };
 		2BC557CC3EADA62F50338CCA /* DSCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DF242F38270F8CEB654549 /* DSCard.swift */; };
 		2FCEB6BA829EC93E079DED85 /* LeaguePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E753C76862AFD099D5FD8DC /* LeaguePreview.swift */; };
 		319A129B56079D021616A322 /* LeaguesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C85AC94E06CB38EE15F06FBD /* LeaguesViewModel.swift */; };
@@ -50,11 +50,12 @@
 		9CD37873BEEB5DC6E7ADBA05 /* LeaguesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B4F0E8C24BE1594C483E0B /* LeaguesView.swift */; };
 		9E9FB184FDAD9D611FE50C82 /* PaidLeague.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF72C30AD8BCA7C858A0099 /* PaidLeague.swift */; };
 		A9CB58CA3A97B59755CD5097 /* JoinLeagueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F92B2128386637B702FCB12 /* JoinLeagueView.swift */; };
-		AC0A276F0B440FD3ACEFAD82 /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054F468904D721E525EB09FF /* Typography.swift */; };
 		AE50172FE0206CEECC9A36E9 /* LeagueCreatedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2485ABB28B60E960F5EF2DBD /* LeagueCreatedView.swift */; };
+		AE7F2FCAF778F50C36FCAC3F /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFE022A9349F1AA3A1C91AAA /* Theme.swift */; };
 		B90E3D25AC9B855EC6852C6D /* ColorHex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 298239CC4E1599B8F4D3DD6B /* ColorHex.swift */; };
 		BCD62DC3E165765ADBC71D63 /* LeagueMember+Paid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E07C95B627553979AA23A9D /* LeagueMember+Paid.swift */; };
 		BFEFF38173238FF865088D99 /* WalletTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79B2CA606CE4F01DE5A3463 /* WalletTransaction.swift */; };
+		C18944C3C19FAFF9A4F6EFF8 /* ThemeTypography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B40A2C5A1E662F39AFFF4D /* ThemeTypography.swift */; };
 		C3D394837CA733E73575D7E6 /* LeagueDetailViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F216753239D19859422CE36E /* LeagueDetailViewModelTests.swift */; };
 		C4D198A5D7680A6177525DE9 /* StandingsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC52855C3048BF9B6B8F30F /* StandingsService.swift */; };
 		C982F902B95FEA0B5AADDDC8 /* AuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC95918095D0EA3F4C29A0AA /* AuthView.swift */; };
@@ -62,6 +63,7 @@
 		CE3177E452A07A93E0C07479 /* JoinLeagueViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62DD3CEBABDBB6CF41146B92 /* JoinLeagueViewModelTests.swift */; };
 		CEF0F8A07CD6478394576A7F /* PicksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4DE569154E88F8F744FA9EE /* PicksView.swift */; };
 		D21DBEA23D9F0317191D8415 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1157CEFF33FEBE3B474AD1 /* MainTabView.swift */; };
+		DBC5846C7E8E8D601DAB0F6B /* ThemeColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D3DBB275023CAAEE77B7E6 /* ThemeColors.swift */; };
 		E0541239BC012BD8CF86F558 /* League+Paid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CE85F3F7E44F4D13D7C0555 /* League+Paid.swift */; };
 		E19D354135AFF1048D946323 /* PyramidApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57CD810A22A171F8ABC04150 /* PyramidApp.swift */; };
 		E2E8101EE8A36E77B918555A /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0FCC08CF3FA0B871AD1842 /* AppState.swift */; };
@@ -73,7 +75,6 @@
 		ECCFB5B40F1C0FDC80E94869 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92D006D5D7CA358114130A85 /* RootView.swift */; };
 		F00FD2B545BABFBACE1D27B5 /* LeagueService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 334B3F95F52FDB1F1BDD29CE /* LeagueService.swift */; };
 		F5A1A1424F425CEAEF7F3E85 /* PicksViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7446A3311FC4D09B53500705 /* PicksViewModel.swift */; };
-		F6504DC2917B2393B1424950 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A911BFB5165DD1BE7BBBE84 /* Colors.swift */; };
 		F6FB284AFFF65A792CC1ADFB /* JoinPaidLeagueViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C442226AEE75950E7DBF39 /* JoinPaidLeagueViewModel.swift */; };
 		FBB9430147FB54171E83FFCD /* DSButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 733C2CAA42033AF98772CA35 /* DSButton.swift */; };
 /* End PBXBuildFile section */
@@ -98,7 +99,6 @@
 /* Begin PBXFileReference section */
 		02AFA863A205D6EBCA08EA91 /* WalletView+Sheets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WalletView+Sheets.swift"; sourceTree = "<group>"; };
 		054083ED1D3E595360A2AB79 /* NotificationPreferencesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationPreferencesViewModel.swift; sourceTree = "<group>"; };
-		054F468904D721E525EB09FF /* Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typography.swift; sourceTree = "<group>"; };
 		0A0FCC08CF3FA0B871AD1842 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		0B4AD36135713033ED1110B6 /* DSTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSTextField.swift; sourceTree = "<group>"; };
 		1058DD31F7E446B643331071 /* SupabaseDependency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseDependency.swift; sourceTree = "<group>"; };
@@ -121,16 +121,16 @@
 		351A08CFE9CD12D6B11A184B /* NotificationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationServiceTests.swift; sourceTree = "<group>"; };
 		42379DA3E6430A94B9D0CCDB /* PyramidUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = PyramidUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C81C00D8D1E1BDBDE0C1C12 /* WalletViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletViewModelTests.swift; sourceTree = "<group>"; };
-		4E7F420042D2976B7F28384F /* Spacing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spacing.swift; sourceTree = "<group>"; };
 		5400A7FE42C06A3A94D18530 /* JoinLeagueViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinLeagueViewModel.swift; sourceTree = "<group>"; };
+		55B40A2C5A1E662F39AFFF4D /* ThemeTypography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeTypography.swift; sourceTree = "<group>"; };
 		57CD810A22A171F8ABC04150 /* PyramidApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PyramidApp.swift; sourceTree = "<group>"; };
-		5A911BFB5165DD1BE7BBBE84 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		5CE85F3F7E44F4D13D7C0555 /* League+Paid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "League+Paid.swift"; sourceTree = "<group>"; };
 		5D3C1E53A1E0D35921806E8E /* NotificationPreferencesViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationPreferencesViewModelTests.swift; sourceTree = "<group>"; };
 		62DD3CEBABDBB6CF41146B92 /* JoinLeagueViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinLeagueViewModelTests.swift; sourceTree = "<group>"; };
 		6EADF3F67687936B1B06DE55 /* CreateLeagueViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateLeagueViewModelTests.swift; sourceTree = "<group>"; };
 		733C2CAA42033AF98772CA35 /* DSButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSButton.swift; sourceTree = "<group>"; };
 		7446A3311FC4D09B53500705 /* PicksViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PicksViewModel.swift; sourceTree = "<group>"; };
+		75F26D06C3C9C88A1D2D1492 /* ThemeSpacing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeSpacing.swift; sourceTree = "<group>"; };
 		80B986FB70A636F5DD70A708 /* LeagueDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeagueDetailView.swift; sourceTree = "<group>"; };
 		82F47822297EAF10E0237AC5 /* Pyramid.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Pyramid.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		85D4BC8659B5CE1A855BE310 /* Fixture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fixture.swift; sourceTree = "<group>"; };
@@ -144,6 +144,7 @@
 		A20EEF6DF0971C84B2752983 /* Icons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Icons.swift; sourceTree = "<group>"; };
 		A820EA2E715BCCC4D24C745F /* JoinPaidLeagueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinPaidLeagueView.swift; sourceTree = "<group>"; };
 		A9DF242F38270F8CEB654549 /* DSCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSCard.swift; sourceTree = "<group>"; };
+		AFE022A9349F1AA3A1C91AAA /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		B48CA2CD03079EC7728A091F /* WalletViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletViewModel.swift; sourceTree = "<group>"; };
 		B51FAB807FAD71BC12433A4C /* NotificationPreferencesService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationPreferencesService.swift; sourceTree = "<group>"; };
 		B8BCD3F46DADD8CD42294C6C /* WalletView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletView.swift; sourceTree = "<group>"; };
@@ -151,6 +152,7 @@
 		C1BE5AB66D75DBBC1C9404F7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C387D07BEAC18E4F601DE2EF /* CreateLeagueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateLeagueView.swift; sourceTree = "<group>"; };
 		C4DE569154E88F8F744FA9EE /* PicksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PicksView.swift; sourceTree = "<group>"; };
+		C5D3DBB275023CAAEE77B7E6 /* ThemeColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeColors.swift; sourceTree = "<group>"; };
 		C79B2CA606CE4F01DE5A3463 /* WalletTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletTransaction.swift; sourceTree = "<group>"; };
 		C85AC94E06CB38EE15F06FBD /* LeaguesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaguesViewModel.swift; sourceTree = "<group>"; };
 		CA2AB64C6D691C6A43512A0F /* PaidLeagueService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaidLeagueService.swift; sourceTree = "<group>"; };
@@ -216,7 +218,6 @@
 				E0953FF253E7980D5837D1F1 /* Leagues */,
 				DE76900BD73EEF3FA83B9089 /* Picks */,
 				5ABBCB232C40AB841FC8FB54 /* Profile */,
-				9C5F0BC9446297D25B937385 /* Results */,
 				97942EE4E19BE6934876089C /* Wallet */,
 			);
 			path = Features;
@@ -279,13 +280,6 @@
 			path = Wallet;
 			sourceTree = "<group>";
 		};
-		9C5F0BC9446297D25B937385 /* Results */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Results;
-			sourceTree = "<group>";
-		};
 		BAAC3223EB509AF9671AEBAE /* Pyramid */ = {
 			isa = PBXGroup;
 			children = (
@@ -316,10 +310,11 @@
 		CF8F7EF6106B8162CA162FD1 /* DesignSystem */ = {
 			isa = PBXGroup;
 			children = (
-				5A911BFB5165DD1BE7BBBE84 /* Colors.swift */,
 				A20EEF6DF0971C84B2752983 /* Icons.swift */,
-				4E7F420042D2976B7F28384F /* Spacing.swift */,
-				054F468904D721E525EB09FF /* Typography.swift */,
+				AFE022A9349F1AA3A1C91AAA /* Theme.swift */,
+				C5D3DBB275023CAAEE77B7E6 /* ThemeColors.swift */,
+				75F26D06C3C9C88A1D2D1492 /* ThemeSpacing.swift */,
+				55B40A2C5A1E662F39AFFF4D /* ThemeTypography.swift */,
 				6E52E27F4AAE12732F38C109 /* Components */,
 			);
 			path = DesignSystem;
@@ -531,7 +526,6 @@
 				C982F902B95FEA0B5AADDDC8 /* AuthView.swift in Sources */,
 				9BABBF1862353D78467A05C1 /* AuthViewModel.swift in Sources */,
 				B90E3D25AC9B855EC6852C6D /* ColorHex.swift in Sources */,
-				F6504DC2917B2393B1424950 /* Colors.swift in Sources */,
 				EA57A2E5E39C664FBA18C87D /* CreateLeagueView.swift in Sources */,
 				5B1D3BD5BF64D0868A40FD12 /* CreateLeagueViewModel.swift in Sources */,
 				FBB9430147FB54171E83FFCD /* DSButton.swift in Sources */,
@@ -572,10 +566,12 @@
 				07D4065B76C454F135FBEEF6 /* ProfileView.swift in Sources */,
 				E19D354135AFF1048D946323 /* PyramidApp.swift in Sources */,
 				ECCFB5B40F1C0FDC80E94869 /* RootView.swift in Sources */,
-				0964CB7A29F85812D575494A /* Spacing.swift in Sources */,
 				C4D198A5D7680A6177525DE9 /* StandingsService.swift in Sources */,
 				88159AEE668C70F7B75700E9 /* SupabaseDependency.swift in Sources */,
-				AC0A276F0B440FD3ACEFAD82 /* Typography.swift in Sources */,
+				AE7F2FCAF778F50C36FCAC3F /* Theme.swift in Sources */,
+				DBC5846C7E8E8D601DAB0F6B /* ThemeColors.swift in Sources */,
+				24F3BAACAB43A7F520A0BA26 /* ThemeSpacing.swift in Sources */,
+				C18944C3C19FAFF9A4F6EFF8 /* ThemeTypography.swift in Sources */,
 				E3B7DDD618FAB97AD71C9556 /* WalletBalance.swift in Sources */,
 				7ED7DBFE127BB0BC6B8BFCE4 /* WalletService.swift in Sources */,
 				BFEFF38173238FF865088D99 /* WalletTransaction.swift in Sources */,

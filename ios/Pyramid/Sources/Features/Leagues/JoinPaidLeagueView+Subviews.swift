@@ -26,7 +26,7 @@ extension JoinPaidLeagueView {
     func waitingStateView(
         result: JoinPaidLeagueResponse
     ) -> some View {
-        VStack(spacing: DS.Spacing.s6) {
+        VStack(spacing: Theme.Spacing.s60) {
             Spacer()
 
             ZStack {
@@ -39,20 +39,20 @@ extension JoinPaidLeagueView {
                     .pulsing()
             }
 
-            VStack(spacing: DS.Spacing.s2) {
+            VStack(spacing: Theme.Spacing.s20) {
                 Text("You're in!")
-                    .font(.DS.title1)
+                    .font(Theme.Typography.title1)
                     .foregroundStyle(Colors.textPrimary)
 
                 Text("You are \(result.pseudonym)")
-                    .font(.DS.subheadline)
+                    .font(Theme.Typography.subheadline)
                     .foregroundStyle(Colors.textSecondary)
             }
 
             playerCountCard(result: result)
 
             Text("Starts when 5 players join")
-                .font(.DS.caption1)
+                .font(Theme.Typography.caption1)
                 .foregroundStyle(Colors.textSecondary)
                 .multilineTextAlignment(.center)
 
@@ -63,10 +63,10 @@ extension JoinPaidLeagueView {
                 dismiss()
             }
             .dsStyle(.primary)
-            .padding(.bottom, DS.Spacing.s8)
-            .padding(.horizontal, DS.Spacing.pageMargin)
+            .padding(.bottom, Theme.Spacing.s70)
+            .padding(.horizontal, Theme.Spacing.s40)
         }
-        .padding(.horizontal, DS.Spacing.pageMargin)
+        .padding(.horizontal, Theme.Spacing.s40)
     }
 
     func playerCountCard(
@@ -76,20 +76,20 @@ extension JoinPaidLeagueView {
         let current = min(result.playerCount, total)
         let progress = Double(current) / Double(total)
 
-        return VStack(spacing: DS.Spacing.s3) {
+        return VStack(spacing: Theme.Spacing.s30) {
             HStack {
                 Text("\(current) / \(total) players joined")
-                    .font(.DS.headline)
+                    .font(Theme.Typography.headline)
                     .foregroundStyle(Colors.textPrimary)
                 Spacer()
             }
 
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
-                    RoundedRectangle(cornerRadius: DS.Radius.sm)
+                    RoundedRectangle(cornerRadius: Theme.Radius.r20)
                         .fill(Colors.bgElevated)
                         .frame(height: 8)
-                    RoundedRectangle(cornerRadius: DS.Radius.sm)
+                    RoundedRectangle(cornerRadius: Theme.Radius.r20)
                         .fill(Colors.brandBlue)
                         .frame(
                             width: geo.size.width * progress,
@@ -99,9 +99,9 @@ extension JoinPaidLeagueView {
             }
             .frame(height: 8)
         }
-        .padding(DS.Spacing.s4)
+        .padding(Theme.Spacing.s40)
         .background(Colors.bgCard)
-        .clipShape(RoundedRectangle(cornerRadius: DS.Radius.md))
+        .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.default))
     }
 
     // MARK: - State 3: Active
@@ -109,20 +109,20 @@ extension JoinPaidLeagueView {
     func activeStateView(
         result: JoinPaidLeagueResponse
     ) -> some View {
-        VStack(spacing: DS.Spacing.s6) {
+        VStack(spacing: Theme.Spacing.s60) {
             Spacer()
 
             Image(systemName: Theme.Icon.League.trophyFill)
                 .font(.system(size: 64))
                 .foregroundStyle(Colors.warningYellow)
 
-            VStack(spacing: DS.Spacing.s2) {
+            VStack(spacing: Theme.Spacing.s20) {
                 Text("Round started!")
-                    .font(.DS.title1)
+                    .font(Theme.Typography.title1)
                     .foregroundStyle(Colors.textPrimary)
 
                 Text("You are \(result.pseudonym)")
-                    .font(.DS.subheadline)
+                    .font(Theme.Typography.subheadline)
                     .foregroundStyle(Colors.textSecondary)
             }
 
@@ -133,7 +133,7 @@ extension JoinPaidLeagueView {
 
             Spacer()
 
-            VStack(spacing: DS.Spacing.s3) {
+            VStack(spacing: Theme.Spacing.s30) {
                 Button("View League") {
                     onJoined?(result)
                     dismiss()
@@ -145,10 +145,10 @@ extension JoinPaidLeagueView {
                 }
                 .dsStyle(.ghost)
             }
-            .padding(.bottom, DS.Spacing.s8)
-            .padding(.horizontal, DS.Spacing.pageMargin)
+            .padding(.bottom, Theme.Spacing.s70)
+            .padding(.horizontal, Theme.Spacing.s40)
         }
-        .padding(.horizontal, DS.Spacing.pageMargin)
+        .padding(.horizontal, Theme.Spacing.s40)
     }
 }
 
@@ -158,54 +158,54 @@ extension JoinPaidLeagueView {
     func infoRow(label: String, value: String) -> some View {
         HStack {
             Text(label)
-                .font(.DS.subheadline)
+                .font(Theme.Typography.subheadline)
                 .foregroundStyle(Colors.textSecondary)
             Spacer()
             Text(value)
-                .font(.DS.subheadline)
+                .font(Theme.Typography.subheadline)
                 .foregroundStyle(Colors.textPrimary)
         }
     }
 
     func ruleItem(icon: String, text: String) -> some View {
-        HStack(alignment: .top, spacing: DS.Spacing.s2) {
+        HStack(alignment: .top, spacing: Theme.Spacing.s20) {
             Image(systemName: icon)
-                .font(.DS.caption1)
+                .font(Theme.Typography.caption1)
                 .foregroundStyle(Colors.brandBlue)
                 .frame(width: 16)
             Text(text)
-                .font(.DS.caption1)
+                .font(Theme.Typography.caption1)
                 .foregroundStyle(Colors.textSecondary)
         }
     }
 
     func errorBanner(message: String) -> some View {
-        HStack(spacing: DS.Spacing.s2) {
+        HStack(spacing: Theme.Spacing.s20) {
             Image(systemName: Theme.Icon.Status.errorFill)
                 .foregroundStyle(Colors.errorRed)
             Text(message)
-                .font(.DS.caption1)
+                .font(Theme.Typography.caption1)
                 .foregroundStyle(Colors.textPrimary)
             Spacer()
         }
-        .padding(DS.Spacing.s3)
+        .padding(Theme.Spacing.s30)
         .background(Colors.errorRed.opacity(0.15))
-        .clipShape(RoundedRectangle(cornerRadius: DS.Radius.sm))
+        .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.r20))
     }
 
     func infoChip(label: String, value: String) -> some View {
-        VStack(spacing: DS.Spacing.s1) {
+        VStack(spacing: Theme.Spacing.s10) {
             Text(label)
-                .font(.DS.caption1)
+                .font(Theme.Typography.caption1)
                 .foregroundStyle(Colors.textSecondary)
             Text(value)
-                .font(.DS.headline)
+                .font(Theme.Typography.headline)
                 .foregroundStyle(Colors.textPrimary)
         }
-        .padding(.horizontal, DS.Spacing.s4)
-        .padding(.vertical, DS.Spacing.s2)
+        .padding(.horizontal, Theme.Spacing.s40)
+        .padding(.vertical, Theme.Spacing.s20)
         .background(Colors.bgCard)
-        .clipShape(RoundedRectangle(cornerRadius: DS.Radius.md))
+        .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.default))
     }
 }
 

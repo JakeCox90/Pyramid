@@ -19,17 +19,17 @@ enum DSButtonSize {
 
     var font: Font {
         switch self {
-        case .large:  return .DS.headline
-        case .medium: return .DS.subheadline
-        case .small:  return .DS.footnote
+        case .large:  return Theme.Typography.headline
+        case .medium: return Theme.Typography.subheadline
+        case .small:  return Theme.Typography.footnote
         }
     }
 
     var horizontalPadding: CGFloat {
         switch self {
-        case .large:  return DS.Spacing.s4
-        case .medium: return DS.Spacing.s3
-        case .small:  return DS.Spacing.s2
+        case .large:  return Theme.Spacing.s40
+        case .medium: return Theme.Spacing.s30
+        case .small:  return Theme.Spacing.s20
         }
     }
 }
@@ -58,9 +58,9 @@ struct DSButtonStyle: ButtonStyle {
         .frame(height: size.height)
         .padding(.horizontal, isFullWidth ? 0 : size.horizontalPadding)
         .background(backgroundColor(pressed: configuration.isPressed))
-        .clipShape(RoundedRectangle(cornerRadius: DS.Radius.md))
+        .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.default))
         .overlay(
-            RoundedRectangle(cornerRadius: DS.Radius.md)
+            RoundedRectangle(cornerRadius: Theme.Radius.default)
                 .strokeBorder(borderColor, lineWidth: variant == .secondary ? 1.5 : 0)
         )
         .opacity(isEnabled ? 1 : 0.4)
@@ -70,28 +70,28 @@ struct DSButtonStyle: ButtonStyle {
     private func backgroundColor(pressed: Bool) -> Color {
         switch variant {
         case .primary:
-            return pressed ? .DS.Brand.primaryHover : .DS.Brand.primary
+            return pressed ? Theme.Color.Primary.pressed : Theme.Color.Primary.resting
         case .secondary:
-            return pressed ? .DS.Neutral.n100 : .clear
+            return pressed ? Theme.Color.Surface.Background.page : .clear
         case .destructive:
-            return pressed ? Color("semantic/error").opacity(0.85) : .DS.Semantic.error
+            return pressed ? Theme.Color.Status.Error.resting.opacity(0.85) : Theme.Color.Status.Error.resting
         case .ghost:
-            return pressed ? .DS.Neutral.n100 : .clear
+            return pressed ? Theme.Color.Surface.Background.page : .clear
         }
     }
 
     private func foregroundColor(pressed: Bool) -> Color {
         switch variant {
-        case .primary:     return .DS.Neutral.n000
-        case .secondary:   return .DS.Brand.primary
-        case .destructive: return .DS.Neutral.n000
-        case .ghost:       return .DS.Brand.primary
+        case .primary:     return Theme.Color.Surface.Background.container
+        case .secondary:   return Theme.Color.Primary.resting
+        case .destructive: return Theme.Color.Surface.Background.container
+        case .ghost:       return Theme.Color.Primary.resting
         }
     }
 
     private var borderColor: Color {
         switch variant {
-        case .secondary: return .DS.Brand.primary
+        case .secondary: return Theme.Color.Primary.resting
         default:         return .clear
         }
     }

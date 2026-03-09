@@ -10,7 +10,7 @@ struct CreateLeagueView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Color.DS.Background.primary.ignoresSafeArea()
+                Theme.Color.Surface.Background.page.ignoresSafeArea()
 
                 if let created = viewModel.createdLeague {
                     LeagueCreatedView(response: created) {
@@ -36,10 +36,10 @@ struct CreateLeagueView: View {
     }
 
     private var createForm: some View {
-        VStack(spacing: DS.Spacing.s6) {
+        VStack(spacing: Theme.Spacing.s60) {
             Spacer()
 
-            VStack(alignment: .leading, spacing: DS.Spacing.s3) {
+            VStack(alignment: .leading, spacing: Theme.Spacing.s30) {
                 DSTextField(
                     label: "League Name",
                     text: $viewModel.leagueName,
@@ -49,8 +49,8 @@ struct CreateLeagueView: View {
                 .autocorrectionDisabled()
 
                 Text("Give your league a unique name. You'll get a join code to share with friends.")
-                    .font(.DS.caption1)
-                    .foregroundStyle(Color.DS.Neutral.n500)
+                    .font(Theme.Typography.caption1)
+                    .foregroundStyle(Theme.Color.Content.Text.disabled)
             }
 
             Button("Create League") {
@@ -62,6 +62,6 @@ struct CreateLeagueView: View {
             Spacer()
             Spacer()
         }
-        .padding(.horizontal, DS.Spacing.pageMargin)
+        .padding(.horizontal, Theme.Spacing.s40)
     }
 }

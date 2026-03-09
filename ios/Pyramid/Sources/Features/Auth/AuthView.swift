@@ -5,22 +5,22 @@ struct AuthView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: DS.Spacing.s6) {
+            VStack(spacing: Theme.Spacing.s60) {
                 Spacer()
 
-                VStack(spacing: DS.Spacing.s2) {
+                VStack(spacing: Theme.Spacing.s20) {
                     Text("Pyramid")
-                        .font(.DS.display)
-                        .foregroundStyle(Color.DS.Neutral.n900)
+                        .font(Theme.Typography.display)
+                        .foregroundStyle(Theme.Color.Content.Text.default)
 
                     Text("Premier League Last Man Standing")
-                        .font(.DS.subheadline)
-                        .foregroundStyle(Color.DS.Neutral.n500)
+                        .font(Theme.Typography.subheadline)
+                        .foregroundStyle(Theme.Color.Content.Text.disabled)
                 }
 
                 Spacer()
 
-                VStack(spacing: DS.Spacing.s3) {
+                VStack(spacing: Theme.Spacing.s30) {
                     DSTextField(
                         label: "Email",
                         text: $viewModel.email,
@@ -44,7 +44,7 @@ struct AuthView: View {
                     }
                     .dsStyle(.primary, isLoading: viewModel.isLoading)
                     .disabled(viewModel.isLoading)
-                    .padding(.top, DS.Spacing.s2)
+                    .padding(.top, Theme.Spacing.s20)
 
                     Button("Create account") {
                         Task { await viewModel.signUp() }
@@ -54,8 +54,8 @@ struct AuthView: View {
 
                 Spacer()
             }
-            .padding(.horizontal, DS.Spacing.pageMargin)
-            .background(Color.DS.Background.primary.ignoresSafeArea())
+            .padding(.horizontal, Theme.Spacing.s40)
+            .background(Theme.Color.Surface.Background.page.ignoresSafeArea())
         }
     }
 }
