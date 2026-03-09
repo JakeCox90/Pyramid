@@ -11,17 +11,12 @@ final class AppState: ObservableObject {
     let supabase: SupabaseClient
 
     init() {
-        let urlString = Bundle.main.object(forInfoDictionaryKey: "SUPABASE_URL") as? String ?? ""
-        let anonKey = Bundle.main.object(forInfoDictionaryKey: "SUPABASE_ANON_KEY") as? String ?? ""
-
-        guard let url = URL(string: urlString), !urlString.isEmpty, !anonKey.isEmpty else {
-            // Use a placeholder client so the test runner can bootstrap the app
-            // without crashing. Real app launch requires valid xcconfig values.
-            self.supabase = SupabaseClient(
-                supabaseURL: URL(string: "https://placeholder.supabase.co")!,
-                supabaseKey: "placeholder"
-            )
-            return
+        guard
+            let urlString = Bundle.main.object(forInfoDictionaryKey: "SUPABASE_URL") as? String,
+            let url = URL(string: urlString),
+            let anonKey = Bundle.main.object(forInfoDictionaryKey: "SUPABASE_ANON_KEY") as? String
+        else {
+            fatalError("SUPABASE_URL and SUPABASE_ANON_KEY must be set in Info.plist")
         }
 
         self.supabase = SupabaseClient(supabaseURL: url, supabaseKey: anonKey)
