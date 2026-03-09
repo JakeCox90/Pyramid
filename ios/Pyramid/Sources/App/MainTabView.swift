@@ -12,13 +12,13 @@ struct MainTabView: View {
         TabView(selection: $selectedTab) {
             LeaguesView()
                 .tabItem {
-                    Label("Leagues", systemImage: "trophy")
+                    Label("Leagues", systemImage: Theme.Icon.Navigation.leagues)
                 }
                 .tag(Tab.leagues)
 
             ProfileView()
                 .tabItem {
-                    Label("Profile", systemImage: "person.circle")
+                    Label("Profile", systemImage: Theme.Icon.Navigation.profile)
                 }
                 .tag(Tab.profile)
         }

@@ -51,7 +51,7 @@ struct NotificationPreferencesView: View {
     private var permissionBanner: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 10) {
-                Image(systemName: "bell.slash.fill")
+                Image(systemName: Theme.Icon.Navigation.notificationsDisabled)
                     .foregroundStyle(Color(hex: "FF453A"))
                 Text("Notifications are turned off")
                     .font(.subheadline)

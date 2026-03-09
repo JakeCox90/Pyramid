@@ -40,7 +40,7 @@ struct PicksView: View {
 
     private func errorView(message: String) -> some View {
         VStack(spacing: DS.Spacing.s4) {
-            Image(systemName: "exclamationmark.triangle")
+            Image(systemName: Theme.Icon.Status.error)
                 .font(.system(size: 48))
                 .foregroundStyle(Color.DS.Neutral.n300)
             Text(message)
@@ -54,7 +54,7 @@ struct PicksView: View {
 
     private var emptyStateView: some View {
         VStack(spacing: DS.Spacing.s4) {
-            Image(systemName: "calendar.badge.clock")
+            Image(systemName: Theme.Icon.Pick.deadline)
                 .font(.system(size: 56))
                 .foregroundStyle(Color.DS.Neutral.n300)
             Text("No fixtures this week")
@@ -84,7 +84,7 @@ struct PicksView: View {
 
                 if let deadline = viewModel.deadlineText {
                     HStack {
-                        Image(systemName: "clock")
+                        Image(systemName: Theme.Icon.Pick.timeRemaining)
                             .foregroundStyle(Color.DS.Semantic.warning)
                         Text(deadline)
                             .font(.DS.subheadline.bold())
@@ -118,7 +118,7 @@ struct PicksView: View {
 
     private func currentPickBanner(pick: Pick) -> some View {
         HStack {
-            Image(systemName: pick.isLocked ? "lock.fill" : "checkmark.circle.fill")
+            Image(systemName: pick.isLocked ? Theme.Icon.Pick.locked : Theme.Icon.Status.success)
                 .foregroundStyle(pick.isLocked ? Color.DS.Neutral.n500 : Color.DS.Semantic.success)
             VStack(alignment: .leading, spacing: 2) {
                 Text(pick.isLocked ? "Pick locked: \(pick.teamName)" : "Current pick: \(pick.teamName)")
@@ -140,7 +140,7 @@ struct PicksView: View {
 
     private func successBanner(message: String) -> some View {
         HStack {
-            Image(systemName: "checkmark.circle.fill")
+            Image(systemName: Theme.Icon.Status.success)
                 .foregroundStyle(Color.DS.Semantic.success)
             Text(message)
                 .font(.DS.subheadline)
@@ -155,7 +155,7 @@ struct PicksView: View {
 
     private func errorBanner(message: String) -> some View {
         HStack {
-            Image(systemName: "exclamationmark.triangle.fill")
+            Image(systemName: Theme.Icon.Status.errorFill)
                 .foregroundStyle(Color.DS.Semantic.error)
             Text(message)
                 .font(.DS.subheadline)

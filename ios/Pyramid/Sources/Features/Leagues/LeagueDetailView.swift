@@ -40,7 +40,7 @@ struct LeagueDetailView: View {
 
     private func errorView(message: String) -> some View {
         VStack(spacing: DS.Spacing.s4) {
-            Image(systemName: "exclamationmark.triangle")
+            Image(systemName: Theme.Icon.Status.error)
                 .font(.system(size: 48))
                 .foregroundStyle(Color.DS.Neutral.n300)
             Text(message)
@@ -105,7 +105,7 @@ struct LeagueDetailView: View {
 
     private var emptyMembersView: some View {
         VStack(spacing: DS.Spacing.s4) {
-            Image(systemName: "person.2")
+            Image(systemName: Theme.Icon.League.members)
                 .font(.system(size: 48))
                 .foregroundStyle(Color.DS.Neutral.n300)
             Text("No other members yet")
@@ -124,7 +124,7 @@ struct LeagueDetailView: View {
         VStack(spacing: DS.Spacing.s2) {
             if !viewModel.isDeadlinePassed() {
                 HStack {
-                    Image(systemName: "lock.fill")
+                    Image(systemName: Theme.Icon.Pick.locked)
                         .foregroundStyle(Color.DS.Neutral.n500)
                     Text("Picks are hidden until kick-off")
                         .font(.DS.caption1)
@@ -180,20 +180,20 @@ struct MemberRow: View {
     @ViewBuilder private var statusIcon: some View {
         switch member.status {
         case .winner:
-            Image(systemName: "trophy.fill")
+            Image(systemName: Theme.Icon.League.trophyFill)
                 .foregroundStyle(Color.DS.Semantic.warning)
         case .active:
-            Image(systemName: "checkmark.circle.fill")
+            Image(systemName: Theme.Icon.Status.success)
                 .foregroundStyle(Color.DS.Semantic.success)
         case .eliminated:
-            Image(systemName: "xmark.circle.fill")
+            Image(systemName: Theme.Icon.Status.failure)
                 .foregroundStyle(Color.DS.Semantic.error)
         }
     }
 
     @ViewBuilder private var pickView: some View {
         if !deadlinePassed {
-            Image(systemName: "lock.fill")
+            Image(systemName: Theme.Icon.Pick.locked)
                 .font(.DS.caption1)
                 .foregroundStyle(Color.DS.Neutral.n300)
         } else if let pick {
