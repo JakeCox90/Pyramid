@@ -12,10 +12,10 @@ struct PaidLeagueBadge: View {
             Text("Paid League")
                 .font(.DS.caption1)
         }
-        .foregroundStyle(Color(hex: "FFD60A"))
+        .foregroundStyle(Color.DS.Semantic.warning)
         .padding(.horizontal, DS.Spacing.s3)
         .padding(.vertical, DS.Spacing.s1)
-        .background(Color(hex: "FFD60A").opacity(0.15))
+        .background(Color.DS.Semantic.warning.opacity(0.15))
         .clipShape(Capsule())
     }
 }
@@ -81,7 +81,7 @@ struct PaidMemberRow: View {
             VStack(alignment: .trailing, spacing: DS.Spacing.s1) {
                 Text(formatPence(prizePence))
                     .font(.DS.headline)
-                    .foregroundStyle(Color(hex: "30D158"))
+                    .foregroundStyle(Color.DS.Semantic.success)
                 Text("Prize")
                     .font(.DS.caption2)
                     .foregroundStyle(Color.DS.Neutral.n500)

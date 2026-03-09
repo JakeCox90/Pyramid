@@ -1,7 +1,5 @@
 import SwiftUI
 
-private typealias Colors = JoinPaidLeagueColors
-
 // MARK: - JoinPaidLeagueView
 
 struct JoinPaidLeagueView: View {
@@ -14,7 +12,7 @@ struct JoinPaidLeagueView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Colors.bgPrimary.ignoresSafeArea()
+                Color.DS.Background.primary.ignoresSafeArea()
 
                 if let result = viewModel.joinResult {
                     switch result.status {
@@ -40,7 +38,7 @@ struct JoinPaidLeagueView: View {
                 ToolbarItem(placement: .cancellationAction) {
                     if viewModel.joinResult == nil {
                         Button("Cancel") { dismiss() }
-                            .foregroundStyle(Colors.textSecondary)
+                            .foregroundStyle(Color.DS.Text.secondary)
                     }
                 }
             }
@@ -96,9 +94,9 @@ struct JoinPaidLeagueView: View {
         VStack(alignment: .leading, spacing: DS.Spacing.s3) {
             Text("Prize Pot")
                 .font(.DS.headline)
-                .foregroundStyle(Colors.textPrimary)
+                .foregroundStyle(Color.DS.Text.primary)
 
-            Divider().background(Colors.separator)
+            Divider().background(Color.DS.separator)
 
             infoRow(label: "Entry fee", value: "£5.00")
             infoRow(
@@ -111,7 +109,7 @@ struct JoinPaidLeagueView: View {
             )
         }
         .padding(DS.Spacing.s4)
-        .background(Colors.bgCard)
+        .background(Color.DS.Background.secondary)
         .clipShape(RoundedRectangle(cornerRadius: DS.Radius.md))
     }
 
@@ -119,17 +117,18 @@ struct JoinPaidLeagueView: View {
         HStack {
             Text("Your wallet")
                 .font(.DS.subheadline)
-                .foregroundStyle(Colors.textSecondary)
+                .foregroundStyle(Color.DS.Text.secondary)
             Spacer()
             Text(viewModel.walletBalanceFormatted)
                 .font(.DS.headline)
                 .foregroundStyle(
                     viewModel.hasInsufficientFunds
-                        ? Colors.errorRed : Colors.successGreen
+                        ? Color.DS.Semantic.error
+                        : Color.DS.Semantic.success
                 )
         }
         .padding(DS.Spacing.s4)
-        .background(Colors.bgCard)
+        .background(Color.DS.Background.secondary)
         .clipShape(RoundedRectangle(cornerRadius: DS.Radius.md))
     }
 
@@ -137,7 +136,7 @@ struct JoinPaidLeagueView: View {
         VStack(alignment: .leading, spacing: DS.Spacing.s2) {
             Text("Rules")
                 .font(.DS.caption1)
-                .foregroundStyle(Colors.textSecondary)
+                .foregroundStyle(Color.DS.Text.secondary)
 
             ruleItem(
                 icon: "theatermasks",
@@ -153,7 +152,7 @@ struct JoinPaidLeagueView: View {
             )
         }
         .padding(DS.Spacing.s4)
-        .background(Colors.bgCard)
+        .background(Color.DS.Background.secondary)
         .clipShape(RoundedRectangle(cornerRadius: DS.Radius.md))
     }
 }

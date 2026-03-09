@@ -1,22 +1,5 @@
 import SwiftUI
 
-// MARK: - Dark theme colour constants (shared across JoinPaidLeagueView files)
-
-enum JoinPaidLeagueColors {
-    static let bgPrimary = Color(hex: "0A0A0A")
-    static let bgCard = Color(hex: "1C1C1E")
-    static let bgElevated = Color(hex: "2C2C2E")
-    static let textPrimary = Color.white
-    static let textSecondary = Color.white.opacity(0.6)
-    static let brandBlue = Color(hex: "1A56DB")
-    static let successGreen = Color(hex: "30D158")
-    static let errorRed = Color(hex: "FF453A")
-    static let warningYellow = Color(hex: "FFD60A")
-    static let separator = Color(hex: "38383A")
-}
-
-private typealias Colors = JoinPaidLeagueColors
-
 // MARK: - JoinPaidLeagueView state views
 
 extension JoinPaidLeagueView {
@@ -31,29 +14,29 @@ extension JoinPaidLeagueView {
 
             ZStack {
                 Circle()
-                    .fill(Colors.successGreen.opacity(0.15))
+                    .fill(Color.DS.Semantic.success.opacity(0.15))
                     .frame(width: 96, height: 96)
                 Image(systemName: "checkmark.circle.fill")
                     .font(.system(size: 56))
-                    .foregroundStyle(Colors.successGreen)
+                    .foregroundStyle(Color.DS.Semantic.success)
                     .pulsing()
             }
 
             VStack(spacing: DS.Spacing.s2) {
                 Text("You're in!")
                     .font(.DS.title1)
-                    .foregroundStyle(Colors.textPrimary)
+                    .foregroundStyle(Color.DS.Text.primary)
 
                 Text("You are \(result.pseudonym)")
                     .font(.DS.subheadline)
-                    .foregroundStyle(Colors.textSecondary)
+                    .foregroundStyle(Color.DS.Text.secondary)
             }
 
             playerCountCard(result: result)
 
             Text("Starts when 5 players join")
                 .font(.DS.caption1)
-                .foregroundStyle(Colors.textSecondary)
+                .foregroundStyle(Color.DS.Text.secondary)
                 .multilineTextAlignment(.center)
 
             Spacer()
@@ -80,17 +63,17 @@ extension JoinPaidLeagueView {
             HStack {
                 Text("\(current) / \(total) players joined")
                     .font(.DS.headline)
-                    .foregroundStyle(Colors.textPrimary)
+                    .foregroundStyle(Color.DS.Text.primary)
                 Spacer()
             }
 
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
                     RoundedRectangle(cornerRadius: DS.Radius.sm)
-                        .fill(Colors.bgElevated)
+                        .fill(Color.DS.Background.elevated)
                         .frame(height: 8)
                     RoundedRectangle(cornerRadius: DS.Radius.sm)
-                        .fill(Colors.brandBlue)
+                        .fill(Color.DS.Brand.primary)
                         .frame(
                             width: geo.size.width * progress,
                             height: 8
@@ -100,7 +83,7 @@ extension JoinPaidLeagueView {
             .frame(height: 8)
         }
         .padding(DS.Spacing.s4)
-        .background(Colors.bgCard)
+        .background(Color.DS.Background.secondary)
         .clipShape(RoundedRectangle(cornerRadius: DS.Radius.md))
     }
 
@@ -114,16 +97,16 @@ extension JoinPaidLeagueView {
 
             Image(systemName: "trophy.fill")
                 .font(.system(size: 64))
-                .foregroundStyle(Colors.warningYellow)
+                .foregroundStyle(Color.DS.Semantic.warning)
 
             VStack(spacing: DS.Spacing.s2) {
                 Text("Round started!")
                     .font(.DS.title1)
-                    .foregroundStyle(Colors.textPrimary)
+                    .foregroundStyle(Color.DS.Text.primary)
 
                 Text("You are \(result.pseudonym)")
                     .font(.DS.subheadline)
-                    .foregroundStyle(Colors.textSecondary)
+                    .foregroundStyle(Color.DS.Text.secondary)
             }
 
             infoChip(
@@ -159,11 +142,11 @@ extension JoinPaidLeagueView {
         HStack {
             Text(label)
                 .font(.DS.subheadline)
-                .foregroundStyle(Colors.textSecondary)
+                .foregroundStyle(Color.DS.Text.secondary)
             Spacer()
             Text(value)
                 .font(.DS.subheadline)
-                .foregroundStyle(Colors.textPrimary)
+                .foregroundStyle(Color.DS.Text.primary)
         }
     }
 
@@ -171,25 +154,25 @@ extension JoinPaidLeagueView {
         HStack(alignment: .top, spacing: DS.Spacing.s2) {
             Image(systemName: icon)
                 .font(.DS.caption1)
-                .foregroundStyle(Colors.brandBlue)
+                .foregroundStyle(Color.DS.Brand.primary)
                 .frame(width: 16)
             Text(text)
                 .font(.DS.caption1)
-                .foregroundStyle(Colors.textSecondary)
+                .foregroundStyle(Color.DS.Text.secondary)
         }
     }
 
     func errorBanner(message: String) -> some View {
         HStack(spacing: DS.Spacing.s2) {
             Image(systemName: "exclamationmark.triangle.fill")
-                .foregroundStyle(Colors.errorRed)
+                .foregroundStyle(Color.DS.Semantic.error)
             Text(message)
                 .font(.DS.caption1)
-                .foregroundStyle(Colors.textPrimary)
+                .foregroundStyle(Color.DS.Text.primary)
             Spacer()
         }
         .padding(DS.Spacing.s3)
-        .background(Colors.errorRed.opacity(0.15))
+        .background(Color.DS.Semantic.error.opacity(0.15))
         .clipShape(RoundedRectangle(cornerRadius: DS.Radius.sm))
     }
 
@@ -197,14 +180,14 @@ extension JoinPaidLeagueView {
         VStack(spacing: DS.Spacing.s1) {
             Text(label)
                 .font(.DS.caption1)
-                .foregroundStyle(Colors.textSecondary)
+                .foregroundStyle(Color.DS.Text.secondary)
             Text(value)
                 .font(.DS.headline)
-                .foregroundStyle(Colors.textPrimary)
+                .foregroundStyle(Color.DS.Text.primary)
         }
         .padding(.horizontal, DS.Spacing.s4)
         .padding(.vertical, DS.Spacing.s2)
-        .background(Colors.bgCard)
+        .background(Color.DS.Background.secondary)
         .clipShape(RoundedRectangle(cornerRadius: DS.Radius.md))
     }
 }

@@ -1,19 +1,5 @@
 import SwiftUI
 
-// MARK: - Wallet Colours
-
-private let bgPrimary = Color(hex: "0A0A0A")
-private let bgCard = Color(hex: "1C1C1E")
-private let bgElevated = Color(hex: "2C2C2E")
-private let textPrimary = Color.white
-private let textSecondary = Color.white.opacity(0.6)
-private let textTertiary = Color.white.opacity(0.3)
-private let brandBlue = Color(hex: "1A56DB")
-private let successGreen = Color(hex: "30D158")
-private let errorRed = Color(hex: "FF453A")
-private let warningYellow = Color(hex: "FFD60A")
-private let separator = Color(hex: "38383A")
-
 // MARK: - WalletView
 
 struct WalletView: View {
@@ -22,19 +8,19 @@ struct WalletView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                bgPrimary.ignoresSafeArea()
+                Color.DS.Background.primary.ignoresSafeArea()
 
                 if viewModel.isLoading && viewModel.wallet == nil {
                     ProgressView()
-                        .tint(textPrimary)
+                        .tint(Color.DS.Text.primary)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
                     ScrollView {
-                        VStack(spacing: 16) {
+                        VStack(spacing: DS.Spacing.s4) {
                             balanceHeader
                             transactionHistorySection
                         }
-                        .padding(.vertical, 16)
+                        .padding(.vertical, DS.Spacing.s4)
                     }
                 }
             }
@@ -74,48 +60,52 @@ struct WalletView: View {
     // MARK: - Balance Header
 
     private var balanceHeader: some View {
-        VStack(spacing: 12) {
-            VStack(spacing: 4) {
+        VStack(spacing: DS.Spacing.s3) {
+            VStack(spacing: DS.Spacing.s1) {
                 Text("Available to Play")
                     .font(.subheadline)
-                    .foregroundStyle(textSecondary)
+                    .foregroundStyle(Color.DS.Text.secondary)
                 Text(viewModel.wallet?.availableToPlayFormatted ?? "–")
                     .font(.system(size: 48, weight: .bold, design: .rounded))
-                    .foregroundStyle(textPrimary)
+                    .foregroundStyle(Color.DS.Text.primary)
             }
 
-            HStack(spacing: 8) {
+            HStack(spacing: DS.Spacing.s2) {
                 VStack(spacing: 2) {
                     Text("Withdrawable")
                         .font(.caption)
-                        .foregroundStyle(textTertiary)
+                        .foregroundStyle(Color.DS.Text.tertiary)
                     let withdrawable = viewModel.wallet?.withdrawablePence ?? 0
                     Text(viewModel.wallet?.withdrawableFormatted ?? "–")
                         .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(withdrawable > 0 ? successGreen : textSecondary)
+                        .foregroundStyle(
+                            withdrawable > 0
+                                ? Color.DS.Semantic.success
+                                : Color.DS.Text.secondary
+                        )
                 }
                 .frame(maxWidth: .infinity)
 
                 Rectangle()
-                    .fill(separator)
+                    .fill(Color.DS.separator)
                     .frame(width: 1, height: 32)
 
                 VStack(spacing: 2) {
                     Text("Pending")
                         .font(.caption)
-                        .foregroundStyle(textTertiary)
+                        .foregroundStyle(Color.DS.Text.tertiary)
                     Text(viewModel.wallet?.pendingFormatted ?? "–")
                         .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(textSecondary)
+                        .foregroundStyle(Color.DS.Text.secondary)
                 }
                 .frame(maxWidth: .infinity)
             }
-            .padding(.vertical, 12)
-            .padding(.horizontal, 20)
-            .background(bgCard)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .padding(.vertical, DS.Spacing.s3)
+            .padding(.horizontal, DS.Spacing.s5)
+            .background(Color.DS.Background.secondary)
+            .clipShape(RoundedRectangle(cornerRadius: DS.Radius.md))
 
-            HStack(spacing: 12) {
+            HStack(spacing: DS.Spacing.s3) {
                 Button {
                     viewModel.showTopUpSheet = true
                 } label: {
@@ -124,8 +114,8 @@ struct WalletView: View {
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
-                        .background(brandBlue)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .background(Color.DS.Brand.primary)
+                        .clipShape(RoundedRectangle(cornerRadius: DS.Radius.md))
                 }
 
                 let withdrawable = viewModel.wallet?.withdrawablePence ?? 0
@@ -134,26 +124,30 @@ struct WalletView: View {
                 } label: {
                     Text("Withdraw")
                         .font(.headline)
-                        .foregroundStyle(withdrawable > 0 ? textPrimary : textTertiary)
+                        .foregroundStyle(
+                            withdrawable > 0
+                                ? Color.DS.Text.primary
+                                : Color.DS.Text.tertiary
+                        )
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
-                        .background(bgElevated)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .background(Color.DS.Background.elevated)
+                        .clipShape(RoundedRectangle(cornerRadius: DS.Radius.md))
                 }
                 .disabled(withdrawable == 0)
             }
         }
-        .padding(.horizontal, 16)
+        .padding(.horizontal, DS.Spacing.pageMargin)
     }
 
     // MARK: - Transaction History
 
     private var transactionHistorySection: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: DS.Spacing.s2) {
             Text("Transaction History")
                 .font(.headline)
-                .foregroundStyle(textPrimary)
-                .padding(.horizontal, 16)
+                .foregroundStyle(Color.DS.Text.primary)
+                .padding(.horizontal, DS.Spacing.pageMargin)
 
             if viewModel.transactions.isEmpty {
                 emptyTransactionsView
@@ -163,32 +157,32 @@ struct WalletView: View {
                         TransactionRow(transaction: transaction)
                         if transaction.id != viewModel.transactions.last?.id {
                             Divider()
-                                .overlay(separator)
+                                .overlay(Color.DS.separator)
                                 .padding(.leading, 56)
                         }
                     }
                 }
-                .background(bgCard)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-                .padding(.horizontal, 16)
+                .background(Color.DS.Background.secondary)
+                .clipShape(RoundedRectangle(cornerRadius: DS.Radius.md))
+                .padding(.horizontal, DS.Spacing.pageMargin)
             }
         }
     }
 
     private var emptyTransactionsView: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: DS.Spacing.s3) {
             Image(systemName: "creditcard")
                 .font(.system(size: 40))
-                .foregroundStyle(textTertiary)
+                .foregroundStyle(Color.DS.Text.tertiary)
             Text("No transactions yet")
                 .font(.subheadline)
-                .foregroundStyle(textSecondary)
+                .foregroundStyle(Color.DS.Text.secondary)
         }
         .frame(maxWidth: .infinity)
-        .padding(.vertical, 40)
-        .background(bgCard)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-        .padding(.horizontal, 16)
+        .padding(.vertical, DS.Spacing.s10)
+        .background(Color.DS.Background.secondary)
+        .clipShape(RoundedRectangle(cornerRadius: DS.Radius.md))
+        .padding(.horizontal, DS.Spacing.pageMargin)
     }
 }
 
@@ -198,7 +192,7 @@ private struct TransactionRow: View {
     let transaction: WalletTransaction
 
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: DS.Spacing.s3) {
             ZStack {
                 Circle()
                     .fill(iconBackgroundColor.opacity(0.15))
@@ -211,26 +205,33 @@ private struct TransactionRow: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(transactionTitle)
                     .font(.subheadline.weight(.medium))
-                    .foregroundStyle(textPrimary)
+                    .foregroundStyle(Color.DS.Text.primary)
                 if let notes = transaction.notes {
                     Text(notes)
                         .font(.caption)
-                        .foregroundStyle(textSecondary)
+                        .foregroundStyle(Color.DS.Text.secondary)
                 } else {
                     Text(formattedDate)
                         .font(.caption)
-                        .foregroundStyle(textTertiary)
+                        .foregroundStyle(Color.DS.Text.tertiary)
                 }
             }
 
             Spacer()
 
-            Text((transaction.isCredit ? "+" : "-") + transaction.amountFormatted)
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(transaction.isCredit ? successGreen : errorRed)
+            Text(
+                (transaction.isCredit ? "+" : "-")
+                    + transaction.amountFormatted
+            )
+            .font(.subheadline.weight(.semibold))
+            .foregroundStyle(
+                transaction.isCredit
+                    ? Color.DS.Semantic.success
+                    : Color.DS.Semantic.error
+            )
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 12)
+        .padding(.horizontal, DS.Spacing.s4)
+        .padding(.vertical, DS.Spacing.s3)
     }
 
     private var iconName: String {
@@ -251,13 +252,13 @@ private struct TransactionRow: View {
     private var iconBackgroundColor: Color {
         switch transaction.type {
         case .topUp, .winnings:
-            return successGreen
+            return Color.DS.Semantic.success
         case .stake:
-            return brandBlue
+            return Color.DS.Brand.primary
         case .stakeRefund:
-            return warningYellow
+            return Color.DS.Semantic.warning
         case .withdrawal:
-            return errorRed
+            return Color.DS.Semantic.error
         }
     }
 

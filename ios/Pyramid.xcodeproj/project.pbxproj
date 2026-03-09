@@ -34,6 +34,7 @@
 		73E4655BE72ED40E5B80E949 /* WalletViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C81C00D8D1E1BDBDE0C1C12 /* WalletViewModelTests.swift */; };
 		792AE4EF19C36B51EB6B1FC5 /* WalletView+Sheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02AFA863A205D6EBCA08EA91 /* WalletView+Sheets.swift */; };
 		797E94A6CEB57E38168B66EE /* JoinPaidLeagueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A820EA2E715BCCC4D24C745F /* JoinPaidLeagueView.swift */; };
+		79CD52F7CD49A49740E88C4A /* WithdrawSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956E85CEEF44C7F5616E2875 /* WithdrawSheet.swift */; };
 		7D436E5E9070E3F8F48E64CA /* WalletViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48CA2CD03079EC7728A091F /* WalletViewModel.swift */; };
 		7E125965E933660839A52394 /* NotificationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351A08CFE9CD12D6B11A184B /* NotificationServiceTests.swift */; };
 		7ED7DBFE127BB0BC6B8BFCE4 /* WalletService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96279BADF0DD877B6F1E4583 /* WalletService.swift */; };
@@ -136,6 +137,7 @@
 		90E51A69C9956AE38B5BC50D /* JoinPaidLeagueView+Subviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JoinPaidLeagueView+Subviews.swift"; sourceTree = "<group>"; };
 		91C9DFA9DF708B041B1E1F5E /* NotificationPreferencesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationPreferencesView.swift; sourceTree = "<group>"; };
 		92D006D5D7CA358114130A85 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		956E85CEEF44C7F5616E2875 /* WithdrawSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawSheet.swift; sourceTree = "<group>"; };
 		96279BADF0DD877B6F1E4583 /* WalletService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletService.swift; sourceTree = "<group>"; };
 		9B2439FBEE2B6C2E0BDCAD79 /* LeagueDetailView+Paid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LeagueDetailView+Paid.swift"; sourceTree = "<group>"; };
 		A820EA2E715BCCC4D24C745F /* JoinPaidLeagueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinPaidLeagueView.swift; sourceTree = "<group>"; };
@@ -271,6 +273,7 @@
 				B8BCD3F46DADD8CD42294C6C /* WalletView.swift */,
 				02AFA863A205D6EBCA08EA91 /* WalletView+Sheets.swift */,
 				B48CA2CD03079EC7728A091F /* WalletViewModel.swift */,
+				956E85CEEF44C7F5616E2875 /* WithdrawSheet.swift */,
 			);
 			path = Wallet;
 			sourceTree = "<group>";
@@ -575,6 +578,7 @@
 				792AE4EF19C36B51EB6B1FC5 /* WalletView+Sheets.swift in Sources */,
 				96D1A82E790D90918DA4B672 /* WalletView.swift in Sources */,
 				7D436E5E9070E3F8F48E64CA /* WalletViewModel.swift in Sources */,
+				79CD52F7CD49A49740E88C4A /* WithdrawSheet.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

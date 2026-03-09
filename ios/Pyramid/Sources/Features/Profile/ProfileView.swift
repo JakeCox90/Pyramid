@@ -6,18 +6,19 @@ struct ProfileView: View {
             VStack(spacing: 12) {
                 Image(systemName: "person.circle")
                     .font(.system(size: 48))
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Color.DS.Text.secondary)
                 Text("Profile")
                     .font(.headline)
+                    .foregroundStyle(Color.DS.Text.primary)
                 Text("Your profile will appear here.")
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Color.DS.Text.secondary)
 
                 NavigationLink(destination: NotificationPreferencesView()) {
                     Label("Notifications", systemImage: "bell")
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding()
-                        .background(Color(.systemGroupedBackground))
+                        .background(Color.DS.Background.secondary)
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                 }
                 .buttonStyle(.plain)

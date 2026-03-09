@@ -1,18 +1,5 @@
 import SwiftUI
 
-// MARK: - Sheet Colours (local constants)
-
-private let bgPrimary = Color(hex: "0A0A0A")
-private let bgCard = Color(hex: "1C1C1E")
-private let bgElevated = Color(hex: "2C2C2E")
-private let textPrimary = Color.white
-private let textSecondary = Color.white.opacity(0.6)
-private let textTertiary = Color.white.opacity(0.3)
-private let brandBlue = Color(hex: "1A56DB")
-private let successGreen = Color(hex: "30D158")
-private let errorRed = Color(hex: "FF453A")
-private let warningYellow = Color(hex: "FFD60A")
-
 // MARK: - Top-Up Sheet
 
 struct TopUpSheet: View {
@@ -37,245 +24,146 @@ struct TopUpSheet: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                bgPrimary.ignoresSafeArea()
+                Color.DS.Background.primary.ignoresSafeArea()
 
-                VStack(spacing: 24) {
+                VStack(spacing: DS.Spacing.s6) {
                     // Stripe GATE banner
-                    HStack(spacing: 8) {
+                    HStack(spacing: DS.Spacing.s2) {
                         Image(systemName: "info.circle.fill")
-                            .foregroundStyle(warningYellow)
-                        Text("Payment processing coming soon — Stripe integration pending (PYR-25)")
-                            .font(.caption)
-                            .foregroundStyle(warningYellow)
+                            .foregroundStyle(Color.DS.Semantic.warning)
+                        Text(
+                            "Payment processing coming soon"
+                                + " — Stripe integration pending (PYR-25)"
+                        )
+                        .font(.caption)
+                        .foregroundStyle(Color.DS.Semantic.warning)
                     }
-                    .padding(12)
-                    .background(warningYellow.opacity(0.1))
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                    .padding(.horizontal, 16)
+                    .padding(DS.Spacing.s3)
+                    .background(Color.DS.Semantic.warning.opacity(0.1))
+                    .clipShape(RoundedRectangle(cornerRadius: DS.Radius.md))
+                    .padding(.horizontal, DS.Spacing.pageMargin)
 
-                    // Quick-pick amounts
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("Select an amount")
-                            .font(.subheadline.weight(.medium))
-                            .foregroundStyle(textSecondary)
-                            .padding(.horizontal, 16)
-
-                        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
-                            ForEach(quickAmounts, id: \.self) { pence in
-                                let label = String(format: "£%.0f", Double(pence) / 100)
-                                Button {
-                                    selectedAmountPence = pence
-                                    customAmountText = ""
-                                    isCustomFieldFocused = false
-                                } label: {
-                                    Text(label)
-                                        .font(.headline)
-                                        .foregroundStyle(selectedAmountPence == pence ? .white : textPrimary)
-                                        .frame(maxWidth: .infinity)
-                                        .padding(.vertical, 16)
-                                        .background(selectedAmountPence == pence ? brandBlue : bgElevated)
-                                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                                }
-                            }
-                        }
-                        .padding(.horizontal, 16)
-                    }
-
-                    // Custom amount
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Or enter a custom amount")
-                            .font(.subheadline.weight(.medium))
-                            .foregroundStyle(textSecondary)
-
-                        HStack {
-                            Text("£")
-                                .font(.headline)
-                                .foregroundStyle(textSecondary)
-                            TextField("0.00", text: $customAmountText)
-                                .keyboardType(.decimalPad)
-                                .font(.headline)
-                                .foregroundStyle(textPrimary)
-                                .focused($isCustomFieldFocused)
-                                .onChange(of: customAmountText) { newValue in
-                                    if !newValue.isEmpty {
-                                        selectedAmountPence = nil
-                                    }
-                                }
-                        }
-                        .padding(14)
-                        .background(bgElevated)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-
-                        Text("Minimum top-up: £5.00")
-                            .font(.caption)
-                            .foregroundStyle(textTertiary)
-                    }
-                    .padding(.horizontal, 16)
+                    quickPickSection
+                    customAmountSection
 
                     Spacer()
 
-                    Button {
-                        // TODO: PYR-25 GATE — wire up Stripe PaymentSheet here
-                        isPresented = false
-                    } label: {
-                        Text("Continue")
-                            .font(.headline)
-                            .foregroundStyle(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 16)
-                            .background(continueEnabled ? brandBlue : bgElevated)
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
-                    }
-                    .disabled(!continueEnabled)
-                    .padding(.horizontal, 16)
-                    .padding(.bottom, 16)
+                    continueButton
                 }
-                .padding(.top, 8)
+                .padding(.top, DS.Spacing.s2)
             }
             .navigationTitle("Top Up")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { isPresented = false }
-                        .foregroundStyle(textSecondary)
+                        .foregroundStyle(Color.DS.Text.secondary)
                 }
             }
         }
         .preferredColorScheme(.dark)
     }
-}
 
-// MARK: - Withdraw Sheet
+    // MARK: - Quick Pick
 
-struct WithdrawSheet: View {
-    @Binding var isPresented: Bool
-    let withdrawablePence: Int
-    let withdrawableFormatted: String
-    let onWithdraw: (Int) async -> Void
+    private var quickPickSection: some View {
+        VStack(alignment: .leading, spacing: DS.Spacing.s3) {
+            Text("Select an amount")
+                .font(.subheadline.weight(.medium))
+                .foregroundStyle(Color.DS.Text.secondary)
+                .padding(.horizontal, DS.Spacing.pageMargin)
 
-    @State private var amountText = ""
-    @State private var isSubmitting = false
-    @State private var localError: String?
-
-    private let minimumPence = 2000  // £20
-
-    private var amountPence: Int? {
-        guard let value = Double(amountText), value > 0 else { return nil }
-        return Int(value * 100)
-    }
-
-    private var validationError: String? {
-        guard let pence = amountPence else { return nil }
-        if pence < minimumPence { return "Minimum withdrawal is £20.00." }
-        if pence > withdrawablePence { return "Amount exceeds your withdrawable balance." }
-        return nil
-    }
-
-    private var withdrawEnabled: Bool {
-        amountPence != nil && validationError == nil && !isSubmitting
-    }
-
-    var body: some View {
-        NavigationStack {
-            ZStack {
-                bgPrimary.ignoresSafeArea()
-
-                VStack(spacing: 24) {
-                    // Withdrawable balance display
-                    VStack(spacing: 4) {
-                        Text("Available to withdraw")
-                            .font(.subheadline)
-                            .foregroundStyle(textSecondary)
-                        Text(withdrawableFormatted)
-                            .font(.system(size: 36, weight: .bold, design: .rounded))
-                            .foregroundStyle(successGreen)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 20)
-                    .background(bgCard)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                    .padding(.horizontal, 16)
-
-                    // Amount input
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Amount to withdraw")
-                            .font(.subheadline.weight(.medium))
-                            .foregroundStyle(textSecondary)
-
-                        HStack {
-                            Text("£")
-                                .font(.headline)
-                                .foregroundStyle(textSecondary)
-                            TextField("0.00", text: $amountText)
-                                .keyboardType(.decimalPad)
-                                .font(.headline)
-                                .foregroundStyle(textPrimary)
-                        }
-                        .padding(14)
-                        .background(bgElevated)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-
-                        if let error = validationError {
-                            Text(error)
-                                .font(.caption)
-                                .foregroundStyle(errorRed)
-                        } else {
-                            Text("Minimum withdrawal: £20.00")
-                                .font(.caption)
-                                .foregroundStyle(textTertiary)
-                        }
-                    }
-                    .padding(.horizontal, 16)
-
-                    if let error = localError {
-                        Text(error)
-                            .font(.caption)
-                            .foregroundStyle(errorRed)
-                            .multilineTextAlignment(.center)
-                            .padding(.horizontal, 16)
-                    }
-
-                    Spacer()
-
-                    Button {
-                        guard let pence = amountPence else { return }
-                        isSubmitting = true
-                        localError = nil
-                        Task {
-                            await onWithdraw(pence)
-                            isSubmitting = false
-                        }
-                    } label: {
-                        Group {
-                            if isSubmitting {
-                                ProgressView()
-                                    .tint(.white)
-                            } else {
-                                Text("Withdraw")
-                                    .font(.headline)
-                                    .foregroundStyle(.white)
-                            }
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 16)
-                        .background(withdrawEnabled ? errorRed : bgElevated)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                    }
-                    .disabled(!withdrawEnabled)
-                    .padding(.horizontal, 16)
-                    .padding(.bottom, 16)
-                }
-                .padding(.top, 8)
-            }
-            .navigationTitle("Withdraw")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { isPresented = false }
-                        .foregroundStyle(textSecondary)
+            LazyVGrid(
+                columns: [GridItem(.flexible()), GridItem(.flexible())],
+                spacing: DS.Spacing.s3
+            ) {
+                ForEach(quickAmounts, id: \.self) { pence in
+                    quickAmountButton(pence: pence)
                 }
             }
+            .padding(.horizontal, DS.Spacing.pageMargin)
         }
-        .preferredColorScheme(.dark)
+    }
+
+    private func quickAmountButton(pence: Int) -> some View {
+        let label = String(format: "£%.0f", Double(pence) / 100)
+        return Button {
+            selectedAmountPence = pence
+            customAmountText = ""
+            isCustomFieldFocused = false
+        } label: {
+            Text(label)
+                .font(.headline)
+                .foregroundStyle(
+                    selectedAmountPence == pence
+                        ? .white : Color.DS.Text.primary
+                )
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, DS.Spacing.s4)
+                .background(
+                    selectedAmountPence == pence
+                        ? Color.DS.Brand.primary
+                        : Color.DS.Background.elevated
+                )
+                .clipShape(RoundedRectangle(cornerRadius: DS.Radius.md))
+        }
+    }
+
+    // MARK: - Custom Amount
+
+    private var customAmountSection: some View {
+        VStack(alignment: .leading, spacing: DS.Spacing.s2) {
+            Text("Or enter a custom amount")
+                .font(.subheadline.weight(.medium))
+                .foregroundStyle(Color.DS.Text.secondary)
+
+            HStack {
+                Text("£")
+                    .font(.headline)
+                    .foregroundStyle(Color.DS.Text.secondary)
+                TextField("0.00", text: $customAmountText)
+                    .keyboardType(.decimalPad)
+                    .font(.headline)
+                    .foregroundStyle(Color.DS.Text.primary)
+                    .focused($isCustomFieldFocused)
+                    .onChange(of: customAmountText) { newValue in
+                        if !newValue.isEmpty {
+                            selectedAmountPence = nil
+                        }
+                    }
+            }
+            .padding(14)
+            .background(Color.DS.Background.elevated)
+            .clipShape(RoundedRectangle(cornerRadius: DS.Radius.md))
+
+            Text("Minimum top-up: £5.00")
+                .font(.caption)
+                .foregroundStyle(Color.DS.Text.tertiary)
+        }
+        .padding(.horizontal, DS.Spacing.pageMargin)
+    }
+
+    // MARK: - Continue Button
+
+    private var continueButton: some View {
+        Button {
+            // TODO: PYR-25 GATE — wire up Stripe PaymentSheet
+            isPresented = false
+        } label: {
+            Text("Continue")
+                .font(.headline)
+                .foregroundStyle(.white)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, DS.Spacing.s4)
+                .background(
+                    continueEnabled
+                        ? Color.DS.Brand.primary
+                        : Color.DS.Background.elevated
+                )
+                .clipShape(RoundedRectangle(cornerRadius: DS.Radius.md))
+        }
+        .disabled(!continueEnabled)
+        .padding(.horizontal, DS.Spacing.pageMargin)
+        .padding(.bottom, DS.Spacing.s4)
     }
 }

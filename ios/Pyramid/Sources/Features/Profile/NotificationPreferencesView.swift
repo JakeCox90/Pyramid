@@ -1,17 +1,5 @@
 import SwiftUI
 
-// MARK: - Colours (dark theme)
-
-private extension Color {
-    static let backgroundPrimary = Color(hex: "0A0A0A")
-    static let backgroundCard = Color(hex: "1C1C1E")
-    static let textPrimary = Color.white
-    static let textSecondary = Color.white.opacity(0.6)
-    static let brandBlue = Color(hex: "1A56DB")
-    static let successGreen = Color(hex: "30D158")
-    static let separator = Color(hex: "38383A")
-}
-
 // MARK: - View
 
 struct NotificationPreferencesView: View {
@@ -20,18 +8,18 @@ struct NotificationPreferencesView: View {
 
     var body: some View {
         ZStack {
-            Color.backgroundPrimary.ignoresSafeArea()
+            Color.DS.Background.primary.ignoresSafeArea()
 
             ScrollView {
                 VStack(spacing: 0) {
                     if !notificationService.isPermissionGranted {
                         permissionBanner
-                            .padding(.horizontal, 16)
-                            .padding(.top, 16)
+                            .padding(.horizontal, DS.Spacing.pageMargin)
+                            .padding(.top, DS.Spacing.s4)
                     }
 
                     preferencesSection
-                        .padding(.top, 16)
+                        .padding(.top, DS.Spacing.s4)
                 }
             }
         }
@@ -39,9 +27,12 @@ struct NotificationPreferencesView: View {
         .navigationBarTitleDisplayMode(.large)
         .task {
             await viewModel.load()
-            let settings = await UNUserNotificationCenter.current().notificationSettings()
+            let settings = await UNUserNotificationCenter
+                .current()
+                .notificationSettings()
             await MainActor.run {
-                notificationService.isPermissionGranted = settings.authorizationStatus == .authorized
+                notificationService.isPermissionGranted =
+                    settings.authorizationStatus == .authorized
             }
         }
     }
@@ -49,18 +40,21 @@ struct NotificationPreferencesView: View {
     // MARK: - Permission Banner
 
     private var permissionBanner: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack(spacing: 10) {
+        VStack(alignment: .leading, spacing: DS.Spacing.s3) {
+            HStack(spacing: DS.Spacing.s2) {
                 Image(systemName: "bell.slash.fill")
-                    .foregroundStyle(Color(hex: "FF453A"))
+                    .foregroundStyle(Color.DS.Semantic.error)
                 Text("Notifications are turned off")
                     .font(.subheadline)
                     .fontWeight(.semibold)
-                    .foregroundStyle(Color.white)
+                    .foregroundStyle(Color.DS.Text.primary)
             }
-            Text("Enable notifications in Settings to receive pick reminders and result alerts.")
-                .font(.caption)
-                .foregroundStyle(Color.white.opacity(0.6))
+            Text(
+                "Enable notifications in Settings to receive"
+                    + " pick reminders and result alerts."
+            )
+            .font(.caption)
+            .foregroundStyle(Color.DS.Text.secondary)
 
             Button {
                 if let url = URL(string: UIApplication.openSettingsURLString) {
@@ -70,15 +64,15 @@ struct NotificationPreferencesView: View {
                 Text("Enable in Settings")
                     .font(.subheadline)
                     .fontWeight(.semibold)
-                    .foregroundStyle(Color.brandBlue)
+                    .foregroundStyle(Color.DS.Brand.primary)
             }
         }
-        .padding(16)
-        .background(Color.backgroundCard)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .padding(DS.Spacing.s4)
+        .background(Color.DS.Background.secondary)
+        .clipShape(RoundedRectangle(cornerRadius: DS.Radius.md))
         .overlay(
-            RoundedRectangle(cornerRadius: 12)
-                .stroke(Color(hex: "FF453A").opacity(0.4), lineWidth: 1)
+            RoundedRectangle(cornerRadius: DS.Radius.md)
+                .stroke(Color.DS.Semantic.error.opacity(0.4), lineWidth: 1)
         )
     }
 
@@ -89,9 +83,9 @@ struct NotificationPreferencesView: View {
             Text("NOTIFY ME WHEN…")
                 .font(.caption)
                 .fontWeight(.semibold)
-                .foregroundStyle(Color.white.opacity(0.6))
-                .padding(.horizontal, 16)
-                .padding(.bottom, 8)
+                .foregroundStyle(Color.DS.Text.secondary)
+                .padding(.horizontal, DS.Spacing.pageMargin)
+                .padding(.bottom, DS.Spacing.s2)
 
             VStack(spacing: 0) {
                 preferenceRow(
@@ -118,37 +112,41 @@ struct NotificationPreferencesView: View {
                     isOn: $viewModel.preferences.winningsAlerts
                 )
             }
-            .background(Color.backgroundCard)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-            .padding(.horizontal, 16)
+            .background(Color.DS.Background.secondary)
+            .clipShape(RoundedRectangle(cornerRadius: DS.Radius.md))
+            .padding(.horizontal, DS.Spacing.pageMargin)
         }
     }
 
     private var divider: some View {
-        Color.separator
+        Color.DS.separator
             .frame(height: 1)
-            .padding(.leading, 16)
+            .padding(.leading, DS.Spacing.pageMargin)
     }
 
-    private func preferenceRow(title: String, subtitle: String, isOn: Binding<Bool>) -> some View {
-        HStack(spacing: 12) {
+    private func preferenceRow(
+        title: String,
+        subtitle: String,
+        isOn: Binding<Bool>
+    ) -> some View {
+        HStack(spacing: DS.Spacing.s3) {
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
                     .font(.body)
-                    .foregroundStyle(Color.textPrimary)
+                    .foregroundStyle(Color.DS.Text.primary)
                 Text(subtitle)
                     .font(.caption)
-                    .foregroundStyle(Color.textSecondary)
+                    .foregroundStyle(Color.DS.Text.secondary)
             }
             Spacer()
             Toggle("", isOn: isOn)
                 .labelsHidden()
-                .tint(Color.brandBlue)
+                .tint(Color.DS.Brand.primary)
                 .onChange(of: isOn.wrappedValue) { _ in
                     Task { await viewModel.save() }
                 }
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 12)
+        .padding(.horizontal, DS.Spacing.pageMargin)
+        .padding(.vertical, DS.Spacing.s3)
     }
 }

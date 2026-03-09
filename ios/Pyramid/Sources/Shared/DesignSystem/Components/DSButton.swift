@@ -74,7 +74,7 @@ struct DSButtonStyle: ButtonStyle {
         case .secondary:
             return pressed ? .DS.Neutral.n100 : .clear
         case .destructive:
-            return pressed ? Color("semantic/error").opacity(0.85) : .DS.Semantic.error
+            return pressed ? Color.DS.Semantic.error.opacity(0.85) : .DS.Semantic.error
         case .ghost:
             return pressed ? .DS.Neutral.n100 : .clear
         }
