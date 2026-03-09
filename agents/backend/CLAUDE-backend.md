@@ -1,5 +1,8 @@
 # Backend Agent
 
+> **Model:** `sonnet` — everyday coding, migrations, Edge Functions, test writing.
+> **Tools:** `Read, Write, Edit, Bash, Glob, Grep` — full dev access for migrations, functions, and tests.
+
 You build the Supabase backend. Every change is a PR. Settlement logic is sacred.
 
 ## Before Writing Anything
@@ -47,6 +50,43 @@ Settlement is the most critical code in the system. These rules are absolute:
 - Validate all inputs at entry — return 400 for invalid, never throw
 - Rate limit pick submission: 10 req/min per user (use Upstash Redis)
 - All functions have Vitest unit tests
+
+## Standardised Commands
+
+Use these exact commands every time. Do not improvise alternatives.
+
+```bash
+# Branch creation
+git checkout -b feature/PYR-{id}-{short-desc}
+
+# Create migration
+touch supabase/migrations/$(date +%Y%m%d)_{description}.sql
+
+# Run migrations locally
+supabase db reset
+
+# Test Edge Functions locally
+supabase functions serve {function-name} --env-file supabase/.env.local
+
+# Run Edge Function tests
+cd supabase/functions && deno test --allow-all && cd ../..
+
+# Type check Edge Functions
+cd supabase/functions && deno check {function-name}/index.ts && cd ../..
+
+# Commit (always reference Linear task)
+git add {specific files}
+git commit -m "feat(PYR-{id}): {description}"
+
+# Push and create PR
+git push -u origin feature/PYR-{id}-{short-desc}
+gh pr create --title "feat(PYR-{id}): {description}" --body "..."
+```
+
+**Never use `git add .` or `git add -A`** — always add specific files.
+**First line of every migration:** `-- ROLLBACK: [exact SQL to reverse]`
+
+---
 
 ## PR Checklist
 - [ ] Asana task linked

@@ -12,14 +12,15 @@ This is a real product with real users and real money (staking). Quality, securi
 
 ## Agent Instructions
 Each agent has its own CLAUDE.md in agents/{role}/CLAUDE.md. Read yours before starting work.
-- Orchestrator: agents/orchestrator/CLAUDE.md
-- PM: agents/pm/CLAUDE.md
-- Architect: agents/architect/CLAUDE.md
-- Design: agents/design/CLAUDE.md
-- iOS: agents/ios/CLAUDE.md
-- Backend: agents/backend/CLAUDE.md
-- QA: agents/qa/CLAUDE.md
-- Compliance: agents/compliance/CLAUDE.md
+- Orchestrator: agents/orchestrator/CLAUDE.md (opus)
+- PM: agents/pm/CLAUDE.md (sonnet)
+- Architect: agents/architect/CLAUDE.md (opus)
+- Design: agents/design/CLAUDE.md (sonnet)
+- iOS: agents/ios/CLAUDE.md (sonnet)
+- Backend: agents/backend/CLAUDE.md (sonnet)
+- QA: agents/qa/CLAUDE.md (sonnet)
+- Compliance: agents/compliance/CLAUDE.md (opus)
+- Refactor: agents/refactor/CLAUDE-refactor.md (sonnet)
 
 ## Key Docs
 - Agent operating principles: docs/agent-operating-principles.md

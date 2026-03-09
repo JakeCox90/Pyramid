@@ -90,6 +90,70 @@ When complete: move to `docs/plans/completed/` — never delete. Completed plans
 
 ---
 
+## Model Routing
+
+Each agent specifies a preferred model tier. This optimises cost and latency without sacrificing quality where it matters.
+
+| Tier | When to use | Agents |
+|------|-------------|--------|
+| `opus` | Deep reasoning, architecture, compliance, security, settlement review | Orchestrator, Architect, Compliance |
+| `sonnet` | Everyday coding, docs, design, test writing | iOS, Backend, PM, Design, QA |
+| `haiku` | Quick lookups, search, formatting, status checks | (ad-hoc subagents only) |
+
+Each agent's CLAUDE.md declares its tier. When the Orchestrator spawns a subagent, it should request the declared model tier. If unavailable, fall back one tier up (haiku → sonnet → opus), never down.
+
+---
+
+## Tool Scoping
+
+Each agent declares the tools it is permitted to use. This enforces least-privilege:
+
+| Role | Permitted tools | Rationale |
+|------|----------------|-----------|
+| Orchestrator | Read, Glob, Grep, Agent | Coordinates — never writes code or docs directly |
+| PM | Read, Write, Edit, Glob, Grep | Writes PRDs and game rules, no shell access |
+| Architect | Read, Write, Edit, Glob, Grep | Writes ADRs and reviews, no shell access |
+| Design | Read, Write, Edit, Glob | Writes design docs, no shell or search |
+| iOS | Read, Write, Edit, Bash, Glob, Grep | Full dev access — builds and tests |
+| Backend | Read, Write, Edit, Bash, Glob, Grep | Full dev access — migrations, functions, tests |
+| QA | Read, Write, Edit, Bash, Glob, Grep | Writes tests, runs test suites, files bug reports |
+| Compliance | Read, Write, Edit, Glob, Grep | Writes compliance docs, no shell access |
+
+If an agent needs a tool outside its scope for a specific task, it must request it from the Orchestrator, who grants it for that task only and documents the exception in the execution plan.
+
+---
+
+## Ticket Complexity Scoring
+
+Every ticket must carry a complexity score (1–5). This prevents oversized tasks from stalling agents.
+
+| Score | Agent action |
+|-------|-------------|
+| 1–3 | Execute directly |
+| 4 | Split into subtasks before assigning — no agent should receive a score-4 ticket |
+| 5 | Requires human design input or Architect review before execution |
+
+The PM agent scores tickets at creation. The Orchestrator validates scores during its pre-flight check before spawning execution agents. See `agents/pm/CLAUDE-pm.md` for the full scoring rubric.
+
+---
+
+## Fresh Context Per Story
+
+When the Orchestrator spawns a subagent for a task, each task gets a **fresh context window**. This prevents:
+- Goal drift from accumulated context
+- Hallucinated state from earlier tasks bleeding into later ones
+- Context window exhaustion on long sessions
+
+**The pattern:**
+1. Each Linear task / user story is executed in an isolated agent invocation
+2. The agent receives only: its CLAUDE.md, the specific task brief, relevant file paths, and PRD/ADR references
+3. Continuity between tasks comes from the repository (git history, docs, plan files) — not from shared context
+4. The Orchestrator tracks progress externally (Linear, execution plans) and passes only the relevant slice to each new agent
+
+**When to break this rule:** Only when two tasks share tight coupling (e.g., a schema migration and the Edge Function that depends on it). In that case, group them as subtasks in a single agent invocation and document why.
+
+---
+
 ## Human Gate Protocol
 
 The human owner's time is the scarcest resource. Protect it.

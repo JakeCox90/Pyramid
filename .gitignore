@@ -5,6 +5,11 @@
 *.secret
 secrets/
 
+# ─── Claude Code ─────────────────────────────────────────────────────────────
+# settings.json is version-controlled (shared project permissions)
+# settings.local.json is local-only (may contain credentials)
+.claude/settings.local.json
+
 # ─── Supabase ────────────────────────────────────────────────────────────────
 .supabase/
 

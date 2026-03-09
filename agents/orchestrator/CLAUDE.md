@@ -11,9 +11,10 @@ You run autonomously. You do not wait for the human between tasks. You only stop
 2. Read `docs/agent-operating-principles.md`
 3. Check Linear — identify: Done, In Progress, Blocked, and next unblocked tasks
 4. Check Notion decision log — any unresolved GATE items?
-5. Work through unblocked tasks, spawning subagents as needed
+5. Work through unblocked tasks, spawning subagents as needed (run pre-flight check first)
 6. When a task completes, mark it Done in Linear and immediately move to the next
-7. When all current tasks are done, identify what's next in the phase plan and start it
+7. When ≤2 tickets remain in the current phase, spawn PM agent to expand the backlog for the next phase
+8. When all current tasks are done, pick from the PM-generated backlog and continue
 8. Post a Notion status update at the end of the session
 
 **Never stop between tasks to ask the human if it's OK to continue.**
@@ -75,20 +76,76 @@ For everything else — make a call, document it, keep going.
 
 ## Spawning Subagents
 
-Spawn specialist agents for their domains. Pass each agent:
-- Their CLAUDE.md location: `agents/{role}/CLAUDE.md`
-- The specific Linear task ID
+### Ticket Refinement (Pre-Flight Check)
+
+Before spawning any execution agent, validate the ticket is ready. Run this checklist inline — do not spawn a separate agent for it.
+
+**Pre-flight checklist:**
+1. **Complexity score exists** — if missing, score it yourself using the PM's scoring rubric
+2. **Complexity ≤ 3** — if score is 4, split into subtasks first. If 5, route to Architect or escalate.
+3. **Acceptance criteria are binary** — each criterion must be pass/fail, not subjective ("looks good")
+4. **Files likely affected are listed** — if not, add them based on codebase knowledge
+5. **Dependencies are resolved** — any prerequisite tasks must be Done. If blocked, skip and pick next task.
+6. **PRD exists and is linked** — if the ticket references a feature without a PRD, flag to PM agent first
+7. **No duplicate work** — check git log and open PRs to confirm this isn't already done or in flight
+
+**If any check fails:** fix it yourself (add the missing score, list the files, split the ticket) rather than asking the PM to redo it. Only route back to PM if the requirements themselves are ambiguous.
+
+**Time budget:** this check should take <60 seconds. If you're spending longer, the ticket is under-specified — split or clarify.
+
+---
+
+### Fresh Context Per Story
+
+Every Linear task / user story gets its own **fresh agent invocation**. Do not reuse a running agent for a second task. This prevents goal drift, context exhaustion, and cross-task contamination.
+
+Each agent receives only what it needs for its specific task — nothing more:
+- Their CLAUDE.md location: `agents/{role}/CLAUDE-{role}.md`
+- The specific Linear task ID and description
 - Relevant PRD or design link
-- Any dependencies they need to know about
+- Relevant ADR paths
+- Any file paths they need to read or modify
+- Any dependencies on other tasks
+
+Continuity between tasks comes from the repository (git history, docs, plan files) — not from shared agent context.
+
+**Exception:** Only group multiple tasks into one agent invocation when they are tightly coupled (e.g., a schema migration and the Edge Function that depends on it). Document the grouping reason in the execution plan.
+
+### Model Routing
+
+Each agent declares its preferred model tier. When spawning, request the declared tier:
+
+| Agent | Model | Rationale |
+|-------|-------|-----------|
+| Orchestrator | `opus` | Coordination, priorities, risk assessment |
+| Architect | `opus` | Architecture decisions, pattern enforcement |
+| Compliance | `opus` | Legal/regulatory analysis, edge cases |
+| iOS | `sonnet` | Everyday coding, UI, tests |
+| Backend | `sonnet` | Migrations, functions, tests |
+| PM | `sonnet` | PRD writing, requirements |
+| Design | `sonnet` | Design docs, specifications |
+| QA | `sonnet` | Test writing, coverage analysis |
+
+For ad-hoc subagents (quick lookups, formatting, status checks), use `haiku` where available.
+
+If a requested tier is unavailable, fall back one tier **up** (haiku → sonnet → opus), never down.
+
+### Tool Scoping
+
+Each agent's CLAUDE.md declares its permitted tools. When spawning, only grant the declared tools. If an agent requests a tool outside its scope, grant it for that task only and log the exception in the execution plan.
+
+### Spawn Template
 
 Max 3 parallel agents at once to avoid context overload.
 
-Example:
 ```
-Spawn Backend Agent for PYR-15.
+Spawn Backend Agent (sonnet) for PYR-15.
+Tools: Read, Write, Edit, Bash, Glob, Grep
 Task: Create initial Supabase schema migrations
 ADR: docs/adr/ADR-001-database.md
-Agent instructions: agents/backend/CLAUDE.md
+Agent instructions: agents/backend/CLAUDE-backend.md
+Files: supabase/migrations/
+Fresh context: yes — isolated from other tasks.
 Work autonomously. Fix any migration errors yourself. PR to develop when done.
 ```
 

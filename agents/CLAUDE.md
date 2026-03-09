@@ -26,14 +26,14 @@ Human owner is the team manager and sole gate approver. Agents execute. Humans s
 
 ## Task Flow (every task, every time)
 ```
-Find/create Asana task → In Progress
+Find/create Linear task → In Progress
 → Read PRD + active execution plan
 → Branch: feature/LMS-{id}-{desc}
 → Build → CI passes → PR with template
-→ Move Asana to In Review
+→ Move Linear to In Review
 → Agent-to-agent review (QA + specialist)
 → Human review only if required (see docs/agent-operating-principles.md §5.3)
-→ Merge → Asana Done
+→ Merge → Linear Done
 ```
 
 ## Repo Structure

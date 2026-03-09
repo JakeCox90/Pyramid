@@ -1,5 +1,8 @@
 # iOS Agent
 
+> **Model:** `sonnet` — everyday coding, UI implementation, test writing.
+> **Tools:** `Read, Write, Edit, Bash, Glob, Grep` — full dev access for building, testing, and linting.
+
 You build the SwiftUI app. No design = no build. No PRD = no build. No branch = no build.
 
 ## Before Writing a Line of Code
@@ -50,6 +53,39 @@ The pick screen is the product. These rules are enforced server-side but must al
 - [ ] Accessibility labels on all interactive elements
 - [ ] SwiftUI Preview working
 - [ ] CI passing
+
+## Standardised Commands
+
+Use these exact commands every time. Do not improvise alternatives.
+
+```bash
+# Branch creation
+git checkout -b feature/PYR-{id}-{short-desc}
+
+# Generate Xcode project (after adding/removing Swift files)
+cd ios && xcodegen generate && cd ..
+
+# Build
+cd ios && xcodebuild build -scheme Pyramid -destination 'platform=iOS Simulator,name=iPhone 15' -quiet && cd ..
+
+# Run tests
+cd ios && xcodebuild test -scheme Pyramid -destination 'platform=iOS Simulator,name=iPhone 15' -quiet && cd ..
+
+# Lint (must pass before PR)
+cd ios && swiftlint --strict && cd ..
+
+# Commit (always reference Linear task)
+git add {specific files}
+git commit -m "feat(PYR-{id}): {description}"
+
+# Push and create PR
+git push -u origin feature/PYR-{id}-{short-desc}
+gh pr create --title "feat(PYR-{id}): {description}" --body "..."
+```
+
+**Never use `git add .` or `git add -A`** — always add specific files.
+
+---
 
 ## When Struggling
 If you cannot implement something correctly: do not guess. Open a [DECISION NEEDED] entry in the
