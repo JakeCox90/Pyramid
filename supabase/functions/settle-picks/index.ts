@@ -21,6 +21,8 @@
 //   Picks keep result "survived" so that team counts as used this round.
 
 import { getServiceClient } from "../_shared/supabase.ts";
+import { createLogger } from "../_shared/logger.ts";
+import { alertSlack } from "../_shared/alert.ts";
 import { determinePickResult, findNoPickMemberIds } from "./settlement.ts";
 import type { DbFixture, DbPick } from "./settlement.ts";
 
@@ -41,12 +43,14 @@ async function settleLeague(
   fixture: DbFixture,
   gameweekId: number,
   idempotencyKey: string,
+  log: ReturnType<typeof createLogger>,
 ): Promise<{ survivors: number; eliminations: number; voids: number; isMassElim: boolean }> {
   const counts = { survivors: 0, eliminations: 0, voids: 0 };
   const eliminatedUserIds: string[] = [];
 
   for (const pick of picks) {
     const result = determinePickResult(pick, fixture);
+    log.info("Settling pick", { pickId: pick.id, fixtureId: fixture.id, outcome: result });
 
     const { error: pickErr } = await db
       .from("picks")
@@ -54,7 +58,7 @@ async function settleLeague(
       .eq("id", pick.id);
 
     if (pickErr) {
-      console.error(`pick ${pick.id} update failed:`, pickErr);
+      log.error("Pick update failed", pickErr, { pickId: pick.id });
       continue;
     }
 
@@ -106,9 +110,7 @@ async function settleLeague(
       const noPickIds = findNoPickMemberIds(activeIds, pendingIds);
 
       for (const userId of noPickIds) {
-        console.log(
-          `Auto-eliminating ${userId} in league ${leagueId} — no valid pick for GW${gameweekId} (§3.3)`,
-        );
+        log.info("Auto-eliminating member — no valid pick (§3.3)", { userId, leagueId, gameweekId });
         await db
           .from("league_members")
           .update({
@@ -135,7 +137,7 @@ async function settleLeague(
       .eq("status", "active");
 
     if ((active ?? []).length === 0) {
-      console.log(`Mass elimination in league ${leagueId} — reinstating all GW${gameweekId} eliminations`);
+      log.info("Mass elimination — reinstating all GW eliminations", { leagueId, gameweekId });
       isMassElim = true;
 
       // Reinstate all members eliminated this gameweek
@@ -172,7 +174,7 @@ async function settleLeague(
 
   if (logErr && logErr.code !== "23505") {
     // 23505 = unique_violation (concurrent run) — safe to ignore
-    console.error(`settlement_log insert failed for league ${leagueId}:`, logErr);
+    log.error("settlement_log insert failed", logErr, { leagueId });
   }
 
   return { ...counts, isMassElim };
@@ -184,6 +186,8 @@ Deno.serve(async (req) => {
   if (req.method !== "POST") {
     return json({ error: "Method not allowed" }, 405);
   }
+
+  const log = createLogger("settle-picks", req);
 
   // Internal-only: require service role key
   const authHeader = req.headers.get("Authorization") ?? "";
@@ -230,6 +234,8 @@ Deno.serve(async (req) => {
     .eq("result", "pending");
 
   if (picksErr) {
+    log.error("Failed to fetch picks", picksErr, { fixtureId });
+    await alertSlack("settle-picks failed", { fixtureId, error: picksErr.message });
     return json({ error: `Failed to fetch picks: ${picksErr.message}` }, 500);
   }
 
@@ -271,12 +277,12 @@ Deno.serve(async (req) => {
       .maybeSingle();
 
     if (existing) {
-      console.log(`League ${leagueId} already settled for fixture ${fixtureId} — skipping`);
+      log.info("League already settled — skipping", { leagueId, fixtureId });
       summary.leaguesSkipped++;
       continue;
     }
 
-    const result = await settleLeague(db, leagueId, picks, fixture as DbFixture, gameweekId, idempotencyKey);
+    const result = await settleLeague(db, leagueId, picks, fixture as DbFixture, gameweekId, idempotencyKey, log);
     summary.survived += result.survivors;
     summary.eliminated += result.eliminations;
     summary.void += result.voids;
@@ -292,7 +298,7 @@ Deno.serve(async (req) => {
     await db.from("fixtures").update({ settled_at: new Date().toISOString() }).eq("id", fixtureId);
   }
 
-  console.log("Settlement summary:", summary);
+  log.complete("ok", summary);
   return json(summary, 200);
 });
 

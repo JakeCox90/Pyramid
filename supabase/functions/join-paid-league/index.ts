@@ -22,6 +22,7 @@
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders, getServiceClient } from "../_shared/supabase.ts";
+import { createLogger } from "../_shared/logger.ts";
 import {
   computeGrossPot,
   computeLeagueStatusAfterJoin,
@@ -76,6 +77,8 @@ Deno.serve(async (req) => {
     return errorResponse("Method not allowed", "METHOD_NOT_ALLOWED", 405, origin);
   }
 
+  const log = createLogger("join-paid-league", req);
+
   // Authenticate user via JWT
   const authHeader = req.headers.get("Authorization");
   if (!authHeader) {
@@ -109,7 +112,7 @@ Deno.serve(async (req) => {
     .maybeSingle();
 
   if (walletError) {
-    console.error("Failed to fetch wallet balance:", walletError);
+    log.error("Failed to fetch wallet balance", walletError);
     return errorResponse("Failed to fetch wallet balance", "FETCH_FAILED", 500, origin);
   }
 
@@ -133,7 +136,7 @@ Deno.serve(async (req) => {
     .eq("leagues.type", "paid");
 
   if (membershipError) {
-    console.error("Failed to check active league memberships:", membershipError);
+    log.error("Failed to check active league memberships", membershipError);
     return errorResponse("Failed to check league memberships", "FETCH_FAILED", 500, origin);
   }
 
@@ -156,7 +159,7 @@ Deno.serve(async (req) => {
     .eq("paid_status", "waiting");
 
   if (leaguesError) {
-    console.error("Failed to fetch waiting leagues:", leaguesError);
+    log.error("Failed to fetch waiting leagues", leaguesError);
     return errorResponse("Failed to fetch available leagues", "FETCH_FAILED", 500, origin);
   }
 
@@ -189,7 +192,7 @@ Deno.serve(async (req) => {
       .single();
 
     if (createError || !newLeague) {
-      console.error("Failed to create new paid league:", createError);
+      log.error("Failed to create new paid league", createError);
       return errorResponse("Failed to create league", "CREATE_FAILED", 500, origin);
     }
 
@@ -262,7 +265,7 @@ Deno.serve(async (req) => {
         origin,
       );
     }
-    console.error("Failed to insert league member:", memberInsertError);
+    log.error("Failed to insert league member", memberInsertError);
     return errorResponse("Failed to join league", "JOIN_FAILED", 500, origin);
   }
 
@@ -279,7 +282,7 @@ Deno.serve(async (req) => {
 
   if (stakeError) {
     // Non-fatal: member was added, but stake write failed. Log for ops team to reconcile.
-    console.error(`CRITICAL: stake deduction failed for user ${user.id} league ${targetLeague.id}:`, stakeError);
+    log.error("CRITICAL: stake deduction failed", stakeError, { userId: user.id, leagueId: targetLeague.id });
   }
 
   // ── 7. Compute new player count and update league status ──────────────────
@@ -321,7 +324,7 @@ Deno.serve(async (req) => {
     .eq("id", targetLeague.id);
 
   if (updateError) {
-    console.error("Failed to update league status after join:", updateError);
+    log.error("Failed to update league status after join", updateError);
     // Non-fatal: member was added and stake deducted; status will be corrected on next join.
   }
 

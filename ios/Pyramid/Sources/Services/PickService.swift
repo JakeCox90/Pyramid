@@ -1,4 +1,5 @@
 import Foundation
+import os
 import Supabase
 
 // MARK: - Error
@@ -137,6 +138,7 @@ final class PickService: PickServiceProtocol {
             }
         }
         do {
+            Log.picks.info("Submitting pick: team=\(teamName) fixture=\(fixtureId)")
             let response: SubmitPickResponse = try await client.functions.invoke(
                 "submit-pick",
                 options: FunctionInvokeOptions(body: SubmitPickBody(
@@ -146,8 +148,10 @@ final class PickService: PickServiceProtocol {
                     teamName: teamName
                 ))
             )
+            Log.picks.info("Pick submitted successfully: \(response.pickId)")
             return response
         } catch {
+            Log.picks.error("Pick submission failed: \(error.localizedDescription)")
             throw PickServiceError.submitFailed(error.localizedDescription)
         }
     }

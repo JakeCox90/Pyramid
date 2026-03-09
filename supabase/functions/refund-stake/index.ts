@@ -19,6 +19,7 @@
 //   state and the function can be safely re-run.
 
 import { getServiceClient } from "../_shared/supabase.ts";
+import { createLogger } from "../_shared/logger.ts";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -56,6 +57,8 @@ Deno.serve(async (req) => {
     return json({ error: "Method not allowed" }, 405);
   }
 
+  const log = createLogger("refund-stake", req);
+
   // Internal-only: require service role key
   const authHeader = req.headers.get("Authorization") ?? "";
   const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
@@ -87,7 +90,7 @@ Deno.serve(async (req) => {
 
   if (existingLog) {
     const cached = existingLog.payload ? JSON.parse(existingLog.payload as string) : {};
-    console.log(`refund-stake: already processed for league ${leagueId} — returning cached result`);
+    log.info("Already processed — returning cached result", { leagueId });
     return json({ leagueId, ...cached, cached: true }, 200);
   }
 
@@ -153,10 +156,10 @@ Deno.serve(async (req) => {
   if (logError) {
     if (logError.code === "23505") {
       // Concurrent run already wrote the log
-      console.log(`refund-stake: concurrent idempotency conflict for league ${leagueId} — returning early`);
+      log.info("Concurrent idempotency conflict — returning early", { leagueId });
       return json({ leagueId, refundedCount, cached: true }, 200);
     }
-    console.error("refund-stake: failed to write settlement_log:", logError);
+    log.error("Failed to write settlement_log", logError);
     return json({ error: "Failed to write settlement log" }, 500);
   }
 
@@ -189,13 +192,13 @@ Deno.serve(async (req) => {
     });
 
     if (txError && txError.code !== "23505") {
-      console.error(`refund-stake: wallet_transactions insert failed for ${member.user_id}:`, txError);
+      log.error("wallet_transactions insert failed", txError, { userId: member.user_id });
       errors.push(`wallet write failed for user ${member.user_id}: ${txError.message}`);
     }
   }
 
   if (errors.length > 0) {
-    console.error("refund-stake: partial wallet write failures:", errors);
+    log.error("Partial wallet write failures", errors);
   }
 
   // ── 6. Update league status ───────────────────────────────────────────────
@@ -212,12 +215,10 @@ Deno.serve(async (req) => {
     .eq("id", leagueId);
 
   if (leagueUpdateErr) {
-    console.error("refund-stake: failed to update league status:", leagueUpdateErr);
+    log.error("Failed to update league status", leagueUpdateErr);
   }
 
-  console.log(
-    `refund-stake: completed for league ${leagueId}, ${refundedCount} refunds of ${stakePence}p each`,
-  );
+  log.info("Refund complete", { leagueId, refundedCount, stakePence });
 
   return json({ leagueId, refundedCount }, 200);
 });

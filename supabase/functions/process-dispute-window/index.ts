@@ -17,6 +17,7 @@
 // Idempotency: running twice in the same minute is safe — the query returns 0 eligible rows.
 
 import { getServiceClient } from "../_shared/supabase.ts";
+import { createLogger } from "../_shared/logger.ts";
 
 interface ProcessResult {
   processed: number;
@@ -42,6 +43,7 @@ Deno.serve(async (req) => {
     return json({ error: "Unauthorized — service role required" }, 401);
   }
 
+  const log = createLogger("process-dispute-window", req);
   const db = getServiceClient();
 
   // Find winnings transactions whose dispute window has now expired.
@@ -55,7 +57,7 @@ Deno.serve(async (req) => {
     .not("dispute_window_expires_at", "is", null);
 
   if (fetchError) {
-    console.error("Failed to fetch expired dispute window transactions:", fetchError);
+    log.error("Failed to fetch expired dispute window transactions", fetchError);
     return json({ error: "Failed to query transactions" }, 500);
   }
 
@@ -65,10 +67,12 @@ Deno.serve(async (req) => {
   for (const tx of eligible) {
     totalPenceReleased += tx.amount_pence as number;
     // Log for audit — in production this is where push notifications would fire
-    console.log(
-      `Dispute window expired for transaction ${tx.id}: user ${tx.user_id}, ` +
-        `amount ${tx.amount_pence}p, expired at ${tx.dispute_window_expires_at}`,
-    );
+    log.info("Dispute window expired", {
+      transactionId: tx.id,
+      userId: tx.user_id,
+      amountPence: tx.amount_pence,
+      expiredAt: tx.dispute_window_expires_at,
+    });
   }
 
   const result: ProcessResult = {
@@ -76,6 +80,6 @@ Deno.serve(async (req) => {
     total_pence_released: totalPenceReleased,
   };
 
-  console.log("process-dispute-window complete:", result);
+  log.complete("ok", result);
   return json(result, 200);
 });

@@ -5,6 +5,7 @@
 // Fire-and-forget: never throws — all errors are logged and swallowed.
 // Callers must wrap in try/catch as an extra safety net.
 
+import { createLogger } from "./logger.ts";
 import { getServiceClient } from "./supabase.ts";
 import { sendApnsNotification } from "./apns.ts";
 import type { ApnsPayload } from "./apns.ts";
@@ -142,6 +143,8 @@ export function renderTemplate(
 export async function sendNotification(params: SendNotificationParams): Promise<void> {
   const { userId, template, data } = params;
 
+  const log = createLogger("send-notification");
+
   try {
     const db = getServiceClient();
     const prefKey = preferenceKeyFor(template);
@@ -155,7 +158,7 @@ export async function sendNotification(params: SendNotificationParams): Promise<
 
     // If a preferences row exists and the relevant preference is explicitly false, skip
     if (prefs !== null && prefs !== undefined && prefs[prefKey] === false) {
-      console.log(`sendNotification: user ${userId} has ${prefKey} disabled — skipping`);
+      log.info("Notification preference disabled — skipping", { userId, prefKey });
       return;
     }
 
@@ -166,13 +169,13 @@ export async function sendNotification(params: SendNotificationParams): Promise<
       .eq("user_id", userId);
 
     if (tokenErr) {
-      console.error(`sendNotification: failed to fetch tokens for user ${userId}:`, tokenErr);
+      log.error("Failed to fetch device tokens", tokenErr, { userId });
       return;
     }
 
     const tokens = (tokenRows ?? []).map((r: { token: string }) => r.token);
     if (tokens.length === 0) {
-      console.log(`sendNotification: no device tokens for user ${userId}`);
+      log.info("No device tokens found", { userId });
       return;
     }
 
@@ -208,18 +211,13 @@ export async function sendNotification(params: SendNotificationParams): Promise<
         .in("token", tokensToDelete);
 
       if (deleteErr) {
-        console.error(
-          `sendNotification: failed to delete stale tokens for user ${userId}:`,
-          deleteErr,
-        );
+        log.error("Failed to delete stale tokens", deleteErr, { userId, count: tokensToDelete.length });
       } else {
-        console.log(
-          `sendNotification: deleted ${tokensToDelete.length} stale token(s) for user ${userId}`,
-        );
+        log.info("Deleted stale device tokens", { userId, count: tokensToDelete.length });
       }
     }
   } catch (err) {
     // Fire-and-forget: log but never propagate
-    console.error(`sendNotification: unexpected error for user ${userId}:`, err);
+    log.error("Unexpected error", err, { userId, template });
   }
 }

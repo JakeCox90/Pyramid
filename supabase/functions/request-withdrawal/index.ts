@@ -15,6 +15,7 @@
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders, getServiceClient } from "../_shared/supabase.ts";
+import { createLogger } from "../_shared/logger.ts";
 
 const MIN_WITHDRAWAL_PENCE = 2000; // £20
 
@@ -55,6 +56,8 @@ Deno.serve(async (req) => {
   if (req.method !== "POST") {
     return errorResponse("Method not allowed", "METHOD_NOT_ALLOWED", 405, origin);
   }
+
+  const log = createLogger("request-withdrawal", req);
 
   // Authenticate user via JWT
   const authHeader = req.headers.get("Authorization");
@@ -118,7 +121,7 @@ Deno.serve(async (req) => {
     .maybeSingle();
 
   if (walletError) {
-    console.error("Failed to fetch wallet balance:", walletError);
+    log.error("Failed to fetch wallet balance", walletError);
     return errorResponse("Failed to fetch wallet balance", "FETCH_FAILED", 500, origin);
   }
 
@@ -159,9 +162,9 @@ Deno.serve(async (req) => {
   //   2. Create a Stripe Transfer or Payout via the Stripe API.
   //   3. Store the Stripe payout_id in reference_id and notes.
   //   4. Withdrawal fee is passed through at cost — shown to user before confirmation.
-  console.log(
-    `TODO: initiate Stripe payout once PYR-25 GATE resolved. ` +
-      `user_id=${user.id} amount_pence=${amount_pence}`,
+  log.info(
+    "TODO: initiate Stripe payout once PYR-25 GATE resolved",
+    { userId: user.id, amount_pence },
   );
 
   // Write withdrawal transaction
@@ -180,7 +183,7 @@ Deno.serve(async (req) => {
     .single();
 
   if (txError || !tx) {
-    console.error("Failed to write withdrawal transaction:", txError);
+    log.error("Failed to write withdrawal transaction", txError);
     return errorResponse("Failed to process withdrawal", "WITHDRAWAL_FAILED", 500, origin);
   }
 

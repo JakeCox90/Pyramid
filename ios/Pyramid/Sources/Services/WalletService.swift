@@ -1,4 +1,5 @@
 import Foundation
+import os
 import Supabase
 
 // MARK: - Error
@@ -40,12 +41,15 @@ final class WalletService: WalletServiceProtocol {
 
     func fetchWallet() async throws -> WalletBalance {
         do {
+            Log.wallet.info("Fetching wallet balance")
             let balance: WalletBalance = try await client.functions.invoke(
                 "get-wallet",
                 options: FunctionInvokeOptions()
             )
+            Log.wallet.info("Wallet balance fetched")
             return balance
         } catch {
+            Log.wallet.error("Wallet fetch failed: \(error.localizedDescription)")
             throw WalletServiceError.fetchFailed(error.localizedDescription)
         }
     }
@@ -68,6 +72,7 @@ final class WalletService: WalletServiceProtocol {
 
     func requestWithdrawal(amountPence: Int) async throws {
         do {
+            Log.wallet.info("Requesting withdrawal: \(amountPence)p")
             struct WithdrawalRequest: Encodable {
                 let amountPence: Int
                 enum CodingKeys: String, CodingKey {
@@ -78,7 +83,9 @@ final class WalletService: WalletServiceProtocol {
                 "request-withdrawal",
                 options: FunctionInvokeOptions(body: WithdrawalRequest(amountPence: amountPence))
             )
+            Log.wallet.info("Withdrawal request succeeded: \(amountPence)p")
         } catch {
+            Log.wallet.error("Withdrawal failed: \(error.localizedDescription)")
             throw WalletServiceError.withdrawalFailed(error.localizedDescription)
         }
     }
@@ -86,6 +93,7 @@ final class WalletService: WalletServiceProtocol {
     // TODO: PYR-25 GATE — Stripe PaymentSheet integration is pending.
     // This stub will be replaced with real Stripe confirmation flow once PYR-25 is approved.
     func topUp(amountPence: Int, paymentIntentId: String) async throws {
+        Log.wallet.info("Top-up initiated: \(amountPence)p")
         do {
             struct TopUpRequest: Encodable {
                 let amountPence: Int
@@ -102,7 +110,9 @@ final class WalletService: WalletServiceProtocol {
                     paymentIntentId: paymentIntentId
                 ))
             )
+            Log.wallet.info("Top-up succeeded: \(amountPence)p")
         } catch {
+            Log.wallet.error("Top-up failed: \(error.localizedDescription)")
             throw WalletServiceError.topUpFailed(error.localizedDescription)
         }
     }

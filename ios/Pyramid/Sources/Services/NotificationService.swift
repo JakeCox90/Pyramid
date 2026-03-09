@@ -1,4 +1,5 @@
 import Foundation
+import os
 import UserNotifications
 import UIKit
 import Supabase
@@ -62,6 +63,7 @@ final class NotificationService: NSObject, ObservableObject {
     /// Called by AppDelegate when APNs assigns a token
     func handleDeviceToken(_ data: Data) async {
         let tokenString = data.map { String(format: "%02.2hhx", $0) }.joined()
+        Log.notifications.info("APNs token received, registering with server")
         deviceToken = tokenString
         await registerToken(tokenString)
     }
@@ -69,7 +71,7 @@ final class NotificationService: NSObject, ObservableObject {
     /// Called by AppDelegate on registration failure
     func handleRegistrationFailure(_ error: Error) {
         // Log failure without crashing — token registration is best-effort
-        print("[NotificationService] APNs registration failed: \(error.localizedDescription)")
+        Log.notifications.error("APNs registration failed: \(error.localizedDescription)")
     }
 
     /// Routes a notification deep link to the correct screen
@@ -90,7 +92,7 @@ final class NotificationService: NSObject, ObservableObject {
                 )
             )
         } catch {
-            print("[NotificationService] Failed to register token: \(error.localizedDescription)")
+            Log.notifications.error("Failed to register device token: \(error.localizedDescription)")
         }
     }
 }

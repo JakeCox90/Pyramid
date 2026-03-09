@@ -11,6 +11,7 @@
 
 import { ApiFootballClient, CURRENT_SEASON, parseRoundNumber, teamShortCode } from "../_shared/api-football.ts";
 import { getServiceClient } from "../_shared/supabase.ts";
+import { createLogger } from "../_shared/logger.ts";
 
 Deno.serve(async (req) => {
   // Only allow POST
@@ -20,6 +21,8 @@ Deno.serve(async (req) => {
       headers: { "Content-Type": "application/json" },
     });
   }
+
+  const log = createLogger("sync-fixtures", req);
 
   const apiKey = Deno.env.get("API_FOOTBALL_KEY");
   if (!apiKey) {
@@ -44,10 +47,10 @@ Deno.serve(async (req) => {
     let fixtures;
 
     if (body.round != null) {
-      console.log(`Syncing round ${body.round}, season ${season}`);
+      log.info("Syncing round", { round: body.round, season });
       fixtures = await client.getFixturesByRound(body.round, season);
     } else {
-      console.log(`Full season sync for season ${season}`);
+      log.info("Full season sync", { season });
       fixtures = await client.getAllFixturesBySeason(season);
     }
 
@@ -98,7 +101,7 @@ Deno.serve(async (req) => {
         .single();
 
       if (gwError) {
-        console.error(`Failed to upsert gameweek ${roundNum}:`, gwError);
+        log.error("Failed to upsert gameweek", gwError, { roundNum });
         continue;
       }
 
@@ -128,7 +131,7 @@ Deno.serve(async (req) => {
         .select("id", { count: "exact", head: true });
 
       if (fixError) {
-        console.error(`Failed to upsert fixtures for round ${roundNum}:`, fixError);
+        log.error("Failed to upsert fixtures for round", fixError, { roundNum });
         continue;
       }
 
@@ -145,7 +148,7 @@ Deno.serve(async (req) => {
       { status: 200, headers: { "Content-Type": "application/json" } },
     );
   } catch (err) {
-    console.error("sync-fixtures error:", err);
+    log.error("sync-fixtures error", err);
     return new Response(JSON.stringify({ error: String(err) }), {
       status: 500,
       headers: { "Content-Type": "application/json" },

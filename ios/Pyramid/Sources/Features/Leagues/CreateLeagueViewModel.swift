@@ -1,3 +1,4 @@
+import os
 import SwiftUI
 
 @MainActor
@@ -5,6 +6,7 @@ final class CreateLeagueViewModel: ObservableObject {
     @Published var leagueName = ""
     @Published var isLoading = false
     @Published var errorMessage: String?
+    @Published var showErrorAlert = false
     @Published var createdLeague: CreateLeagueResponse?
 
     private let leagueService: LeagueServiceProtocol
@@ -43,7 +45,12 @@ final class CreateLeagueViewModel: ObservableObject {
         do {
             createdLeague = try await leagueService.createLeague(name: name)
         } catch {
-            errorMessage = error.localizedDescription
+            let message = error.localizedDescription
+            Log.leagues.error("Create league failed: \(error.localizedDescription)")
+            errorMessage = message.isEmpty
+                ? "Failed to create league. Please try again."
+                : message
+            showErrorAlert = true
         }
 
         isLoading = false

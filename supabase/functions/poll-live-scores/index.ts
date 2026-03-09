@@ -18,6 +18,8 @@ import {
   VOID_STATUSES,
 } from "../_shared/api-football.ts";
 import { getServiceClient } from "../_shared/supabase.ts";
+import { createLogger } from "../_shared/logger.ts";
+import { alertSlack } from "../_shared/alert.ts";
 
 interface DbFixture {
   id: number;
@@ -36,6 +38,8 @@ Deno.serve(async (req) => {
       headers: { "Content-Type": "application/json" },
     });
   }
+
+  const log = createLogger("poll-live-scores", req);
 
   const apiKey = Deno.env.get("API_FOOTBALL_KEY");
   if (!apiKey) {
@@ -126,9 +130,16 @@ Deno.serve(async (req) => {
         scoreChanged
       ) {
         // Score changed but status is already FT — data discrepancy, hold settlement
-        console.warn(
-          `Score discrepancy for fixture ${dbFix.id}: DB ${dbFix.home_score}-${dbFix.away_score} vs API ${newHomeScore}-${newAwayScore}. Holding settlement.`,
-        );
+        log.warn("Score discrepancy — holding settlement", {
+          fixtureId: dbFix.id,
+          dbScore: `${dbFix.home_score}-${dbFix.away_score}`,
+          apiScore: `${newHomeScore}-${newAwayScore}`,
+        });
+        await alertSlack("Score discrepancy detected", {
+          fixtureId: dbFix.id,
+          dbScore: `${dbFix.home_score}-${dbFix.away_score}`,
+          apiScore: `${newHomeScore}-${newAwayScore}`,
+        });
         // Update score but flag for review — do not trigger settlement
         await db.from("fixtures").update({
           home_score: newHomeScore,
@@ -152,7 +163,7 @@ Deno.serve(async (req) => {
       }).eq("id", dbFix.id);
 
       if (updateError) {
-        console.error(`Failed to update fixture ${dbFix.id}:`, updateError);
+        log.error("Failed to update fixture", updateError, { fixtureId: dbFix.id });
         continue;
       }
 
@@ -160,17 +171,20 @@ Deno.serve(async (req) => {
 
       // 5. If now FT (or AET/PEN), trigger settlement
       if (SETTLED_STATUSES.includes(newStatus as never)) {
-        const settlementResult = await triggerSettlement(db, dbFix.id, currentGw.id);
+        const settlementResult = await triggerSettlement(db, dbFix.id, currentGw.id, log);
         if (settlementResult) results.settlementTriggered++;
       }
     }
+
+    log.complete("ok", results);
 
     return new Response(JSON.stringify(results), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
   } catch (err) {
-    console.error("poll-live-scores error:", err);
+    log.error("poll-live-scores failed", err, {});
+    await alertSlack("poll-live-scores failed", { error: String(err) });
     return new Response(JSON.stringify({ error: String(err) }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
@@ -187,13 +201,15 @@ async function triggerSettlement(
   db: any,
   fixtureId: number,
   gameweekId: number,
+  // deno-lint-ignore no-explicit-any
+  log: any,
 ): Promise<boolean> {
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
     if (!supabaseUrl || !serviceKey) {
-      console.error("Cannot trigger settlement: SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY missing");
+      log.error("Cannot trigger settlement: missing env vars", null, { fixtureId });
       return false;
     }
 
@@ -207,14 +223,14 @@ async function triggerSettlement(
     });
 
     if (!res.ok) {
-      console.error(`settle-picks returned ${res.status} for fixture ${fixtureId}`);
+      log.error("settle-picks returned error status", null, { fixtureId, status: res.status });
       return false;
     }
 
-    console.log(`Settlement triggered for fixture ${fixtureId}`);
+    log.info("Settlement triggered", { fixtureId });
     return true;
   } catch (err) {
-    console.error(`Failed to trigger settlement for fixture ${fixtureId}:`, err);
+    log.error("Failed to trigger settlement", err, { fixtureId });
     return false;
   }
 }
