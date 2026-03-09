@@ -76,6 +76,32 @@ jobs:
         working-directory: ios
         run: swiftlint --strict
 
+  token-check:
+    name: Token Freshness
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Generate tokens
+        run: node scripts/generate-tokens.js
+
+      - name: Check for drift
+        run: |
+          if ! git diff --exit-code ios/Pyramid/Sources/Shared/DesignSystem/ThemeColors.swift \
+               ios/Pyramid/Sources/Shared/DesignSystem/ThemeSpacing.swift \
+               ios/Pyramid/Sources/Shared/DesignSystem/ThemeTypography.swift; then
+            echo "::error::Generated token files are stale. Run 'node scripts/generate-tokens.js' and commit."
+            exit 1
+          fi
+
   secret-scan:
     name: Secret Scan
     runs-on: ubuntu-latest
