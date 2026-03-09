@@ -11,6 +11,9 @@ struct LeaguesView: View {
             Group {
                 if viewModel.isLoading && viewModel.leagues.isEmpty {
                     loadingView
+                } else if let errorMessage = viewModel.errorMessage,
+                          viewModel.leagues.isEmpty {
+                    errorStateView(message: errorMessage)
                 } else if viewModel.leagues.isEmpty {
                     emptyStateView
                 } else {
@@ -43,21 +46,33 @@ struct LeaguesView: View {
                     }
                 }
             }
-            .sheet(isPresented: $showCreateLeague) {
-                CreateLeagueView { created in
-                    Task { await viewModel.leagueAdded(created) }
+            .sheet(
+                isPresented: $showCreateLeague,
+                onDismiss: { Task { await viewModel.fetchLeagues() } },
+                content: {
+                    CreateLeagueView { created in
+                        Task { await viewModel.leagueAdded(created) }
+                    }
                 }
-            }
-            .sheet(isPresented: $showJoinLeague) {
-                JoinLeagueView { _ in
-                    Task { await viewModel.fetchLeagues() }
+            )
+            .sheet(
+                isPresented: $showJoinLeague,
+                onDismiss: { Task { await viewModel.fetchLeagues() } },
+                content: {
+                    JoinLeagueView { _ in
+                        Task { await viewModel.fetchLeagues() }
+                    }
                 }
-            }
-            .sheet(isPresented: $showJoinPaidLeague) {
-                JoinPaidLeagueView { _ in
-                    Task { await viewModel.fetchLeagues() }
+            )
+            .sheet(
+                isPresented: $showJoinPaidLeague,
+                onDismiss: { Task { await viewModel.fetchLeagues() } },
+                content: {
+                    JoinPaidLeagueView { _ in
+                        Task { await viewModel.fetchLeagues() }
+                    }
                 }
-            }
+            )
             .task {
                 await viewModel.fetchLeagues()
             }
@@ -72,6 +87,39 @@ struct LeaguesView: View {
     private var loadingView: some View {
         ProgressView()
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    private func errorStateView(message: String) -> some View {
+        VStack(spacing: DS.Spacing.s6) {
+            Spacer()
+
+            VStack(spacing: DS.Spacing.s4) {
+                Image(systemName: "exclamationmark.triangle")
+                    .font(.system(size: 56))
+                    .foregroundStyle(Color.DS.Neutral.n300)
+
+                VStack(spacing: DS.Spacing.s2) {
+                    Text("Something went wrong")
+                        .font(.DS.title3)
+                        .foregroundStyle(Color.DS.Neutral.n900)
+
+                    Text(message)
+                        .font(.DS.subheadline)
+                        .foregroundStyle(Color.DS.Neutral.n500)
+                        .multilineTextAlignment(.center)
+                }
+            }
+
+            Button("Try Again") {
+                Task { await viewModel.fetchLeagues() }
+            }
+            .dsStyle(.primary)
+            .padding(.horizontal, DS.Spacing.pageMargin)
+
+            Spacer()
+            Spacer()
+        }
+        .padding(.horizontal, DS.Spacing.pageMargin)
     }
 
     private var emptyStateView: some View {

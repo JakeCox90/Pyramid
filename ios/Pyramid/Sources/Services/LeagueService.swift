@@ -26,6 +26,21 @@ enum LeagueServiceError: LocalizedError, Equatable {
     }
 }
 
+// MARK: - Join query helper
+
+/// Intermediate type for decoding league_members → leagues join queries.
+private struct LeagueMemberRow: Decodable {
+    let leagueId: String
+    let leagues: League
+
+    var league: League { leagues }
+
+    enum CodingKeys: String, CodingKey {
+        case leagueId = "league_id"
+        case leagues
+    }
+}
+
 // MARK: - Protocol
 
 protocol LeagueServiceProtocol: Sendable {
@@ -85,13 +100,20 @@ final class LeagueService: LeagueServiceProtocol {
 
     func fetchMyLeagues() async throws -> [League] {
         do {
-            let leagues: [League] = try await client
-                .from("leagues")
-                .select("id, name, join_code, type, status, season, created_at")
-                .order("created_at", ascending: false)
+            let userId = try await client.auth.session.user.id.uuidString
+            let rows: [LeagueMemberRow] = try await client
+                .from("league_members")
+                .select(
+                    """
+                    league_id, \
+                    leagues(id, name, join_code, type, status, season, created_at)
+                    """
+                )
+                .eq("user_id", value: userId)
                 .execute()
                 .value
-            return leagues
+            return rows.map(\.league)
+                .sorted { $0.createdAt > $1.createdAt }
         } catch {
             throw LeagueServiceError.fetchFailed(error.localizedDescription)
         }
