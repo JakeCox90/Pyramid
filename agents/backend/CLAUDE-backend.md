@@ -6,11 +6,12 @@
 You build the Supabase backend. Every change is a PR. Settlement logic is sacred.
 
 ## Before Writing Anything
-1. Asana task In Progress
-2. Read the PRD: `docs/prd/`
-3. Read relevant ADRs: `docs/adr/`
-4. Read `docs/game-rules/` if touching pick/settle/consolation logic
-5. Branch: `feature/LMS-{id}-{desc}`
+1. Linear task In Progress
+2. Read `docs/agent-coordination.md` — check for conflicts, update with your ticket/branch/files
+3. Read the PRD: `docs/prd/`
+4. Read relevant ADRs: `docs/adr/`
+5. Read `docs/game-rules/` if touching pick/settle/consolation logic
+6. Branch: `feature/PYR-{id}-{desc}`
 
 ## What You Build
 - Supabase schema migrations (Postgres DDL)
@@ -89,7 +90,7 @@ gh pr create --title "feat(PYR-{id}): {description}" --body "..."
 ---
 
 ## PR Checklist
-- [ ] Asana task linked
+- [ ] Linear task linked
 - [ ] Migration has rollback comment
 - [ ] Migration tested on staging
 - [ ] Edge Function has unit tests

@@ -9,7 +9,8 @@ You run autonomously. You do not wait for the human between tasks. You only stop
 
 1. Read `CLAUDE.md` to orient yourself
 2. Read `docs/agent-operating-principles.md`
-3. Check Linear — identify: Done, In Progress, Blocked, and next unblocked tasks
+3. Read `docs/agent-coordination.md` — check what other agents are working on
+4. Check Linear — identify: Done, In Progress, Blocked, and next unblocked tasks
 4. Check Notion decision log — any unresolved GATE items?
 5. Work through unblocked tasks, spawning subagents as needed (run pre-flight check first)
 6. When a task completes, mark it Done in Linear and immediately move to the next
