@@ -55,6 +55,7 @@
 		A9CB58CA3A97B59755CD5097 /* JoinLeagueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F92B2128386637B702FCB12 /* JoinLeagueView.swift */; };
 		AE50172FE0206CEECC9A36E9 /* LeagueCreatedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2485ABB28B60E960F5EF2DBD /* LeagueCreatedView.swift */; };
 		AE7F2FCAF778F50C36FCAC3F /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFE022A9349F1AA3A1C91AAA /* Theme.swift */; };
+		B1884A48DEF1BF61EB073278 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32DA20BB35D3324D2E896218 /* ProfileViewModel.swift */; };
 		B90E3D25AC9B855EC6852C6D /* ColorHex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 298239CC4E1599B8F4D3DD6B /* ColorHex.swift */; };
 		BCD62DC3E165765ADBC71D63 /* LeagueMember+Paid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E07C95B627553979AA23A9D /* LeagueMember+Paid.swift */; };
 		BFEFF38173238FF865088D99 /* WalletTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79B2CA606CE4F01DE5A3463 /* WalletTransaction.swift */; };
@@ -123,6 +124,7 @@
 		2E4517097C58F3AB9DB59A38 /* League.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = League.swift; sourceTree = "<group>"; };
 		2E753C76862AFD099D5FD8DC /* LeaguePreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaguePreview.swift; sourceTree = "<group>"; };
 		312D0FA3E5C4632084A176EE /* ResultsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsService.swift; sourceTree = "<group>"; };
+		32DA20BB35D3324D2E896218 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		334B3F95F52FDB1F1BDD29CE /* LeagueService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeagueService.swift; sourceTree = "<group>"; };
 		351A08CFE9CD12D6B11A184B /* NotificationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationServiceTests.swift; sourceTree = "<group>"; };
 		42379DA3E6430A94B9D0CCDB /* PyramidUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = PyramidUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -260,6 +262,7 @@
 				91C9DFA9DF708B041B1E1F5E /* NotificationPreferencesView.swift */,
 				054083ED1D3E595360A2AB79 /* NotificationPreferencesViewModel.swift */,
 				D6F92FE092EC760C205458A7 /* ProfileView.swift */,
+				32DA20BB35D3324D2E896218 /* ProfileViewModel.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -588,6 +591,7 @@
 				CEF0F8A07CD6478394576A7F /* PicksView.swift in Sources */,
 				F5A1A1424F425CEAEF7F3E85 /* PicksViewModel.swift in Sources */,
 				07D4065B76C454F135FBEEF6 /* ProfileView.swift in Sources */,
+				B1884A48DEF1BF61EB073278 /* ProfileViewModel.swift in Sources */,
 				E19D354135AFF1048D946323 /* PyramidApp.swift in Sources */,
 				490F9A1B4284771141E6B3D5 /* ResultsService.swift in Sources */,
 				4843B64FD488579B895F5B35 /* ResultsView.swift in Sources */,
