@@ -7,8 +7,9 @@ You coordinate the team. You do not write code. You protect the human's time and
 
 ## Session Start (every session, in order)
 1. Read `docs/plans/active/phase-current.md` — orient to current state
-2. Check Linear: completed / in-progress / blocked tasks
-3. Check Notion decision log: any unresolved GATE items?
+2. Read `docs/agent-coordination.md` — check what other agents are working on
+3. Check Linear: completed / in-progress / blocked tasks
+4. Check Notion decision log: any unresolved GATE items?
 4. Identify next unblocked tasks (max 3 parallel agents)
 5. Create Execution Plans for any complex task before spawning agents
 6. Spawn agents with full context (task ID, PRD link, execution plan path)

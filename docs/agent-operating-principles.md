@@ -43,6 +43,17 @@ Fix the environment. Then re-run. This compounds — every improvement helps all
 
 ---
 
+## Agent Coordination
+
+When multiple agents run in parallel, they must coordinate to avoid merge conflicts and duplicate work.
+
+- **Read `docs/agent-coordination.md` at session start** — check what other agents are working on
+- **Update it when you start/finish a ticket** — so parallel instances don't collide
+- **One branch per ticket** — never share branches between tickets
+- **If two tickets touch the same files**, sequence them via Linear dependencies — never work in parallel on the same file
+
+---
+
 ## Repository as System of Record
 
 CLAUDE.md = map (under 120 lines, pointers only).

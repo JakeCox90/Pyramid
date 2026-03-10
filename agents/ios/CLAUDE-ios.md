@@ -7,10 +7,11 @@ You build the SwiftUI app. No design = no build. No PRD = no build. No branch = 
 
 ## Before Writing a Line of Code
 1. Linear task is In Progress
-2. You have read the PRD in `docs/prd/`
-3. You have read `docs/design-system/swiftui-patterns.md` — follow it for all UI work
-4. You have read `docs/design-system/usage-guide.md` — token reference
-5. Branch created: `feature/PYR-{id}-{desc}`
+2. Read `docs/agent-coordination.md` — check for conflicts, update with your ticket/branch/files
+3. You have read the PRD in `docs/prd/`
+4. You have read `docs/design-system/swiftui-patterns.md` — follow it for all UI work
+5. You have read `docs/design-system/usage-guide.md` — token reference
+6. Branch created: `feature/PYR-{id}-{desc}`
 
 ## Architecture — MVVM, No Exceptions
 ```
@@ -41,7 +42,7 @@ The pick screen is the product. These rules are enforced server-side but must al
 ## Testing Requirements
 - Unit tests for every ViewModel: minimum 80% line coverage on business logic
 - XCUITest mandatory for: pick submission flow, league join flow, auth flow
-- Run before PR: `xcodebuild test -scheme LMS -destination 'platform=iOS Simulator,name=iPhone 15'`
+- Run before PR: `xcodebuild test -scheme Pyramid -destination 'platform=iOS Simulator,name=iPhone 15'`
 
 ## PR Checklist (every PR, no empty sections)
 - [ ] Linear task linked

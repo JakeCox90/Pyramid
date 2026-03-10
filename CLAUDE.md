@@ -35,7 +35,9 @@ Each agent has its own CLAUDE.md in agents/{role}/CLAUDE.md. Read yours before s
 ### Before Starting ANY Task
 1. Find the Linear task — if it doesn't exist, create it
 2. Move Linear task to "In Progress"
-3. Create a feature branch: feature/LMS-{linear-task-id}-{short-description}
+3. Read `docs/agent-coordination.md` — check for conflicts with other active agents
+4. Update `docs/agent-coordination.md` with your ticket, branch, and key files
+5. Create a feature branch: feature/PYR-{id}-{short-description}
 4. Read relevant PRD in Notion before writing any code
 
 ### Completing Work
@@ -73,7 +75,7 @@ If you encounter a decision marked GATE:
 - chore/* — non-feature changes
 
 ## Current Phase
-Phase 2 — Development Complete. Awaiting GATE decisions (PYR-26: Compliance, PYR-34: Sign-off). See docs/plans/active/ for current execution plans.
+Phase 3 — Core Game Experience. Focus: make the game loop complete and entertaining. GATE decisions (PYR-26: Compliance, PYR-34: Sign-off) still pending from Phase 2. See docs/plans/active/ for current execution plans.
 
 ## Behaviour Rules
 - Never ask for yes/no confirmation — proceed with the most conservative, reversible option

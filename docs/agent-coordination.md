@@ -7,7 +7,9 @@
 
 | Ticket | Branch | Agent | Status | Key Files | Started |
 |--------|--------|-------|--------|-----------|---------|
-| — | — | — | — | — | — |
+| PYR-68 | feature/PYR-68-gameweek-advancement | Backend | In Review | `supabase/functions/poll-live-scores/index.ts` | 2026-03-10 |
+| PYR-70 | feature/PYR-70-sign-out | iOS | In Review | `ios/Pyramid/Sources/Features/Profile/ProfileView.swift` | 2026-03-10 |
+| PYR-80 | feature/PYR-80-browse-free-leagues | iOS | In Review | `ios/Pyramid/Sources/Features/Leagues/BrowseLeaguesView.swift` | 2026-03-10 |
 
 ## Recently Completed
 
