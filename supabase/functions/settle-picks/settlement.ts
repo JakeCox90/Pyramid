@@ -74,3 +74,37 @@ export function findNoPickMemberIds(
   const safeSet = new Set(memberIdsWithPendingPick);
   return activeMemberIds.filter((id) => !safeSet.has(id));
 }
+
+// ─── Winner detection helpers ─────────────────────────────────────────────────
+
+export interface GwFixtureSummary {
+  id: number;
+  status: string;
+  settled_at: string | null;
+}
+
+/**
+ * Returns true if all fixtures in a gameweek are fully settled or in a
+ * terminal non-played state (PST, CANC, ABD).
+ *
+ * "Settled" = settled_at IS NOT NULL.
+ * "Terminal non-played" = status in PST | CANC | ABD — these will never
+ * produce a settlement event, so they don't block winner declaration.
+ *
+ * Winner detection must NEVER fire while any GW fixture still has a live or
+ * unresolved result — this guard enforces that invariant.
+ */
+export function isGameweekFullySettled(fixtures: GwFixtureSummary[]): boolean {
+  if (fixtures.length === 0) return false; // no fixtures — never declare winner
+  const terminalNonPlayed = new Set(["PST", "CANC", "ABD"]);
+  return fixtures.every((f) => f.settled_at !== null || terminalNonPlayed.has(f.status));
+}
+
+/**
+ * Returns true if exactly one active member remains in a league — the winner.
+ *
+ * @param activeCount  Number of members with status = 'active' in the league
+ */
+export function hasSingleSurvivor(activeCount: number): boolean {
+  return activeCount === 1;
+}
