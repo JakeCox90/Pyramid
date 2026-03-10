@@ -6,9 +6,11 @@ struct Fixture: Identifiable, Codable, Sendable, Equatable {
     let homeTeamId: Int
     let homeTeamName: String
     let homeTeamShort: String
+    let homeTeamLogo: String?
     let awayTeamId: Int
     let awayTeamName: String
     let awayTeamShort: String
+    let awayTeamLogo: String?
     let kickoffAt: Date
     let status: FixtureStatus
     let homeScore: Int?
@@ -20,9 +22,11 @@ struct Fixture: Identifiable, Codable, Sendable, Equatable {
         case homeTeamId = "home_team_id"
         case homeTeamName = "home_team_name"
         case homeTeamShort = "home_team_short"
+        case homeTeamLogo = "home_team_logo"
         case awayTeamId = "away_team_id"
         case awayTeamName = "away_team_name"
         case awayTeamShort = "away_team_short"
+        case awayTeamLogo = "away_team_logo"
         case kickoffAt = "kickoff_at"
         case status
         case homeScore = "home_score"

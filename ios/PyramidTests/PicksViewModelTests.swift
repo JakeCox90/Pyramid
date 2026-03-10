@@ -232,12 +232,16 @@ final class MockPickService: PickServiceProtocol {
         return [
             Fixture(id: 1, gameweekId: gameweekId,
                     homeTeamId: 100, homeTeamName: "Arsenal", homeTeamShort: "ARS",
+                    homeTeamLogo: nil,
                     awayTeamId: 200, awayTeamName: "Chelsea", awayTeamShort: "CHE",
+                    awayTeamLogo: nil,
                     kickoffAt: Date().addingTimeInterval(86400),
                     status: .notStarted, homeScore: nil, awayScore: nil),
             Fixture(id: 2, gameweekId: gameweekId,
                     homeTeamId: 300, homeTeamName: "Liverpool", homeTeamShort: "LIV",
+                    homeTeamLogo: nil,
                     awayTeamId: 400, awayTeamName: "Man City", awayTeamShort: "MCI",
+                    awayTeamLogo: nil,
                     kickoffAt: Date().addingTimeInterval(90000),
                     status: .notStarted, homeScore: nil, awayScore: nil)
         ]
