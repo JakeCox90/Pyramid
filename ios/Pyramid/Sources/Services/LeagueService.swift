@@ -49,6 +49,7 @@ protocol LeagueServiceProtocol: Sendable {
     func previewLeague(code: String) async throws -> LeaguePreview
     func joinLeague(code: String) async throws -> JoinLeagueResponse
     func fetchMyLeagues() async throws -> [League]
+    func fetchOpenLeagues() async throws -> [BrowseLeague]
 }
 
 // MARK: - Implementation
@@ -70,7 +71,7 @@ final class LeagueService: LeagueServiceProtocol {
             Log.leagues.info("League created: \(response.leagueId)")
             return response
         } catch {
-            Log.leagues.error("League creation failed: \(error.localizedDescription)")
+            Log.leagues.error("League creation failed: \(error)")
             throw LeagueServiceError.createFailed(error.localizedDescription)
         }
     }
@@ -100,7 +101,7 @@ final class LeagueService: LeagueServiceProtocol {
             Log.leagues.info("Joined league: \(response.leagueId)")
             return response
         } catch {
-            Log.leagues.error("Join league failed: \(error.localizedDescription)")
+            Log.leagues.error("Join league failed: \(error)")
             throw LeagueServiceError.joinFailed(error.localizedDescription)
         }
     }
@@ -121,6 +122,45 @@ final class LeagueService: LeagueServiceProtocol {
                 .value
             return rows.map(\.league)
                 .sorted { $0.createdAt > $1.createdAt }
+        } catch {
+            throw LeagueServiceError.fetchFailed(error.localizedDescription)
+        }
+    }
+
+    func fetchOpenLeagues() async throws -> [BrowseLeague] {
+        do {
+            let userId = try await client.auth.session.user.id.uuidString
+
+            let myRows: [LeagueMemberRow] = try await client
+                .from("league_members")
+                .select(
+                    """
+                    league_id, \
+                    leagues(id, name, join_code, type, status, season, created_at)
+                    """
+                )
+                .eq("user_id", value: userId)
+                .execute()
+                .value
+            let myLeagueIds = Set(myRows.map(\.leagueId))
+
+            let allOpen: [BrowseLeagueRow] = try await client
+                .from("leagues")
+                .select(
+                    """
+                    id, name, join_code, status, season, created_at, \
+                    league_members(count)
+                    """
+                )
+                .eq("type", value: "free")
+                .in("status", values: ["pending", "active"])
+                .order("created_at", ascending: false)
+                .execute()
+                .value
+
+            return allOpen
+                .filter { !myLeagueIds.contains($0.id) }
+                .map { $0.toBrowseLeague() }
         } catch {
             throw LeagueServiceError.fetchFailed(error.localizedDescription)
         }

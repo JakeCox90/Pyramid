@@ -2,8 +2,13 @@ import SwiftUI
 
 @MainActor
 final class AuthViewModel: ObservableObject {
+    #if DEBUG
+    @Published var email = "test@pyramid.app"
+    @Published var password = "Pyramid2026Dev"
+    #else
     @Published var email = ""
     @Published var password = ""
+    #endif
     @Published var isLoading = false
     @Published var errorMessage: String?
 
