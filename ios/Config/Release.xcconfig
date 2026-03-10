@@ -2,6 +2,5 @@
 // DO NOT commit real values. This file is a template.
 // Real values are injected by CI (GitHub Secrets) for App Store builds.
 
-SUPABASE_URL = https://cracvbokmvryhhclzxxw.supabase.co
-SUPABASE_ANON_KEY =
-// Set SUPABASE_ANON_KEY in CI via secrets.SUPABASE_ANON_KEY_PROD
+SUPABASE_URL = https:$()/$()/cracvbokmvryhhclzxxw.supabase.co
+SUPABASE_ANON_KEY = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNyYWN2Ym9rbXZyeWhoY2x6eHh3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5MDUyODAsImV4cCI6MjA4ODQ4MTI4MH0.khHYUW_xHJk1mLGKB0COQImANCg8Y00EW8gxJi39YJo

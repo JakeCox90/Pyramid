@@ -5,6 +5,7 @@ struct LeaguesView: View {
     @State private var showCreateLeague = false
     @State private var showJoinLeague = false
     @State private var showJoinPaidLeague = false
+    @State private var showBrowseLeagues = false
 
     var body: some View {
         NavigationStack {
@@ -26,19 +27,36 @@ struct LeaguesView: View {
                     ToolbarItem(placement: .primaryAction) {
                         Menu {
                             Button {
+                                showBrowseLeagues = true
+                            } label: {
+                                Label(
+                                    "Browse Free Leagues",
+                                    systemImage: Theme.Icon.League.members
+                                )
+                            }
+                            Button {
                                 showCreateLeague = true
                             } label: {
-                                Label("Create League", systemImage: Theme.Icon.League.create)
+                                Label(
+                                    "Create League",
+                                    systemImage: Theme.Icon.League.create
+                                )
                             }
                             Button {
                                 showJoinLeague = true
                             } label: {
-                                Label("Join League", systemImage: Theme.Icon.League.join)
+                                Label(
+                                    "Join with Code",
+                                    systemImage: Theme.Icon.League.join
+                                )
                             }
                             Button {
                                 showJoinPaidLeague = true
                             } label: {
-                                Label("Join Paid League", systemImage: Theme.Icon.League.paid)
+                                Label(
+                                    "Join Paid League",
+                                    systemImage: Theme.Icon.League.paid
+                                )
                             }
                         } label: {
                             Image(systemName: Theme.Icon.Navigation.add)
@@ -60,6 +78,15 @@ struct LeaguesView: View {
                 onDismiss: { Task { await viewModel.fetchLeagues() } },
                 content: {
                     JoinLeagueView { _ in
+                        Task { await viewModel.fetchLeagues() }
+                    }
+                }
+            )
+            .sheet(
+                isPresented: $showBrowseLeagues,
+                onDismiss: { Task { await viewModel.fetchLeagues() } },
+                content: {
+                    BrowseLeaguesView { _ in
                         Task { await viewModel.fetchLeagues() }
                     }
                 }
@@ -136,7 +163,10 @@ struct LeaguesView: View {
                         .font(Theme.Typography.title3)
                         .foregroundStyle(Theme.Color.Content.Text.default)
 
-                    Text("Create a league and invite friends, or join one with a code.")
+                    Text(
+                        "Browse open leagues, create your own, "
+                        + "or join one with a code."
+                    )
                         .font(Theme.Typography.subheadline)
                         .foregroundStyle(Theme.Color.Content.Text.disabled)
                         .multilineTextAlignment(.center)
@@ -144,10 +174,15 @@ struct LeaguesView: View {
             }
 
             VStack(spacing: Theme.Spacing.s30) {
+                Button("Browse Free Leagues") {
+                    showBrowseLeagues = true
+                }
+                .dsStyle(.primary)
+
                 Button("Create a League") {
                     showCreateLeague = true
                 }
-                .dsStyle(.primary)
+                .dsStyle(.secondary)
 
                 Button("Join with Code") {
                     showJoinLeague = true
@@ -166,7 +201,9 @@ struct LeaguesView: View {
         ScrollView {
             LazyVStack(spacing: Theme.Spacing.s30) {
                 ForEach(viewModel.leagues) { league in
-                    NavigationLink(destination: LeagueDetailView(league: league)) {
+                    NavigationLink(
+                        destination: LeagueDetailView(league: league)
+                    ) {
                         LeagueRowView(league: league)
                     }
                     .buttonStyle(.plain)

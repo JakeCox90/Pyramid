@@ -32,6 +32,14 @@ struct CreateLeagueView: View {
                 }
             }
             .animation(.easeInOut(duration: 0.2), value: viewModel.createdLeague != nil)
+            .alert(
+                "League Creation Failed",
+                isPresented: $viewModel.showErrorAlert
+            ) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text(viewModel.errorMessage ?? "An unknown error occurred.")
+            }
         }
     }
 

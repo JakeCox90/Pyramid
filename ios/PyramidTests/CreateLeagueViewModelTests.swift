@@ -148,4 +148,9 @@ final class MockLeagueService: LeagueServiceProtocol {
         if shouldFail { throw URLError(.badServerResponse) }
         return []
     }
+
+    func fetchOpenLeagues() async throws -> [BrowseLeague] {
+        if shouldFail { throw URLError(.badServerResponse) }
+        return []
+    }
 }

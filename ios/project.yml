@@ -7,6 +7,10 @@ options:
   createIntermediateGroups: true
   generateEmptyDirectories: true
 
+configFiles:
+  Debug: Config/Debug.xcconfig
+  Release: Config/Release.xcconfig
+
 settings:
   base:
     SWIFT_VERSION: "5.9"
@@ -60,6 +64,7 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.pyramid.tests
+        GENERATE_INFOPLIST_FILE: YES
 
   PyramidUITests:
     type: bundle.ui-testing
@@ -71,3 +76,4 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.pyramid.uitests
+        GENERATE_INFOPLIST_FILE: YES
