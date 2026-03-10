@@ -1,6 +1,7 @@
 // Edge Function: poll-live-scores
 // Polls API-Football for live match scores and updates the fixtures table.
 // Triggers settlement check for any match that just reached FT.
+// After all fixtures are settled/voided, automatically advances to the next gameweek.
 //
 // Called by a Supabase cron job every 2 minutes during match windows.
 // Called every 60 minutes outside of match windows (cron config handles scheduling).
@@ -77,104 +78,107 @@ Deno.serve(async (req) => {
       .not("status", "in", `(${VOID_STATUSES.join(",")})`); // skip voided
 
     if (fixError) throw new Error(`DB fetch error: ${fixError.message}`);
-    if (!dbFixtures || dbFixtures.length === 0) {
-      return new Response(
-        JSON.stringify({ updated: 0, message: "No unsettled fixtures in current gameweek" }),
-        { status: 200, headers: { "Content-Type": "application/json" } },
-      );
-    }
 
-    // 3. Fetch live data from API-Football
-    const liveFixtures = await client.getLiveFixtures();
-
-    // Also fetch by round to catch recently finished matches (live endpoint drops them)
-    const roundFixtures = await client.getFixturesByRound(currentGw.round_number, CURRENT_SEASON);
-
-    // Merge: live takes priority, round fills in the rest
-    const apiFixtureMap = new Map<number, ApiFixture>();
-    for (const f of roundFixtures) apiFixtureMap.set(f.fixture.id, f);
-    for (const f of liveFixtures) apiFixtureMap.set(f.fixture.id, f); // overwrite with live
-
-    // 4. Process each unsettled fixture
+    // Process each unsettled fixture
     const results = {
       updated: 0,
       settlementTriggered: 0,
       heldForReview: 0,
       skipped: 0,
+      gameweekAdvanced: false,
     };
 
-    for (const dbFix of dbFixtures as DbFixture[]) {
-      const apiFix = apiFixtureMap.get(dbFix.id);
-      if (!apiFix) {
-        results.skipped++;
-        continue;
-      }
+    if (dbFixtures && dbFixtures.length > 0) {
+      // 3. Fetch live data from API-Football
+      const liveFixtures = await client.getLiveFixtures();
 
-      const newStatus = apiFix.fixture.status.short;
-      const newHomeScore = apiFix.goals.home;
-      const newAwayScore = apiFix.goals.away;
+      // Also fetch by round to catch recently finished matches (live endpoint drops them)
+      const roundFixtures = await client.getFixturesByRound(currentGw.round_number, CURRENT_SEASON);
 
-      // Check if anything changed
-      const statusChanged = newStatus !== dbFix.status;
-      const scoreChanged = newHomeScore !== dbFix.home_score || newAwayScore !== dbFix.away_score;
+      // Merge: live takes priority, round fills in the rest
+      const apiFixtureMap = new Map<number, ApiFixture>();
+      for (const f of roundFixtures) apiFixtureMap.set(f.fixture.id, f);
+      for (const f of liveFixtures) apiFixtureMap.set(f.fixture.id, f); // overwrite with live
 
-      if (!statusChanged && !scoreChanged) {
-        results.skipped++;
-        continue;
-      }
+      for (const dbFix of dbFixtures as DbFixture[]) {
+        const apiFix = apiFixtureMap.get(dbFix.id);
+        if (!apiFix) {
+          results.skipped++;
+          continue;
+        }
 
-      // Safety check: if newly FT but previous poll had different FT score, hold
-      if (
-        SETTLED_STATUSES.includes(newStatus as never) &&
-        dbFix.status === newStatus &&
-        scoreChanged
-      ) {
-        // Score changed but status is already FT — data discrepancy, hold settlement
-        log.warn("Score discrepancy — holding settlement", {
-          fixtureId: dbFix.id,
-          dbScore: `${dbFix.home_score}-${dbFix.away_score}`,
-          apiScore: `${newHomeScore}-${newAwayScore}`,
-        });
-        await alertSlack("Score discrepancy detected", {
-          fixtureId: dbFix.id,
-          dbScore: `${dbFix.home_score}-${dbFix.away_score}`,
-          apiScore: `${newHomeScore}-${newAwayScore}`,
-        });
-        // Update score but flag for review — do not trigger settlement
-        await db.from("fixtures").update({
+        const newStatus = apiFix.fixture.status.short;
+        const newHomeScore = apiFix.goals.home;
+        const newAwayScore = apiFix.goals.away;
+
+        // Check if anything changed
+        const statusChanged = newStatus !== dbFix.status;
+        const scoreChanged = newHomeScore !== dbFix.home_score || newAwayScore !== dbFix.away_score;
+
+        if (!statusChanged && !scoreChanged) {
+          results.skipped++;
+          continue;
+        }
+
+        // Safety check: if newly FT but previous poll had different FT score, hold
+        if (
+          SETTLED_STATUSES.includes(newStatus as never) &&
+          dbFix.status === newStatus &&
+          scoreChanged
+        ) {
+          // Score changed but status is already FT — data discrepancy, hold settlement
+          log.warn("Score discrepancy — holding settlement", {
+            fixtureId: dbFix.id,
+            dbScore: `${dbFix.home_score}-${dbFix.away_score}`,
+            apiScore: `${newHomeScore}-${newAwayScore}`,
+          });
+          await alertSlack("Score discrepancy detected", {
+            fixtureId: dbFix.id,
+            dbScore: `${dbFix.home_score}-${dbFix.away_score}`,
+            apiScore: `${newHomeScore}-${newAwayScore}`,
+          });
+          // Update score but flag for review — do not trigger settlement
+          await db.from("fixtures").update({
+            home_score: newHomeScore,
+            away_score: newAwayScore,
+            status: newStatus,
+            raw_api_response: apiFix,
+            // settled_at deliberately not set — settlement will not fire
+          }).eq("id", dbFix.id);
+
+          results.heldForReview++;
+          // TODO: send alert to Orchestrator (Slack / notification)
+          continue;
+        }
+
+        // Update fixture in DB
+        const { error: updateError } = await db.from("fixtures").update({
+          status: newStatus,
           home_score: newHomeScore,
           away_score: newAwayScore,
-          status: newStatus,
           raw_api_response: apiFix,
-          // settled_at deliberately not set — settlement will not fire
         }).eq("id", dbFix.id);
 
-        results.heldForReview++;
-        // TODO: send alert to Orchestrator (Slack / notification)
-        continue;
-      }
+        if (updateError) {
+          log.error("Failed to update fixture", updateError, { fixtureId: dbFix.id });
+          continue;
+        }
 
-      // Update fixture in DB
-      const { error: updateError } = await db.from("fixtures").update({
-        status: newStatus,
-        home_score: newHomeScore,
-        away_score: newAwayScore,
-        raw_api_response: apiFix,
-      }).eq("id", dbFix.id);
+        results.updated++;
 
-      if (updateError) {
-        log.error("Failed to update fixture", updateError, { fixtureId: dbFix.id });
-        continue;
-      }
-
-      results.updated++;
-
-      // 5. If now FT (or AET/PEN), trigger settlement
-      if (SETTLED_STATUSES.includes(newStatus as never)) {
-        const settlementResult = await triggerSettlement(db, dbFix.id, currentGw.id, log);
-        if (settlementResult) results.settlementTriggered++;
+        // 4. If now FT (or AET/PEN), trigger settlement
+        if (SETTLED_STATUSES.includes(newStatus as never)) {
+          const settlementResult = await triggerSettlement(db, dbFix.id, currentGw.id, log);
+          if (settlementResult) results.settlementTriggered++;
+        }
       }
     }
+
+    // 5. Check if gameweek is complete and advance if so.
+    // This runs on every poll so it catches the case where all fixtures were already
+    // settled before this invocation (e.g. after a restart or manual re-run).
+    const advanced = await maybeAdvanceGameweek(db, currentGw.id, currentGw.round_number, log);
+    results.gameweekAdvanced = advanced;
 
     log.complete("ok", results);
 
@@ -233,4 +237,120 @@ async function triggerSettlement(
     log.error("Failed to trigger settlement", err, { fixtureId });
     return false;
   }
+}
+
+/**
+ * Check whether all fixtures in the current gameweek are done (settled or void),
+ * and if so atomically advance to the next gameweek.
+ * Exported for unit testing.
+ *
+ * A fixture is "done" when:
+ *   - settled_at IS NOT NULL  (settlement has run), OR
+ *   - status IN ('PST', 'CANC', 'ABD')  (void — no result to settle)
+ *
+ * Race condition safety: the UPDATE on the current GW uses
+ *   WHERE is_finished = false
+ * so concurrent poll invocations are no-ops after the first one succeeds.
+ *
+ * Off-season handling: if no next GW exists we mark the current one finished
+ * and log — the season is over and no advancement is needed.
+ *
+ * Returns true if advancement actually happened (i.e. this invocation was the
+ * one that flipped is_current), false otherwise (already done or not ready).
+ */
+export async function maybeAdvanceGameweek(
+  // deno-lint-ignore no-explicit-any
+  db: any,
+  currentGwId: number,
+  currentRoundNumber: number,
+  // deno-lint-ignore no-explicit-any
+  log: any,
+): Promise<boolean> {
+  // Count fixtures that are NOT yet done:
+  //   - not settled (settled_at IS NULL)  AND
+  //   - not void (status NOT IN VOID_STATUSES)
+  const { count: pendingCount, error: pendingError } = await db
+    .from("fixtures")
+    .select("id", { count: "exact", head: true })
+    .eq("gameweek_id", currentGwId)
+    .is("settled_at", null)
+    .not("status", "in", `(${VOID_STATUSES.join(",")})`);
+
+  if (pendingError) {
+    log.error("Failed to count pending fixtures", pendingError, { gameweekId: currentGwId });
+    return false;
+  }
+
+  // If any fixtures are still pending, do not advance
+  if (pendingCount !== 0) {
+    return false;
+  }
+
+  // All fixtures are settled or void. Atomically mark this GW as finished.
+  // The WHERE guard (is_finished = false) ensures only one concurrent poll wins.
+  const { data: finishedRows, error: finishError } = await db
+    .from("gameweeks")
+    .update({ is_finished: true, is_current: false })
+    .eq("id", currentGwId)
+    .eq("is_finished", false) // WHERE guard — only the first caller flips this
+    .select("id");
+
+  if (finishError) {
+    log.error("Failed to mark gameweek finished", finishError, { gameweekId: currentGwId });
+    return false;
+  }
+
+  // If no rows were updated, another concurrent invocation already advanced — no-op
+  if (!finishedRows || finishedRows.length === 0) {
+    log.info("Gameweek already marked finished by concurrent invocation", { gameweekId: currentGwId });
+    return false;
+  }
+
+  log.info("Gameweek marked finished", { gameweekId: currentGwId, round: currentRoundNumber });
+
+  // Find the next gameweek (next round_number in the same season)
+  const { data: nextGw, error: nextGwError } = await db
+    .from("gameweeks")
+    .select("id, round_number")
+    .eq("season", CURRENT_SEASON)
+    .eq("round_number", currentRoundNumber + 1)
+    .single();
+
+  if (nextGwError || !nextGw) {
+    // Off-season or final gameweek — no next GW exists, season is over
+    log.info("No next gameweek found — season may be complete", {
+      currentRound: currentRoundNumber,
+    });
+    await alertSlack("Season complete — no next gameweek found", {
+      finishedGameweekId: currentGwId,
+      round: currentRoundNumber,
+    });
+    // Not an error — current GW is already marked finished above
+    return true;
+  }
+
+  // Promote next GW to current
+  const { error: promoteError } = await db
+    .from("gameweeks")
+    .update({ is_current: true })
+    .eq("id", nextGw.id);
+
+  if (promoteError) {
+    log.error("Failed to promote next gameweek", promoteError, { nextGameweekId: nextGw.id });
+    // Current GW is already marked finished — the next promotion failed.
+    // Alert so a human can manually set is_current on the next GW.
+    await alertSlack("Failed to promote next gameweek — manual intervention required", {
+      finishedGameweekId: currentGwId,
+      nextGameweekId: nextGw.id,
+      error: promoteError.message,
+    });
+    return false;
+  }
+
+  log.info("Gameweek advanced", {
+    from: { id: currentGwId, round: currentRoundNumber },
+    to: { id: nextGw.id, round: nextGw.round_number },
+  });
+
+  return true;
 }
