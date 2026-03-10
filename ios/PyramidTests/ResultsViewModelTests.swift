@@ -46,21 +46,27 @@ final class ResultsViewModelTests: XCTestCase {
         Fixture(
             id: 101, gameweekId: 5,
             homeTeamId: 100, homeTeamName: "Arsenal", homeTeamShort: "ARS",
+            homeTeamLogo: nil,
             awayTeamId: 200, awayTeamName: "Spurs", awayTeamShort: "TOT",
+            awayTeamLogo: nil,
             kickoffAt: Date().addingTimeInterval(-86400),
             status: .fullTime, homeScore: 2, awayScore: 0
         ),
         Fixture(
             id: 102, gameweekId: 5,
             homeTeamId: 300, homeTeamName: "Chelsea", homeTeamShort: "CHE",
+            homeTeamLogo: nil,
             awayTeamId: 400, awayTeamName: "Liverpool", awayTeamShort: "LIV",
+            awayTeamLogo: nil,
             kickoffAt: Date().addingTimeInterval(-86400),
             status: .fullTime, homeScore: 0, awayScore: 1
         ),
         Fixture(
             id: 201, gameweekId: 4,
             homeTeamId: 500, homeTeamName: "Liverpool", homeTeamShort: "LIV",
+            homeTeamLogo: nil,
             awayTeamId: 600, awayTeamName: "Man Utd", awayTeamShort: "MUN",
+            awayTeamLogo: nil,
             kickoffAt: Date().addingTimeInterval(-172800),
             status: .fullTime, homeScore: 3, awayScore: 1
         )
