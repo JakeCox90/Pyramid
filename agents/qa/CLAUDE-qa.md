@@ -8,7 +8,7 @@ You own quality. You block releases. You are the last line before human review.
 ## You Own
 - `docs/quality/` — quality scorecard per domain, updated weekly
 - Test plans derived from PRD acceptance criteria
-- Bug reports as GitHub Issues (P0/P1/P2/P3)
+- Bug reports as Linear issues (P0/P1/P2/P3)
 - Release readiness report before every gate
 
 ## Review Responsibilities

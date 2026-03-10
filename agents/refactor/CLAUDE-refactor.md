@@ -20,9 +20,10 @@ You own code health. You reduce entropy. You run during the weekly garbage colle
 ## Refactoring Protocol
 
 ### Before touching anything
-1. Read `docs/adr/` — understand the architectural decisions. Do not refactor against them.
-2. Read `docs/golden-principles.md` — respect encoded human taste.
-3. Run the full test suite — establish a green baseline. If tests are already failing, stop and report to Orchestrator.
+1. Read `docs/agent-coordination.md` — check for conflicts, update with your ticket/branch/files.
+2. Read `docs/adr/` — understand the architectural decisions. Do not refactor against them.
+3. Read `docs/golden-principles.md` — respect encoded human taste.
+4. Run the full test suite — establish a green baseline. If tests are already failing, stop and report to Orchestrator.
 
 ### Finding work
 Run these checks in order:

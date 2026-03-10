@@ -28,7 +28,7 @@ Human owner is the team manager and sole gate approver. Agents execute. Humans s
 ```
 Find/create Linear task → In Progress
 → Read PRD + active execution plan
-→ Branch: feature/LMS-{id}-{desc}
+→ Branch: feature/PYR-{id}-{desc}
 → Build → CI passes → PR with template
 → Move Linear to In Review
 → Agent-to-agent review (QA + specialist)
@@ -63,7 +63,7 @@ Find/create Linear task → In Progress
 
 ## Branch Naming
 - `main` — production, protected, 1 human approval
-- `feature/LMS-{id}-{desc}` | `fix/LMS-{id}-{desc}` | `chore/LMS-{id}-{desc}`
+- `feature/PYR-{id}-{desc}` | `fix/PYR-{id}-{desc}` | `chore/PYR-{id}-{desc}`
 
 ## Current Phase
 See `docs/plans/active/phase-current.md`
