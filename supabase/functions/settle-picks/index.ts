@@ -23,8 +23,9 @@
 import { getServiceClient } from "../_shared/supabase.ts";
 import { createLogger } from "../_shared/logger.ts";
 import { alertSlack } from "../_shared/alert.ts";
-import { determinePickResult, findNoPickMemberIds } from "./settlement.ts";
-import type { DbFixture, DbPick } from "./settlement.ts";
+import { determinePickResult, findNoPickMemberIds, isGameweekFullySettled, hasSingleSurvivor } from "./settlement.ts";
+import { sendNotification } from "../_shared/send-notification.ts";
+import type { DbFixture, DbPick, GwFixtureSummary } from "./settlement.ts";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -180,6 +181,175 @@ async function settleLeague(
   return { ...counts, isMassElim };
 }
 
+// ─── Winner detection ─────────────────────────────────────────────────────────
+//
+// Fires after all picks in a GW are settled for a given league.
+// Conditions for winner declaration (rules §4.4, §5.1):
+//   1. The league is still "active" (not already "completed") — idempotent guard.
+//   2. ALL fixtures in the gameweek are settled (settled_at IS NOT NULL) or in a
+//      terminal non-played status (PST, CANC, ABD). Never fire on partial GW.
+//   3. Exactly 1 active league_member remains after this settlement round.
+//   4. Mass elimination did NOT just occur (all reinstatement case — no winner yet).
+//
+// Returns true if a winner was declared, false otherwise.
+
+async function detectAndDeclareWinner(
+  // deno-lint-ignore no-explicit-any
+  db: any,
+  leagueId: string,
+  gameweekId: number,
+  isMassElim: boolean,
+  log: ReturnType<typeof createLogger>,
+): Promise<boolean> {
+  // Guard 1: mass elimination — all players reinstated, no winner yet.
+  if (isMassElim) {
+    log.info("Winner detection skipped — mass elimination round", { leagueId, gameweekId });
+    return false;
+  }
+
+  // Guard 2: league must still be active (idempotent — skip if already completed).
+  const { data: league, error: leagueErr } = await db
+    .from("leagues")
+    .select("id, name, status, type")
+    .eq("id", leagueId)
+    .maybeSingle();
+
+  if (leagueErr || !league) {
+    log.error("Winner detection: failed to fetch league", leagueErr, { leagueId });
+    return false;
+  }
+
+  if (league.status === "completed") {
+    log.info("Winner detection skipped — league already completed", { leagueId });
+    return false;
+  }
+
+  // Guard 3: ALL fixtures in this gameweek must be settled or terminal-non-played.
+  // "settled" = settled_at IS NOT NULL
+  // "terminal-non-played" = status IN ('PST', 'CANC', 'ABD')
+  // This prevents premature winner declaration when some GW fixtures are still live.
+  const { data: gwFixtures, error: fixErr } = await db
+    .from("fixtures")
+    .select("id, status, settled_at")
+    .eq("gameweek_id", gameweekId);
+
+  if (fixErr || !gwFixtures) {
+    log.error("Winner detection: failed to fetch GW fixtures", fixErr, { gameweekId });
+    return false;
+  }
+
+  const gwFixtureSummaries = gwFixtures as GwFixtureSummary[];
+  if (!isGameweekFullySettled(gwFixtureSummaries)) {
+    const terminalNonPlayed = new Set(["PST", "CANC", "ABD"]);
+    log.info("Winner detection skipped — GW has unsettled fixtures", {
+      leagueId,
+      gameweekId,
+      totalFixtures: gwFixtureSummaries.length,
+      unsettled: gwFixtureSummaries.filter(
+        (f) => f.settled_at === null && !terminalNonPlayed.has(f.status),
+      ).length,
+    });
+    return false;
+  }
+
+  // Guard 4: count active members — exactly 1 → winner.
+  const { data: activeMembers, error: memberErr } = await db
+    .from("league_members")
+    .select("id, user_id")
+    .eq("league_id", leagueId)
+    .eq("status", "active");
+
+  if (memberErr) {
+    log.error("Winner detection: failed to fetch active members", memberErr, { leagueId });
+    return false;
+  }
+
+  const active = (activeMembers ?? []) as { id: string; user_id: string }[];
+
+  if (!hasSingleSurvivor(active.length)) {
+    log.info("Winner detection: not a single survivor", {
+      leagueId,
+      gameweekId,
+      activeCount: active.length,
+    });
+    return false;
+  }
+
+  // Declare the winner.
+  const winner = active[0];
+  log.info("Winner detected — declaring winner", {
+    leagueId,
+    winnerId: winner.user_id,
+    gameweekId,
+  });
+
+  // Set league_member status → winner.
+  const { error: memberUpdateErr } = await db
+    .from("league_members")
+    .update({ status: "winner" })
+    .eq("id", winner.id)
+    .eq("status", "active"); // idempotent guard — only update if still active
+
+  if (memberUpdateErr) {
+    log.error("Winner detection: failed to update member status", memberUpdateErr, {
+      leagueId,
+      memberId: winner.id,
+    });
+    await alertSlack("settle-picks: winner member update failed", {
+      leagueId,
+      memberId: winner.id,
+      error: memberUpdateErr.message,
+    });
+    return false;
+  }
+
+  // Set leagues.status → completed.
+  const { error: leagueUpdateErr } = await db
+    .from("leagues")
+    .update({ status: "completed" })
+    .eq("id", leagueId)
+    .eq("status", "active"); // idempotent guard — only update if still active
+
+  if (leagueUpdateErr) {
+    log.error("Winner detection: failed to update league status", leagueUpdateErr, { leagueId });
+    await alertSlack("settle-picks: league completion update failed", {
+      leagueId,
+      error: leagueUpdateErr.message,
+    });
+    // Attempt rollback: revert member status to active so the state stays consistent
+    await db
+      .from("league_members")
+      .update({ status: "active" })
+      .eq("id", winner.id)
+      .eq("status", "winner");
+    return false;
+  }
+
+  log.info("League marked completed", { leagueId, winnerId: winner.user_id });
+
+  // Fire push notification — fire-and-forget (sendNotification never throws).
+  try {
+    await sendNotification({
+      userId: winner.user_id,
+      template: "round_complete_winner",
+      data: {
+        leagueName: league.name as string,
+        // amount is blank for free leagues; paid league prize distribution is
+        // handled separately by the distribute-prizes Edge Function.
+        amount: league.type === "free" ? "0" : "",
+      },
+    });
+  } catch (notifErr) {
+    // Fire-and-forget — notification failure must never fail settlement.
+    log.error("Winner notification failed (non-fatal)", notifErr, {
+      leagueId,
+      userId: winner.user_id,
+    });
+  }
+
+  return true;
+}
+
 // ─── Main handler ─────────────────────────────────────────────────────────────
 
 Deno.serve(async (req) => {
@@ -264,6 +434,7 @@ Deno.serve(async (req) => {
     massEliminationLeagues: 0,
     leaguesSettled: 0,
     leaguesSkipped: 0,
+    winnersDetected: 0,
   };
 
   for (const [leagueId, picks] of picksByLeague) {
@@ -288,6 +459,18 @@ Deno.serve(async (req) => {
     summary.void += result.voids;
     if (result.isMassElim) summary.massEliminationLeagues++;
     summary.leaguesSettled++;
+
+    // ── Winner detection (runs after each league is settled) ────────────────
+    // Checks whether all GW fixtures are now settled and exactly 1 active
+    // member remains. Gated on isMassElim to prevent false positives (§4.5).
+    const winnerDeclared = await detectAndDeclareWinner(
+      db,
+      leagueId,
+      gameweekId,
+      result.isMassElim,
+      log,
+    );
+    if (winnerDeclared) summary.winnersDetected++;
   }
 
   // ── 5. Mark fixture settled ───────────────────────────────────────────────

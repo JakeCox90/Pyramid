@@ -4,8 +4,14 @@
 import {
   assertEquals,
 } from "https://deno.land/std@0.224.0/assert/mod.ts";
-import { determinePickResult, findNoPickMemberIds, isMassElimination } from "./settlement.ts";
-import type { DbFixture, DbPick } from "./settlement.ts";
+import {
+  determinePickResult,
+  findNoPickMemberIds,
+  hasSingleSurvivor,
+  isMassElimination,
+  isGameweekFullySettled,
+} from "./settlement.ts";
+import type { DbFixture, DbPick, GwFixtureSummary } from "./settlement.ts";
 
 // ─── Fixtures ─────────────────────────────────────────────────────────────────
 
@@ -136,4 +142,106 @@ Deno.test("no-pick: member with only a void PST pick (no pending pick) — retur
   // u2 has a void pick (PST) but no pending pick for another fixture.
   // They did not repick, so they should be auto-eliminated (§3.3).
   assertEquals(findNoPickMemberIds(["u1", "u2"], ["u1"]), ["u2"]);
+});
+
+// ─── isGameweekFullySettled ───────────────────────────────────────────────────
+
+function makeGwFixture(overrides: Partial<GwFixtureSummary> = {}): GwFixtureSummary {
+  return { id: 1, status: "FT", settled_at: "2026-03-10T22:00:00Z", ...overrides };
+}
+
+Deno.test("isGameweekFullySettled: all fixtures settled — returns true", () => {
+  const fixtures: GwFixtureSummary[] = [
+    makeGwFixture({ id: 1, settled_at: "2026-03-10T22:00:00Z" }),
+    makeGwFixture({ id: 2, settled_at: "2026-03-10T22:45:00Z" }),
+  ];
+  assertEquals(isGameweekFullySettled(fixtures), true);
+});
+
+Deno.test("isGameweekFullySettled: one fixture not yet settled — returns false", () => {
+  const fixtures: GwFixtureSummary[] = [
+    makeGwFixture({ id: 1, settled_at: "2026-03-10T22:00:00Z" }),
+    makeGwFixture({ id: 2, settled_at: null, status: "FT" }), // FT but not settled yet
+  ];
+  assertEquals(isGameweekFullySettled(fixtures), false);
+});
+
+Deno.test("isGameweekFullySettled: PST fixture with no settled_at — counts as settled (non-played)", () => {
+  const fixtures: GwFixtureSummary[] = [
+    makeGwFixture({ id: 1, settled_at: "2026-03-10T22:00:00Z" }),
+    makeGwFixture({ id: 2, settled_at: null, status: "PST" }), // postponed — non-played terminal
+  ];
+  assertEquals(isGameweekFullySettled(fixtures), true);
+});
+
+Deno.test("isGameweekFullySettled: CANC fixture with no settled_at — counts as settled (non-played)", () => {
+  const fixtures: GwFixtureSummary[] = [
+    makeGwFixture({ id: 1, settled_at: null, status: "CANC" }),
+  ];
+  assertEquals(isGameweekFullySettled(fixtures), true);
+});
+
+Deno.test("isGameweekFullySettled: ABD fixture with no settled_at — counts as settled (non-played)", () => {
+  const fixtures: GwFixtureSummary[] = [
+    makeGwFixture({ id: 1, settled_at: null, status: "ABD" }),
+  ];
+  assertEquals(isGameweekFullySettled(fixtures), true);
+});
+
+Deno.test("isGameweekFullySettled: empty fixture list — returns false (safety: no fixtures → no winner)", () => {
+  assertEquals(isGameweekFullySettled([]), false);
+});
+
+Deno.test("isGameweekFullySettled: live fixture (1H status) — returns false", () => {
+  const fixtures: GwFixtureSummary[] = [
+    makeGwFixture({ id: 1, settled_at: "2026-03-10T22:00:00Z" }),
+    makeGwFixture({ id: 2, settled_at: null, status: "1H" }), // still in play
+  ];
+  assertEquals(isGameweekFullySettled(fixtures), false);
+});
+
+Deno.test("isGameweekFullySettled: mix of settled and PST/CANC — returns true", () => {
+  const fixtures: GwFixtureSummary[] = [
+    makeGwFixture({ id: 1, settled_at: "2026-03-10T22:00:00Z", status: "FT" }),
+    makeGwFixture({ id: 2, settled_at: null, status: "PST" }),
+    makeGwFixture({ id: 3, settled_at: null, status: "CANC" }),
+    makeGwFixture({ id: 4, settled_at: "2026-03-10T22:15:00Z", status: "FT" }),
+  ];
+  assertEquals(isGameweekFullySettled(fixtures), true);
+});
+
+// ─── hasSingleSurvivor ────────────────────────────────────────────────────────
+
+Deno.test("hasSingleSurvivor: exactly 1 active member — true", () => {
+  assertEquals(hasSingleSurvivor(1), true);
+});
+
+Deno.test("hasSingleSurvivor: 0 active members — false (mass elim / race condition guard)", () => {
+  assertEquals(hasSingleSurvivor(0), false);
+});
+
+Deno.test("hasSingleSurvivor: 2 active members — false (multiple survivors, game continues)", () => {
+  assertEquals(hasSingleSurvivor(2), false);
+});
+
+Deno.test("hasSingleSurvivor: 5 active members — false", () => {
+  assertEquals(hasSingleSurvivor(5), false);
+});
+
+// ─── Winner detection idempotency — replay safety ────────────────────────────
+// These tests confirm that the pure logic functions do not have side effects.
+// The idempotency of the DB writes (status guards) is verified in CI integration tests.
+
+Deno.test("idempotency: isGameweekFullySettled is pure — same input always same output", () => {
+  const fixtures: GwFixtureSummary[] = [
+    makeGwFixture({ id: 1, settled_at: "2026-03-10T22:00:00Z" }),
+  ];
+  // Call twice — must return same result
+  assertEquals(isGameweekFullySettled(fixtures), true);
+  assertEquals(isGameweekFullySettled(fixtures), true);
+});
+
+Deno.test("idempotency: hasSingleSurvivor is pure — same input always same output", () => {
+  assertEquals(hasSingleSurvivor(1), true);
+  assertEquals(hasSingleSurvivor(1), true);
 });
