@@ -73,7 +73,7 @@ struct PicksView: View {
         ScrollView {
             VStack(spacing: Theme.Spacing.s30) {
                 if let gameweek = viewModel.gameweek {
-                    Text(gameweek.name)
+                    Text("Gameweek \(gameweek.roundNumber)")
                         .font(Theme.Typography.subheadline)
                         .foregroundStyle(Theme.Color.Content.Text.disabled)
                         .frame(maxWidth: .infinity, alignment: .leading)
