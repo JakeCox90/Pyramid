@@ -7,6 +7,8 @@ struct RootView: View {
         Group {
             if appState.isLoading {
                 ProgressView()
+            } else if appState.session != nil && appState.showOnboarding {
+                OnboardingView()
             } else if appState.session != nil {
                 MainTabView()
             } else {
