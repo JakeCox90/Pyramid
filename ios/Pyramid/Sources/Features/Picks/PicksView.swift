@@ -20,7 +20,7 @@ struct PicksView: View {
                     fixturesList
                 }
             }
-            .navigationTitle(viewModel.gameweek?.name ?? "Make Your Pick")
+            .navigationTitle("Make Your Pick")
             .navigationBarTitleDisplayMode(.large)
             .task {
                 await viewModel.load()
@@ -72,6 +72,14 @@ struct PicksView: View {
     private var fixturesList: some View {
         ScrollView {
             VStack(spacing: Theme.Spacing.s30) {
+                if let gameweek = viewModel.gameweek {
+                    Text(gameweek.name)
+                        .font(Theme.Typography.subheadline)
+                        .foregroundStyle(Theme.Color.Content.Text.disabled)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal, Theme.Spacing.s40)
+                }
+
                 if let pick = viewModel.currentPick {
                     currentPickBanner(pick: pick)
                 }
