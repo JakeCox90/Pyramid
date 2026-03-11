@@ -1,3 +1,4 @@
+import os
 import SwiftUI
 
 @MainActor
@@ -24,7 +25,9 @@ final class AuthViewModel: ObservableObject {
         errorMessage = nil
         do {
             try await authService.signIn(email: email, password: password)
+            Log.auth.info("Sign-in succeeded for \(self.email)")
         } catch {
+            Log.auth.error("Sign-in failed: \(String(describing: error))")
             errorMessage = error.localizedDescription
         }
         isLoading = false
@@ -36,7 +39,9 @@ final class AuthViewModel: ObservableObject {
         errorMessage = nil
         do {
             try await authService.signUp(email: email, password: password)
+            Log.auth.info("Sign-up succeeded for \(self.email)")
         } catch {
+            Log.auth.error("Sign-up failed: \(String(describing: error))")
             errorMessage = error.localizedDescription
         }
         isLoading = false
