@@ -36,6 +36,18 @@ final class LeagueDetailViewModel: ObservableObject {
         members.filter { $0.status == .eliminated }.count
     }
 
+    var winnerCount: Int {
+        members.filter { $0.status == .winner }.count
+    }
+
+    var winners: [LeagueMember] {
+        members.filter { $0.status == .winner }
+    }
+
+    var isCompleted: Bool {
+        league.status == .completed
+    }
+
     init(
         league: League,
         standingsService: StandingsServiceProtocol = StandingsService(),

@@ -1,9 +1,10 @@
 import SwiftUI
 
 struct LeagueDetailView: View {
-    @StateObject private var viewModel: LeagueDetailViewModel
-    @State private var showPicks = false
-    @State private var showResults = false
+    @StateObject var viewModel: LeagueDetailViewModel
+    @State var showPicks = false
+    @State var showResults = false
+    @State var showCompleteView = false
 
     init(league: League) {
         _viewModel = StateObject(wrappedValue: LeagueDetailViewModel(league: league))
@@ -46,6 +47,13 @@ struct LeagueDetailView: View {
                 season: viewModel.league.season
             )
         }
+        .sheet(isPresented: $showCompleteView) {
+            LeagueCompleteView(
+                leagueName: viewModel.league.name,
+                winners: viewModel.winners,
+                totalMembers: viewModel.members.count
+            )
+        }
         .task { await viewModel.load() }
         .refreshable { await viewModel.load() }
     }
@@ -69,6 +77,9 @@ struct LeagueDetailView: View {
     private var standingsContent: some View {
         ScrollView {
             VStack(spacing: Theme.Spacing.s40) {
+                if viewModel.isCompleted {
+                    winnerBanner
+                }
                 statsHeader
                 if viewModel.members.isEmpty {
                     emptyMembersView
@@ -82,11 +93,19 @@ struct LeagueDetailView: View {
 
     private var statsHeader: some View {
         HStack(spacing: Theme.Spacing.s30) {
-            statBadge(
-                label: "Alive",
-                value: "\(viewModel.activeCount)",
-                color: Theme.Color.Status.Success.resting
-            )
+            if viewModel.isCompleted && viewModel.winnerCount > 0 {
+                statBadge(
+                    label: viewModel.winnerCount == 1 ? "Winner" : "Winners",
+                    value: "\(viewModel.winnerCount)",
+                    color: Theme.Color.Status.Warning.resting
+                )
+            } else {
+                statBadge(
+                    label: "Alive",
+                    value: "\(viewModel.activeCount)",
+                    color: Theme.Color.Status.Success.resting
+                )
+            }
             statBadge(
                 label: "Eliminated",
                 value: "\(viewModel.eliminatedCount)",
