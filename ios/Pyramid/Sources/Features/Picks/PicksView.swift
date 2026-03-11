@@ -198,6 +198,7 @@ struct FixturePickRow: View {
                         teamId: fixture.homeTeamId,
                         teamName: fixture.homeTeamName,
                         shortName: fixture.homeTeamShort,
+                        logoURL: fixture.homeTeamLogo,
                         score: fixture.homeScore
                     )
 
@@ -221,6 +222,7 @@ struct FixturePickRow: View {
                         teamId: fixture.awayTeamId,
                         teamName: fixture.awayTeamName,
                         shortName: fixture.awayTeamShort,
+                        logoURL: fixture.awayTeamLogo,
                         score: fixture.awayScore
                     )
                 }
@@ -229,7 +231,13 @@ struct FixturePickRow: View {
     }
 
     @ViewBuilder
-    private func teamButton(teamId: Int, teamName: String, shortName: String, score: Int?) -> some View {
+    private func teamButton(
+        teamId: Int,
+        teamName: String,
+        shortName: String,
+        logoURL: String?,
+        score: Int?
+    ) -> some View {
         let isPicked = selectedTeamId == teamId
         let isUsed = usedTeamIds.contains(teamId) && !isPicked
         let isDisabled = isLocked || isSubmitting || isUsed
@@ -244,9 +252,7 @@ struct FixturePickRow: View {
                         .font(Theme.Typography.title2.bold())
                         .foregroundStyle(Theme.Color.Content.Text.default)
                 }
-                Text(shortName)
-                    .font(Theme.Typography.headline)
-                    .foregroundStyle(isPicked ? Color.white : Theme.Color.Content.Text.default)
+                TeamBadge(logoURL: logoURL, shortName: shortName, size: 32)
                 Text(teamName)
                     .font(Theme.Typography.caption2)
                     .foregroundStyle(isPicked ? Color.white.opacity(0.8) : Theme.Color.Content.Text.disabled)
