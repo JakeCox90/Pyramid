@@ -48,6 +48,7 @@
 		8495A42365FCA8125FDCC0A3 /* PaidLeagueService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA2AB64C6D691C6A43512A0F /* PaidLeagueService.swift */; };
 		877E9354D98CD419291A1C2C /* PyramidUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2439413A5D89DC3B0FB2B44B /* PyramidUITests.swift */; };
 		88159AEE668C70F7B75700E9 /* SupabaseDependency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1058DD31F7E446B643331071 /* SupabaseDependency.swift */; };
+		94414CFCD6B1A40B6466906A /* OnboardingPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58F9ED18587B1BBE59491449 /* OnboardingPage.swift */; };
 		96D1A82E790D90918DA4B672 /* WalletView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8BCD3F46DADD8CD42294C6C /* WalletView.swift */; };
 		976970E376FBEB55CCD2BB4C /* BrowseLeague.swift in Sources */ = {isa = PBXBuildFile; fileRef = 912FDAAEFFFBE2AAE048CC05 /* BrowseLeague.swift */; };
 		97C476250A341A74BE0CCF44 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBF8340D3551DE2055CE9810 /* AuthService.swift */; };
@@ -72,6 +73,7 @@
 		CE3177E452A07A93E0C07479 /* JoinLeagueViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62DD3CEBABDBB6CF41146B92 /* JoinLeagueViewModelTests.swift */; };
 		CEF0F8A07CD6478394576A7F /* PicksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4DE569154E88F8F744FA9EE /* PicksView.swift */; };
 		D21DBEA23D9F0317191D8415 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1157CEFF33FEBE3B474AD1 /* MainTabView.swift */; };
+		D410036FE35A8276567F5B38 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55D9C15250977E3B8C1AF32D /* OnboardingView.swift */; };
 		DBC5846C7E8E8D601DAB0F6B /* ThemeColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D3DBB275023CAAEE77B7E6 /* ThemeColors.swift */; };
 		E0541239BC012BD8CF86F558 /* League+Paid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CE85F3F7E44F4D13D7C0555 /* League+Paid.swift */; };
 		E19D354135AFF1048D946323 /* PyramidApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57CD810A22A171F8ABC04150 /* PyramidApp.swift */; };
@@ -140,7 +142,9 @@
 		5400A7FE42C06A3A94D18530 /* JoinLeagueViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinLeagueViewModel.swift; sourceTree = "<group>"; };
 		55215FBC5D5182D9EFF96329 /* LeagueCompleteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeagueCompleteView.swift; sourceTree = "<group>"; };
 		55B40A2C5A1E662F39AFFF4D /* ThemeTypography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeTypography.swift; sourceTree = "<group>"; };
+		55D9C15250977E3B8C1AF32D /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		57CD810A22A171F8ABC04150 /* PyramidApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PyramidApp.swift; sourceTree = "<group>"; };
+		58F9ED18587B1BBE59491449 /* OnboardingPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPage.swift; sourceTree = "<group>"; };
 		5930D4506392E138FBBDB9BA /* ResultsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsViewModelTests.swift; sourceTree = "<group>"; };
 		5CE85F3F7E44F4D13D7C0555 /* League+Paid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "League+Paid.swift"; sourceTree = "<group>"; };
 		5D3C1E53A1E0D35921806E8E /* NotificationPreferencesViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationPreferencesViewModelTests.swift; sourceTree = "<group>"; };
@@ -243,6 +247,7 @@
 			children = (
 				F0CF51E430FE32795ABC7904 /* Auth */,
 				E0953FF253E7980D5837D1F1 /* Leagues */,
+				6395632043D914C2BF98B540 /* Onboarding */,
 				DE76900BD73EEF3FA83B9089 /* Picks */,
 				5ABBCB232C40AB841FC8FB54 /* Profile */,
 				9C5F0BC9446297D25B937385 /* Results */,
@@ -280,6 +285,15 @@
 				32DA20BB35D3324D2E896218 /* ProfileViewModel.swift */,
 			);
 			path = Profile;
+			sourceTree = "<group>";
+		};
+		6395632043D914C2BF98B540 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				58F9ED18587B1BBE59491449 /* OnboardingPage.swift */,
+				55D9C15250977E3B8C1AF32D /* OnboardingView.swift */,
+			);
+			path = Onboarding;
 			sourceTree = "<group>";
 		};
 		6A8E3D04E8EF306388292F9D /* Resources */ = {
@@ -619,6 +633,8 @@
 				221D54F9C05D7B44FFAB4AC0 /* NotificationPreferencesView.swift in Sources */,
 				9ADB9036DC96AEEFD2A2247F /* NotificationPreferencesViewModel.swift in Sources */,
 				99A7952EFF6D4882824B622D /* NotificationService.swift in Sources */,
+				94414CFCD6B1A40B6466906A /* OnboardingPage.swift in Sources */,
+				D410036FE35A8276567F5B38 /* OnboardingView.swift in Sources */,
 				9E9FB184FDAD9D611FE50C82 /* PaidLeague.swift in Sources */,
 				8495A42365FCA8125FDCC0A3 /* PaidLeagueService.swift in Sources */,
 				56C22940504502DFFEBBB4BE /* Pick.swift in Sources */,

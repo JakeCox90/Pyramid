@@ -56,12 +56,12 @@
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "SUPABASE_ANON_KEY"
-            value = "[&quot;value&quot;: &quot;&quot;, &quot;isEnabled&quot;: true]"
+            value = "[&quot;isEnabled&quot;: true, &quot;value&quot;: &quot;&quot;]"
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "SUPABASE_URL"
-            value = "[&quot;value&quot;: &quot;&quot;, &quot;isEnabled&quot;: true]"
+            value = "[&quot;isEnabled&quot;: true, &quot;value&quot;: &quot;&quot;]"
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>
@@ -91,12 +91,12 @@
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "SUPABASE_ANON_KEY"
-            value = "[&quot;value&quot;: &quot;&quot;, &quot;isEnabled&quot;: true]"
+            value = "[&quot;isEnabled&quot;: true, &quot;value&quot;: &quot;&quot;]"
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "SUPABASE_URL"
-            value = "[&quot;value&quot;: &quot;&quot;, &quot;isEnabled&quot;: true]"
+            value = "[&quot;isEnabled&quot;: true, &quot;value&quot;: &quot;&quot;]"
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>
@@ -122,12 +122,12 @@
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "SUPABASE_ANON_KEY"
-            value = "[&quot;value&quot;: &quot;&quot;, &quot;isEnabled&quot;: true]"
+            value = "[&quot;isEnabled&quot;: true, &quot;value&quot;: &quot;&quot;]"
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "SUPABASE_URL"
-            value = "[&quot;value&quot;: &quot;&quot;, &quot;isEnabled&quot;: true]"
+            value = "[&quot;isEnabled&quot;: true, &quot;value&quot;: &quot;&quot;]"
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>
