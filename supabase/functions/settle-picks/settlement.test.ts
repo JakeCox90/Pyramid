@@ -10,6 +10,8 @@ import {
   hasSingleSurvivor,
   isMassElimination,
   isGameweekFullySettled,
+  isFinalGameweek,
+  FINAL_GAMEWEEK,
 } from "./settlement.ts";
 import type { DbFixture, DbPick, GwFixtureSummary } from "./settlement.ts";
 
@@ -226,6 +228,28 @@ Deno.test("hasSingleSurvivor: 2 active members — false (multiple survivors, ga
 
 Deno.test("hasSingleSurvivor: 5 active members — false", () => {
   assertEquals(hasSingleSurvivor(5), false);
+});
+
+// ─── isFinalGameweek (GW38 hard cutoff, rules §5.3) ─────────────────────────
+
+Deno.test("isFinalGameweek: GW38 — true", () => {
+  assertEquals(isFinalGameweek(38), true);
+});
+
+Deno.test("isFinalGameweek: GW37 — false (not final)", () => {
+  assertEquals(isFinalGameweek(37), false);
+});
+
+Deno.test("isFinalGameweek: GW1 — false", () => {
+  assertEquals(isFinalGameweek(1), false);
+});
+
+Deno.test("isFinalGameweek: GW39 — false (beyond season)", () => {
+  assertEquals(isFinalGameweek(39), false);
+});
+
+Deno.test("FINAL_GAMEWEEK constant is 38", () => {
+  assertEquals(FINAL_GAMEWEEK, 38);
 });
 
 // ─── Winner detection idempotency — replay safety ────────────────────────────

@@ -108,3 +108,14 @@ export function isGameweekFullySettled(fixtures: GwFixtureSummary[]): boolean {
 export function hasSingleSurvivor(activeCount: number): boolean {
   return activeCount === 1;
 }
+
+/** The final Premier League gameweek — hard season cutoff (rules §5.3). */
+export const FINAL_GAMEWEEK = 38;
+
+/**
+ * Returns true if the given round number is the final gameweek (GW38).
+ * At GW38, all remaining active members become joint winners.
+ */
+export function isFinalGameweek(roundNumber: number): boolean {
+  return roundNumber === FINAL_GAMEWEEK;
+}
