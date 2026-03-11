@@ -23,7 +23,7 @@
 import { getServiceClient } from "../_shared/supabase.ts";
 import { createLogger } from "../_shared/logger.ts";
 import { alertSlack } from "../_shared/alert.ts";
-import { determinePickResult, findNoPickMemberIds, isGameweekFullySettled, hasSingleSurvivor } from "./settlement.ts";
+import { determinePickResult, findNoPickMemberIds, isGameweekFullySettled, hasSingleSurvivor, isFinalGameweek } from "./settlement.ts";
 import { sendNotification } from "../_shared/send-notification.ts";
 import type { DbFixture, DbPick, GwFixtureSummary } from "./settlement.ts";
 
@@ -191,13 +191,19 @@ async function settleLeague(
 //   3. Exactly 1 active league_member remains after this settlement round.
 //   4. Mass elimination did NOT just occur (all reinstatement case — no winner yet).
 //
-// Returns true if a winner was declared, false otherwise.
+// GW38 hard cutoff (rules §5.3):
+//   If the gameweek is GW38 (final PL round) and 2+ active members remain after
+//   full settlement, ALL remaining active members become joint winners. The league
+//   is completed. Prize split: 65% divided equally among joint winners.
+//
+// Returns true if a winner (or joint winners) was declared, false otherwise.
 
 async function detectAndDeclareWinner(
   // deno-lint-ignore no-explicit-any
   db: any,
   leagueId: string,
   gameweekId: number,
+  roundNumber: number,
   isMassElim: boolean,
   log: ReturnType<typeof createLogger>,
 ): Promise<boolean> {
@@ -225,9 +231,6 @@ async function detectAndDeclareWinner(
   }
 
   // Guard 3: ALL fixtures in this gameweek must be settled or terminal-non-played.
-  // "settled" = settled_at IS NOT NULL
-  // "terminal-non-played" = status IN ('PST', 'CANC', 'ABD')
-  // This prevents premature winner declaration when some GW fixtures are still live.
   const { data: gwFixtures, error: fixErr } = await db
     .from("fixtures")
     .select("id, status, settled_at")
@@ -252,7 +255,7 @@ async function detectAndDeclareWinner(
     return false;
   }
 
-  // Guard 4: count active members — exactly 1 → winner.
+  // Guard 4: count active members.
   const { data: activeMembers, error: memberErr } = await db
     .from("league_members")
     .select("id, user_id")
@@ -266,29 +269,47 @@ async function detectAndDeclareWinner(
 
   const active = (activeMembers ?? []) as { id: string; user_id: string }[];
 
-  if (!hasSingleSurvivor(active.length)) {
-    log.info("Winner detection: not a single survivor", {
-      leagueId,
-      gameweekId,
-      activeCount: active.length,
-    });
-    return false;
+  // ── Single survivor → sole winner ──────────────────────────────────────────
+  if (hasSingleSurvivor(active.length)) {
+    return await declareSoleWinner(db, leagueId, active[0], league, gameweekId, log);
   }
 
-  // Declare the winner.
-  const winner = active[0];
-  log.info("Winner detected — declaring winner", {
+  // ── GW38 hard cutoff → joint winners (rules §5.3) ─────────────────────────
+  if (isFinalGameweek(roundNumber) && active.length >= 2) {
+    return await declareJointWinners(db, leagueId, active, league, gameweekId, log);
+  }
+
+  log.info("Winner detection: game continues", {
+    leagueId,
+    gameweekId,
+    roundNumber,
+    activeCount: active.length,
+  });
+  return false;
+}
+
+// ─── Declare a sole winner ────────────────────────────────────────────────────
+
+async function declareSoleWinner(
+  // deno-lint-ignore no-explicit-any
+  db: any,
+  leagueId: string,
+  winner: { id: string; user_id: string },
+  league: { name: string; type: string },
+  gameweekId: number,
+  log: ReturnType<typeof createLogger>,
+): Promise<boolean> {
+  log.info("Winner detected — declaring sole winner", {
     leagueId,
     winnerId: winner.user_id,
     gameweekId,
   });
 
-  // Set league_member status → winner.
   const { error: memberUpdateErr } = await db
     .from("league_members")
     .update({ status: "winner" })
     .eq("id", winner.id)
-    .eq("status", "active"); // idempotent guard — only update if still active
+    .eq("status", "active");
 
   if (memberUpdateErr) {
     log.error("Winner detection: failed to update member status", memberUpdateErr, {
@@ -303,12 +324,11 @@ async function detectAndDeclareWinner(
     return false;
   }
 
-  // Set leagues.status → completed.
   const { error: leagueUpdateErr } = await db
     .from("leagues")
     .update({ status: "completed" })
     .eq("id", leagueId)
-    .eq("status", "active"); // idempotent guard — only update if still active
+    .eq("status", "active");
 
   if (leagueUpdateErr) {
     log.error("Winner detection: failed to update league status", leagueUpdateErr, { leagueId });
@@ -316,7 +336,6 @@ async function detectAndDeclareWinner(
       leagueId,
       error: leagueUpdateErr.message,
     });
-    // Attempt rollback: revert member status to active so the state stays consistent
     await db
       .from("league_members")
       .update({ status: "active" })
@@ -327,24 +346,108 @@ async function detectAndDeclareWinner(
 
   log.info("League marked completed", { leagueId, winnerId: winner.user_id });
 
-  // Fire push notification — fire-and-forget (sendNotification never throws).
   try {
     await sendNotification({
       userId: winner.user_id,
       template: "round_complete_winner",
       data: {
-        leagueName: league.name as string,
-        // amount is blank for free leagues; paid league prize distribution is
-        // handled separately by the distribute-prizes Edge Function.
+        leagueName: league.name,
         amount: league.type === "free" ? "0" : "",
       },
     });
   } catch (notifErr) {
-    // Fire-and-forget — notification failure must never fail settlement.
     log.error("Winner notification failed (non-fatal)", notifErr, {
       leagueId,
       userId: winner.user_id,
     });
+  }
+
+  return true;
+}
+
+// ─── Declare joint winners (GW38 hard cutoff, rules §5.3) ────────────────────
+
+async function declareJointWinners(
+  // deno-lint-ignore no-explicit-any
+  db: any,
+  leagueId: string,
+  winners: { id: string; user_id: string }[],
+  league: { name: string; type: string },
+  gameweekId: number,
+  log: ReturnType<typeof createLogger>,
+): Promise<boolean> {
+  log.info("GW38 hard cutoff — declaring joint winners", {
+    leagueId,
+    gameweekId,
+    jointWinnerCount: winners.length,
+    winnerIds: winners.map((w) => w.user_id),
+  });
+
+  // Set all active members to winner status.
+  const winnerMemberIds = winners.map((w) => w.id);
+  const { error: memberUpdateErr } = await db
+    .from("league_members")
+    .update({ status: "winner" })
+    .in("id", winnerMemberIds)
+    .eq("status", "active");
+
+  if (memberUpdateErr) {
+    log.error("GW38 cutoff: failed to update member statuses", memberUpdateErr, {
+      leagueId,
+      count: winners.length,
+    });
+    await alertSlack("settle-picks: GW38 joint winner update failed", {
+      leagueId,
+      count: winners.length,
+      error: memberUpdateErr.message,
+    });
+    return false;
+  }
+
+  // Set league to completed.
+  const { error: leagueUpdateErr } = await db
+    .from("leagues")
+    .update({ status: "completed" })
+    .eq("id", leagueId)
+    .eq("status", "active");
+
+  if (leagueUpdateErr) {
+    log.error("GW38 cutoff: failed to update league status", leagueUpdateErr, { leagueId });
+    await alertSlack("settle-picks: GW38 league completion failed", {
+      leagueId,
+      error: leagueUpdateErr.message,
+    });
+    // Rollback: revert all winners back to active.
+    await db
+      .from("league_members")
+      .update({ status: "active" })
+      .in("id", winnerMemberIds)
+      .eq("status", "winner");
+    return false;
+  }
+
+  log.info("League marked completed — GW38 joint winners", {
+    leagueId,
+    jointWinnerCount: winners.length,
+  });
+
+  // Notify all joint winners — fire-and-forget.
+  for (const winner of winners) {
+    try {
+      await sendNotification({
+        userId: winner.user_id,
+        template: "round_complete_winner",
+        data: {
+          leagueName: league.name,
+          amount: league.type === "free" ? "0" : "",
+        },
+      });
+    } catch (notifErr) {
+      log.error("Joint winner notification failed (non-fatal)", notifErr, {
+        leagueId,
+        userId: winner.user_id,
+      });
+    }
   }
 
   return true;
@@ -379,6 +482,20 @@ Deno.serve(async (req) => {
   }
 
   const db = getServiceClient();
+
+  // ── 0. Fetch gameweek round_number for GW38 cutoff detection ───────────────
+  const { data: gameweek, error: gwErr } = await db
+    .from("gameweeks")
+    .select("round_number")
+    .eq("id", gameweekId)
+    .maybeSingle();
+
+  if (gwErr || !gameweek) {
+    log.error("Failed to fetch gameweek", gwErr, { gameweekId });
+    return json({ error: "Gameweek not found", gameweekId }, 404);
+  }
+
+  const roundNumber = (gameweek as { round_number: number }).round_number;
 
   // ── 1. Fetch fixture ──────────────────────────────────────────────────────
   const { data: fixture, error: fixErr } = await db
@@ -462,11 +579,13 @@ Deno.serve(async (req) => {
 
     // ── Winner detection (runs after each league is settled) ────────────────
     // Checks whether all GW fixtures are now settled and exactly 1 active
-    // member remains. Gated on isMassElim to prevent false positives (§4.5).
+    // member remains. Also handles GW38 joint winners (§5.3).
+    // Gated on isMassElim to prevent false positives (§4.5).
     const winnerDeclared = await detectAndDeclareWinner(
       db,
       leagueId,
       gameweekId,
+      roundNumber,
       result.isMassElim,
       log,
     );
