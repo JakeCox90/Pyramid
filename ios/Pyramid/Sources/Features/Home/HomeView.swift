@@ -77,40 +77,7 @@ struct HomeView: View {
     }
 
     private func summarySection(_ data: HomeData) -> some View {
-        VStack(alignment: .leading, spacing: Theme.Spacing.s20) {
-            let aliveCount = data.memberStatuses.values.filter { $0 == .active }.count
-            let picksNeeded = data.leagues.filter { league in
-                data.picks[league.id] == nil
-                    && data.memberStatuses[league.id] == .active
-            }.count
-
-            HStack(spacing: Theme.Spacing.s20) {
-                Circle()
-                    .fill(aliveCount > 0
-                        ? Theme.Color.Status.Success.resting
-                        : Theme.Color.Status.Error.resting)
-                    .frame(width: 10, height: 10)
-                Text("Alive in \(aliveCount) league\(aliveCount == 1 ? "" : "s")")
-                    .font(Theme.Typography.headline)
-                    .foregroundStyle(Theme.Color.Content.Text.default)
-            }
-
-            if picksNeeded > 0 {
-                Text("\(picksNeeded) pick\(picksNeeded == 1 ? "" : "s") needed")
-                    .font(Theme.Typography.subheadline)
-                    .foregroundStyle(Theme.Color.Status.Warning.resting)
-            }
-
-            if let gw = data.gameweek {
-                Text(gw.name)
-                    .font(Theme.Typography.caption1)
-                    .foregroundStyle(Theme.Color.Content.Text.subtle)
-            }
-        }
-        .padding(Theme.Spacing.s40)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Theme.Color.Surface.Background.container)
-        .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.r40))
+        HeroStatusCard(data: data)
     }
 
     private func leaguesSection(_ data: HomeData) -> some View {
