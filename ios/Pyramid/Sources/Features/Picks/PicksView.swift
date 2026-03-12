@@ -85,6 +85,8 @@ struct PicksView: View {
                 }
                 if let success = viewModel.successMessage {
                     successBanner(message: success)
+                        .transition(.move(edge: .top).combined(with: .opacity))
+                        .animation(.spring(response: 0.4), value: viewModel.successMessage)
                 }
                 if let error = viewModel.errorMessage {
                     errorBanner(message: error)
@@ -113,7 +115,9 @@ struct PicksView: View {
                         selectedTeamId: viewModel.currentPick?.teamId,
                         usedTeamIds: viewModel.usedTeamIds,
                         isLocked: viewModel.isFixtureLocked(fixture),
-                        isSubmitting: viewModel.isSubmitting
+                        isSubmitting: viewModel.isSubmitting,
+                        celebratedTeamId: viewModel.celebratedTeamId,
+                        showCelebration: viewModel.showCelebration
                     ) { teamId, teamName in
                         Task { await viewModel.submitPick(fixtureId: fixture.id, teamId: teamId, teamName: teamName) }
                     }
@@ -185,6 +189,8 @@ struct FixturePickRow: View {
     let usedTeamIds: Set<Int>
     let isLocked: Bool
     let isSubmitting: Bool
+    var celebratedTeamId: Int?
+    var showCelebration: Bool = false
     let onPick: (Int, String) -> Void
 
     private var kickoffText: String {
@@ -281,6 +287,13 @@ struct FixturePickRow: View {
                     .stroke(isPicked ? Theme.Color.Content.Text.default : Theme.Color.Border.default, lineWidth: 1)
             )
             .opacity(isDisabled && !isPicked ? 0.5 : 1.0)
+            .scaleEffect(isPicked && celebratedTeamId == teamId ? 1.05 : 1.0)
+            .animation(.spring(response: 0.3, dampingFraction: 0.5), value: celebratedTeamId)
+            .overlay {
+                if showCelebration && celebratedTeamId == teamId {
+                    ConfettiView()
+                }
+            }
         }
         .disabled(isDisabled && !isPicked)
     }
