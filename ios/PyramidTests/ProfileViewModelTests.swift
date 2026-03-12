@@ -7,7 +7,7 @@ final class ProfileViewModelTests: XCTestCase {
     // MARK: - signOut
 
     func testSignOutSuccessReturnsTrue() async {
-        let mock = MockAuthService()
+        let mock = MockProfileAuthService()
         let vm = ProfileViewModel(authService: mock)
 
         let result = await vm.signOut()
@@ -18,7 +18,7 @@ final class ProfileViewModelTests: XCTestCase {
     }
 
     func testSignOutFailureSetsErrorMessage() async {
-        let mock = MockAuthService(shouldFailSignOut: true)
+        let mock = MockProfileAuthService(shouldFail: true)
         let vm = ProfileViewModel(authService: mock)
 
         let result = await vm.signOut()
@@ -31,20 +31,18 @@ final class ProfileViewModelTests: XCTestCase {
 
 // MARK: - Mock
 
-private final class MockAuthService: AuthServiceProtocol {
-    var shouldFailSignOut: Bool
+private final class MockProfileAuthService: AuthServiceProtocol {
+    var shouldFail: Bool
 
-    init(shouldFailSignOut: Bool = false) {
-        self.shouldFailSignOut = shouldFailSignOut
+    init(shouldFail: Bool = false) {
+        self.shouldFail = shouldFail
     }
 
     func signIn(email: String, password: String) async throws {}
     func signUp(email: String, password: String) async throws {}
 
     func signOut() async throws {
-        if shouldFailSignOut {
-            throw URLError(.badServerResponse)
-        }
+        if shouldFail { throw URLError(.badServerResponse) }
     }
 
     func signInWithApple(idToken: String, nonce: String) async throws {}
