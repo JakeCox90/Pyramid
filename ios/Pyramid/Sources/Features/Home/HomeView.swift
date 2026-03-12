@@ -67,7 +67,7 @@ struct HomeView: View {
     private func contentView(_ data: HomeData) -> some View {
         ScrollView {
             VStack(alignment: .leading, spacing: Theme.Spacing.s40) {
-                summarySection(data)
+                HeroStatusCard(data: data)
 
                 if let gw = data.gameweek, let deadline = gw.deadlineAt {
                     DeadlineCountdownCard(
@@ -76,6 +76,7 @@ struct HomeView: View {
                     )
                 }
 
+                actionBannersSection(data)
                 leaguesSection(data)
             }
             .padding(Theme.Spacing.s40)
@@ -84,9 +85,35 @@ struct HomeView: View {
         .task { await viewModel.load() }
     }
 
-    private func summarySection(_ data: HomeData) -> some View {
-        HeroStatusCard(data: data)
+    // MARK: - Action Banners (PYR-89)
+
+    @ViewBuilder
+    private func actionBannersSection(_ data: HomeData) -> some View {
+        let leaguesNeedingPicks = data.leagues.filter { league in
+            data.picks[league.id] == nil
+                && data.memberStatuses[league.id] == .active
+                && league.status == .active
+                && isBeforeDeadline(data.gameweek)
+        }
+
+        if !leaguesNeedingPicks.isEmpty {
+            VStack(spacing: Theme.Spacing.s20) {
+                ForEach(leaguesNeedingPicks) { league in
+                    ActionBannerView(
+                        league: league,
+                        gameweek: data.gameweek
+                    )
+                }
+            }
+        }
     }
+
+    private func isBeforeDeadline(_ gameweek: Gameweek?) -> Bool {
+        guard let deadline = gameweek?.deadlineAt else { return true }
+        return Date() < deadline
+    }
+
+    // MARK: - League Summary Cards (PYR-90)
 
     private func leaguesSection(_ data: HomeData) -> some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s30) {
@@ -99,64 +126,36 @@ struct HomeView: View {
                     .font(Theme.Typography.body)
                     .foregroundStyle(Theme.Color.Content.Text.subtle)
             } else {
-                ForEach(data.leagues) { league in
-                    homeLeagueRow(league, data: data)
+                ForEach(sortedLeagues(data)) { league in
+                    LeagueSummaryCard(
+                        league: league,
+                        memberStatus: data.memberStatuses[league.id],
+                        pick: data.picks[league.id],
+                        gameweek: data.gameweek
+                    )
                 }
             }
         }
     }
 
-    private func homeLeagueRow(_ league: League, data: HomeData) -> some View {
+    private func sortedLeagues(_ data: HomeData) -> [League] {
+        data.leagues.sorted { lhs, rhs in
+            leagueSortKey(lhs, data: data) < leagueSortKey(rhs, data: data)
+        }
+    }
+
+    /// Sort key: 0 = active + no pick, 1 = active + has pick, 2 = completed/eliminated
+    private func leagueSortKey(
+        _ league: League,
+        data: HomeData
+    ) -> Int {
         let status = data.memberStatuses[league.id]
-        let pick = data.picks[league.id]
-
-        return HStack {
-            VStack(alignment: .leading, spacing: Theme.Spacing.s10) {
-                Text(league.name)
-                    .font(Theme.Typography.headline)
-                    .foregroundStyle(Theme.Color.Content.Text.default)
-
-                HStack(spacing: Theme.Spacing.s20) {
-                    if let status {
-                        Text(status.rawValue.capitalized)
-                            .font(Theme.Typography.caption1)
-                            .foregroundStyle(statusColor(status))
-                    }
-
-                    if let count = league.memberCount {
-                        HStack(spacing: Theme.Spacing.s10) {
-                            Image(systemName: Theme.Icon.League.members)
-                                .font(Theme.Typography.caption2)
-                            Text("\(count)")
-                                .font(Theme.Typography.caption1)
-                        }
-                        .foregroundStyle(Theme.Color.Content.Text.disabled)
-                    }
-                }
-            }
-
-            Spacer()
-
-            if let pick {
-                Text(pick.teamName)
-                    .font(Theme.Typography.caption1)
-                    .foregroundStyle(Theme.Color.Content.Text.subtle)
-            } else if status == .active {
-                Text("Pick needed")
-                    .font(Theme.Typography.caption1)
-                    .foregroundStyle(Theme.Color.Status.Warning.resting)
-            }
+        if league.status == .completed || status == .eliminated {
+            return 2
         }
-        .padding(Theme.Spacing.s40)
-        .background(Theme.Color.Surface.Background.container)
-        .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.r30))
-    }
-
-    private func statusColor(_ status: LeagueMember.MemberStatus) -> Color {
-        switch status {
-        case .active: return Theme.Color.Status.Success.resting
-        case .eliminated: return Theme.Color.Status.Error.resting
-        case .winner: return Theme.Color.Status.Warning.resting
+        if data.picks[league.id] == nil && status == .active {
+            return 0
         }
+        return 1
     }
 }
