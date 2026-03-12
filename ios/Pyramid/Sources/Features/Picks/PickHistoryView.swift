@@ -106,8 +106,7 @@ struct PickHistoryRow: View {
         }
     }
 
-    @ViewBuilder
-    private var resultIcon: some View {
+    @ViewBuilder private var resultIcon: some View {
         switch pick.result {
         case .survived:
             Image(systemName: Theme.Icon.Status.success)
@@ -124,8 +123,7 @@ struct PickHistoryRow: View {
         }
     }
 
-    @ViewBuilder
-    private var resultBadge: some View {
+    @ViewBuilder private var resultBadge: some View {
         Text(pick.result.rawValue.capitalized)
             .font(Theme.Typography.caption1.bold())
             .foregroundStyle(resultColor)
