@@ -44,6 +44,7 @@
 		73E4655BE72ED40E5B80E949 /* WalletViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C81C00D8D1E1BDBDE0C1C12 /* WalletViewModelTests.swift */; };
 		792AE4EF19C36B51EB6B1FC5 /* WalletView+Sheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02AFA863A205D6EBCA08EA91 /* WalletView+Sheets.swift */; };
 		797E94A6CEB57E38168B66EE /* JoinPaidLeagueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A820EA2E715BCCC4D24C745F /* JoinPaidLeagueView.swift */; };
+		7CA075C2162F04E712DFD643 /* HeroStatusCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B101F6D708AF973E8C6AB621 /* HeroStatusCard.swift */; };
 		7D436E5E9070E3F8F48E64CA /* WalletViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48CA2CD03079EC7728A091F /* WalletViewModel.swift */; };
 		7E125965E933660839A52394 /* NotificationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351A08CFE9CD12D6B11A184B /* NotificationServiceTests.swift */; };
 		7ED7DBFE127BB0BC6B8BFCE4 /* WalletService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96279BADF0DD877B6F1E4583 /* WalletService.swift */; };
@@ -179,6 +180,7 @@
 		A9DF242F38270F8CEB654549 /* DSCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSCard.swift; sourceTree = "<group>"; };
 		AD7BAEC05B2931D2A196CC6E /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		AFE022A9349F1AA3A1C91AAA /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		B101F6D708AF973E8C6AB621 /* HeroStatusCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroStatusCard.swift; sourceTree = "<group>"; };
 		B48CA2CD03079EC7728A091F /* WalletViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletViewModel.swift; sourceTree = "<group>"; };
 		B51FAB807FAD71BC12433A4C /* NotificationPreferencesService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationPreferencesService.swift; sourceTree = "<group>"; };
 		B8BCD3F46DADD8CD42294C6C /* WalletView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletView.swift; sourceTree = "<group>"; };
@@ -327,6 +329,7 @@
 		8D5900BBF0E034ACA02D733F /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				B101F6D708AF973E8C6AB621 /* HeroStatusCard.swift */,
 				7AB86047F9178A4FF08B9548 /* HomeView.swift */,
 				2015515265CB0DEA4256073A /* HomeViewModel.swift */,
 			);
@@ -626,6 +629,7 @@
 				56CC2E236030EE4F473EB416 /* DSTextField.swift in Sources */,
 				E4740370A7568165D66364B7 /* Fixture.swift in Sources */,
 				01DD6DAA1AB77AEBEB9E9445 /* Gameweek.swift in Sources */,
+				7CA075C2162F04E712DFD643 /* HeroStatusCard.swift in Sources */,
 				D12C5F5A9B89E14E8900B3C6 /* HomeData.swift in Sources */,
 				D1EAEB20746F6A1D899FCB8E /* HomeService.swift in Sources */,
 				09C7D71D93EEFEBA179955E1 /* HomeView.swift in Sources */,
