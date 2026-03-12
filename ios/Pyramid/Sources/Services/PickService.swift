@@ -29,6 +29,7 @@ protocol PickServiceProtocol: Sendable {
     func fetchMyPick(leagueId: String, gameweekId: Int) async throws -> Pick?
     func fetchUsedTeamIds(leagueId: String) async throws -> Set<Int>
     func submitPick(leagueId: String, fixtureId: Int, teamId: Int, teamName: String) async throws -> SubmitPickResponse
+    func fetchMyPickHistory(leagueId: String) async throws -> [Pick]
 }
 
 // MARK: - Implementation
@@ -114,6 +115,24 @@ final class PickService: PickServiceProtocol {
                 .execute()
                 .value
             return picks.first
+        } catch {
+            throw PickServiceError.fetchFailed(error.localizedDescription)
+        }
+    }
+
+    func fetchMyPickHistory(leagueId: String) async throws -> [Pick] {
+        do {
+            let picks: [Pick] = try await client
+                .from("picks")
+                .select("""
+                    id, league_id, user_id, gameweek_id, fixture_id,
+                    team_id, team_name, is_locked, result, submitted_at
+                """)
+                .eq("league_id", value: leagueId)
+                .order("gameweek_id", ascending: true)
+                .execute()
+                .value
+            return picks
         } catch {
             throw PickServiceError.fetchFailed(error.localizedDescription)
         }

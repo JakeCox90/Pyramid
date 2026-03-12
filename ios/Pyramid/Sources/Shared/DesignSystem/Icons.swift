@@ -40,6 +40,7 @@ extension Theme {
             static let locked = "lock.fill"
             static let pseudonymous = "theatermasks"
             static let noRepeat = "arrow.triangle.2.circlepath"
+            static let history = "list.bullet.clipboard"
         }
 
         // MARK: - Wallet
