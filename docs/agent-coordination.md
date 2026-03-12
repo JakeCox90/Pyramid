@@ -14,6 +14,7 @@
 | PYR-85 | feature/PYR-85-home-tab | iOS | In Progress | `MainTabView.swift`, `HomeView.swift`, `HomeViewModel.swift` | 2026-03-11 |
 | PYR-86 | feature/PYR-86-home-service | iOS | In Progress | `HomeService.swift`, `HomeData.swift` | 2026-03-11 |
 | PYR-87 | feature/PYR-87-hero-status-card | iOS | In Progress | `HeroStatusCard.swift`, `HomeView.swift` | 2026-03-12 |
+| PYR-88 | feature/PYR-88-deadline-countdown | iOS | In Progress | `DeadlineCountdownCard.swift`, `HomeView.swift` | 2026-03-12 |
 
 ## Recently Completed
 

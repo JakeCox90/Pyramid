@@ -68,6 +68,14 @@ struct HomeView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: Theme.Spacing.s40) {
                 summarySection(data)
+
+                if let gw = data.gameweek, let deadline = gw.deadlineAt {
+                    DeadlineCountdownCard(
+                        gameweekName: gw.name,
+                        deadline: deadline
+                    )
+                }
+
                 leaguesSection(data)
             }
             .padding(Theme.Spacing.s40)
