@@ -53,7 +53,7 @@ final class StandingsService: StandingsServiceProtocol {
         do {
             let picks: [MemberPick] = try await client
                 .from("picks")
-                .select("user_id, team_name, result, is_locked, gameweek_id")
+                .select("user_id, team_name, result, is_locked, gameweek_id, fixture_id, team_id")
                 .eq("league_id", value: leagueId)
                 .eq("gameweek_id", value: gameweekId)
                 .eq("is_locked", value: true)
