@@ -1,12 +1,14 @@
 import SwiftUI
 
 struct LeagueDetailView: View {
+    @EnvironmentObject var appState: AppState
     @StateObject var viewModel: LeagueDetailViewModel
     @State var showPicks = false
     @State var showResults = false
     @State var showPickHistory = false
     @State var showCompleteView = false
     @State var showShareSheet = false
+    @State var showSettlementResult = false
 
     init(league: League) {
         _viewModel = StateObject(wrappedValue: LeagueDetailViewModel(league: league))
@@ -74,6 +76,14 @@ struct LeagueDetailView: View {
                 items: [shareMessage]
             )
         }
+        .sheet(isPresented: $showSettlementResult) {
+            if let gameweek = viewModel.currentGameweek {
+                SettlementResultView(
+                    leagueId: viewModel.league.id,
+                    gameweekId: gameweek.id
+                )
+            }
+        }
         .background(Theme.Color.Surface.Background.page.ignoresSafeArea())
         .task {
             await viewModel.load()
@@ -117,6 +127,7 @@ struct LeagueDetailView: View {
                 if viewModel.isCompleted {
                     winnerBanner
                 }
+                mySettlementBanner
                 statsHeader
                 if viewModel.members.isEmpty {
                     emptyMembersView
@@ -128,46 +139,4 @@ struct LeagueDetailView: View {
         }
     }
 
-    private var emptyMembersView: some View {
-        VStack(spacing: Theme.Spacing.s40) {
-            Image(systemName: Theme.Icon.League.members)
-                .font(.system(size: 48))
-                .foregroundStyle(Theme.Color.Border.default)
-            Text("No other members yet")
-                .font(Theme.Typography.title3)
-                .foregroundStyle(Theme.Color.Content.Text.default)
-            Text("Share the join code to invite players.")
-                .font(Theme.Typography.subheadline)
-                .foregroundStyle(Theme.Color.Content.Text.disabled)
-                .multilineTextAlignment(.center)
-        }
-        .padding(.horizontal, Theme.Spacing.s40)
-        .padding(.top, Theme.Spacing.s70)
-    }
-
-    private var membersList: some View {
-        VStack(spacing: Theme.Spacing.s20) {
-            if !viewModel.isDeadlinePassed() {
-                HStack {
-                    Image(systemName: Theme.Icon.Pick.locked)
-                        .foregroundStyle(Theme.Color.Content.Text.disabled)
-                    Text("Picks are hidden until kick-off")
-                        .font(Theme.Typography.caption1)
-                        .foregroundStyle(Theme.Color.Content.Text.disabled)
-                    Spacer()
-                }
-                .padding(.horizontal, Theme.Spacing.s40)
-            }
-
-            ForEach(viewModel.sortedMembers) { member in
-                MemberRow(
-                    member: member,
-                    pick: viewModel.pick(for: member),
-                    fixture: viewModel.pick(for: member).flatMap { viewModel.fixture(for: $0) },
-                    deadlinePassed: viewModel.isDeadlinePassed()
-                )
-                .padding(.horizontal, Theme.Spacing.s40)
-            }
-        }
-    }
 }

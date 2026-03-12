@@ -10,10 +10,20 @@ enum DeepLinkScreen: String {
     case picks
     case standings
     case wallet
+    case settlement
+}
+
+// MARK: - Deep Link Payload
+
+struct DeepLinkPayload {
+    let screen: DeepLinkScreen
+    let leagueId: String?
+    let gameweekId: Int?
 }
 
 extension Notification.Name {
     static let navigateToScreen = Notification.Name("navigateToScreen")
+    static let navigateWithPayload = Notification.Name("navigateWithPayload")
 }
 
 // MARK: - Edge Function Body
@@ -77,7 +87,23 @@ final class NotificationService: NSObject, ObservableObject {
     /// Routes a notification deep link to the correct screen
     func handleNotificationResponse(_ response: UNNotificationResponse) {
         let userInfo = response.notification.request.content.userInfo
-        guard let screenValue = userInfo["screen"] as? String else { return }
+        guard let screenValue = userInfo["screen"] as? String,
+              let screen = DeepLinkScreen(rawValue: screenValue) else { return }
+
+        let leagueId = userInfo["league_id"] as? String
+        let gameweekId: Int?
+        if let gwValue = userInfo["gameweek_id"] as? Int {
+            gameweekId = gwValue
+        } else if let gwString = userInfo["gameweek_id"] as? String {
+            gameweekId = Int(gwString)
+        } else {
+            gameweekId = nil
+        }
+
+        let payload = DeepLinkPayload(screen: screen, leagueId: leagueId, gameweekId: gameweekId)
+        NotificationCenter.default.post(name: .navigateWithPayload, object: payload)
+
+        // Also post legacy notification for backwards compatibility
         NotificationCenter.default.post(name: .navigateToScreen, object: screenValue)
     }
 
