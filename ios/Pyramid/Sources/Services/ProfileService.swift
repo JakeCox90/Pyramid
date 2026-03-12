@@ -79,10 +79,14 @@ final class ProfileService: ProfileServiceProtocol {
                 .value
 
             // Query 2: all picks for this user ordered by league + gameweek
+            let pickColumns = [
+                "id", "league_id", "user_id", "gameweek_id",
+                "fixture_id", "team_id", "team_name",
+                "is_locked", "result", "submitted_at"
+            ].joined(separator: ", ")
             let picks: [Pick] = try await client
                 .from("picks")
-                // swiftlint:disable:next line_length
-                .select("id, league_id, user_id, gameweek_id, fixture_id, team_id, team_name, is_locked, result, submitted_at")
+                .select(pickColumns)
                 .eq("user_id", value: userId)
                 .order("league_id", ascending: true)
                 .order("gameweek_id", ascending: true)
