@@ -11,9 +11,11 @@ final class AuthViewModel: ObservableObject {
     @Published var password = ""
     #endif
     @Published var isLoading = false
+    @Published var isSocialLoading = false
     @Published var errorMessage: String?
 
     private let authService: AuthServiceProtocol
+    private let appleSignInCoordinator = AppleSignInCoordinator()
 
     init(authService: AuthServiceProtocol = AuthService()) {
         self.authService = authService
@@ -45,6 +47,35 @@ final class AuthViewModel: ObservableObject {
             errorMessage = error.localizedDescription
         }
         isLoading = false
+    }
+
+    func signInWithApple() async {
+        isSocialLoading = true
+        errorMessage = nil
+        do {
+            let credentials = try await appleSignInCoordinator.signIn()
+            try await authService.signInWithApple(idToken: credentials.idToken, nonce: credentials.nonce)
+            Log.auth.info("Apple sign-in succeeded")
+        } catch let error as AppleSignInError where error == .cancelled {
+            Log.auth.info("Apple sign-in cancelled by user")
+        } catch {
+            Log.auth.error("Apple sign-in failed: \(String(describing: error))")
+            errorMessage = error.localizedDescription
+        }
+        isSocialLoading = false
+    }
+
+    func signInWithGoogle() async {
+        isSocialLoading = true
+        errorMessage = nil
+        do {
+            try await authService.signInWithGoogle()
+            Log.auth.info("Google sign-in succeeded")
+        } catch {
+            Log.auth.error("Google sign-in failed: \(String(describing: error))")
+            errorMessage = error.localizedDescription
+        }
+        isSocialLoading = false
     }
 
     private func validate() -> Bool {
