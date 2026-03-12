@@ -70,7 +70,8 @@ final class LeagueDetailViewModelTests: XCTestCase {
     func testLoadSetsLockedPicks() async {
         let lockedPick = MemberPick(
             userId: "u1", teamName: "Arsenal",
-            result: .pending, isLocked: true, gameweekId: 29
+            result: .pending, isLocked: true, gameweekId: 29,
+            fixtureId: 12345, teamId: 42
         )
         let mock = MockStandingsService(members: Self.activeMembers, lockedPicks: [lockedPick])
         let vm = LeagueDetailViewModel(
