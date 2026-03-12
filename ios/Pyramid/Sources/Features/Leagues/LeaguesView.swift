@@ -1,11 +1,10 @@
 import SwiftUI
 
 struct LeaguesView: View {
-    @StateObject private var viewModel = LeaguesViewModel()
-    @State private var showCreateLeague = false
-    @State private var showJoinLeague = false
-    @State private var showJoinPaidLeague = false
-    @State private var showBrowseLeagues = false
+    @StateObject var viewModel = LeaguesViewModel()
+    @State var showCreateLeague = false
+    @State var showJoinLeague = false
+    @State var showBrowseLeagues = false
 
     var body: some View {
         NavigationStack {
@@ -16,7 +15,7 @@ struct LeaguesView: View {
                           viewModel.leagues.isEmpty {
                     errorStateView(message: errorMessage)
                 } else if viewModel.leagues.isEmpty {
-                    emptyStateView
+                    emptyStateContent
                 } else {
                     leaguesList
                 }
@@ -48,14 +47,6 @@ struct LeaguesView: View {
                                 Label(
                                     "Join with Code",
                                     systemImage: Theme.Icon.League.join
-                                )
-                            }
-                            Button {
-                                showJoinPaidLeague = true
-                            } label: {
-                                Label(
-                                    "Join Paid League",
-                                    systemImage: Theme.Icon.League.paid
                                 )
                             }
                         } label: {
@@ -91,15 +82,6 @@ struct LeaguesView: View {
                     }
                 }
             )
-            .sheet(
-                isPresented: $showJoinPaidLeague,
-                onDismiss: { Task { await viewModel.fetchLeagues() } },
-                content: {
-                    JoinPaidLeagueView { _ in
-                        Task { await viewModel.fetchLeagues() }
-                    }
-                }
-            )
             .background(Theme.Color.Surface.Background.page.ignoresSafeArea())
             .task {
                 await viewModel.fetchLeagues()
@@ -129,11 +111,15 @@ struct LeaguesView: View {
                 VStack(spacing: Theme.Spacing.s20) {
                     Text("Something went wrong")
                         .font(Theme.Typography.title3)
-                        .foregroundStyle(Theme.Color.Content.Text.default)
+                        .foregroundStyle(
+                            Theme.Color.Content.Text.default
+                        )
 
                     Text(message)
                         .font(Theme.Typography.subheadline)
-                        .foregroundStyle(Theme.Color.Content.Text.disabled)
+                        .foregroundStyle(
+                            Theme.Color.Content.Text.disabled
+                        )
                         .multilineTextAlignment(.center)
                 }
             }
@@ -142,54 +128,6 @@ struct LeaguesView: View {
                 Task { await viewModel.fetchLeagues() }
             }
             .dsStyle(.primary)
-            .padding(.horizontal, Theme.Spacing.s40)
-
-            Spacer()
-            Spacer()
-        }
-        .padding(.horizontal, Theme.Spacing.s40)
-    }
-
-    private var emptyStateView: some View {
-        VStack(spacing: Theme.Spacing.s60) {
-            Spacer()
-
-            VStack(spacing: Theme.Spacing.s40) {
-                Image(systemName: Theme.Icon.League.trophy)
-                    .font(.system(size: 56))
-                    .foregroundStyle(Theme.Color.Border.default)
-
-                VStack(spacing: Theme.Spacing.s20) {
-                    Text("No leagues yet")
-                        .font(Theme.Typography.title3)
-                        .foregroundStyle(Theme.Color.Content.Text.default)
-
-                    Text(
-                        "Browse open leagues, create your own, "
-                        + "or join one with a code."
-                    )
-                        .font(Theme.Typography.subheadline)
-                        .foregroundStyle(Theme.Color.Content.Text.disabled)
-                        .multilineTextAlignment(.center)
-                }
-            }
-
-            VStack(spacing: Theme.Spacing.s30) {
-                Button("Browse Free Leagues") {
-                    showBrowseLeagues = true
-                }
-                .dsStyle(.primary)
-
-                Button("Create a League") {
-                    showCreateLeague = true
-                }
-                .dsStyle(.secondary)
-
-                Button("Join with Code") {
-                    showJoinLeague = true
-                }
-                .dsStyle(.secondary)
-            }
             .padding(.horizontal, Theme.Spacing.s40)
 
             Spacer()
@@ -212,57 +150,6 @@ struct LeaguesView: View {
                 }
             }
             .padding(.vertical, Theme.Spacing.s40)
-        }
-    }
-}
-
-// MARK: - League Row
-
-struct LeagueRowView: View {
-    let league: League
-
-    var body: some View {
-        DSCard {
-            HStack {
-                VStack(alignment: .leading, spacing: Theme.Spacing.s10) {
-                    Text(league.name)
-                        .font(Theme.Typography.headline)
-                        .foregroundStyle(Theme.Color.Content.Text.default)
-
-                    HStack(spacing: Theme.Spacing.s20) {
-                        Text(league.status.displayName)
-                            .font(Theme.Typography.caption1)
-                            .foregroundStyle(Theme.Color.Content.Text.disabled)
-
-                        if let count = league.memberCount {
-                            HStack(spacing: Theme.Spacing.s10) {
-                                Image(systemName: Theme.Icon.League.members)
-                                    .font(Theme.Typography.caption2)
-                                Text("\(count)")
-                                    .font(Theme.Typography.caption1)
-                            }
-                            .foregroundStyle(Theme.Color.Content.Text.disabled)
-                        }
-                    }
-                }
-
-                Spacer()
-
-                Image(systemName: Theme.Icon.Navigation.disclosure)
-                    .font(.caption)
-                    .foregroundStyle(Theme.Color.Border.default)
-            }
-        }
-    }
-}
-
-private extension League.LeagueStatus {
-    var displayName: String {
-        switch self {
-        case .pending:   return "Waiting for players"
-        case .active:    return "In progress"
-        case .completed: return "Finished"
-        case .cancelled: return "Cancelled"
         }
     }
 }
