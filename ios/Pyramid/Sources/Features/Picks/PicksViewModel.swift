@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 @MainActor
 final class PicksViewModel: ObservableObject {
@@ -10,6 +11,8 @@ final class PicksViewModel: ObservableObject {
     @Published var isSubmitting = false
     @Published var errorMessage: String?
     @Published var successMessage: String?
+    @Published var showCelebration = false
+    @Published var celebratedTeamId: Int?
 
     let leagueId: String
 
@@ -69,8 +72,17 @@ final class PicksViewModel: ObservableObject {
                 teamName: teamName
             )
             successMessage = "Pick confirmed: \(response.teamName)"
+            celebratedTeamId = teamId
+            showCelebration = true
+            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
             if let gw = gameweek {
                 currentPick = try await pickService.fetchMyPick(leagueId: leagueId, gameweekId: gw.id)
+            }
+            Task { [weak self] in
+                try? await Task.sleep(nanoseconds: 3_000_000_000)
+                self?.successMessage = nil
+                self?.showCelebration = false
+                self?.celebratedTeamId = nil
             }
         } catch {
             errorMessage = error.localizedDescription
