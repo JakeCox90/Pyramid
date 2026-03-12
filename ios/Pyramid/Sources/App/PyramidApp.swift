@@ -9,6 +9,7 @@ struct PyramidApp: App {
         WindowGroup {
             RootView()
                 .environmentObject(appState)
+                .preferredColorScheme(.dark)
         }
     }
 }

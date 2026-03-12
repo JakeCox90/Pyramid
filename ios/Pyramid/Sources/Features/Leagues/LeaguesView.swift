@@ -100,6 +100,7 @@ struct LeaguesView: View {
                     }
                 }
             )
+            .background(Theme.Color.Surface.Background.page.ignoresSafeArea())
             .task {
                 await viewModel.fetchLeagues()
             }
@@ -228,9 +229,21 @@ struct LeagueRowView: View {
                         .font(Theme.Typography.headline)
                         .foregroundStyle(Theme.Color.Content.Text.default)
 
-                    Text(league.status.displayName)
-                        .font(Theme.Typography.caption1)
-                        .foregroundStyle(Theme.Color.Content.Text.disabled)
+                    HStack(spacing: Theme.Spacing.s20) {
+                        Text(league.status.displayName)
+                            .font(Theme.Typography.caption1)
+                            .foregroundStyle(Theme.Color.Content.Text.disabled)
+
+                        if let count = league.memberCount {
+                            HStack(spacing: Theme.Spacing.s10) {
+                                Image(systemName: Theme.Icon.League.members)
+                                    .font(Theme.Typography.caption2)
+                                Text("\(count)")
+                                    .font(Theme.Typography.caption1)
+                            }
+                            .foregroundStyle(Theme.Color.Content.Text.disabled)
+                        }
+                    }
                 }
 
                 Spacer()

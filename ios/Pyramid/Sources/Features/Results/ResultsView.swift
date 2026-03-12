@@ -28,6 +28,7 @@ struct ResultsView: View {
         }
         .navigationTitle("Results")
         .navigationBarTitleDisplayMode(.large)
+        .background(Theme.Color.Surface.Background.page.ignoresSafeArea())
         .task { await viewModel.load() }
         .refreshable { await viewModel.load() }
     }

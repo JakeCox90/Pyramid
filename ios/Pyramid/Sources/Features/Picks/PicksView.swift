@@ -22,6 +22,7 @@ struct PicksView: View {
             }
             .navigationTitle("Make Your Pick")
             .navigationBarTitleDisplayMode(.large)
+            .background(Theme.Color.Surface.Background.page.ignoresSafeArea())
             .task {
                 await viewModel.load()
             }

@@ -54,6 +54,7 @@ struct LeagueDetailView: View {
                 totalMembers: viewModel.members.count
             )
         }
+        .background(Theme.Color.Surface.Background.page.ignoresSafeArea())
         .task { await viewModel.load() }
         .refreshable { await viewModel.load() }
     }
