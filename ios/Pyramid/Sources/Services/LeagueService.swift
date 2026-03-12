@@ -27,7 +27,7 @@ enum LeagueServiceError: LocalizedError, Equatable {
     }
 }
 
-// MARK: - Join query helper
+// MARK: - Join query helpers
 
 /// Intermediate type for decoding league_members → leagues join queries.
 private struct LeagueMemberRow: Decodable {
@@ -73,6 +73,11 @@ private struct LeagueWithCountRow: Decodable {
 
 private struct AggregateCount: Decodable {
     let count: Int
+}
+
+/// Row from league_members with embedded league + member count (single-query fetch).
+private struct MemberWithLeagueRow: Decodable {
+    let leagues: LeagueWithCountRow
 }
 
 // MARK: - Protocol
@@ -143,31 +148,22 @@ final class LeagueService: LeagueServiceProtocol {
         do {
             let userId = try await client.auth.session.user.id.uuidString
 
-            // Get league IDs the user belongs to
-            let memberRows: [LeagueMemberRow] = try await client
+            // Single query: join through league_members → leagues with member count
+            let rows: [MemberWithLeagueRow] = try await client
                 .from("league_members")
-                .select("league_id")
+                .select(
+                    """
+                    leagues(id, name, join_code, type, status, season, \
+                    created_at, league_members(count))
+                    """
+                )
                 .eq("user_id", value: userId)
                 .execute()
                 .value
-            let leagueIds = memberRows.map(\.leagueId)
 
-            guard !leagueIds.isEmpty else { return [] }
-
-            // Fetch leagues with member counts
-            let rows: [LeagueWithCountRow] = try await client
-                .from("leagues")
-                .select(
-                    """
-                    id, name, join_code, type, status, season, \
-                    created_at, league_members(count)
-                    """
-                )
-                .in("id", values: leagueIds)
-                .order("created_at", ascending: false)
-                .execute()
-                .value
-            return rows.map { $0.toLeague() }
+            return rows
+                .map { $0.leagues.toLeague() }
+                .sorted { $0.createdAt > $1.createdAt }
         } catch {
             throw LeagueServiceError.fetchFailed(error.localizedDescription)
         }
