@@ -32,14 +32,47 @@ enum LeagueServiceError: LocalizedError, Equatable {
 /// Intermediate type for decoding league_members → leagues join queries.
 private struct LeagueMemberRow: Decodable {
     let leagueId: String
-    let leagues: League
-
-    var league: League { leagues }
 
     enum CodingKeys: String, CodingKey {
         case leagueId = "league_id"
-        case leagues
     }
+}
+
+/// Row from leagues query with nested member count.
+private struct LeagueWithCountRow: Decodable {
+    let id: String
+    let name: String
+    let joinCode: String
+    let type: League.LeagueType
+    let status: League.LeagueStatus
+    let season: Int
+    let createdAt: Date
+    let leagueMembers: [AggregateCount]
+
+    enum CodingKeys: String, CodingKey {
+        case id, name, type, status, season
+        case joinCode = "join_code"
+        case createdAt = "created_at"
+        case leagueMembers = "league_members"
+    }
+
+    func toLeague() -> League {
+        var league = League(
+            id: id,
+            name: name,
+            joinCode: joinCode,
+            type: type,
+            status: status,
+            season: season,
+            createdAt: createdAt
+        )
+        league.memberCount = leagueMembers.first?.count ?? 0
+        return league
+    }
+}
+
+private struct AggregateCount: Decodable {
+    let count: Int
 }
 
 // MARK: - Protocol
@@ -109,19 +142,32 @@ final class LeagueService: LeagueServiceProtocol {
     func fetchMyLeagues() async throws -> [League] {
         do {
             let userId = try await client.auth.session.user.id.uuidString
-            let rows: [LeagueMemberRow] = try await client
+
+            // Get league IDs the user belongs to
+            let memberRows: [LeagueMemberRow] = try await client
                 .from("league_members")
-                .select(
-                    """
-                    league_id, \
-                    leagues(id, name, join_code, type, status, season, created_at)
-                    """
-                )
+                .select("league_id")
                 .eq("user_id", value: userId)
                 .execute()
                 .value
-            return rows.map(\.league)
-                .sorted { $0.createdAt > $1.createdAt }
+            let leagueIds = memberRows.map(\.leagueId)
+
+            guard !leagueIds.isEmpty else { return [] }
+
+            // Fetch leagues with member counts
+            let rows: [LeagueWithCountRow] = try await client
+                .from("leagues")
+                .select(
+                    """
+                    id, name, join_code, type, status, season, \
+                    created_at, league_members(count)
+                    """
+                )
+                .in("id", values: leagueIds)
+                .order("created_at", ascending: false)
+                .execute()
+                .value
+            return rows.map { $0.toLeague() }
         } catch {
             throw LeagueServiceError.fetchFailed(error.localizedDescription)
         }

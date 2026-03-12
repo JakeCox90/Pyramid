@@ -23,4 +23,6 @@ enum Log {
     static let network = Logger(subsystem: subsystem, category: "network")
     /// League creation and joining
     static let leagues = Logger(subsystem: subsystem, category: "leagues")
+    /// Home screen aggregate data fetching
+    static let home = Logger(subsystem: subsystem, category: "home")
 }

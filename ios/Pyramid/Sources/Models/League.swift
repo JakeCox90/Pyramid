@@ -8,6 +8,7 @@ struct League: Identifiable, Codable, Sendable, Equatable {
     let status: LeagueStatus
     let season: Int
     let createdAt: Date
+    var memberCount: Int?
 
     enum CodingKeys: String, CodingKey {
         case id

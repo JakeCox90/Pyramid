@@ -11,6 +11,8 @@
 | PYR-68 | feature/PYR-68-gameweek-advancement | Backend | In Review | `supabase/functions/poll-live-scores/index.ts` | 2026-03-10 |
 | PYR-70 | feature/PYR-70-sign-out | iOS | In Review | `ios/Pyramid/Sources/Features/Profile/ProfileView.swift` | 2026-03-10 |
 | PYR-80 | feature/PYR-80-browse-free-leagues | iOS | In Review | `ios/Pyramid/Sources/Features/Leagues/BrowseLeaguesView.swift` | 2026-03-10 |
+| PYR-85 | feature/PYR-85-home-tab | iOS | In Progress | `MainTabView.swift`, `HomeView.swift`, `HomeViewModel.swift` | 2026-03-11 |
+| PYR-86 | feature/PYR-86-home-service | iOS | In Progress | `HomeService.swift`, `HomeData.swift` | 2026-03-11 |
 
 ## Recently Completed
 
