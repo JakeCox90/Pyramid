@@ -61,4 +61,12 @@ final class MockAuthService: AuthServiceProtocol {
     }
 
     func signOut() async throws {}
+
+    func signInWithApple(idToken: String, nonce: String) async throws {
+        if shouldFail { throw URLError(.badServerResponse) }
+    }
+
+    func signInWithGoogle() async throws {
+        if shouldFail { throw URLError(.badServerResponse) }
+    }
 }
