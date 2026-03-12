@@ -34,12 +34,14 @@ targets:
         buildPhase: resources
         excludes:
           - "Info.plist"
+          - "*.entitlements"
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.pyramid.app
         INFOPLIST_FILE: Pyramid/Resources/Info.plist
         DEVELOPMENT_TEAM: ""  # set to your Apple Team ID
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        CODE_SIGN_ENTITLEMENTS: Pyramid/Resources/Pyramid.entitlements
     dependencies:
       - package: Supabase
         product: Supabase

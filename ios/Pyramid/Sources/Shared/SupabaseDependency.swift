@@ -43,7 +43,7 @@ final class SupabaseDependency: @unchecked Sendable {
             options: .init(
                 auth: .init(
                     storage: UserDefaultsAuthStorage(),
-                    flowType: .implicit
+                    flowType: .pkce
                 )
             )
         )

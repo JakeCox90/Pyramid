@@ -35,5 +35,19 @@
     <string>$(SUPABASE_URL)</string>
     <key>SUPABASE_ANON_KEY</key>
     <string>$(SUPABASE_ANON_KEY)</string>
+    <!-- OAuth callback URL scheme for Supabase social sign-on -->
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLName</key>
+            <string>com.pyramid.app</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>com.pyramid.app</string>
+            </array>
+        </dict>
+    </array>
 </dict>
 </plist>

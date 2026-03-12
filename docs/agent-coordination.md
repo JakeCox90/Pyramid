@@ -13,6 +13,7 @@
 | PYR-80 | feature/PYR-80-browse-free-leagues | iOS | In Review | `ios/Pyramid/Sources/Features/Leagues/BrowseLeaguesView.swift` | 2026-03-10 |
 | PYR-85 | feature/PYR-85-home-tab | iOS | In Progress | `MainTabView.swift`, `HomeView.swift`, `HomeViewModel.swift` | 2026-03-11 |
 | PYR-86 | feature/PYR-86-home-service | iOS | In Progress | `HomeService.swift`, `HomeData.swift` | 2026-03-11 |
+| PYR-39 | feature/PYR-39-social-sign-on | iOS | In Progress | `AuthView.swift`, `AuthViewModel.swift`, `AuthService.swift`, `PyramidApp.swift`, `AppState.swift`, `project.yml` | 2026-03-12 |
 
 ## Recently Completed
 
