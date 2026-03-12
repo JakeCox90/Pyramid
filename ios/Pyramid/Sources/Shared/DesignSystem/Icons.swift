@@ -11,6 +11,7 @@ extension Theme {
         // MARK: - Navigation
 
         enum Navigation {
+            static let home = "house.fill"
             static let leagues = "trophy"
             static let profile = "person.circle"
             static let notifications = "bell"

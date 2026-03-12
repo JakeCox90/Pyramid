@@ -1,15 +1,22 @@
 import SwiftUI
 
 struct MainTabView: View {
-    @State private var selectedTab: Tab = .leagues
+    @State private var selectedTab: Tab = .home
 
     enum Tab: Int {
+        case home
         case leagues
         case profile
     }
 
     var body: some View {
         TabView(selection: $selectedTab) {
+            HomeView()
+                .tabItem {
+                    Label("Home", systemImage: Theme.Icon.Navigation.home)
+                }
+                .tag(Tab.home)
+
             LeaguesView()
                 .tabItem {
                     Label("Leagues", systemImage: Theme.Icon.Navigation.leagues)
