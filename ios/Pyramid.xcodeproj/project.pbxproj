@@ -26,6 +26,7 @@
 		2BC557CC3EADA62F50338CCA /* DSCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DF242F38270F8CEB654549 /* DSCard.swift */; };
 		2FCEB6BA829EC93E079DED85 /* LeaguePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E753C76862AFD099D5FD8DC /* LeaguePreview.swift */; };
 		319A129B56079D021616A322 /* LeaguesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C85AC94E06CB38EE15F06FBD /* LeaguesViewModel.swift */; };
+		334C05511417DEACF96B356D /* LeagueSummaryCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8432354A78995F48EDA7B34 /* LeagueSummaryCard.swift */; };
 		3D493E78B785A7D3FD97BF35 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C1BE5AB66D75DBBC1C9404F7 /* Assets.xcassets */; };
 		4668BAF70224B38BF6FF3B73 /* CreateLeagueViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EADF3F67687936B1B06DE55 /* CreateLeagueViewModelTests.swift */; };
 		4843B64FD488579B895F5B35 /* ResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA855EAE8D23079E4160D476 /* ResultsView.swift */; };
@@ -66,6 +67,7 @@
 		AE7F2FCAF778F50C36FCAC3F /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFE022A9349F1AA3A1C91AAA /* Theme.swift */; };
 		B1884A48DEF1BF61EB073278 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32DA20BB35D3324D2E896218 /* ProfileViewModel.swift */; };
 		B90E3D25AC9B855EC6852C6D /* ColorHex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 298239CC4E1599B8F4D3DD6B /* ColorHex.swift */; };
+		BAFDB818DF2A3BD7863B6FC5 /* ActionBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F2ABE793F2ABA0CC5FB78C3 /* ActionBannerView.swift */; };
 		BCD62DC3E165765ADBC71D63 /* LeagueMember+Paid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E07C95B627553979AA23A9D /* LeagueMember+Paid.swift */; };
 		BFEFF38173238FF865088D99 /* WalletTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79B2CA606CE4F01DE5A3463 /* WalletTransaction.swift */; };
 		C18944C3C19FAFF9A4F6EFF8 /* ThemeTypography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B40A2C5A1E662F39AFFF4D /* ThemeTypography.swift */; };
@@ -144,6 +146,7 @@
 		32DA20BB35D3324D2E896218 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		334B3F95F52FDB1F1BDD29CE /* LeagueService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeagueService.swift; sourceTree = "<group>"; };
 		351A08CFE9CD12D6B11A184B /* NotificationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationServiceTests.swift; sourceTree = "<group>"; };
+		3F2ABE793F2ABA0CC5FB78C3 /* ActionBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionBannerView.swift; sourceTree = "<group>"; };
 		42379DA3E6430A94B9D0CCDB /* PyramidUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = PyramidUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C81C00D8D1E1BDBDE0C1C12 /* WalletViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletViewModelTests.swift; sourceTree = "<group>"; };
 		5400A7FE42C06A3A94D18530 /* JoinLeagueViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinLeagueViewModel.swift; sourceTree = "<group>"; };
@@ -198,6 +201,7 @@
 		D45FA7FC994C841B0871B333 /* PicksViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PicksViewModelTests.swift; sourceTree = "<group>"; };
 		D6F92FE092EC760C205458A7 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		D777CF3A60C13FAA223F9058 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		D8432354A78995F48EDA7B34 /* LeagueSummaryCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeagueSummaryCard.swift; sourceTree = "<group>"; };
 		DB0C996842F2EB9BE19C6ADC /* DeadlineCountdownCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeadlineCountdownCard.swift; sourceTree = "<group>"; };
 		E1C8C30BF7F9A32AEAC93132 /* WalletBalance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletBalance.swift; sourceTree = "<group>"; };
 		EA855EAE8D23079E4160D476 /* ResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsView.swift; sourceTree = "<group>"; };
@@ -331,10 +335,12 @@
 		8D5900BBF0E034ACA02D733F /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				3F2ABE793F2ABA0CC5FB78C3 /* ActionBannerView.swift */,
 				DB0C996842F2EB9BE19C6ADC /* DeadlineCountdownCard.swift */,
 				B101F6D708AF973E8C6AB621 /* HeroStatusCard.swift */,
 				7AB86047F9178A4FF08B9548 /* HomeView.swift */,
 				2015515265CB0DEA4256073A /* HomeViewModel.swift */,
+				D8432354A78995F48EDA7B34 /* LeagueSummaryCard.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -617,6 +623,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BAFDB818DF2A3BD7863B6FC5 /* ActionBannerView.swift in Sources */,
 				E2E8101EE8A36E77B918555A /* AppState.swift in Sources */,
 				97C476250A341A74BE0CCF44 /* AuthService.swift in Sources */,
 				C982F902B95FEA0B5AADDDC8 /* AuthView.swift in Sources */,
@@ -656,6 +663,7 @@
 				4E70BBEDA3326F3325610985 /* LeagueMember.swift in Sources */,
 				2FCEB6BA829EC93E079DED85 /* LeaguePreview.swift in Sources */,
 				F00FD2B545BABFBACE1D27B5 /* LeagueService.swift in Sources */,
+				334C05511417DEACF96B356D /* LeagueSummaryCard.swift in Sources */,
 				9CD37873BEEB5DC6E7ADBA05 /* LeaguesView.swift in Sources */,
 				319A129B56079D021616A322 /* LeaguesViewModel.swift in Sources */,
 				6600A4A50ED0A47DBB6F4A73 /* Log.swift in Sources */,
