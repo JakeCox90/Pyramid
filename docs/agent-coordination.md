@@ -14,11 +14,13 @@
 | PYR-85 | feature/PYR-85-home-tab | iOS | In Progress | `MainTabView.swift`, `HomeView.swift`, `HomeViewModel.swift` | 2026-03-11 |
 | PYR-86 | feature/PYR-86-home-service | iOS | In Progress | `HomeService.swift`, `HomeData.swift` | 2026-03-11 |
 | PYR-39 | feature/PYR-39-social-sign-on | iOS | In Progress | `AuthView.swift`, `AuthViewModel.swift`, `AuthService.swift`, `PyramidApp.swift`, `AppState.swift`, `project.yml` | 2026-03-12 |
+| PYR-73 | feature/PYR-73-live-scores | iOS | In Progress | `LeagueDetailViewModel.swift`, `LeagueDetailView.swift`, `StandingsService.swift`, `LeagueMember.swift` | 2026-03-12 |
 
 ## Recently Completed
 
 | Ticket | Branch | PR | Merged |
 |--------|--------|----|--------|
+| PYR-39 | feature/PYR-39-social-sign-on | #56 | In Review |
 | PYR-62 | feature/PYR-62-results-history | #33 | Pending |
 | PYR-49 | feature/PYR-49-usage-guide | #22 | Pending |
 | PYR-46 | feature/PYR-46-swiftui-patterns | #23 | Pending |

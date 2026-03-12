@@ -54,6 +54,8 @@ struct MemberPick: Codable, Sendable, Equatable {
     let result: PickResult
     let isLocked: Bool
     let gameweekId: Int
+    let fixtureId: Int
+    let teamId: Int
 
     enum CodingKeys: String, CodingKey {
         case userId = "user_id"
@@ -61,5 +63,7 @@ struct MemberPick: Codable, Sendable, Equatable {
         case result
         case isLocked = "is_locked"
         case gameweekId = "gameweek_id"
+        case fixtureId = "fixture_id"
+        case teamId = "team_id"
     }
 }
