@@ -96,6 +96,7 @@
 		F5A1A1424F425CEAEF7F3E85 /* PicksViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7446A3311FC4D09B53500705 /* PicksViewModel.swift */; };
 		F6FB284AFFF65A792CC1ADFB /* JoinPaidLeagueViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C442226AEE75950E7DBF39 /* JoinPaidLeagueViewModel.swift */; };
 		FBB9430147FB54171E83FFCD /* DSButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 733C2CAA42033AF98772CA35 /* DSButton.swift */; };
+		FF365CA62C8598823A6497A0 /* DeadlineCountdownCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0C996842F2EB9BE19C6ADC /* DeadlineCountdownCard.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -197,6 +198,7 @@
 		D45FA7FC994C841B0871B333 /* PicksViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PicksViewModelTests.swift; sourceTree = "<group>"; };
 		D6F92FE092EC760C205458A7 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		D777CF3A60C13FAA223F9058 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		DB0C996842F2EB9BE19C6ADC /* DeadlineCountdownCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeadlineCountdownCard.swift; sourceTree = "<group>"; };
 		E1C8C30BF7F9A32AEAC93132 /* WalletBalance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletBalance.swift; sourceTree = "<group>"; };
 		EA855EAE8D23079E4160D476 /* ResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsView.swift; sourceTree = "<group>"; };
 		ECF72C30AD8BCA7C858A0099 /* PaidLeague.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaidLeague.swift; sourceTree = "<group>"; };
@@ -329,6 +331,7 @@
 		8D5900BBF0E034ACA02D733F /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				DB0C996842F2EB9BE19C6ADC /* DeadlineCountdownCard.swift */,
 				B101F6D708AF973E8C6AB621 /* HeroStatusCard.swift */,
 				7AB86047F9178A4FF08B9548 /* HomeView.swift */,
 				2015515265CB0DEA4256073A /* HomeViewModel.swift */,
@@ -627,6 +630,7 @@
 				FBB9430147FB54171E83FFCD /* DSButton.swift in Sources */,
 				2BC557CC3EADA62F50338CCA /* DSCard.swift in Sources */,
 				56CC2E236030EE4F473EB416 /* DSTextField.swift in Sources */,
+				FF365CA62C8598823A6497A0 /* DeadlineCountdownCard.swift in Sources */,
 				E4740370A7568165D66364B7 /* Fixture.swift in Sources */,
 				01DD6DAA1AB77AEBEB9E9445 /* Gameweek.swift in Sources */,
 				7CA075C2162F04E712DFD643 /* HeroStatusCard.swift in Sources */,
