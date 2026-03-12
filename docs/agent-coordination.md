@@ -15,6 +15,8 @@
 | PYR-86 | feature/PYR-86-home-service | iOS | In Progress | `HomeService.swift`, `HomeData.swift` | 2026-03-11 |
 | PYR-87 | feature/PYR-87-hero-status-card | iOS | In Progress | `HeroStatusCard.swift`, `HomeView.swift` | 2026-03-12 |
 | PYR-88 | feature/PYR-88-deadline-countdown | iOS | In Progress | `DeadlineCountdownCard.swift`, `HomeView.swift` | 2026-03-12 |
+| PYR-89 | feature/PYR-89-action-banners | iOS | In Progress | `ActionBannerView.swift`, `HomeView.swift` | 2026-03-12 |
+| PYR-90 | feature/PYR-89-action-banners | iOS | In Progress | `LeagueSummaryCard.swift`, `HomeView.swift` | 2026-03-12 |
 
 ## Recently Completed
 

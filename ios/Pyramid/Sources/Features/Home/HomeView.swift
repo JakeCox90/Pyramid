@@ -20,6 +20,7 @@ struct HomeView: View {
             .navigationBarTitleDisplayMode(.large)
             .background(Theme.Color.Surface.Background.page.ignoresSafeArea())
         }
+        .task { await viewModel.load() }
     }
 
     // MARK: - Loading
@@ -82,7 +83,6 @@ struct HomeView: View {
             .padding(Theme.Spacing.s40)
         }
         .refreshable { await viewModel.load() }
-        .task { await viewModel.load() }
     }
 
     // MARK: - Action Banners (PYR-89)
