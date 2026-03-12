@@ -3,8 +3,7 @@ import SwiftUI
 // MARK: - My Pick Card
 
 extension LeagueDetailView {
-    @ViewBuilder
-    var myPickCard: some View {
+    @ViewBuilder var myPickCard: some View {
         if viewModel.isDeadlinePassed(), let pick = viewModel.myPick {
             DSCard {
                 if let fixture = viewModel.myFixture {
