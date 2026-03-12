@@ -80,9 +80,11 @@ final class ProfileService: ProfileServiceProtocol {
 
             let picks: [Pick] = try await client
                 .from("picks")
-                .select(
-                    "id, league_id, user_id, gameweek_id, fixture_id, team_id, team_name, is_locked, result, submitted_at"
-                )
+                .select([
+                    "id, league_id, user_id, gameweek_id",
+                    "fixture_id, team_id, team_name",
+                    "is_locked, result, submitted_at"
+                ].joined(separator: ", "))
                 .eq("user_id", value: userId)
                 .order("league_id", ascending: true)
                 .order("gameweek_id", ascending: true)
