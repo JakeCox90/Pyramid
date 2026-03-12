@@ -54,6 +54,29 @@ final class LeagueDetailViewModel: ObservableObject {
         fixtures.values.contains { $0.status.isLive }
     }
 
+    @Published var currentUserId: String?
+
+    var myPick: MemberPick? {
+        guard let userId = currentUserId else { return nil }
+        return lockedPicks[userId]
+    }
+
+    var myFixture: Fixture? {
+        guard let pick = myPick else { return nil }
+        return fixtures[pick.fixtureId]
+    }
+
+    var isSurviving: Bool? {
+        guard let pick = myPick, let fixture = myFixture else { return nil }
+        guard let homeScore = fixture.homeScore, let awayScore = fixture.awayScore else { return nil }
+        if pick.teamId == fixture.homeTeamId {
+            return homeScore >= awayScore
+        } else if pick.teamId == fixture.awayTeamId {
+            return awayScore >= homeScore
+        }
+        return nil
+    }
+
     init(
         league: League,
         standingsService: StandingsServiceProtocol = StandingsService(),
@@ -68,6 +91,9 @@ final class LeagueDetailViewModel: ObservableObject {
         isLoading = true
         errorMessage = nil
         do {
+            if currentUserId == nil {
+                currentUserId = try? await SupabaseDependency.shared.client.auth.session.user.id.uuidString
+            }
             async let membersFetch = standingsService.fetchMembers(leagueId: league.id)
             async let gameweekFetch = pickService.fetchCurrentGameweek()
             let (fetchedMembers, gameweek) = try await (membersFetch, gameweekFetch)
