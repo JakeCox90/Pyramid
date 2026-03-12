@@ -55,6 +55,7 @@
 		8495A42365FCA8125FDCC0A3 /* PaidLeagueService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA2AB64C6D691C6A43512A0F /* PaidLeagueService.swift */; };
 		877E9354D98CD419291A1C2C /* PyramidUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2439413A5D89DC3B0FB2B44B /* PyramidUITests.swift */; };
 		88159AEE668C70F7B75700E9 /* SupabaseDependency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1058DD31F7E446B643331071 /* SupabaseDependency.swift */; };
+		937701AA830180DFC878D519 /* LeagueDetailView+MyPick.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3259B64351AE3F7BEA0C5371 /* LeagueDetailView+MyPick.swift */; };
 		94414CFCD6B1A40B6466906A /* OnboardingPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58F9ED18587B1BBE59491449 /* OnboardingPage.swift */; };
 		96D1A82E790D90918DA4B672 /* WalletView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8BCD3F46DADD8CD42294C6C /* WalletView.swift */; };
 		976970E376FBEB55CCD2BB4C /* BrowseLeague.swift in Sources */ = {isa = PBXBuildFile; fileRef = 912FDAAEFFFBE2AAE048CC05 /* BrowseLeague.swift */; };
@@ -151,6 +152,7 @@
 		2E753C76862AFD099D5FD8DC /* LeaguePreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaguePreview.swift; sourceTree = "<group>"; };
 		312D0FA3E5C4632084A176EE /* ResultsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsService.swift; sourceTree = "<group>"; };
 		314496D0C15C23D765B95D20 /* LeaguesView+Row.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LeaguesView+Row.swift"; sourceTree = "<group>"; };
+		3259B64351AE3F7BEA0C5371 /* LeagueDetailView+MyPick.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LeagueDetailView+MyPick.swift"; sourceTree = "<group>"; };
 		32951A4690F620B60F611917 /* BrowseLeaguesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowseLeaguesView.swift; sourceTree = "<group>"; };
 		32DA20BB35D3324D2E896218 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		334B3F95F52FDB1F1BDD29CE /* LeagueService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeagueService.swift; sourceTree = "<group>"; };
@@ -468,6 +470,7 @@
 				2485ABB28B60E960F5EF2DBD /* LeagueCreatedView.swift */,
 				80B986FB70A636F5DD70A708 /* LeagueDetailView.swift */,
 				FA78A7680CA200466833A894 /* LeagueDetailView+Complete.swift */,
+				3259B64351AE3F7BEA0C5371 /* LeagueDetailView+MyPick.swift */,
 				9B2439FBEE2B6C2E0BDCAD79 /* LeagueDetailView+Paid.swift */,
 				4696D6AF279C4078BE60AB5A /* LeagueDetailView+Row.swift */,
 				4275A214EFB0ACFC61834626 /* LeagueDetailView+Stats.swift */,
@@ -674,6 +677,7 @@
 				4995279C4CAEB9551195E099 /* LeagueCompleteView.swift in Sources */,
 				AE50172FE0206CEECC9A36E9 /* LeagueCreatedView.swift in Sources */,
 				9B28E327E05DB10A75A8BE03 /* LeagueDetailView+Complete.swift in Sources */,
+				937701AA830180DFC878D519 /* LeagueDetailView+MyPick.swift in Sources */,
 				0D79E4579CB7F23AA8175EB9 /* LeagueDetailView+Paid.swift in Sources */,
 				A22D55B8BC113D8F8C25266D /* LeagueDetailView+Row.swift in Sources */,
 				394B36BDFC9E6193A2B80389 /* LeagueDetailView+Stats.swift in Sources */,
