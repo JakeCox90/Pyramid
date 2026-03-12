@@ -78,10 +78,12 @@ final class PicksViewModel: ObservableObject {
             if let gw = gameweek {
                 currentPick = try await pickService.fetchMyPick(leagueId: leagueId, gameweekId: gw.id)
             }
-            try? await Task.sleep(nanoseconds: 3_000_000_000)
-            successMessage = nil
-            showCelebration = false
-            celebratedTeamId = nil
+            Task { [weak self] in
+                try? await Task.sleep(nanoseconds: 3_000_000_000)
+                self?.successMessage = nil
+                self?.showCelebration = false
+                self?.celebratedTeamId = nil
+            }
         } catch {
             errorMessage = error.localizedDescription
         }
