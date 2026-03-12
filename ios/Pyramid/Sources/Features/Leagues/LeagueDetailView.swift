@@ -4,6 +4,7 @@ struct LeagueDetailView: View {
     @StateObject var viewModel: LeagueDetailViewModel
     @State var showPicks = false
     @State var showResults = false
+    @State var showPickHistory = false
     @State var showCompleteView = false
     @State var showShareSheet = false
 
@@ -28,6 +29,11 @@ struct LeagueDetailView: View {
             ToolbarItem(placement: .primaryAction) {
                 HStack(spacing: Theme.Spacing.s20) {
                     Button {
+                        showPickHistory = true
+                    } label: {
+                        Image(systemName: Theme.Icon.Pick.history)
+                    }
+                    Button {
                         showShareSheet = true
                     } label: {
                         Image(systemName: Theme.Icon.Action.share)
@@ -46,6 +52,9 @@ struct LeagueDetailView: View {
         }
         .navigationDestination(isPresented: $showPicks) {
             PicksView(leagueId: viewModel.league.id)
+        }
+        .navigationDestination(isPresented: $showPickHistory) {
+            PickHistoryView(leagueId: viewModel.league.id)
         }
         .navigationDestination(isPresented: $showResults) {
             ResultsView(
