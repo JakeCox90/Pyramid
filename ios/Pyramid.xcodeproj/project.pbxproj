@@ -35,6 +35,7 @@
 		56C22940504502DFFEBBB4BE /* Pick.swift in Sources */ = {isa = PBXBuildFile; fileRef = F15233A6AC65D121675A236F /* Pick.swift */; };
 		56CC2E236030EE4F473EB416 /* DSTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4AD36135713033ED1110B6 /* DSTextField.swift */; };
 		5B1D3BD5BF64D0868A40FD12 /* CreateLeagueViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63B37BEFCB4682687939E4D /* CreateLeagueViewModel.swift */; };
+		5B703ED28C4EB3B3B19CA10C /* ShareSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05E74013E0DD11B4E81E359 /* ShareSheet.swift */; };
 		5FD672369F2F07E944517E6C /* LeagueDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80B986FB70A636F5DD70A708 /* LeagueDetailView.swift */; };
 		6600A4A50ED0A47DBB6F4A73 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD7BAEC05B2931D2A196CC6E /* Log.swift */; };
 		6CDBCAD0778793C345BF146E /* JoinLeagueViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5400A7FE42C06A3A94D18530 /* JoinLeagueViewModel.swift */; };
@@ -182,6 +183,7 @@
 		A9DF242F38270F8CEB654549 /* DSCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSCard.swift; sourceTree = "<group>"; };
 		AD7BAEC05B2931D2A196CC6E /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		AFE022A9349F1AA3A1C91AAA /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		B05E74013E0DD11B4E81E359 /* ShareSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSheet.swift; sourceTree = "<group>"; };
 		B48CA2CD03079EC7728A091F /* WalletViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletViewModel.swift; sourceTree = "<group>"; };
 		B51FAB807FAD71BC12433A4C /* NotificationPreferencesService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationPreferencesService.swift; sourceTree = "<group>"; };
 		B8BCD3F46DADD8CD42294C6C /* WalletView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletView.swift; sourceTree = "<group>"; };
@@ -455,6 +457,7 @@
 			children = (
 				298239CC4E1599B8F4D3DD6B /* ColorHex.swift */,
 				AD7BAEC05B2931D2A196CC6E /* Log.swift */,
+				B05E74013E0DD11B4E81E359 /* ShareSheet.swift */,
 				1058DD31F7E446B643331071 /* SupabaseDependency.swift */,
 				CF8F7EF6106B8162CA162FD1 /* DesignSystem */,
 			);
@@ -672,6 +675,7 @@
 				4843B64FD488579B895F5B35 /* ResultsView.swift in Sources */,
 				EA15E4B40CF0B4AD6018E9B7 /* ResultsViewModel.swift in Sources */,
 				ECCFB5B40F1C0FDC80E94869 /* RootView.swift in Sources */,
+				5B703ED28C4EB3B3B19CA10C /* ShareSheet.swift in Sources */,
 				C4D198A5D7680A6177525DE9 /* StandingsService.swift in Sources */,
 				88159AEE668C70F7B75700E9 /* SupabaseDependency.swift in Sources */,
 				225029DF0BEC0AFD0598257B /* TeamBadge.swift in Sources */,

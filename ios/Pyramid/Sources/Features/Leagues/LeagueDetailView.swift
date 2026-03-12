@@ -5,6 +5,7 @@ struct LeagueDetailView: View {
     @State var showPicks = false
     @State var showResults = false
     @State var showCompleteView = false
+    @State var showShareSheet = false
 
     init(league: League) {
         _viewModel = StateObject(wrappedValue: LeagueDetailViewModel(league: league))
@@ -26,6 +27,11 @@ struct LeagueDetailView: View {
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 HStack(spacing: Theme.Spacing.s20) {
+                    Button {
+                        showShareSheet = true
+                    } label: {
+                        Image(systemName: Theme.Icon.Action.share)
+                    }
                     Button {
                         showResults = true
                     } label: {
@@ -54,9 +60,19 @@ struct LeagueDetailView: View {
                 totalMembers: viewModel.members.count
             )
         }
+        .sheet(isPresented: $showShareSheet) {
+            ShareSheet(
+                items: [shareMessage]
+            )
+        }
         .background(Theme.Color.Surface.Background.page.ignoresSafeArea())
         .task { await viewModel.load() }
         .refreshable { await viewModel.load() }
+    }
+
+    private var shareMessage: String {
+        "Join my Last Man Standing league '\(viewModel.league.name)'! "
+            + "Code: \(viewModel.league.joinCode)"
     }
 
     // MARK: - Subviews
