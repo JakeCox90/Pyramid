@@ -118,6 +118,7 @@ struct LeagueDetailView: View {
                     winnerBanner
                 }
                 statsHeader
+                myPickCard
                 if viewModel.members.isEmpty {
                     emptyMembersView
                 } else {
