@@ -60,7 +60,7 @@ final class AuthViewModel: ObservableObject {
             Log.auth.info("Apple sign-in cancelled by user")
         } catch {
             Log.auth.error("Apple sign-in failed: \(String(describing: error))")
-            errorMessage = error.localizedDescription
+            errorMessage = friendlyMessage(for: error)
         }
         isSocialLoading = false
     }
@@ -73,9 +73,20 @@ final class AuthViewModel: ObservableObject {
             Log.auth.info("Google sign-in succeeded")
         } catch {
             Log.auth.error("Google sign-in failed: \(String(describing: error))")
-            errorMessage = error.localizedDescription
+            errorMessage = friendlyMessage(for: error)
         }
         isSocialLoading = false
+    }
+
+    private func friendlyMessage(for error: Error) -> String {
+        let description = error.localizedDescription.lowercased()
+        if description.contains("user_already_exists")
+            || description.contains("already registered")
+            || description.contains("duplicate") {
+            return "An account with this email already exists. "
+                + "Sign in with your original method, then link this account in Settings."
+        }
+        return error.localizedDescription
     }
 
     private func validate() -> Bool {
