@@ -32,7 +32,11 @@ extension ProfileView {
         .padding(.horizontal, Theme.Spacing.s40)
     }
 
-    func statBadge(label: String, value: String, color: Color) -> some View {
+    private func statBadge(
+        label: String,
+        value: String,
+        color: Color
+    ) -> some View {
         DSCard {
             VStack(spacing: Theme.Spacing.s10) {
                 Text(value)
@@ -40,7 +44,9 @@ extension ProfileView {
                     .foregroundStyle(color)
                 Text(label)
                     .font(Theme.Typography.caption1)
-                    .foregroundStyle(Theme.Color.Content.Text.disabled)
+                    .foregroundStyle(
+                        Theme.Color.Content.Text.disabled
+                    )
             }
             .frame(maxWidth: .infinity)
         }
@@ -50,7 +56,9 @@ extension ProfileView {
 // MARK: - Active Streaks
 
 extension ProfileView {
-    func activeStreaksSection(streaks: [LeagueStreak]) -> some View {
+    func activeStreaksSection(
+        streaks: [LeagueStreak]
+    ) -> some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s20) {
             Text("Current Streaks")
                 .font(Theme.Typography.headline)
@@ -71,17 +79,23 @@ extension ProfileView {
             HStack {
                 Text(streak.leagueName)
                     .font(Theme.Typography.body)
-                    .foregroundStyle(Theme.Color.Content.Text.default)
+                    .foregroundStyle(
+                        Theme.Color.Content.Text.default
+                    )
                     .lineLimit(1)
 
                 Spacer()
 
                 HStack(spacing: Theme.Spacing.s10) {
                     Image(systemName: "flame.fill")
-                        .foregroundStyle(Theme.Color.Status.Warning.resting)
+                        .foregroundStyle(
+                            Theme.Color.Status.Warning.resting
+                        )
                     Text("\(streak.currentStreak)")
                         .font(Theme.Typography.headline)
-                        .foregroundStyle(Theme.Color.Status.Warning.resting)
+                        .foregroundStyle(
+                            Theme.Color.Status.Warning.resting
+                        )
                 }
             }
         }
@@ -91,7 +105,9 @@ extension ProfileView {
 // MARK: - League History
 
 extension ProfileView {
-    func leagueHistorySection(history: [CompletedLeague]) -> some View {
+    func leagueHistorySection(
+        history: [CompletedLeague]
+    ) -> some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s20) {
             Text("League History")
                 .font(Theme.Typography.headline)
@@ -107,17 +123,23 @@ extension ProfileView {
         }
     }
 
-    private func leagueHistoryRow(league: CompletedLeague) -> some View {
+    private func leagueHistoryRow(
+        league: CompletedLeague
+    ) -> some View {
         DSCard {
             HStack {
                 VStack(alignment: .leading, spacing: Theme.Spacing.s10) {
                     Text(league.leagueName)
                         .font(Theme.Typography.body)
-                        .foregroundStyle(Theme.Color.Content.Text.default)
+                        .foregroundStyle(
+                            Theme.Color.Content.Text.default
+                        )
                         .lineLimit(1)
                     Text("Season \(league.season)")
                         .font(Theme.Typography.caption1)
-                        .foregroundStyle(Theme.Color.Content.Text.subtle)
+                        .foregroundStyle(
+                            Theme.Color.Content.Text.subtle
+                        )
                 }
 
                 Spacer()
@@ -128,21 +150,29 @@ extension ProfileView {
     }
 
     @ViewBuilder
-    private func resultBadge(for league: CompletedLeague) -> some View {
+    private func resultBadge(
+        for league: CompletedLeague
+    ) -> some View {
         switch league.result {
         case .winner:
             Label("Winner", systemImage: "trophy.fill")
                 .font(Theme.Typography.caption1)
-                .foregroundStyle(Theme.Color.Status.Warning.resting)
+                .foregroundStyle(
+                    Theme.Color.Status.Warning.resting
+                )
         case .eliminated:
             if let gw = league.eliminatedGameweek {
                 Text("Eliminated GW\(gw)")
                     .font(Theme.Typography.caption1)
-                    .foregroundStyle(Theme.Color.Status.Error.text)
+                    .foregroundStyle(
+                        Theme.Color.Status.Error.text
+                    )
             } else {
                 Text("Eliminated")
                     .font(Theme.Typography.caption1)
-                    .foregroundStyle(Theme.Color.Status.Error.text)
+                    .foregroundStyle(
+                        Theme.Color.Status.Error.text
+                    )
             }
         }
     }

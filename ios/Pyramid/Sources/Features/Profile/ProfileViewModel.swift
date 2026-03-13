@@ -3,15 +3,32 @@ import SwiftUI
 @MainActor
 final class ProfileViewModel: ObservableObject {
     @Published var isSigningOut = false
+    @Published var isLoadingStats = false
     @Published var errorMessage: String?
+    @Published var stats: ProfileStats = .empty
 
     private let authService: AuthServiceProtocol
+    private let profileService: ProfileServiceProtocol
 
-    init(authService: AuthServiceProtocol = AuthService()) {
+    init(
+        authService: AuthServiceProtocol = AuthService(),
+        profileService: ProfileServiceProtocol = ProfileService()
+    ) {
         self.authService = authService
+        self.profileService = profileService
     }
 
-    /// Signs the user out. Returns `true` on success so the caller can clear `AppState.session`.
+    func loadStats() async {
+        isLoadingStats = true
+        errorMessage = nil
+        do {
+            stats = try await profileService.fetchProfileStats()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+        isLoadingStats = false
+    }
+
     func signOut() async -> Bool {
         isSigningOut = true
         errorMessage = nil

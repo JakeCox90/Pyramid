@@ -7,8 +7,10 @@ final class ProfileViewModelTests: XCTestCase {
     // MARK: - signOut
 
     func testSignOutSuccessReturnsTrue() async {
-        let mock = MockProfileAuthService()
-        let vm = ProfileViewModel(authService: mock)
+        let vm = ProfileViewModel(
+            authService: MockProfileAuthService(),
+            profileService: MockProfileService()
+        )
 
         let result = await vm.signOut()
 
@@ -18,8 +20,10 @@ final class ProfileViewModelTests: XCTestCase {
     }
 
     func testSignOutFailureSetsErrorMessage() async {
-        let mock = MockProfileAuthService(shouldFail: true)
-        let vm = ProfileViewModel(authService: mock)
+        let vm = ProfileViewModel(
+            authService: MockProfileAuthService(shouldFail: true),
+            profileService: MockProfileService()
+        )
 
         let result = await vm.signOut()
 
@@ -27,9 +31,70 @@ final class ProfileViewModelTests: XCTestCase {
         XCTAssertFalse(vm.isSigningOut)
         XCTAssertNotNil(vm.errorMessage)
     }
+
+    // MARK: - loadStats
+
+    func testLoadStatsSuccess() async {
+        let expected = ProfileStats(
+            totalLeaguesJoined: 3,
+            wins: 1,
+            totalPicksMade: 15,
+            longestSurvivalStreak: 5,
+            activeStreaks: [
+                LeagueStreak(
+                    id: "league-1",
+                    leagueName: "Test League",
+                    currentStreak: 3
+                )
+            ],
+            leagueHistory: [
+                CompletedLeague(
+                    id: "league-2",
+                    leagueName: "Old League",
+                    result: .winner,
+                    eliminatedGameweek: nil,
+                    season: 2025
+                )
+            ]
+        )
+
+        let vm = ProfileViewModel(
+            authService: MockProfileAuthService(),
+            profileService: MockProfileService(stats: expected)
+        )
+
+        await vm.loadStats()
+
+        XCTAssertEqual(vm.stats, expected)
+        XCTAssertFalse(vm.isLoadingStats)
+        XCTAssertNil(vm.errorMessage)
+    }
+
+    func testLoadStatsFailureSetsError() async {
+        let vm = ProfileViewModel(
+            authService: MockProfileAuthService(),
+            profileService: MockProfileService(shouldFail: true)
+        )
+
+        await vm.loadStats()
+
+        XCTAssertEqual(vm.stats, .empty)
+        XCTAssertFalse(vm.isLoadingStats)
+        XCTAssertNotNil(vm.errorMessage)
+    }
+
+    func testLoadStatsStartsEmpty() {
+        let vm = ProfileViewModel(
+            authService: MockProfileAuthService(),
+            profileService: MockProfileService()
+        )
+
+        XCTAssertEqual(vm.stats, .empty)
+        XCTAssertFalse(vm.isLoadingStats)
+    }
 }
 
-// MARK: - Mock
+// MARK: - Mocks
 
 private final class MockProfileAuthService: AuthServiceProtocol {
     var shouldFail: Bool
@@ -47,4 +112,21 @@ private final class MockProfileAuthService: AuthServiceProtocol {
 
     func signInWithApple(idToken: String, nonce: String) async throws {}
     func signInWithGoogle() async throws {}
+}
+
+private final class MockProfileService: ProfileServiceProtocol {
+    let stats: ProfileStats
+    let shouldFail: Bool
+
+    init(stats: ProfileStats = .empty, shouldFail: Bool = false) {
+        self.stats = stats
+        self.shouldFail = shouldFail
+    }
+
+    func fetchProfileStats() async throws -> ProfileStats {
+        if shouldFail {
+            throw ProfileServiceError.fetchFailed("Mock error")
+        }
+        return stats
+    }
 }

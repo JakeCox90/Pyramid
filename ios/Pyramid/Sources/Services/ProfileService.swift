@@ -1,5 +1,4 @@
 import Foundation
-import os
 import Supabase
 
 // MARK: - Error
@@ -70,23 +69,22 @@ final class ProfileService: ProfileServiceProtocol {
         do {
             let userId = try await client.auth.session.user.id.uuidString
 
-            // Query 1: league memberships with embedded league info
             let memberRows: [MemberWithLeagueRow] = try await client
                 .from("league_members")
-                .select("league_id, status, eliminated_in_gameweek_id, leagues(id, name, status, season)")
+                .select(
+                    "league_id, status, eliminated_in_gameweek_id, leagues(id, name, status, season)"
+                )
                 .eq("user_id", value: userId)
                 .execute()
                 .value
 
-            // Query 2: all picks for this user ordered by league + gameweek
-            let pickColumns = [
-                "id", "league_id", "user_id", "gameweek_id",
-                "fixture_id", "team_id", "team_name",
-                "is_locked", "result", "submitted_at"
-            ].joined(separator: ", ")
             let picks: [Pick] = try await client
                 .from("picks")
-                .select(pickColumns)
+                .select([
+                    "id, league_id, user_id, gameweek_id",
+                    "fixture_id, team_id, team_name",
+                    "is_locked, result, submitted_at"
+                ].joined(separator: ", "))
                 .eq("user_id", value: userId)
                 .order("league_id", ascending: true)
                 .order("gameweek_id", ascending: true)
@@ -110,10 +108,8 @@ final class ProfileService: ProfileServiceProtocol {
     ) -> ProfileStats {
         let totalLeaguesJoined = memberRows.count
         let wins = memberRows.filter { $0.status == .winner }.count
-
         let totalPicksMade = picks.count
         let longestStreak = calculateLongestStreak(picks: picks)
-
         let picksByLeague = Dictionary(grouping: picks, by: \.leagueId)
 
         let activeStreaks: [LeagueStreak] = memberRows
@@ -134,7 +130,8 @@ final class ProfileService: ProfileServiceProtocol {
         let leagueHistory: [CompletedLeague] = memberRows
             .filter { $0.leagues.status == .completed }
             .map { member in
-                let result: CompletedLeagueResult = member.status == .winner ? .winner : .eliminated
+                let result: CompletedLeagueResult =
+                    member.status == .winner ? .winner : .eliminated
                 return CompletedLeague(
                     id: member.leagueId,
                     leagueName: member.leagues.name,
@@ -154,7 +151,6 @@ final class ProfileService: ProfileServiceProtocol {
         )
     }
 
-    /// Longest consecutive `.survived` streak across all picks regardless of league.
     private func calculateLongestStreak(picks: [Pick]) -> Int {
         var longest = 0
         var current = 0
@@ -169,7 +165,6 @@ final class ProfileService: ProfileServiceProtocol {
         return longest
     }
 
-    /// Count consecutive `.survived` picks from the most recent (picks already sorted desc by gameweek).
     private func consecutiveSurvivedFromStart(picks: [Pick]) -> Int {
         var streak = 0
         for pick in picks {
