@@ -130,6 +130,12 @@ struct AuthView: View {
         )
         .disabled(viewModel.isLoading || viewModel.isSocialLoading)
         .accessibilityLabel("Sign in with Apple")
+        .overlay {
+            if viewModel.isSocialLoading {
+                ProgressView()
+                    .tint(Theme.Color.Content.Text.default)
+            }
+        }
     }
 
     // MARK: - Google Button
@@ -164,16 +170,8 @@ struct AuthView: View {
     }
 
     private var googleLogo: some View {
-        ZStack {
-            Circle()
-                .fill(Color.white)
-                .frame(width: 24, height: 24)
-            Image(systemName: "g.circle.fill")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 20, height: 20)
-                .foregroundStyle(Color(red: 0.26, green: 0.52, blue: 0.96))
-        }
+        GoogleGLogo()
+            .frame(width: 20, height: 20)
     }
 }
 
