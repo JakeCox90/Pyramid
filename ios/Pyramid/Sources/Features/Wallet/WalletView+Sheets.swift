@@ -44,7 +44,7 @@ struct TopUpSheet: View {
                     HStack(spacing: 8) {
                         Image(systemName: Theme.Icon.Status.info)
                             .foregroundStyle(warningYellow)
-                        Text("Payment processing coming soon — Stripe integration pending (PYR-25)")
+                        Text("Payment processing coming soon")
                             .font(.caption)
                             .foregroundStyle(warningYellow)
                     }
@@ -115,7 +115,7 @@ struct TopUpSheet: View {
                     Spacer()
 
                     Button {
-                        // TODO: PYR-25 GATE — wire up Stripe PaymentSheet here
+                        // Stripe payment integration pending GATE decision
                         isPresented = false
                     } label: {
                         Text("Continue")
