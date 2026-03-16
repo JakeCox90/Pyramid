@@ -34,7 +34,11 @@ struct MainTabView: View {
             switch DeepLinkScreen(rawValue: screen) {
             case .picks, .standings:
                 selectedTab = .leagues
-            case .wallet, .none:
+            case .wallet:
+                if FeatureFlags.paidFeaturesEnabled {
+                    selectedTab = .profile
+                }
+            case .none:
                 selectedTab = .profile
             }
         }
