@@ -15,6 +15,7 @@ struct RootView: View {
                 AuthView()
             }
         }
+        .preferredColorScheme(.dark)
         .task {
             await appState.loadSession()
         }

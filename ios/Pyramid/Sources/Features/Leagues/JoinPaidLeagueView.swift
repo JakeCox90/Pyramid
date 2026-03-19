@@ -1,7 +1,5 @@
 import SwiftUI
 
-private typealias Colors = JoinPaidLeagueColors
-
 // MARK: - JoinPaidLeagueView
 
 struct JoinPaidLeagueView: View {
@@ -14,7 +12,7 @@ struct JoinPaidLeagueView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Colors.bgPrimary.ignoresSafeArea()
+                Theme.Color.Surface.Background.page.ignoresSafeArea()
 
                 if let result = viewModel.joinResult {
                     switch result.status {
@@ -40,13 +38,12 @@ struct JoinPaidLeagueView: View {
                 ToolbarItem(placement: .cancellationAction) {
                     if viewModel.joinResult == nil {
                         Button("Cancel") { dismiss() }
-                            .foregroundStyle(Colors.textSecondary)
+                            .foregroundStyle(Theme.Color.Content.Text.subtle)
                     }
                 }
             }
             .task { await viewModel.load() }
         }
-        .preferredColorScheme(.dark)
     }
 
     // MARK: - State 1: Confirmation
@@ -96,9 +93,9 @@ struct JoinPaidLeagueView: View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s30) {
             Text("Prize Pot")
                 .font(Theme.Typography.headline)
-                .foregroundStyle(Colors.textPrimary)
+                .foregroundStyle(Theme.Color.Content.Text.default)
 
-            Divider().background(Colors.separator)
+            Divider().background(Theme.Color.Border.default)
 
             infoRow(label: "Entry fee", value: "£5.00")
             infoRow(
@@ -111,7 +108,7 @@ struct JoinPaidLeagueView: View {
             )
         }
         .padding(Theme.Spacing.s40)
-        .background(Colors.bgCard)
+        .background(Theme.Color.Surface.Background.container)
         .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.default))
     }
 
@@ -119,17 +116,17 @@ struct JoinPaidLeagueView: View {
         HStack {
             Text("Your wallet")
                 .font(Theme.Typography.subheadline)
-                .foregroundStyle(Colors.textSecondary)
+                .foregroundStyle(Theme.Color.Content.Text.subtle)
             Spacer()
             Text(viewModel.walletBalanceFormatted)
                 .font(Theme.Typography.headline)
                 .foregroundStyle(
                     viewModel.hasInsufficientFunds
-                        ? Colors.errorRed : Colors.successGreen
+                        ? Theme.Color.Status.Error.resting : Theme.Color.Status.Success.resting
                 )
         }
         .padding(Theme.Spacing.s40)
-        .background(Colors.bgCard)
+        .background(Theme.Color.Surface.Background.container)
         .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.default))
     }
 
@@ -137,7 +134,7 @@ struct JoinPaidLeagueView: View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s20) {
             Text("Rules")
                 .font(Theme.Typography.caption1)
-                .foregroundStyle(Colors.textSecondary)
+                .foregroundStyle(Theme.Color.Content.Text.subtle)
 
             ruleItem(
                 icon: Theme.Icon.Pick.pseudonymous,
@@ -153,7 +150,7 @@ struct JoinPaidLeagueView: View {
             )
         }
         .padding(Theme.Spacing.s40)
-        .background(Colors.bgCard)
+        .background(Theme.Color.Surface.Background.container)
         .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.default))
     }
 }

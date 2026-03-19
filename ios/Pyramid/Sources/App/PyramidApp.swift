@@ -9,7 +9,6 @@ struct PyramidApp: App {
         WindowGroup {
             RootView()
                 .environmentObject(appState)
-                .preferredColorScheme(.dark)
                 .onOpenURL { url in
                     SupabaseDependency.shared.client.auth.handle(url)
                 }

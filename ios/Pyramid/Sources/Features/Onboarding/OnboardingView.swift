@@ -14,7 +14,6 @@ struct OnboardingView: View {
         .background(
             Theme.Color.Surface.Background.page.ignoresSafeArea()
         )
-        .preferredColorScheme(.dark)
     }
 
     // MARK: - Skip

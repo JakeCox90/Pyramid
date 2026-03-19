@@ -179,5 +179,4 @@ struct AuthView: View {
 
 #Preview {
     AuthView()
-        .preferredColorScheme(.dark)
 }
