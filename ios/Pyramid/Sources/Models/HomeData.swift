@@ -12,6 +12,8 @@ struct HomeData: Sendable, Equatable {
     let memberStatuses: [String: LeagueMember.MemberStatus]
     /// Fixtures for the current gameweek, keyed by fixture ID.
     let fixtures: [Int: Fixture]
+    /// User's settled results from the last finished gameweek.
+    let lastGwResults: [LeagueResult]
 }
 
 /// A user's pick paired with its fixture and league name for homepage display.
@@ -33,4 +35,18 @@ struct LivePickContext: Identifiable, Equatable {
             return awayScore >= homeScore
         }
     }
+}
+
+/// A single league result from the previous settled gameweek.
+struct LeagueResult: Identifiable, Sendable, Equatable {
+    let leagueId: String
+    let leagueName: String
+    let gameweekName: String
+    let teamName: String
+    let result: PickResult
+    let homeTeamShort: String
+    let awayTeamShort: String
+    let homeScore: Int
+    let awayScore: Int
+    var id: String { leagueId }
 }

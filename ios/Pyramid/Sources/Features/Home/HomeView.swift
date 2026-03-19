@@ -72,6 +72,7 @@ struct HomeView: View {
             VStack(alignment: .leading, spacing: Theme.Spacing.s40) {
                 summarySection(data)
                 liveMatchSection()
+                lastGwResultsSection(data)
                 leaguesSection(data)
             }
             .padding(Theme.Spacing.s40)
