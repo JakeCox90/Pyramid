@@ -1,22 +1,5 @@
 import SwiftUI
 
-// MARK: - Dark theme colour constants (shared across JoinPaidLeagueView files)
-
-enum JoinPaidLeagueColors {
-    static let bgPrimary = Color(hex: "0A0A0A")
-    static let bgCard = Color(hex: "1C1C1E")
-    static let bgElevated = Color(hex: "2C2C2E")
-    static let textPrimary = Color.white
-    static let textSecondary = Color.white.opacity(0.6)
-    static let brandBlue = Color(hex: "1A56DB")
-    static let successGreen = Color(hex: "30D158")
-    static let errorRed = Color(hex: "FF453A")
-    static let warningYellow = Color(hex: "FFD60A")
-    static let separator = Color(hex: "38383A")
-}
-
-private typealias Colors = JoinPaidLeagueColors
-
 // MARK: - JoinPaidLeagueView state views
 
 extension JoinPaidLeagueView {
@@ -31,29 +14,29 @@ extension JoinPaidLeagueView {
 
             ZStack {
                 Circle()
-                    .fill(Colors.successGreen.opacity(0.15))
+                    .fill(Theme.Color.Status.Success.resting.opacity(0.15))
                     .frame(width: 96, height: 96)
                 Image(systemName: Theme.Icon.Status.success)
                     .font(.system(size: 56))
-                    .foregroundStyle(Colors.successGreen)
+                    .foregroundStyle(Theme.Color.Status.Success.resting)
                     .pulsing()
             }
 
             VStack(spacing: Theme.Spacing.s20) {
                 Text("You're in!")
                     .font(Theme.Typography.title1)
-                    .foregroundStyle(Colors.textPrimary)
+                    .foregroundStyle(Theme.Color.Content.Text.default)
 
                 Text("You are \(result.pseudonym)")
                     .font(Theme.Typography.subheadline)
-                    .foregroundStyle(Colors.textSecondary)
+                    .foregroundStyle(Theme.Color.Content.Text.subtle)
             }
 
             playerCountCard(result: result)
 
             Text("Starts when 5 players join")
                 .font(Theme.Typography.caption1)
-                .foregroundStyle(Colors.textSecondary)
+                .foregroundStyle(Theme.Color.Content.Text.subtle)
                 .multilineTextAlignment(.center)
 
             Spacer()
@@ -80,17 +63,17 @@ extension JoinPaidLeagueView {
             HStack {
                 Text("\(current) / \(total) players joined")
                     .font(Theme.Typography.headline)
-                    .foregroundStyle(Colors.textPrimary)
+                    .foregroundStyle(Theme.Color.Content.Text.default)
                 Spacer()
             }
 
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
                     RoundedRectangle(cornerRadius: Theme.Radius.r20)
-                        .fill(Colors.bgElevated)
+                        .fill(Theme.Color.Surface.Background.container)
                         .frame(height: 8)
                     RoundedRectangle(cornerRadius: Theme.Radius.r20)
-                        .fill(Colors.brandBlue)
+                        .fill(Theme.Color.Primary.resting)
                         .frame(
                             width: geo.size.width * progress,
                             height: 8
@@ -100,7 +83,7 @@ extension JoinPaidLeagueView {
             .frame(height: 8)
         }
         .padding(Theme.Spacing.s40)
-        .background(Colors.bgCard)
+        .background(Theme.Color.Surface.Background.container)
         .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.default))
     }
 
@@ -114,16 +97,16 @@ extension JoinPaidLeagueView {
 
             Image(systemName: Theme.Icon.League.trophyFill)
                 .font(.system(size: 64))
-                .foregroundStyle(Colors.warningYellow)
+                .foregroundStyle(Theme.Color.Status.Warning.resting)
 
             VStack(spacing: Theme.Spacing.s20) {
                 Text("Round started!")
                     .font(Theme.Typography.title1)
-                    .foregroundStyle(Colors.textPrimary)
+                    .foregroundStyle(Theme.Color.Content.Text.default)
 
                 Text("You are \(result.pseudonym)")
                     .font(Theme.Typography.subheadline)
-                    .foregroundStyle(Colors.textSecondary)
+                    .foregroundStyle(Theme.Color.Content.Text.subtle)
             }
 
             infoChip(
@@ -159,11 +142,11 @@ extension JoinPaidLeagueView {
         HStack {
             Text(label)
                 .font(Theme.Typography.subheadline)
-                .foregroundStyle(Colors.textSecondary)
+                .foregroundStyle(Theme.Color.Content.Text.subtle)
             Spacer()
             Text(value)
                 .font(Theme.Typography.subheadline)
-                .foregroundStyle(Colors.textPrimary)
+                .foregroundStyle(Theme.Color.Content.Text.default)
         }
     }
 
@@ -171,25 +154,25 @@ extension JoinPaidLeagueView {
         HStack(alignment: .top, spacing: Theme.Spacing.s20) {
             Image(systemName: icon)
                 .font(Theme.Typography.caption1)
-                .foregroundStyle(Colors.brandBlue)
+                .foregroundStyle(Theme.Color.Primary.resting)
                 .frame(width: 16)
             Text(text)
                 .font(Theme.Typography.caption1)
-                .foregroundStyle(Colors.textSecondary)
+                .foregroundStyle(Theme.Color.Content.Text.subtle)
         }
     }
 
     func errorBanner(message: String) -> some View {
         HStack(spacing: Theme.Spacing.s20) {
             Image(systemName: Theme.Icon.Status.errorFill)
-                .foregroundStyle(Colors.errorRed)
+                .foregroundStyle(Theme.Color.Status.Error.resting)
             Text(message)
                 .font(Theme.Typography.caption1)
-                .foregroundStyle(Colors.textPrimary)
+                .foregroundStyle(Theme.Color.Content.Text.default)
             Spacer()
         }
         .padding(Theme.Spacing.s30)
-        .background(Colors.errorRed.opacity(0.15))
+        .background(Theme.Color.Status.Error.resting.opacity(0.15))
         .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.r20))
     }
 
@@ -197,14 +180,14 @@ extension JoinPaidLeagueView {
         VStack(spacing: Theme.Spacing.s10) {
             Text(label)
                 .font(Theme.Typography.caption1)
-                .foregroundStyle(Colors.textSecondary)
+                .foregroundStyle(Theme.Color.Content.Text.subtle)
             Text(value)
                 .font(Theme.Typography.headline)
-                .foregroundStyle(Colors.textPrimary)
+                .foregroundStyle(Theme.Color.Content.Text.default)
         }
         .padding(.horizontal, Theme.Spacing.s40)
         .padding(.vertical, Theme.Spacing.s20)
-        .background(Colors.bgCard)
+        .background(Theme.Color.Surface.Background.container)
         .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.default))
     }
 }

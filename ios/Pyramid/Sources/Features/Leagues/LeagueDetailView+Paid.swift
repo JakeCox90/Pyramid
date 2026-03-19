@@ -12,10 +12,10 @@ struct PaidLeagueBadge: View {
             Text("Paid League")
                 .font(Theme.Typography.caption1)
         }
-        .foregroundStyle(Color(hex: "FFD60A"))
+        .foregroundStyle(Theme.Color.Status.Warning.resting)
         .padding(.horizontal, Theme.Spacing.s30)
         .padding(.vertical, Theme.Spacing.s10)
-        .background(Color(hex: "FFD60A").opacity(0.15))
+        .background(Theme.Color.Status.Warning.resting.opacity(0.15))
         .clipShape(Capsule())
     }
 }
@@ -81,7 +81,7 @@ struct PaidMemberRow: View {
             VStack(alignment: .trailing, spacing: Theme.Spacing.s10) {
                 Text(formatPence(prizePence))
                     .font(Theme.Typography.headline)
-                    .foregroundStyle(Color(hex: "30D158"))
+                    .foregroundStyle(Theme.Color.Status.Success.resting)
                 Text("Prize")
                     .font(Theme.Typography.caption2)
                     .foregroundStyle(Theme.Color.Content.Text.disabled)
@@ -95,15 +95,15 @@ struct PaidMemberRow: View {
 
     private func positionEmoji(_ position: Int) -> String {
         switch position {
-        case 1: return "🥇"
-        case 2: return "🥈"
-        case 3: return "🥉"
+        case 1: return "\u{1F947}"
+        case 2: return "\u{1F948}"
+        case 3: return "\u{1F949}"
         default: return "\(position)th"
         }
     }
 
     private func formatPence(_ pence: Int) -> String {
         let pounds = Double(pence) / 100
-        return String(format: "£%.2f", pounds)
+        return String(format: "\u{a3}%.2f", pounds)
     }
 }

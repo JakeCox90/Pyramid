@@ -64,7 +64,7 @@ struct JoinPaidLeagueView: View {
                 }
 
                 VStack(spacing: Theme.Spacing.s30) {
-                    Button("Confirm — Pay £5") {
+                    Button("Confirm \u{2014} Pay \u{a3}5") {
                         Task { await viewModel.joinLeague() }
                     }
                     .dsStyle(
@@ -97,7 +97,7 @@ struct JoinPaidLeagueView: View {
 
             Divider().background(Theme.Color.Border.default)
 
-            infoRow(label: "Entry fee", value: "£5.00")
+            infoRow(label: "Entry fee", value: "\u{a3}5.00")
             infoRow(
                 label: "Prize pot",
                 value: viewModel.estimatedPrizePot
