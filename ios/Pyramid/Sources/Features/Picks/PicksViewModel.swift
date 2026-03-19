@@ -9,6 +9,7 @@ final class PicksViewModel: ObservableObject {
     @Published var usedTeamIds: Set<Int> = []
     @Published var isLoading = false
     @Published var isSubmitting = false
+    @Published var submittingTeamId: Int?
     @Published var errorMessage: String?
     @Published var successMessage: String?
     @Published var showCelebration = false
@@ -61,7 +62,9 @@ final class PicksViewModel: ObservableObject {
 
     func submitPick(fixtureId: Int, teamId: Int, teamName: String) async {
         guard !isSubmitting else { return }
+        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
         isSubmitting = true
+        submittingTeamId = teamId
         errorMessage = nil
         successMessage = nil
         do {
@@ -74,7 +77,6 @@ final class PicksViewModel: ObservableObject {
             successMessage = "Pick confirmed: \(response.teamName)"
             celebratedTeamId = teamId
             showCelebration = true
-            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
             if let gw = gameweek {
                 currentPick = try await pickService.fetchMyPick(leagueId: leagueId, gameweekId: gw.id)
             }
@@ -88,6 +90,7 @@ final class PicksViewModel: ObservableObject {
             errorMessage = error.localizedDescription
         }
         isSubmitting = false
+        submittingTeamId = nil
     }
 
     func isTeamPicked(_ teamId: Int) -> Bool {
