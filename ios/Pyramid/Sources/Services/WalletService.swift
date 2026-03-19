@@ -90,8 +90,8 @@ final class WalletService: WalletServiceProtocol {
         }
     }
 
-    // TODO: PYR-25 GATE — Stripe PaymentSheet integration is pending.
-    // This stub will be replaced with real Stripe confirmation flow once PYR-25 is approved.
+    // Stripe PaymentSheet integration pending GATE decision
+    // This stub will be replaced with real Stripe confirmation flow once GATE is approved.
     func topUp(amountPence: Int, paymentIntentId: String) async throws {
         Log.wallet.info("Top-up initiated: \(amountPence)p")
         do {

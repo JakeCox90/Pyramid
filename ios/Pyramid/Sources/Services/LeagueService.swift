@@ -161,9 +161,15 @@ final class LeagueService: LeagueServiceProtocol {
                 .execute()
                 .value
 
-            return rows
+            let leagues = rows
                 .map { $0.leagues.toLeague() }
                 .sorted { $0.createdAt > $1.createdAt }
+
+            if FeatureFlags.paidFeaturesEnabled {
+                return leagues
+            } else {
+                return leagues.filter { $0.type == .free }
+            }
         } catch {
             throw LeagueServiceError.fetchFailed(error.localizedDescription)
         }

@@ -23,15 +23,21 @@ final class SupabaseDependency: @unchecked Sendable {
 
     let client: SupabaseClient
 
-    // swiftlint:disable line_length
-    #if DEBUG
-    private static let supabaseURL = "https://qvmzmeizluqcdkcjsqyd.supabase.co"
-    private static let supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2bXptZWl6bHVxY2RrY2pzcXlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5MDUxNzQsImV4cCI6MjA4ODQ4MTE3NH0.qi76NTlrxrW9CTHn7Y8pahEC0bpnkjF_R9u8eoIVaoo"
-    #else
-    private static let supabaseURL = "https://cracvbokmvryhhclzxxw.supabase.co"
-    private static let supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNyYWN2Ym9rbXZyeWhoY2x6eHh3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5MDUyODAsImV4cCI6MjA4ODQ4MTI4MH0.khHYUW_xHJk1mLGKB0COQImANCg8Y00EW8gxJi39YJo"
-    #endif
-    // swiftlint:enable line_length
+    private static let supabaseURL: String = {
+        guard let value = Bundle.main.infoDictionary?["SUPABASE_URL"] as? String,
+              !value.isEmpty else {
+            fatalError("SUPABASE_URL not set in Info.plist — check your .xcconfig")
+        }
+        return "https://\(value)"
+    }()
+
+    private static let supabaseAnonKey: String = {
+        guard let value = Bundle.main.infoDictionary?["SUPABASE_ANON_KEY"] as? String,
+              !value.isEmpty else {
+            fatalError("SUPABASE_ANON_KEY not set in Info.plist — check your .xcconfig")
+        }
+        return value
+    }()
 
     private init() {
         guard let url = URL(string: Self.supabaseURL) else {
