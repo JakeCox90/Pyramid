@@ -40,7 +40,7 @@ final class JoinLeagueViewModel: ObservableObject {
             let preview = try await leagueService.previewLeague(code: normalizedCode)
             step = .preview(preview)
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = AppError.from(error).userMessage
         }
 
         isLoading = false
@@ -56,7 +56,7 @@ final class JoinLeagueViewModel: ObservableObject {
             let response = try await leagueService.joinLeague(code: normalizedCode)
             step = .joined(response)
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = AppError.from(error).userMessage
         }
 
         isLoading = false

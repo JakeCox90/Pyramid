@@ -108,7 +108,7 @@ final class LeagueDetailViewModel: ObservableObject {
                 try await refreshFixtures()
             }
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = AppError.from(error).userMessage
         }
         isLoading = false
     }

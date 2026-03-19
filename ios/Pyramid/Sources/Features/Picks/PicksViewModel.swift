@@ -54,7 +54,7 @@ final class PicksViewModel: ObservableObject {
             currentPick = try await pickFetch
             usedTeamIds = try await usedTeamsFetch
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = AppError.from(error).userMessage
         }
         isLoading = false
     }
@@ -85,7 +85,7 @@ final class PicksViewModel: ObservableObject {
                 self?.celebratedTeamId = nil
             }
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = AppError.from(error).userMessage
         }
         isSubmitting = false
     }

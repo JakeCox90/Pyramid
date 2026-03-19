@@ -31,7 +31,7 @@ final class WalletViewModel: ObservableObject {
             wallet = fetchedWallet
             transactions = fetchedTx
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = AppError.from(error).userMessage
         }
         isLoading = false
     }
@@ -52,7 +52,7 @@ final class WalletViewModel: ObservableObject {
             showWithdrawSheet = false
             await load()
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = AppError.from(error).userMessage
             isLoading = false
         }
     }

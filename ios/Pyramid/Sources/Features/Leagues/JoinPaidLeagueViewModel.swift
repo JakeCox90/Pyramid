@@ -49,7 +49,7 @@ final class JoinPaidLeagueViewModel: ObservableObject {
         do {
             walletBalance = try await service.fetchWalletBalance()
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = AppError.from(error).userMessage
         }
         isLoading = false
     }
@@ -64,7 +64,7 @@ final class JoinPaidLeagueViewModel: ObservableObject {
         do {
             joinResult = try await service.joinPaidLeague()
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = AppError.from(error).userMessage
         }
         isLoading = false
     }

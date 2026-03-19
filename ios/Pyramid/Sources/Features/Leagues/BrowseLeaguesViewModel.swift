@@ -22,7 +22,7 @@ final class BrowseLeaguesViewModel: ObservableObject {
             leagues = try await leagueService.fetchOpenLeagues()
         } catch {
             Log.leagues.error("Fetch open leagues failed: \(error.localizedDescription)")
-            errorMessage = error.localizedDescription
+            errorMessage = AppError.from(error).userMessage
         }
         isLoading = false
     }
@@ -35,7 +35,7 @@ final class BrowseLeaguesViewModel: ObservableObject {
             leagues.removeAll { $0.id == league.id }
         } catch {
             Log.leagues.error("Join league failed: \(error.localizedDescription)")
-            errorMessage = error.localizedDescription
+            errorMessage = AppError.from(error).userMessage
         }
         joiningLeagueId = nil
     }

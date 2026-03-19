@@ -18,7 +18,7 @@ final class LeaguesViewModel: ObservableObject {
         do {
             leagues = try await leagueService.fetchMyLeagues()
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = AppError.from(error).userMessage
         }
         isLoading = false
     }

@@ -20,7 +20,7 @@ final class HomeViewModel: ObservableObject {
             homeData = try await homeService.fetchHomeData()
             updatePolling()
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = AppError.from(error).userMessage
         }
         isLoading = false
     }

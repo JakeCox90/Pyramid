@@ -20,7 +20,7 @@ final class PickHistoryViewModel: ObservableObject {
         do {
             picks = try await pickService.fetchMyPickHistory(leagueId: leagueId)
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = AppError.from(error).userMessage
         }
         isLoading = false
     }
