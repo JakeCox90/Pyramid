@@ -41,28 +41,9 @@ struct HomeView: View {
     // MARK: - Error
 
     private func errorView(_ message: String) -> some View {
-        VStack(spacing: Theme.Spacing.s40) {
-            Image(systemName: Theme.Icon.Status.error)
-                .font(.system(size: 40))
-                .foregroundStyle(Theme.Color.Status.Error.resting)
-
-            Text("Something went wrong")
-                .font(Theme.Typography.headline)
-                .foregroundStyle(Theme.Color.Content.Text.default)
-
-            Text(message)
-                .font(Theme.Typography.body)
-                .foregroundStyle(Theme.Color.Content.Text.subtle)
-                .multilineTextAlignment(.center)
-
-            Button("Try Again") {
-                Task { await viewModel.load() }
-            }
-            .buttonStyle(.borderedProminent)
-            .tint(Theme.Color.Primary.resting)
+        ErrorStateView(message: message) {
+            await viewModel.load()
         }
-        .padding(Theme.Spacing.s60)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     // MARK: - Content

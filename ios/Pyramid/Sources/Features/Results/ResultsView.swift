@@ -36,40 +36,17 @@ struct ResultsView: View {
     // MARK: - Subviews
 
     private func errorView(message: String) -> some View {
-        VStack(spacing: Theme.Spacing.s40) {
-            Image(systemName: Theme.Icon.Status.error)
-                .font(.system(size: 48))
-                .foregroundStyle(Theme.Color.Border.default)
-            Text(message)
-                .font(Theme.Typography.subheadline)
-                .foregroundStyle(
-                    Theme.Color.Content.Text.disabled
-                )
-                .multilineTextAlignment(.center)
+        ErrorStateView(message: message) {
+            await viewModel.load()
         }
-        .padding(.horizontal, Theme.Spacing.s40)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     private var emptyView: some View {
-        VStack(spacing: Theme.Spacing.s40) {
-            Image(systemName: Theme.Icon.Pick.gameweek)
-                .font(.system(size: 48))
-                .foregroundStyle(Theme.Color.Border.default)
-            Text("No results yet")
-                .font(Theme.Typography.title3)
-                .foregroundStyle(
-                    Theme.Color.Content.Text.default
-                )
-            Text("Results will appear here once gameweeks are settled.")
-                .font(Theme.Typography.subheadline)
-                .foregroundStyle(
-                    Theme.Color.Content.Text.disabled
-                )
-                .multilineTextAlignment(.center)
-        }
-        .padding(.horizontal, Theme.Spacing.s40)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        EmptyStateView(
+            icon: Theme.Icon.Pick.gameweek,
+            title: "No results yet",
+            subtitle: "Results will appear here once gameweeks are settled."
+        )
     }
 
     private var roundsList: some View {

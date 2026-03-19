@@ -100,40 +100,9 @@ struct LeaguesView: View {
     }
 
     private func errorStateView(message: String) -> some View {
-        VStack(spacing: Theme.Spacing.s60) {
-            Spacer()
-
-            VStack(spacing: Theme.Spacing.s40) {
-                Image(systemName: Theme.Icon.Status.error)
-                    .font(.system(size: 56))
-                    .foregroundStyle(Theme.Color.Border.default)
-
-                VStack(spacing: Theme.Spacing.s20) {
-                    Text("Something went wrong")
-                        .font(Theme.Typography.title3)
-                        .foregroundStyle(
-                            Theme.Color.Content.Text.default
-                        )
-
-                    Text(message)
-                        .font(Theme.Typography.subheadline)
-                        .foregroundStyle(
-                            Theme.Color.Content.Text.disabled
-                        )
-                        .multilineTextAlignment(.center)
-                }
-            }
-
-            Button("Try Again") {
-                Task { await viewModel.fetchLeagues() }
-            }
-            .dsStyle(.primary)
-            .padding(.horizontal, Theme.Spacing.s40)
-
-            Spacer()
-            Spacer()
+        ErrorStateView(message: message) {
+            await viewModel.fetchLeagues()
         }
-        .padding(.horizontal, Theme.Spacing.s40)
     }
 
     private var leaguesList: some View {
