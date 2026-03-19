@@ -77,7 +77,11 @@ struct WalletView: View {
                     let withdrawable = viewModel.wallet?.withdrawablePence ?? 0
                     Text(viewModel.wallet?.withdrawableFormatted ?? "–")
                         .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(withdrawable > 0 ? Theme.Color.Status.Success.resting : Theme.Color.Content.Text.subtle)
+                        .foregroundStyle(
+                            withdrawable > 0
+                                ? Theme.Color.Status.Success.resting
+                                : Theme.Color.Content.Text.subtle
+                        )
                 }
                 .frame(maxWidth: .infinity)
 
@@ -119,7 +123,11 @@ struct WalletView: View {
                 } label: {
                     Text("Withdraw")
                         .font(.headline)
-                        .foregroundStyle(withdrawable > 0 ? Theme.Color.Content.Text.default : Theme.Color.Content.Text.disabled)
+                        .foregroundStyle(
+                            withdrawable > 0
+                                ? Theme.Color.Content.Text.default
+                                : Theme.Color.Content.Text.disabled
+                        )
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
                         .background(Theme.Color.Surface.Background.container)
@@ -212,7 +220,11 @@ private struct TransactionRow: View {
 
             Text((transaction.isCredit ? "+" : "-") + transaction.amountFormatted)
                 .font(.subheadline.weight(.semibold))
-                .foregroundStyle(transaction.isCredit ? Theme.Color.Status.Success.resting : Theme.Color.Status.Error.resting)
+                .foregroundStyle(
+                    transaction.isCredit
+                        ? Theme.Color.Status.Success.resting
+                        : Theme.Color.Status.Error.resting
+                )
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
