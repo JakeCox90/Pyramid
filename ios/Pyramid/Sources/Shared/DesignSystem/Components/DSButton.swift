@@ -12,8 +12,8 @@ enum DSButtonSize {
     var height: CGFloat {
         switch self {
         case .large:  return 50
-        case .medium: return 40
-        case .small:  return 32
+        case .medium: return 44
+        case .small:  return 44
         }
     }
 

@@ -88,6 +88,7 @@ struct OnboardingView: View {
                             : Theme.Color.Border.default
                     )
                     .frame(width: 8, height: 8)
+                    .accessibilityHidden(true)
             }
         }
         .padding(.bottom, Theme.Spacing.s40)
