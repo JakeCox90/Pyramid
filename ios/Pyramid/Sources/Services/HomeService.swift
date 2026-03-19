@@ -62,6 +62,7 @@ private struct HomeMemberIdRow: Decodable {
 
 protocol HomeServiceProtocol: Sendable {
     func fetchHomeData() async throws -> HomeData
+    func fetchFixtures(gameweekId: Int) async throws -> [Fixture]
 }
 
 // MARK: - Implementation
@@ -86,11 +87,19 @@ final class HomeService: HomeServiceProtocol {
         let gameweek = try await gameweekFetch
 
         var picks: [String: Pick] = [:]
+        var fixtures: [Int: Fixture] = [:]
         if let gw = gameweek {
-            picks = try await fetchPicks(
+            async let picksFetch = fetchPicks(
                 userId: userId,
                 gameweekId: gw.id,
                 leagueIds: leagues.map(\.id)
+            )
+            async let fixturesFetch = fetchFixtures(gameweekId: gw.id)
+
+            picks = try await picksFetch
+            let fixturesList = try await fixturesFetch
+            fixtures = Dictionary(
+                uniqueKeysWithValues: fixturesList.map { ($0.id, $0) }
             )
         }
 
@@ -101,13 +110,34 @@ final class HomeService: HomeServiceProtocol {
             leagues: leagues,
             gameweek: gameweek,
             picks: picks,
-            memberStatuses: memberStatuses
+            memberStatuses: memberStatuses,
+            fixtures: fixtures
         )
+    }
+
+    func fetchFixtures(gameweekId: Int) async throws -> [Fixture] {
+        let rows: [Fixture] = try await client
+            .from("fixtures")
+            .select(
+                """
+                id, gameweek_id, home_team_id, home_team_name, \
+                home_team_short, home_team_logo, away_team_id, \
+                away_team_name, away_team_short, away_team_logo, \
+                kickoff_at, status, home_score, away_score
+                """
+            )
+            .eq("gameweek_id", value: gameweekId)
+            .execute()
+            .value
+
+        return rows
     }
 
     // MARK: - Private helpers
 
-    private func fetchLeaguesWithCounts(userId: String) async throws -> [League] {
+    private func fetchLeaguesWithCounts(
+        userId: String
+    ) async throws -> [League] {
         let memberRows: [HomeMemberIdRow] = try await client
             .from("league_members")
             .select("league_id")
@@ -134,7 +164,9 @@ final class HomeService: HomeServiceProtocol {
         return rows.map { $0.toLeague() }
     }
 
-    private func fetchMemberStatuses(userId: String) async throws -> [String: LeagueMember.MemberStatus] {
+    private func fetchMemberStatuses(
+        userId: String
+    ) async throws -> [String: LeagueMember.MemberStatus] {
         let rows: [HomeMemberRow] = try await client
             .from("league_members")
             .select("league_id, status")
@@ -142,13 +174,20 @@ final class HomeService: HomeServiceProtocol {
             .execute()
             .value
 
-        return Dictionary(uniqueKeysWithValues: rows.map { ($0.leagueId, $0.status) })
+        return Dictionary(
+            uniqueKeysWithValues: rows.map { ($0.leagueId, $0.status) }
+        )
     }
 
     private func fetchCurrentGameweek() async throws -> Gameweek? {
         let rows: [Gameweek] = try await client
             .from("gameweeks")
-            .select("id, season, round_number, name, deadline_at, is_current, is_finished")
+            .select(
+                """
+                id, season, round_number, name, \
+                deadline_at, is_current, is_finished
+                """
+            )
             .eq("is_current", value: true)
             .limit(1)
             .execute()
@@ -178,6 +217,8 @@ final class HomeService: HomeServiceProtocol {
             .execute()
             .value
 
-        return Dictionary(uniqueKeysWithValues: rows.map { ($0.leagueId, $0) })
+        return Dictionary(
+            uniqueKeysWithValues: rows.map { ($0.leagueId, $0) }
+        )
     }
 }
