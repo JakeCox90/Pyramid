@@ -8,6 +8,7 @@ enum AppError: LocalizedError {
     case network(underlying: Error)
     case auth(underlying: Error)
     case server(underlying: Error)
+    case domain(message: String, underlying: Error)
     case unknown(underlying: Error)
 
     // MARK: User-facing message
@@ -20,6 +21,8 @@ enum AppError: LocalizedError {
             return "Your session has expired. Please sign in again."
         case .server:
             return "Something went wrong on our end. Please try again later."
+        case .domain(let message, _):
+            return message
         case .unknown:
             return "Something went wrong. Please try again."
         }
@@ -61,6 +64,12 @@ enum AppError: LocalizedError {
         let serverKeywords = ["500", "502", "503", "internal server error"]
         if serverKeywords.contains(where: { description.contains($0) }) {
             return .server(underlying: error)
+        }
+
+        // Domain-specific errors that already provide user-facing messages
+        if let localizedError = error as? LocalizedError,
+           let message = localizedError.errorDescription {
+            return .domain(message: message, underlying: error)
         }
 
         return .unknown(underlying: error)
