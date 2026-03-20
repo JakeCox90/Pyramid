@@ -1,19 +1,19 @@
 // Edge Function: reset-dev-data
 // Resets the dev environment seed data by calling the dev_reset_data Postgres function.
-// Protected by environment check and service role key validation.
+// Protected by environment check and user JWT authentication.
 //
 // POST /reset-dev-data
-// Headers: Authorization: Bearer <service-role-key>
-// Body: { "mode": "game" | "full", "userId": "<uuid>" }
+// Headers: Authorization: Bearer <user-jwt>
+// Body: { "mode": "game" | "full" }
 // Response 200: { success: true, mode: string, clearOnboarding: boolean }
 // Response 403: { error: "Reset is only available in dev environment" }
 
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders, getServiceClient } from "../_shared/supabase.ts";
 import { createLogger } from "../_shared/logger.ts";
 
 interface ResetBody {
   mode: "game" | "full";
-  userId: string;
 }
 
 interface ErrorResponse {
@@ -37,7 +37,6 @@ function errorResponse(
 Deno.serve(async (req) => {
   const origin = req.headers.get("origin");
 
-  // CORS preflight
   if (req.method === "OPTIONS") {
     return new Response(null, { status: 204, headers: corsHeaders(origin) });
   }
@@ -60,19 +59,29 @@ Deno.serve(async (req) => {
     );
   }
 
-  // ── Service role key validation ───────────────────────────────────────────
+  // ── User JWT authentication ──────────────────────────────────────────────
   const authHeader = req.headers.get("Authorization");
-  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-
-  if (!authHeader || !serviceRoleKey) {
+  if (!authHeader) {
     return errorResponse("Unauthorized", "UNAUTHORIZED", 401, origin);
   }
 
-  const token = authHeader.replace("Bearer ", "");
-  if (token !== serviceRoleKey) {
-    log.warn("Invalid service role key");
+  const supabaseUrl = Deno.env.get("SUPABASE_URL");
+  const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY");
+  if (!supabaseUrl || !supabaseAnonKey) {
+    return errorResponse("Server misconfiguration", "SERVER_ERROR", 500, origin);
+  }
+
+  const userClient = createClient(supabaseUrl, supabaseAnonKey, {
+    global: { headers: { Authorization: authHeader } },
+    auth: { autoRefreshToken: false, persistSession: false },
+  });
+
+  const { data: { user }, error: authError } = await userClient.auth.getUser();
+  if (authError || !user) {
     return errorResponse("Unauthorized", "UNAUTHORIZED", 401, origin);
   }
+
+  const userId = user.id;
 
   // ── Parse and validate body ───────────────────────────────────────────────
   let body: ResetBody;
@@ -82,7 +91,7 @@ Deno.serve(async (req) => {
     return errorResponse("Invalid JSON body", "INVALID_BODY", 400, origin);
   }
 
-  const { mode, userId } = body;
+  const { mode } = body;
 
   if (mode !== "game" && mode !== "full") {
     return errorResponse(
@@ -93,13 +102,9 @@ Deno.serve(async (req) => {
     );
   }
 
-  if (!userId || typeof userId !== "string") {
-    return errorResponse("userId is required", "INVALID_BODY", 400, origin);
-  }
-
   log.info("Starting dev reset", { mode, userId });
 
-  // ── Call the Postgres function ────────────────────────────────────────────
+  // ── Call the Postgres function (via service role to bypass RLS) ──────────
   try {
     const supabase = getServiceClient();
 
