@@ -22,6 +22,7 @@ struct HomeView: View {
             .background(
                 Theme.Color.Surface.Background.page.ignoresSafeArea()
             )
+            .task { await viewModel.load() }
         }
     }
 
@@ -59,7 +60,6 @@ struct HomeView: View {
             .padding(Theme.Spacing.s40)
         }
         .refreshable { await viewModel.load() }
-        .task { await viewModel.load() }
         .onDisappear { viewModel.stopPolling() }
     }
 

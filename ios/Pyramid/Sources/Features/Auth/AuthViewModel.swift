@@ -4,8 +4,8 @@ import SwiftUI
 @MainActor
 final class AuthViewModel: ObservableObject {
     #if DEBUG
-    @Published var email = "test@pyramid.app"
-    @Published var password = "Pyramid2026Dev"
+    @Published var email = "jakecox@hotmail.co.uk"
+    @Published var password = "test-password"
     #else
     @Published var email = ""
     @Published var password = ""
