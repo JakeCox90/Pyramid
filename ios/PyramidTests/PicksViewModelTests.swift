@@ -257,6 +257,14 @@ final class MockPickService: PickServiceProtocol {
         return usedTeamIds
     }
 
+    func fetchUsedTeams(leagueId: String) async throws -> [Int: String] {
+        if shouldFail { throw URLError(.badServerResponse) }
+        return Dictionary(
+            usedTeamIds.map { ($0, "Team \($0)") },
+            uniquingKeysWith: { first, _ in first }
+        )
+    }
+
     func fetchMyPickHistory(leagueId: String) async throws -> [Pick] {
         if shouldFail { throw URLError(.badServerResponse) }
         if let pick = currentPick { return [pick] }

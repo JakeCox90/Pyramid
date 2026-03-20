@@ -21,105 +21,261 @@ struct FixturePickRow: View {
     }
 
     var body: some View {
-        DSCard {
-            VStack(spacing: Theme.Spacing.s30) {
-                Text(kickoffText)
-                    .font(Theme.Typography.caption1)
-                    .foregroundStyle(Theme.Color.Content.Text.disabled)
-                    .frame(maxWidth: .infinity)
+        VStack(spacing: Theme.Spacing.s40) {
+            fixtureHeader
+            teamRow
+            pickButtons
+        }
+        .padding(Theme.Spacing.s40)
+        .background(Theme.Color.Surface.Background.container)
+        .clipShape(
+            RoundedRectangle(cornerRadius: Theme.Radius.r40)
+        )
+    }
+}
 
-                HStack(spacing: Theme.Spacing.s30) {
-                    teamButton(
-                        teamId: fixture.homeTeamId,
-                        teamName: fixture.homeTeamName,
-                        shortName: fixture.homeTeamShort,
-                        logoURL: fixture.homeTeamLogo,
-                        score: fixture.homeScore
-                    )
+// MARK: - Header & Team Row
 
-                    VStack(spacing: Theme.Spacing.s10) {
-                        if fixture.status.isLive || fixture.status.isFinished {
-                            Text(fixture.status.displayLabel)
-                                .font(Theme.Typography.caption1.bold())
-                                .foregroundStyle(
-                                    fixture.status.isLive
-                                        ? Theme.Color.Status.Error.resting
-                                        : Theme.Color.Content.Text.disabled
-                                )
-                        } else {
-                            Text("vs")
-                                .font(Theme.Typography.caption1)
-                                .foregroundStyle(Theme.Color.Content.Text.disabled)
-                        }
-                    }
+extension FixturePickRow {
+    private var fixtureHeader: some View {
+        HStack {
+            Text(kickoffText)
+                .font(Theme.Typography.caption1)
+                .foregroundStyle(
+                    Theme.Color.Content.Text.disabled
+                )
 
-                    teamButton(
-                        teamId: fixture.awayTeamId,
-                        teamName: fixture.awayTeamName,
-                        shortName: fixture.awayTeamShort,
-                        logoURL: fixture.awayTeamLogo,
-                        score: fixture.awayScore
-                    )
+            Spacer()
+
+            if fixture.status.isLive {
+                HStack(spacing: Theme.Spacing.s10) {
+                    PulsingDot()
+                    Text(fixture.status.displayLabel)
+                        .font(Theme.Typography.caption1.bold())
+                        .foregroundStyle(
+                            Theme.Color.Status.Error.resting
+                        )
                 }
+            } else if fixture.status.isFinished {
+                Text(fixture.status.displayLabel)
+                    .font(Theme.Typography.caption1.bold())
+                    .foregroundStyle(
+                        Theme.Color.Content.Text.disabled
+                    )
             }
         }
     }
 
+    private var teamRow: some View {
+        HStack {
+            teamDisplay(
+                teamId: fixture.homeTeamId,
+                teamName: fixture.homeTeamName,
+                logoURL: fixture.homeTeamLogo
+            )
+
+            Spacer()
+
+            scoreOrVs
+
+            Spacer()
+
+            teamDisplay(
+                teamId: fixture.awayTeamId,
+                teamName: fixture.awayTeamName,
+                logoURL: fixture.awayTeamLogo
+            )
+        }
+    }
+
+    @ViewBuilder private var scoreOrVs: some View {
+        if fixture.status.isLive || fixture.status.isFinished,
+           let homeScore = fixture.homeScore,
+           let awayScore = fixture.awayScore {
+            Text("\(homeScore) - \(awayScore)")
+                .font(Theme.Typography.title2)
+                .foregroundStyle(
+                    Theme.Color.Content.Text.default
+                )
+                .monospacedDigit()
+        } else {
+            Text("vs")
+                .font(Theme.Typography.caption1)
+                .foregroundStyle(
+                    Theme.Color.Content.Text.disabled
+                )
+        }
+    }
+
     @ViewBuilder
-    private func teamButton(
-        teamId: Int, teamName: String,
-        shortName: String, logoURL: String?, score: Int?
+    private func teamDisplay(
+        teamId: Int,
+        teamName: String,
+        logoURL: String?
+    ) -> some View {
+        let isUsed = usedTeamIds.contains(teamId)
+            && selectedTeamId != teamId
+
+        VStack(spacing: Theme.Spacing.s20) {
+            TeamBadge(
+                teamName: teamName,
+                logoURL: logoURL,
+                size: 64
+            )
+            .opacity(isUsed ? 0.4 : 1.0)
+
+            Text(teamName)
+                .font(Theme.Typography.caption1.bold())
+                .foregroundStyle(
+                    Theme.Color.Content.Text.default
+                )
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+        }
+        .frame(width: 80)
+    }
+}
+
+// MARK: - Pick Buttons
+
+extension FixturePickRow {
+    private var pickButtons: some View {
+        HStack(spacing: Theme.Spacing.s30) {
+            pickButton(
+                teamId: fixture.homeTeamId,
+                teamName: fixture.homeTeamName,
+                label: "Home"
+            )
+
+            pickButton(
+                teamId: fixture.awayTeamId,
+                teamName: fixture.awayTeamName,
+                label: "Away"
+            )
+        }
+    }
+
+    @ViewBuilder
+    private func pickButton(
+        teamId: Int,
+        teamName: String,
+        label: String
     ) -> some View {
         let isPicked = selectedTeamId == teamId
         let isUsed = usedTeamIds.contains(teamId) && !isPicked
-        let isThisTeamSubmitting = submittingTeamId == teamId
-        let isOtherTeamSubmitting = submittingTeamId != nil && !isThisTeamSubmitting
+        let isThisSubmitting = submittingTeamId == teamId
+        let isOtherSubmitting = submittingTeamId != nil
+            && !isThisSubmitting
         let isDisabled = isLocked || isSubmitting || isUsed
 
         Button {
             guard !isDisabled else { return }
             onPick(teamId, teamName)
         } label: {
-            VStack(spacing: Theme.Spacing.s10) {
-                if isThisTeamSubmitting {
-                    ProgressView().frame(height: 32)
-                } else {
-                    if let score {
-                        Text("\(score)")
-                            .font(Theme.Typography.title2.bold())
-                            .foregroundStyle(Theme.Color.Content.Text.default)
-                    }
-                    TeamBadge(teamName: teamName, logoURL: logoURL, size: 32)
-                    Text(teamName)
-                        .font(Theme.Typography.caption2)
-                        .foregroundStyle(
-                            isPicked ? Color.white.opacity(0.8) : Theme.Color.Content.Text.disabled
-                        )
-                        .lineLimit(1).minimumScaleFactor(0.7)
-                    if isUsed {
-                        Text("Used").font(Theme.Typography.caption2)
-                            .foregroundStyle(Theme.Color.Status.Error.resting)
-                    }
-                }
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, Theme.Spacing.s30)
-            .background(isPicked ? Theme.Color.Content.Text.default : Theme.Color.Surface.Background.page)
-            .clipShape(RoundedRectangle(cornerRadius: 8))
-            .overlay(
-                RoundedRectangle(cornerRadius: 8)
-                    .stroke(isPicked ? Theme.Color.Content.Text.default : Theme.Color.Border.default, lineWidth: 1)
+            pickButtonLabel(
+                isPicked: isPicked,
+                isUsed: isUsed,
+                isThisSubmitting: isThisSubmitting,
+                label: label
             )
-            .opacity(isThisTeamSubmitting ? 0.7 : (isOtherTeamSubmitting || (isDisabled && !isPicked)) ? 0.5 : 1.0)
-            .scaleEffect((!reduceMotion && isPicked && celebratedTeamId == teamId) ? 1.05 : 1.0)
+            .frame(maxWidth: .infinity)
+            .frame(height: 40)
+            .background(pickButtonBackground(isPicked: isPicked))
+            .clipShape(Capsule())
+            .opacity(pickButtonOpacity(
+                isThisSubmitting: isThisSubmitting,
+                isOtherSubmitting: isOtherSubmitting,
+                isDisabled: isDisabled,
+                isPicked: isPicked
+            ))
+            .scaleEffect(pickButtonScale(
+                isPicked: isPicked, teamId: teamId
+            ))
             .animation(
-                reduceMotion ? nil : .spring(response: 0.3, dampingFraction: 0.5),
+                reduceMotion ? nil : .spring(
+                    response: 0.3, dampingFraction: 0.5
+                ),
                 value: celebratedTeamId
             )
-            .overlay { if showCelebration && celebratedTeamId == teamId { ConfettiView() } }
+            .overlay {
+                if showCelebration && celebratedTeamId == teamId {
+                    ConfettiView()
+                }
+            }
         }
         .disabled(isDisabled && !isPicked)
-        .accessibilityLabel(isUsed ? "\(teamName), already used" : "Pick \(teamName)")
-        .accessibilityHint(isDisabled ? "" : "Double-tap to select this team")
+        .accessibilityLabel(pickAccessibilityLabel(
+            teamName: teamName,
+            isUsed: isUsed,
+            isPicked: isPicked
+        ))
+        .accessibilityHint(
+            isDisabled ? "" : "Double-tap to select this team"
+        )
+    }
+
+    @ViewBuilder
+    private func pickButtonLabel(
+        isPicked: Bool,
+        isUsed: Bool,
+        isThisSubmitting: Bool,
+        label: String
+    ) -> some View {
+        if isThisSubmitting {
+            ProgressView()
+                .tint(Theme.Color.Content.Text.default)
+        } else if isUsed {
+            Text("USED")
+                .font(Theme.Typography.caption1.bold())
+                .foregroundStyle(
+                    Theme.Color.Content.Text.disabled
+                )
+                .tracking(0.8)
+        } else {
+            Text(isPicked ? "PICKED" : label.uppercased())
+                .font(Theme.Typography.caption1.bold())
+                .foregroundStyle(
+                    isPicked
+                        ? Theme.Color.Primary.text
+                        : Theme.Color.Content.Text.default
+                )
+                .tracking(0.8)
+        }
+    }
+
+    private func pickButtonBackground(
+        isPicked: Bool
+    ) -> Color {
+        isPicked
+            ? Theme.Color.Primary.resting
+            : Theme.Color.Surface.Background.highlight
+    }
+
+    private func pickButtonOpacity(
+        isThisSubmitting: Bool,
+        isOtherSubmitting: Bool,
+        isDisabled: Bool,
+        isPicked: Bool
+    ) -> Double {
+        if isThisSubmitting { return 0.7 }
+        if isOtherSubmitting || (isDisabled && !isPicked) {
+            return 0.4
+        }
+        return 1.0
+    }
+
+    private func pickButtonScale(
+        isPicked: Bool, teamId: Int
+    ) -> CGFloat {
+        (!reduceMotion && isPicked && celebratedTeamId == teamId)
+            ? 1.05 : 1.0
+    }
+
+    private func pickAccessibilityLabel(
+        teamName: String, isUsed: Bool, isPicked: Bool
+    ) -> String {
+        if isUsed { return "\(teamName), already used" }
+        if isPicked { return "\(teamName), picked" }
+        return "Pick \(teamName)"
     }
 }

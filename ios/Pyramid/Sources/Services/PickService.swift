@@ -28,6 +28,7 @@ protocol PickServiceProtocol: Sendable {
     func fetchFixtures(for gameweekId: Int) async throws -> [Fixture]
     func fetchMyPick(leagueId: String, gameweekId: Int) async throws -> Pick?
     func fetchUsedTeamIds(leagueId: String) async throws -> Set<Int>
+    func fetchUsedTeams(leagueId: String) async throws -> [Int: String]
     func submitPick(leagueId: String, fixtureId: Int, teamId: Int, teamName: String) async throws -> SubmitPickResponse
     func fetchMyPickHistory(leagueId: String) async throws -> [Pick]
 }
@@ -98,6 +99,33 @@ final class PickService: PickServiceProtocol {
             return Set(rows.map(\.teamId))
         } catch {
             throw PickServiceError.fetchFailed(error.localizedDescription)
+        }
+    }
+
+    func fetchUsedTeams(leagueId: String) async throws -> [Int: String] {
+        struct UsedTeamRow: Decodable {
+            let teamId: Int
+            let teamName: String
+            enum CodingKeys: String, CodingKey {
+                case teamId = "team_id"
+                case teamName = "team_name"
+            }
+        }
+        do {
+            let rows: [UsedTeamRow] = try await client
+                .from("used_teams")
+                .select("team_id, team_name")
+                .eq("league_id", value: leagueId)
+                .execute()
+                .value
+            return Dictionary(
+                rows.map { ($0.teamId, $0.teamName) },
+                uniquingKeysWith: { first, _ in first }
+            )
+        } catch {
+            throw PickServiceError.fetchFailed(
+                error.localizedDescription
+            )
         }
     }
 
