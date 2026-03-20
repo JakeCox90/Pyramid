@@ -84,7 +84,7 @@ struct TeamBadge: View {
         "west ham united": "TeamBadges/West_Ham_United",
         "wolverhampton": "TeamBadges/Wolverhampton",
         "wolverhampton wanderers": "TeamBadges/Wolverhampton",
-        "wolves": "TeamBadges/Wolverhampton",
+        "wolves": "TeamBadges/Wolverhampton"
     ]
 
     static func localBadge(for teamName: String) -> Image? {

@@ -43,11 +43,12 @@ struct PicksView: View {
                     } label: {
                         Image(systemName: "chevron.left")
                             .font(
-                                .system(size: 16, weight: .semibold)
+                                .system(
+                                    size: 16,
+                                    weight: .semibold
+                                )
                             )
-                            .foregroundStyle(
-                                Theme.Color.Content.Text.default
-                            )
+                            .foregroundStyle(Color.white)
                     }
                 }
             }
@@ -61,7 +62,7 @@ struct PicksView: View {
     }
 }
 
-// MARK: - Header & Used Teams
+// MARK: - Header
 
 extension PicksView {
     var headerSection: some View {
@@ -70,25 +71,27 @@ extension PicksView {
                 Text("GAMEWEEK \(gameweek.roundNumber)")
                     .font(Theme.Typography.caption1)
                     .foregroundStyle(
-                        Theme.Color.Content.Text.disabled
+                        Color.white.opacity(0.6)
                     )
                     .tracking(1.2)
             }
 
             Text("Pick a team")
                 .font(Theme.Typography.title1)
-                .foregroundStyle(
-                    Theme.Color.Content.Text.default
-                )
+                .foregroundStyle(Color.white)
 
             if !viewModel.usedTeamIds.isEmpty {
-                usedTeamsRail
+                TeamsUsedPillContainer(
+                    teamNames: viewModel.usedTeamNames,
+                    count: viewModel.usedTeamIds.count
+                )
             }
 
             if let deadline = viewModel.deadlineText {
                 HStack(spacing: Theme.Spacing.s10) {
                     Image(
-                        systemName: Theme.Icon.Pick.timeRemaining
+                        systemName: Theme.Icon.Pick
+                            .timeRemaining
                     )
                     .font(.system(size: 12))
                     .accessibilityHidden(true)
@@ -102,45 +105,7 @@ extension PicksView {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.horizontal, Theme.Spacing.s40)
-    }
-
-    private var usedTeamsRail: some View {
-        HStack(spacing: -8) {
-            ForEach(
-                viewModel.usedTeamNames, id: \.self
-            ) { name in
-                TeamBadge(
-                    teamName: name,
-                    logoURL: nil,
-                    size: 28
-                )
-                .clipShape(Circle())
-                .overlay(
-                    Circle()
-                        .stroke(
-                            Theme.Color.Surface.Background.page,
-                            lineWidth: 2
-                        )
-                )
-            }
-
-            let count = viewModel.usedTeamIds.count
-            Text(
-                "\(count) team\(count == 1 ? "" : "s") used"
-            )
-            .font(Theme.Typography.caption2)
-            .foregroundStyle(
-                Theme.Color.Content.Text.subtle
-            )
-            .padding(.horizontal, Theme.Spacing.s30)
-            .padding(.vertical, Theme.Spacing.s10)
-            .background(
-                Theme.Color.Surface.Background.highlight
-            )
-            .clipShape(Capsule())
-            .padding(.leading, Theme.Spacing.s20)
-        }
+        .padding(.horizontal, Theme.Spacing.s60)
     }
 }
 
@@ -149,6 +114,7 @@ extension PicksView {
 extension PicksView {
     private var loadingView: some View {
         ProgressView()
+            .tint(Color.white)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
@@ -156,11 +122,13 @@ extension PicksView {
         VStack(spacing: Theme.Spacing.s40) {
             Image(systemName: Theme.Icon.Status.error)
                 .font(.system(size: 48))
-                .foregroundStyle(Theme.Color.Border.default)
+                .foregroundStyle(
+                    Color.white.opacity(0.3)
+                )
             Text(message)
                 .font(Theme.Typography.subheadline)
                 .foregroundStyle(
-                    Theme.Color.Content.Text.disabled
+                    Color.white.opacity(0.6)
                 )
                 .multilineTextAlignment(.center)
         }
@@ -172,18 +140,20 @@ extension PicksView {
         VStack(spacing: Theme.Spacing.s40) {
             Image(systemName: Theme.Icon.Pick.deadline)
                 .font(.system(size: 56))
-                .foregroundStyle(Theme.Color.Border.default)
+                .foregroundStyle(
+                    Color.white.opacity(0.3)
+                )
             Text("No fixtures this week")
                 .font(Theme.Typography.title3)
-                .foregroundStyle(
-                    Theme.Color.Content.Text.default
-                )
-            Text("Check back when the gameweek schedule is available.")
-                .font(Theme.Typography.subheadline)
-                .foregroundStyle(
-                    Theme.Color.Content.Text.disabled
-                )
-                .multilineTextAlignment(.center)
+                .foregroundStyle(Color.white)
+            Text(
+                "Check back when the gameweek schedule is available."
+            )
+            .font(Theme.Typography.subheadline)
+            .foregroundStyle(
+                Color.white.opacity(0.6)
+            )
+            .multilineTextAlignment(.center)
         }
         .padding(.horizontal, Theme.Spacing.s40)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -191,31 +161,39 @@ extension PicksView {
 
     var fixturesList: some View {
         ScrollView {
-            VStack(spacing: Theme.Spacing.s40) {
+            VStack(spacing: Theme.Spacing.s60) {
                 headerSection
                 bannerSection
 
-                ForEach(viewModel.fixtures) { fixture in
-                    FixturePickRow(
-                        fixture: fixture,
-                        selectedTeamId: viewModel.currentPick?.teamId,
-                        usedTeamIds: viewModel.usedTeamIds,
-                        isLocked: viewModel.isFixtureLocked(fixture),
-                        isSubmitting: viewModel.isSubmitting,
-                        submittingTeamId: viewModel.submittingTeamId,
-                        celebratedTeamId: viewModel.celebratedTeamId,
-                        showCelebration: viewModel.showCelebration
-                    ) { teamId, teamName in
-                        Task {
-                            await viewModel.submitPick(
-                                fixtureId: fixture.id,
-                                teamId: teamId,
-                                teamName: teamName
-                            )
+                VStack(spacing: Theme.Spacing.s60) {
+                    ForEach(viewModel.fixtures) { fixture in
+                        FixturePickRow(
+                            fixture: fixture,
+                            selectedTeamId: viewModel
+                                .currentPick?.teamId,
+                            usedTeamIds: viewModel.usedTeamIds,
+                            isLocked: viewModel
+                                .isFixtureLocked(fixture),
+                            isSubmitting: viewModel
+                                .isSubmitting,
+                            submittingTeamId: viewModel
+                                .submittingTeamId,
+                            celebratedTeamId: viewModel
+                                .celebratedTeamId,
+                            showCelebration: viewModel
+                                .showCelebration
+                        ) { teamId, teamName in
+                            Task {
+                                await viewModel.submitPick(
+                                    fixtureId: fixture.id,
+                                    teamId: teamId,
+                                    teamName: teamName
+                                )
+                            }
                         }
                     }
-                    .padding(.horizontal, Theme.Spacing.s40)
                 }
+                .padding(.horizontal, Theme.Spacing.s60)
             }
             .padding(.vertical, Theme.Spacing.s40)
         }
