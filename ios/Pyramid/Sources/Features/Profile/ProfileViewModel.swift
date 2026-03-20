@@ -24,7 +24,7 @@ final class ProfileViewModel: ObservableObject {
         do {
             stats = try await profileService.fetchProfileStats()
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = AppError.from(error).userMessage
         }
         isLoadingStats = false
     }
@@ -37,7 +37,7 @@ final class ProfileViewModel: ObservableObject {
             isSigningOut = false
             return true
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = AppError.from(error).userMessage
             isSigningOut = false
             return false
         }

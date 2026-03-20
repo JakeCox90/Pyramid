@@ -19,7 +19,7 @@ final class NotificationPreferencesViewModel: ObservableObject {
         do {
             preferences = try await service.fetchPreferences()
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = AppError.from(error).userMessage
         }
         isLoading = false
     }
@@ -34,7 +34,7 @@ final class NotificationPreferencesViewModel: ObservableObject {
             } catch is CancellationError {
                 // debounce cancelled — a newer save will run
             } catch {
-                errorMessage = error.localizedDescription
+                errorMessage = AppError.from(error).userMessage
             }
         }
         await saveTask?.value

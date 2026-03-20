@@ -89,7 +89,7 @@ final class ResultsViewModel: ObservableObject {
                 )
             }
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = AppError.from(error).userMessage
         }
         isLoading = false
     }

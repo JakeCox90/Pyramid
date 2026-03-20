@@ -45,11 +45,8 @@ final class CreateLeagueViewModel: ObservableObject {
         do {
             createdLeague = try await leagueService.createLeague(name: name)
         } catch {
-            let message = error.localizedDescription
             Log.leagues.error("Create league failed: \(error.localizedDescription)")
-            errorMessage = message.isEmpty
-                ? "Failed to create league. Please try again."
-                : message
+            errorMessage = AppError.from(error).userMessage
             showErrorAlert = true
         }
 
