@@ -1,18 +1,5 @@
 import SwiftUI
 
-// MARK: - Sheet Colours (local constants)
-
-private let bgPrimary = Color(hex: "0A0A0A")
-private let bgCard = Color(hex: "1C1C1E")
-private let bgElevated = Color(hex: "2C2C2E")
-private let textPrimary = Color.white
-private let textSecondary = Color.white.opacity(0.6)
-private let textTertiary = Color.white.opacity(0.3)
-private let brandBlue = Color(hex: "1A56DB")
-private let successGreen = Color(hex: "30D158")
-private let errorRed = Color(hex: "FF453A")
-private let warningYellow = Color(hex: "FFD60A")
-
 // MARK: - Top-Up Sheet
 
 struct TopUpSheet: View {
@@ -37,19 +24,19 @@ struct TopUpSheet: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                bgPrimary.ignoresSafeArea()
+                Theme.Color.Surface.Background.page.ignoresSafeArea()
 
                 VStack(spacing: 24) {
                     // Stripe GATE banner
                     HStack(spacing: 8) {
                         Image(systemName: Theme.Icon.Status.info)
-                            .foregroundStyle(warningYellow)
+                            .foregroundStyle(Theme.Color.Status.Warning.resting)
                         Text("Payment processing coming soon")
                             .font(.caption)
-                            .foregroundStyle(warningYellow)
+                            .foregroundStyle(Theme.Color.Status.Warning.resting)
                     }
                     .padding(12)
-                    .background(warningYellow.opacity(0.1))
+                    .background(Theme.Color.Status.Warning.resting.opacity(0.1))
                     .clipShape(RoundedRectangle(cornerRadius: 10))
                     .padding(.horizontal, 16)
 
@@ -57,12 +44,12 @@ struct TopUpSheet: View {
                     VStack(alignment: .leading, spacing: 12) {
                         Text("Select an amount")
                             .font(.subheadline.weight(.medium))
-                            .foregroundStyle(textSecondary)
+                            .foregroundStyle(Theme.Color.Content.Text.subtle)
                             .padding(.horizontal, 16)
 
                         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
                             ForEach(quickAmounts, id: \.self) { pence in
-                                let label = String(format: "£%.0f", Double(pence) / 100)
+                                let label = String(format: "\u{a3}%.0f", Double(pence) / 100)
                                 Button {
                                     selectedAmountPence = pence
                                     customAmountText = ""
@@ -70,10 +57,18 @@ struct TopUpSheet: View {
                                 } label: {
                                     Text(label)
                                         .font(.headline)
-                                        .foregroundStyle(selectedAmountPence == pence ? .white : textPrimary)
+                                        .foregroundStyle(
+                                            selectedAmountPence == pence
+                                                ? .white
+                                                : Theme.Color.Content.Text.default
+                                        )
                                         .frame(maxWidth: .infinity)
                                         .padding(.vertical, 16)
-                                        .background(selectedAmountPence == pence ? brandBlue : bgElevated)
+                                        .background(
+                                            selectedAmountPence == pence
+                                                ? Theme.Color.Primary.resting
+                                                : Theme.Color.Surface.Background.container
+                                        )
                                         .clipShape(RoundedRectangle(cornerRadius: 12))
                                 }
                             }
@@ -85,16 +80,16 @@ struct TopUpSheet: View {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Or enter a custom amount")
                             .font(.subheadline.weight(.medium))
-                            .foregroundStyle(textSecondary)
+                            .foregroundStyle(Theme.Color.Content.Text.subtle)
 
                         HStack {
-                            Text("£")
+                            Text("\u{a3}")
                                 .font(.headline)
-                                .foregroundStyle(textSecondary)
+                                .foregroundStyle(Theme.Color.Content.Text.subtle)
                             TextField("0.00", text: $customAmountText)
                                 .keyboardType(.decimalPad)
                                 .font(.headline)
-                                .foregroundStyle(textPrimary)
+                                .foregroundStyle(Theme.Color.Content.Text.default)
                                 .focused($isCustomFieldFocused)
                                 .onChange(of: customAmountText) { newValue in
                                     if !newValue.isEmpty {
@@ -103,12 +98,12 @@ struct TopUpSheet: View {
                                 }
                         }
                         .padding(14)
-                        .background(bgElevated)
+                        .background(Theme.Color.Surface.Background.container)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
 
-                        Text("Minimum top-up: £5.00")
+                        Text("Minimum top-up: \u{a3}5.00")
                             .font(.caption)
-                            .foregroundStyle(textTertiary)
+                            .foregroundStyle(Theme.Color.Content.Text.disabled)
                     }
                     .padding(.horizontal, 16)
 
@@ -123,7 +118,11 @@ struct TopUpSheet: View {
                             .foregroundStyle(.white)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 16)
-                            .background(continueEnabled ? brandBlue : bgElevated)
+                            .background(
+                                continueEnabled
+                                    ? Theme.Color.Primary.resting
+                                    : Theme.Color.Surface.Background.container
+                            )
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
                     .disabled(!continueEnabled)
@@ -137,7 +136,7 @@ struct TopUpSheet: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { isPresented = false }
-                        .foregroundStyle(textSecondary)
+                        .foregroundStyle(Theme.Color.Content.Text.subtle)
                 }
             }
         }
@@ -166,7 +165,7 @@ struct WithdrawSheet: View {
 
     private var validationError: String? {
         guard let pence = amountPence else { return nil }
-        if pence < minimumPence { return "Minimum withdrawal is £20.00." }
+        if pence < minimumPence { return "Minimum withdrawal is \u{a3}20.00." }
         if pence > withdrawablePence { return "Amount exceeds your withdrawable balance." }
         return nil
     }
@@ -178,21 +177,21 @@ struct WithdrawSheet: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                bgPrimary.ignoresSafeArea()
+                Theme.Color.Surface.Background.page.ignoresSafeArea()
 
                 VStack(spacing: 24) {
                     // Withdrawable balance display
                     VStack(spacing: 4) {
                         Text("Available to withdraw")
                             .font(.subheadline)
-                            .foregroundStyle(textSecondary)
+                            .foregroundStyle(Theme.Color.Content.Text.subtle)
                         Text(withdrawableFormatted)
                             .font(.system(size: 36, weight: .bold, design: .rounded))
-                            .foregroundStyle(successGreen)
+                            .foregroundStyle(Theme.Color.Status.Success.resting)
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 20)
-                    .background(bgCard)
+                    .background(Theme.Color.Surface.Background.container)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                     .padding(.horizontal, 16)
 
@@ -200,29 +199,29 @@ struct WithdrawSheet: View {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Amount to withdraw")
                             .font(.subheadline.weight(.medium))
-                            .foregroundStyle(textSecondary)
+                            .foregroundStyle(Theme.Color.Content.Text.subtle)
 
                         HStack {
-                            Text("£")
+                            Text("\u{a3}")
                                 .font(.headline)
-                                .foregroundStyle(textSecondary)
+                                .foregroundStyle(Theme.Color.Content.Text.subtle)
                             TextField("0.00", text: $amountText)
                                 .keyboardType(.decimalPad)
                                 .font(.headline)
-                                .foregroundStyle(textPrimary)
+                                .foregroundStyle(Theme.Color.Content.Text.default)
                         }
                         .padding(14)
-                        .background(bgElevated)
+                        .background(Theme.Color.Surface.Background.container)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
 
                         if let error = validationError {
                             Text(error)
                                 .font(.caption)
-                                .foregroundStyle(errorRed)
+                                .foregroundStyle(Theme.Color.Status.Error.resting)
                         } else {
-                            Text("Minimum withdrawal: £20.00")
+                            Text("Minimum withdrawal: \u{a3}20.00")
                                 .font(.caption)
-                                .foregroundStyle(textTertiary)
+                                .foregroundStyle(Theme.Color.Content.Text.disabled)
                         }
                     }
                     .padding(.horizontal, 16)
@@ -230,7 +229,7 @@ struct WithdrawSheet: View {
                     if let error = localError {
                         Text(error)
                             .font(.caption)
-                            .foregroundStyle(errorRed)
+                            .foregroundStyle(Theme.Color.Status.Error.resting)
                             .multilineTextAlignment(.center)
                             .padding(.horizontal, 16)
                     }
@@ -258,7 +257,11 @@ struct WithdrawSheet: View {
                         }
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
-                        .background(withdrawEnabled ? errorRed : bgElevated)
+                        .background(
+                            withdrawEnabled
+                                ? Theme.Color.Status.Error.resting
+                                : Theme.Color.Surface.Background.container
+                        )
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
                     .disabled(!withdrawEnabled)
@@ -272,7 +275,7 @@ struct WithdrawSheet: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { isPresented = false }
-                        .foregroundStyle(textSecondary)
+                        .foregroundStyle(Theme.Color.Content.Text.subtle)
                 }
             }
         }

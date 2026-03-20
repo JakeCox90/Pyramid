@@ -1,17 +1,5 @@
 import SwiftUI
 
-// MARK: - Colours (dark theme)
-
-private extension Color {
-    static let backgroundPrimary = Color(hex: "0A0A0A")
-    static let backgroundCard = Color(hex: "1C1C1E")
-    static let textPrimary = Color.white
-    static let textSecondary = Color.white.opacity(0.6)
-    static let brandBlue = Color(hex: "1A56DB")
-    static let successGreen = Color(hex: "30D158")
-    static let separator = Color(hex: "38383A")
-}
-
 // MARK: - View
 
 struct NotificationPreferencesView: View {
@@ -20,7 +8,7 @@ struct NotificationPreferencesView: View {
 
     var body: some View {
         ZStack {
-            Color.backgroundPrimary.ignoresSafeArea()
+            Theme.Color.Surface.Background.page.ignoresSafeArea()
 
             ScrollView {
                 VStack(spacing: 0) {
@@ -52,15 +40,15 @@ struct NotificationPreferencesView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 10) {
                 Image(systemName: Theme.Icon.Navigation.notificationsDisabled)
-                    .foregroundStyle(Color(hex: "FF453A"))
+                    .foregroundStyle(Theme.Color.Status.Error.resting)
                 Text("Notifications are turned off")
                     .font(.subheadline)
                     .fontWeight(.semibold)
-                    .foregroundStyle(Color.white)
+                    .foregroundStyle(Theme.Color.Content.Text.default)
             }
             Text("Enable notifications in Settings to receive pick reminders and result alerts.")
                 .font(.caption)
-                .foregroundStyle(Color.white.opacity(0.6))
+                .foregroundStyle(Theme.Color.Content.Text.subtle)
 
             Button {
                 if let url = URL(string: UIApplication.openSettingsURLString) {
@@ -70,15 +58,15 @@ struct NotificationPreferencesView: View {
                 Text("Enable in Settings")
                     .font(.subheadline)
                     .fontWeight(.semibold)
-                    .foregroundStyle(Color.brandBlue)
+                    .foregroundStyle(Theme.Color.Primary.resting)
             }
         }
         .padding(16)
-        .background(Color.backgroundCard)
+        .background(Theme.Color.Surface.Background.container)
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .overlay(
             RoundedRectangle(cornerRadius: 12)
-                .stroke(Color(hex: "FF453A").opacity(0.4), lineWidth: 1)
+                .stroke(Theme.Color.Status.Error.resting.opacity(0.4), lineWidth: 1)
         )
     }
 
@@ -86,10 +74,10 @@ struct NotificationPreferencesView: View {
 
     private var preferencesSection: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text("NOTIFY ME WHEN…")
+            Text("NOTIFY ME WHEN\u{2026}")
                 .font(.caption)
                 .fontWeight(.semibold)
-                .foregroundStyle(Color.white.opacity(0.6))
+                .foregroundStyle(Theme.Color.Content.Text.subtle)
                 .padding(.horizontal, 16)
                 .padding(.bottom, 8)
 
@@ -118,14 +106,14 @@ struct NotificationPreferencesView: View {
                     isOn: $viewModel.preferences.winningsAlerts
                 )
             }
-            .background(Color.backgroundCard)
+            .background(Theme.Color.Surface.Background.container)
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .padding(.horizontal, 16)
         }
     }
 
     private var divider: some View {
-        Color.separator
+        Theme.Color.Border.default
             .frame(height: 1)
             .padding(.leading, 16)
     }
@@ -135,15 +123,15 @@ struct NotificationPreferencesView: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
                     .font(.body)
-                    .foregroundStyle(Color.textPrimary)
+                    .foregroundStyle(Theme.Color.Content.Text.default)
                 Text(subtitle)
                     .font(.caption)
-                    .foregroundStyle(Color.textSecondary)
+                    .foregroundStyle(Theme.Color.Content.Text.subtle)
             }
             Spacer()
             Toggle("", isOn: isOn)
                 .labelsHidden()
-                .tint(Color.brandBlue)
+                .tint(Theme.Color.Primary.resting)
                 .onChange(of: isOn.wrappedValue) { _ in
                     Task { await viewModel.save() }
                 }

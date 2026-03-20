@@ -37,7 +37,7 @@ struct WalletView: View {
             WithdrawSheet(
                 isPresented: $viewModel.showWithdrawSheet,
                 withdrawablePence: viewModel.wallet?.withdrawablePence ?? 0,
-                withdrawableFormatted: viewModel.wallet?.withdrawableFormatted ?? "£0.00",
+                withdrawableFormatted: viewModel.wallet?.withdrawableFormatted ?? "\u{a3}0.00",
                 onWithdraw: { amount in
                     await viewModel.requestWithdrawal(amountPence: amount)
                 }
@@ -75,7 +75,7 @@ struct WalletView: View {
                         .font(.caption)
                         .foregroundStyle(Theme.Color.Content.Text.disabled)
                     let withdrawable = viewModel.wallet?.withdrawablePence ?? 0
-                    Text(viewModel.wallet?.withdrawableFormatted ?? "–")
+                    Text(viewModel.wallet?.withdrawableFormatted ?? "\u{2013}")
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(
                             withdrawable > 0
