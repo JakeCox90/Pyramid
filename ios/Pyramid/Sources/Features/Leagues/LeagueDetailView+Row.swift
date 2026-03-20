@@ -34,6 +34,7 @@ struct MemberRow: View {
                 pickView
             }
         }
+        .accessibilityElement(children: .combine)
     }
 
     @ViewBuilder private var statusIcon: some View {
@@ -41,12 +42,15 @@ struct MemberRow: View {
         case .winner:
             Image(systemName: Theme.Icon.League.trophyFill)
                 .foregroundStyle(Theme.Color.Status.Warning.resting)
+                .accessibilityLabel("Winner")
         case .active:
             Image(systemName: Theme.Icon.Status.success)
                 .foregroundStyle(Theme.Color.Status.Success.resting)
+                .accessibilityLabel("Active")
         case .eliminated:
             Image(systemName: Theme.Icon.Status.failure)
                 .foregroundStyle(Theme.Color.Status.Error.resting)
+                .accessibilityLabel("Eliminated")
         }
     }
 
@@ -55,6 +59,7 @@ struct MemberRow: View {
             Image(systemName: Theme.Icon.Pick.locked)
                 .font(Theme.Typography.caption1)
                 .foregroundStyle(Theme.Color.Border.default)
+                .accessibilityLabel("Pick hidden until kick-off")
         } else if let pick {
             if let fixture, fixture.status.isLive || fixture.status.isFinished {
                 liveFixtureView(pick: pick, fixture: fixture)
@@ -95,6 +100,7 @@ struct MemberRow: View {
                         .onAppear {
                             if !reduceMotion { livePulse = true }
                         }
+                        .accessibilityLabel("Live match in progress")
                 }
                 Text("\(homeScore) - \(awayScore)")
                     .font(Theme.Typography.subheadline)

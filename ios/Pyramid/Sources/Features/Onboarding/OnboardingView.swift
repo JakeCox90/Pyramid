@@ -42,7 +42,7 @@ struct OnboardingView: View {
                 Array(OnboardingPage.allPages.enumerated()),
                 id: \.offset
             ) { index, page in
-                pageView(page)
+                pageView(page, index: index)
                     .tag(index)
             }
         }
@@ -50,13 +50,14 @@ struct OnboardingView: View {
         .animation(reduceMotion ? nil : .easeInOut, value: currentPage)
     }
 
-    private func pageView(_ page: OnboardingPage) -> some View {
+    private func pageView(_ page: OnboardingPage, index: Int) -> some View {
         VStack(spacing: Theme.Spacing.s40) {
             Spacer()
 
             Image(systemName: page.icon)
                 .font(.system(size: 72))
                 .foregroundStyle(page.iconColor)
+                .accessibilityHidden(true)
 
             VStack(spacing: Theme.Spacing.s20) {
                 Text(page.title)
@@ -75,6 +76,9 @@ struct OnboardingView: View {
             Spacer()
             Spacer()
         }
+        .accessibilityLabel(
+            "Page \(index + 1) of \(OnboardingPage.allPages.count): \(page.title). \(page.subtitle)"
+        )
     }
 
     // MARK: - Page Indicator

@@ -180,6 +180,7 @@ extension LeagueDetailView {
                             ? Theme.Color.Status.Success.resting
                             : Theme.Color.Status.Error.resting
                     )
+                    .accessibilityHidden(true)
                 Text(surviving ? "Surviving" : "In Danger")
                     .font(Theme.Typography.subheadline)
                     .foregroundStyle(
@@ -188,14 +189,17 @@ extension LeagueDetailView {
                             : Theme.Color.Status.Error.resting
                     )
             }
+            .accessibilityLabel(surviving ? "Surviving" : "In danger")
         } else {
             HStack(spacing: Theme.Spacing.s10) {
                 Image(systemName: "circle.dotted")
                     .foregroundStyle(Theme.Color.Content.Text.disabled)
+                    .accessibilityHidden(true)
                 Text("Pending")
                     .font(Theme.Typography.subheadline)
                     .foregroundStyle(Theme.Color.Content.Text.disabled)
             }
+            .accessibilityLabel("Pending")
         }
     }
 

@@ -3,7 +3,7 @@ import SwiftUI
 // MARK: - WalletView
 
 struct WalletView: View {
-    @StateObject private var viewModel = WalletViewModel()
+    @StateObject var viewModel = WalletViewModel()
     @State private var showPendingInfo = false
 
     var body: some View {
@@ -70,6 +70,10 @@ struct WalletView: View {
                     .fontWeight(.bold)
                     .foregroundStyle(Theme.Color.Content.Text.default)
             }
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel(
+                "Available to play, \(viewModel.wallet?.availableToPlayFormatted ?? "unknown")"
+            )
 
             HStack(spacing: 8) {
                 VStack(spacing: 2) {
@@ -86,10 +90,15 @@ struct WalletView: View {
                         )
                 }
                 .frame(maxWidth: .infinity)
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel(
+                    "Withdrawable, \(viewModel.wallet?.withdrawableFormatted ?? "none")"
+                )
 
                 Rectangle()
                     .fill(Theme.Color.Border.default)
                     .frame(width: 1, height: 32)
+                    .accessibilityHidden(true)
 
                 VStack(spacing: 2) {
                     HStack(spacing: 4) {
@@ -112,6 +121,10 @@ struct WalletView: View {
                         .foregroundStyle(Theme.Color.Content.Text.subtle)
                 }
                 .frame(maxWidth: .infinity)
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel(
+                    "Pending, \(viewModel.wallet?.pendingFormatted ?? "none")"
+                )
             }
             .padding(.vertical, 12)
             .padding(.horizontal, 20)
@@ -173,48 +186,4 @@ struct WalletView: View {
         }
     }
 
-    // MARK: - Transaction History
-
-    private var transactionHistorySection: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("Transaction History")
-                .font(.headline)
-                .foregroundStyle(Theme.Color.Content.Text.default)
-                .padding(.horizontal, 16)
-
-            if viewModel.transactions.isEmpty {
-                emptyTransactionsView
-            } else {
-                VStack(spacing: 0) {
-                    ForEach(viewModel.transactions) { transaction in
-                        TransactionRow(transaction: transaction)
-                        if transaction.id != viewModel.transactions.last?.id {
-                            Divider()
-                                .overlay(Theme.Color.Border.default)
-                                .padding(.leading, 56)
-                        }
-                    }
-                }
-                .background(Theme.Color.Surface.Background.container)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-                .padding(.horizontal, 16)
-            }
-        }
-    }
-
-    private var emptyTransactionsView: some View {
-        VStack(spacing: 12) {
-            Image(systemName: Theme.Icon.Wallet.empty)
-                .font(.system(size: 40))
-                .foregroundStyle(Theme.Color.Content.Text.disabled)
-            Text("No transactions yet")
-                .font(.subheadline)
-                .foregroundStyle(Theme.Color.Content.Text.subtle)
-        }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 40)
-        .background(Theme.Color.Surface.Background.container)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-        .padding(.horizontal, 16)
-    }
 }

@@ -17,5 +17,6 @@ struct PulsingDot: View {
             .onAppear {
                 if !reduceMotion { pulse = true }
             }
+            .accessibilityHidden(true)
     }
 }

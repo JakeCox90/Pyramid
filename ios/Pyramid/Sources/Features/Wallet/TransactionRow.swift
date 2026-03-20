@@ -13,6 +13,7 @@ struct TransactionRow: View {
                     .font(.system(size: 16, weight: .medium))
                     .foregroundStyle(iconBackgroundColor)
             }
+            .accessibilityLabel(transactionTitle)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(transactionTitle)
@@ -41,6 +42,7 @@ struct TransactionRow: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
+        .accessibilityElement(children: .combine)
     }
 
     private var iconName: String {
