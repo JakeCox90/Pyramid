@@ -9,6 +9,8 @@ struct MemberRow: View {
     let deadlinePassed: Bool
 
     @State private var livePulse = false
+    @Environment(\.accessibilityReduceMotion)
+    private var reduceMotion
 
     var body: some View {
         DSCard {
@@ -83,12 +85,16 @@ struct MemberRow: View {
                     Circle()
                         .fill(Theme.Color.Status.Error.resting)
                         .frame(width: 6, height: 6)
-                        .scaleEffect(livePulse ? 1.4 : 1.0)
+                        .scaleEffect(reduceMotion ? 1.0 : (livePulse ? 1.4 : 1.0))
                         .animation(
-                            .easeInOut(duration: 1).repeatForever(autoreverses: true),
+                            reduceMotion
+                                ? nil
+                                : .easeInOut(duration: 1).repeatForever(autoreverses: true),
                             value: livePulse
                         )
-                        .onAppear { livePulse = true }
+                        .onAppear {
+                            if !reduceMotion { livePulse = true }
+                        }
                 }
                 Text("\(homeScore) - \(awayScore)")
                     .font(Theme.Typography.subheadline)

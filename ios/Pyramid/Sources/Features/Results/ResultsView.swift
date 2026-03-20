@@ -2,6 +2,8 @@ import SwiftUI
 
 struct ResultsView: View {
     @StateObject private var viewModel: ResultsViewModel
+    @Environment(\.accessibilityReduceMotion)
+    private var reduceMotion
 
     init(leagueId: String, season: Int) {
         _viewModel = StateObject(
@@ -58,7 +60,7 @@ struct ResultsView: View {
                         isExpanded: viewModel.expandedRoundId
                             == round.id,
                         onToggle: {
-                            withAnimation(.easeInOut(duration: 0.25)) {
+                            withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.25)) {
                                 viewModel.toggleRound(round.id)
                             }
                         }

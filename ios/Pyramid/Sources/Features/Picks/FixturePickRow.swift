@@ -11,6 +11,9 @@ struct FixturePickRow: View {
     var showCelebration: Bool = false
     let onPick: (Int, String) -> Void
 
+    @Environment(\.accessibilityReduceMotion)
+    private var reduceMotion
+
     private var kickoffText: String {
         let formatter = DateFormatter()
         formatter.dateFormat = "EEE dd MMM, HH:mm"
@@ -64,11 +67,8 @@ struct FixturePickRow: View {
 
     @ViewBuilder
     private func teamButton(
-        teamId: Int,
-        teamName: String,
-        shortName: String,
-        logoURL: String?,
-        score: Int?
+        teamId: Int, teamName: String,
+        shortName: String, logoURL: String?, score: Int?
     ) -> some View {
         let isPicked = selectedTeamId == teamId
         let isUsed = usedTeamIds.contains(teamId) && !isPicked
@@ -82,8 +82,7 @@ struct FixturePickRow: View {
         } label: {
             VStack(spacing: Theme.Spacing.s10) {
                 if isThisTeamSubmitting {
-                    ProgressView()
-                        .frame(height: 32)
+                    ProgressView().frame(height: 32)
                 } else {
                     if let score {
                         Text("\(score)")
@@ -93,12 +92,12 @@ struct FixturePickRow: View {
                     TeamBadge(logoURL: logoURL, shortName: shortName, size: 32)
                     Text(teamName)
                         .font(Theme.Typography.caption2)
-                        .foregroundStyle(isPicked ? Color.white.opacity(0.8) : Theme.Color.Content.Text.disabled)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.7)
+                        .foregroundStyle(
+                            isPicked ? Color.white.opacity(0.8) : Theme.Color.Content.Text.disabled
+                        )
+                        .lineLimit(1).minimumScaleFactor(0.7)
                     if isUsed {
-                        Text("Used")
-                            .font(Theme.Typography.caption2)
+                        Text("Used").font(Theme.Typography.caption2)
                             .foregroundStyle(Theme.Color.Status.Error.resting)
                     }
                 }
@@ -112,13 +111,12 @@ struct FixturePickRow: View {
                     .stroke(isPicked ? Theme.Color.Content.Text.default : Theme.Color.Border.default, lineWidth: 1)
             )
             .opacity(isThisTeamSubmitting ? 0.7 : (isOtherTeamSubmitting || (isDisabled && !isPicked)) ? 0.5 : 1.0)
-            .scaleEffect(isPicked && celebratedTeamId == teamId ? 1.05 : 1.0)
-            .animation(.spring(response: 0.3, dampingFraction: 0.5), value: celebratedTeamId)
-            .overlay {
-                if showCelebration && celebratedTeamId == teamId {
-                    ConfettiView()
-                }
-            }
+            .scaleEffect((!reduceMotion && isPicked && celebratedTeamId == teamId) ? 1.05 : 1.0)
+            .animation(
+                reduceMotion ? nil : .spring(response: 0.3, dampingFraction: 0.5),
+                value: celebratedTeamId
+            )
+            .overlay { if showCelebration && celebratedTeamId == teamId { ConfettiView() } }
         }
         .disabled(isDisabled && !isPicked)
     }

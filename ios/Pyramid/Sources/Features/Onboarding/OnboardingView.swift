@@ -3,6 +3,8 @@ import SwiftUI
 struct OnboardingView: View {
     @EnvironmentObject private var appState: AppState
     @State private var currentPage = 0
+    @Environment(\.accessibilityReduceMotion)
+    private var reduceMotion
 
     var body: some View {
         VStack(spacing: 0) {
@@ -45,7 +47,7 @@ struct OnboardingView: View {
             }
         }
         .tabViewStyle(.page(indexDisplayMode: .never))
-        .animation(.easeInOut, value: currentPage)
+        .animation(reduceMotion ? nil : .easeInOut, value: currentPage)
     }
 
     private func pageView(_ page: OnboardingPage) -> some View {
@@ -102,7 +104,7 @@ struct OnboardingView: View {
                     .dsStyle(.primary)
             } else {
                 Button("Next") {
-                    withAnimation { currentPage += 1 }
+                    withAnimation(reduceMotion ? nil : .default) { currentPage += 1 }
                 }
                 .dsStyle(.primary)
             }
