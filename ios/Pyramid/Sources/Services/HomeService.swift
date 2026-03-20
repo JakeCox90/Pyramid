@@ -68,7 +68,7 @@ protocol HomeServiceProtocol: Sendable {
 // MARK: - Implementation
 
 final class HomeService: HomeServiceProtocol {
-    private let client: SupabaseClient
+    let client: SupabaseClient
 
     init(client: SupabaseClient = SupabaseDependency.shared.client) {
         self.client = client
