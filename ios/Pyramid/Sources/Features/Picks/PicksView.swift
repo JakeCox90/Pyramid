@@ -69,19 +69,21 @@ extension PicksView {
         VStack(alignment: .leading, spacing: Theme.Spacing.s20) {
             if let gameweek = viewModel.gameweek {
                 Text("GAMEWEEK \(gameweek.roundNumber)")
-                    .font(Theme.Typography.caption1)
+                    .font(
+                        Font.custom("Inter-Bold", size: 12)
+                    )
+                    .textCase(.uppercase)
                     .foregroundStyle(
                         Color.white.opacity(0.6)
                     )
-                    .tracking(1.2)
             }
 
             Text("Pick a team")
-                .font(Theme.Typography.title1)
+                .font(.custom("Inter-Bold", size: 44))
                 .foregroundStyle(Color.white)
 
             if !viewModel.usedTeamIds.isEmpty {
-                TeamsUsedPillContainer(
+                TeamsUsedPill(
                     teamNames: viewModel.usedTeamNames,
                     count: viewModel.usedTeamIds.count
                 )

@@ -2,9 +2,13 @@ import SwiftUI
 
 // MARK: - Pick Buttons
 
+// Figma layout_PDPJ4P: x:12, y:151, width:329, height:44, gap:12px
+// Figma layout_LYCBPN: padding 12px 24px, height 44, fill width
+// Figma fill_RNW9LA: rgba(255,255,255,0.1), border-radius 200px
+
 extension FixturePickRow {
     var pickButtons: some View {
-        HStack(spacing: Theme.Spacing.s30) {
+        HStack(spacing: 12) {
             pickButton(
                 teamId: fixture.homeTeamId,
                 teamName: fixture.homeTeamName,
@@ -16,8 +20,8 @@ extension FixturePickRow {
                 label: "Away"
             )
         }
-        .padding(.horizontal, Theme.Spacing.s30)
-        .padding(.bottom, Theme.Spacing.s30)
+        .padding(.horizontal, 12)
+        .padding(.bottom, 12)
     }
 
     @ViewBuilder
@@ -95,9 +99,10 @@ extension FixturePickRow {
             && !isThisSub
         let disabled = isLocked || isSubmitting || isUsed
 
+        // fill_RNW9LA: rgba(255,255,255,0.1)
         let fill = isPicked
             ? Theme.Color.Primary.resting
-            : Color.white.opacity(0.1)
+            : Color.white.opacity(0.1) // fill_RNW9LA
 
         var alpha = 1.0
         if isThisSub {
@@ -142,7 +147,7 @@ extension FixturePickRow {
         } else if state.isUsed {
             Text("USED")
                 .font(
-                    Theme.Typography.caption1.bold()
+                    Font.custom("Inter-Bold", size: 12)
                 )
                 .foregroundStyle(Color.white)
                 .opacity(0.2)
@@ -153,7 +158,7 @@ extension FixturePickRow {
                     ? "PICKED"
                     : label.uppercased()
             )
-            .font(Theme.Typography.caption1.bold())
+            .font(Font.custom("Inter-Bold", size: 12))
             .foregroundStyle(
                 state.isPicked
                     ? Theme.Color.Primary.text
