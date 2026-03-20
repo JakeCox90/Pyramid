@@ -75,8 +75,12 @@ extension HomeService {
                 gameweekName: gameweek.name,
                 teamName: pick.teamName,
                 result: pick.result,
+                homeTeamName: fixture.homeTeamName,
                 homeTeamShort: fixture.homeTeamShort,
+                homeTeamLogo: fixture.homeTeamLogo,
+                awayTeamName: fixture.awayTeamName,
                 awayTeamShort: fixture.awayTeamShort,
+                awayTeamLogo: fixture.awayTeamLogo,
                 homeScore: fixture.homeScore ?? 0,
                 awayScore: fixture.awayScore ?? 0
             )

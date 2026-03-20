@@ -77,6 +77,11 @@ extension HomeView {
         let awayScore = context.fixture.awayScore ?? 0
 
         HStack {
+            TeamBadge(
+                teamName: context.fixture.homeTeamName,
+                logoURL: context.fixture.homeTeamLogo,
+                size: 28
+            )
             Text(context.fixture.homeTeamShort)
                 .font(Theme.Typography.subheadline)
                 .foregroundStyle(Theme.Color.Content.Text.subtle)
@@ -93,6 +98,11 @@ extension HomeView {
             Text(context.fixture.awayTeamShort)
                 .font(Theme.Typography.subheadline)
                 .foregroundStyle(Theme.Color.Content.Text.subtle)
+            TeamBadge(
+                teamName: context.fixture.awayTeamName,
+                logoURL: context.fixture.awayTeamLogo,
+                size: 28
+            )
         }
     }
 

@@ -75,6 +75,11 @@ extension HomeView {
         _ result: LeagueResult
     ) -> some View {
         HStack {
+            TeamBadge(
+                teamName: result.homeTeamName,
+                logoURL: result.homeTeamLogo,
+                size: 28
+            )
             Text(result.homeTeamShort)
                 .font(Theme.Typography.subheadline)
                 .foregroundStyle(
@@ -97,6 +102,11 @@ extension HomeView {
                 .foregroundStyle(
                     Theme.Color.Content.Text.subtle
                 )
+            TeamBadge(
+                teamName: result.awayTeamName,
+                logoURL: result.awayTeamLogo,
+                size: 28
+            )
         }
     }
 
