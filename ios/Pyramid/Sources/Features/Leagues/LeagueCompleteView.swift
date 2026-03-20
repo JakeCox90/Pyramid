@@ -30,7 +30,6 @@ struct LeagueCompleteView: View {
                 }
             }
         }
-        .preferredColorScheme(.dark)
     }
 
     // MARK: - Subviews
