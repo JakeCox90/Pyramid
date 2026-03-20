@@ -65,7 +65,6 @@ struct FixturePickRow: View {
         }
     }
 
-    // swiftlint:disable:next function_body_length
     @ViewBuilder
     private func teamButton(
         teamId: Int, teamName: String,
