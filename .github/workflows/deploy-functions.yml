@@ -18,6 +18,12 @@ jobs:
         with:
           version: latest
 
+      - name: Set Edge Function secrets
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          supabase secrets set ENVIRONMENT=dev --project-ref qvmzmeizluqcdkcjsqyd
+
       - name: Deploy all Edge Functions
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
