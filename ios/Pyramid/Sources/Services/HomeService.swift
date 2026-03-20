@@ -68,7 +68,7 @@ protocol HomeServiceProtocol: Sendable {
 // MARK: - Implementation
 
 final class HomeService: HomeServiceProtocol {
-    private let client: SupabaseClient
+    let client: SupabaseClient
 
     init(client: SupabaseClient = SupabaseDependency.shared.client) {
         self.client = client
@@ -81,10 +81,16 @@ final class HomeService: HomeServiceProtocol {
         async let leaguesFetch = fetchLeaguesWithCounts(userId: userId)
         async let memberStatusesFetch = fetchMemberStatuses(userId: userId)
         async let gameweekFetch = fetchCurrentGameweek()
+        async let lastGwFetch = fetchLastFinishedGameweek()
 
         let leagues = try await leaguesFetch
         let memberStatuses = try await memberStatusesFetch
         let gameweek = try await gameweekFetch
+        let lastGw = try await lastGwFetch
+
+        let leagueMap = Dictionary(
+            uniqueKeysWithValues: leagues.map { ($0.id, $0.name) }
+        )
 
         var picks: [String: Pick] = [:]
         var fixtures: [Int: Fixture] = [:]
@@ -103,15 +109,24 @@ final class HomeService: HomeServiceProtocol {
             )
         }
 
-        Log.home.info(
-            "Home data fetched: \(leagues.count) leagues, gameweek=\(gameweek?.id ?? -1, privacy: .public)"
-        )
+        var lastGwResults: [LeagueResult] = []
+        if let lastGw, !leagues.isEmpty {
+            lastGwResults = try await fetchLastGwResults(
+                userId: userId,
+                gameweek: lastGw,
+                leagueIds: leagues.map(\.id),
+                leagueNames: leagueMap
+            )
+        }
+
+        Log.home.info("Home data fetched: \(leagues.count) leagues, gameweek=\(gameweek?.id ?? -1, privacy: .public)")
         return HomeData(
             leagues: leagues,
             gameweek: gameweek,
             picks: picks,
             memberStatuses: memberStatuses,
-            fixtures: fixtures
+            fixtures: fixtures,
+            lastGwResults: lastGwResults
         )
     }
 
@@ -221,4 +236,5 @@ final class HomeService: HomeServiceProtocol {
             uniqueKeysWithValues: rows.map { ($0.leagueId, $0) }
         )
     }
+
 }
