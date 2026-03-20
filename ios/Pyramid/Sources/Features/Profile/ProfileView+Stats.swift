@@ -50,6 +50,8 @@ extension ProfileView {
             }
             .frame(maxWidth: .infinity)
         }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(value) \(label)")
     }
 }
 
@@ -91,12 +93,15 @@ extension ProfileView {
                         .foregroundStyle(
                             Theme.Color.Status.Warning.resting
                         )
+                        .accessibilityHidden(true)
                     Text("\(streak.currentStreak)")
                         .font(Theme.Typography.headline)
                         .foregroundStyle(
                             Theme.Color.Status.Warning.resting
                         )
                 }
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("Active streak, \(streak.currentStreak) gameweeks")
             }
         }
     }

@@ -60,6 +60,7 @@ extension HomeView {
             Spacer()
 
             PulsingDot()
+                .accessibilityLabel("Live")
 
             Text(context.fixture.status.displayLabel)
                 .font(Theme.Typography.caption2)
@@ -104,6 +105,7 @@ extension HomeView {
                         ? "checkmark.circle.fill"
                         : "xmark.circle.fill"
                 )
+                .accessibilityHidden(true)
                 Text(surviving ? "Surviving" : "In Danger")
                     .font(Theme.Typography.subheadline)
             }
@@ -112,6 +114,7 @@ extension HomeView {
                     ? Theme.Color.Status.Success.resting
                     : Theme.Color.Status.Error.resting
             )
+            .accessibilityLabel(surviving ? "Surviving" : "In danger")
         }
     }
 

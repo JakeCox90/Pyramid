@@ -70,6 +70,10 @@ struct WalletView: View {
                     .fontWeight(.bold)
                     .foregroundStyle(Theme.Color.Content.Text.default)
             }
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel(
+                "Available to play, \(viewModel.wallet?.availableToPlayFormatted ?? "unknown")"
+            )
 
             HStack(spacing: 8) {
                 VStack(spacing: 2) {
@@ -86,10 +90,15 @@ struct WalletView: View {
                         )
                 }
                 .frame(maxWidth: .infinity)
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel(
+                    "Withdrawable, \(viewModel.wallet?.withdrawableFormatted ?? "none")"
+                )
 
                 Rectangle()
                     .fill(Theme.Color.Border.default)
                     .frame(width: 1, height: 32)
+                    .accessibilityHidden(true)
 
                 VStack(spacing: 2) {
                     HStack(spacing: 4) {
@@ -112,6 +121,10 @@ struct WalletView: View {
                         .foregroundStyle(Theme.Color.Content.Text.subtle)
                 }
                 .frame(maxWidth: .infinity)
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel(
+                    "Pending, \(viewModel.wallet?.pendingFormatted ?? "none")"
+                )
             }
             .padding(.vertical, 12)
             .padding(.horizontal, 20)
@@ -207,6 +220,7 @@ struct WalletView: View {
             Image(systemName: Theme.Icon.Wallet.empty)
                 .font(.system(size: 40))
                 .foregroundStyle(Theme.Color.Content.Text.disabled)
+                .accessibilityHidden(true)
             Text("No transactions yet")
                 .font(.subheadline)
                 .foregroundStyle(Theme.Color.Content.Text.subtle)

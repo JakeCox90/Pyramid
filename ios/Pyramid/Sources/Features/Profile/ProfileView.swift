@@ -65,6 +65,7 @@ private extension ProfileView {
             Image(systemName: Theme.Icon.Navigation.profile)
                 .font(.system(size: 48))
                 .foregroundStyle(Theme.Color.Content.Text.subtle)
+                .accessibilityHidden(true)
             Text("Profile")
                 .font(Theme.Typography.title2)
                 .foregroundStyle(Theme.Color.Content.Text.default)

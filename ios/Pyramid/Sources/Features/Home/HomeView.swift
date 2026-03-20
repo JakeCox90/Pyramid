@@ -80,6 +80,7 @@ struct HomeView: View {
                             : Theme.Color.Status.Error.resting
                     )
                     .frame(width: 10, height: 10)
+                    .accessibilityHidden(true)
                 Text("Alive in \(aliveCount) league\(aliveCount == 1 ? "" : "s")")
                     .font(Theme.Typography.headline)
                     .foregroundStyle(Theme.Color.Content.Text.default)
