@@ -60,8 +60,8 @@ extension HomeService {
     }
 
     private func fetchFixtureMap(
-        for fixtureIds: [String]
-    ) async throws -> [String: Fixture] {
+        for fixtureIds: [Int]
+    ) async throws -> [Int: Fixture] {
         let fixtures: [Fixture] = try await client
             .from("fixtures")
             .select(
@@ -84,7 +84,7 @@ extension HomeService {
     private func makeLeagueResult(
         pick: Pick,
         gameweek: Gameweek,
-        fixtureMap: [String: Fixture],
+        fixtureMap: [Int: Fixture],
         leagueNames: [String: String]
     ) -> LeagueResult? {
         guard let fixture = fixtureMap[pick.fixtureId],
