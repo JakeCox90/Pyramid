@@ -76,7 +76,7 @@ extension PicksView {
             }
 
             Text("Pick a team")
-                .font(Font.custom("Inter-Bold", size: 44))
+                .font(Theme.Typography.title1)
                 .foregroundStyle(
                     Theme.Color.Content.Text.default
                 )

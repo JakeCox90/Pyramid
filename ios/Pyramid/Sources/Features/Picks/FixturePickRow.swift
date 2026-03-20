@@ -67,24 +67,23 @@ extension FixturePickRow {
     }
 
     private var teamRow: some View {
-        HStack {
+        HStack(spacing: Theme.Spacing.s20) {
             teamDisplay(
                 teamId: fixture.homeTeamId,
                 teamName: fixture.homeTeamName,
                 logoURL: fixture.homeTeamLogo
             )
-
-            Spacer()
+            .frame(maxWidth: .infinity)
 
             scoreOrVs
-
-            Spacer()
+                .frame(width: 44)
 
             teamDisplay(
                 teamId: fixture.awayTeamId,
                 teamName: fixture.awayTeamName,
                 logoURL: fixture.awayTeamLogo
             )
+            .frame(maxWidth: .infinity)
         }
     }
 
@@ -120,7 +119,7 @@ extension FixturePickRow {
             TeamBadge(
                 teamName: teamName,
                 logoURL: logoURL,
-                size: 64
+                size: 48
             )
             .opacity(isUsed ? 0.4 : 1.0)
 
@@ -132,7 +131,6 @@ extension FixturePickRow {
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
         }
-        .frame(width: 80)
     }
 }
 
