@@ -22,7 +22,7 @@ jobs:
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
         run: |
-          for fn in create-league join-league join-paid-league submit-pick get-wallet top-up request-withdrawal register-device-token settle-picks credit-winnings distribute-prizes refund-stake process-dispute-window poll-live-scores sync-fixtures; do
+          for fn in create-league join-league join-paid-league submit-pick get-wallet top-up request-withdrawal register-device-token settle-picks credit-winnings distribute-prizes refund-stake process-dispute-window poll-live-scores sync-fixtures reset-dev-data; do
             echo "Deploying $fn..."
             supabase functions deploy "$fn" --no-verify-jwt --project-ref qvmzmeizluqcdkcjsqyd
           done
