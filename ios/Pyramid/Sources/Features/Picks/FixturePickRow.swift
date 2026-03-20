@@ -65,13 +65,11 @@ struct FixturePickRow: View {
         }
     }
 
+    // swiftlint:disable:next function_body_length
     @ViewBuilder
     private func teamButton(
-        teamId: Int,
-        teamName: String,
-        shortName: String,
-        logoURL: String?,
-        score: Int?
+        teamId: Int, teamName: String,
+        shortName: String, logoURL: String?, score: Int?
     ) -> some View {
         let isPicked = selectedTeamId == teamId
         let isUsed = usedTeamIds.contains(teamId) && !isPicked
@@ -83,10 +81,35 @@ struct FixturePickRow: View {
             guard !isDisabled else { return }
             onPick(teamId, teamName)
         } label: {
-            teamButtonLabel(
-                teamId: teamId, teamName: teamName, shortName: shortName,
-                logoURL: logoURL, score: score, isPicked: isPicked,
-                isUsed: isUsed, isThisTeamSubmitting: isThisTeamSubmitting
+            VStack(spacing: Theme.Spacing.s10) {
+                if isThisTeamSubmitting {
+                    ProgressView().frame(height: 32)
+                } else {
+                    if let score {
+                        Text("\(score)")
+                            .font(Theme.Typography.title2.bold())
+                            .foregroundStyle(Theme.Color.Content.Text.default)
+                    }
+                    TeamBadge(logoURL: logoURL, shortName: shortName, size: 32)
+                    Text(teamName)
+                        .font(Theme.Typography.caption2)
+                        .foregroundStyle(
+                            isPicked ? Color.white.opacity(0.8) : Theme.Color.Content.Text.disabled
+                        )
+                        .lineLimit(1).minimumScaleFactor(0.7)
+                    if isUsed {
+                        Text("Used").font(Theme.Typography.caption2)
+                            .foregroundStyle(Theme.Color.Status.Error.resting)
+                    }
+                }
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, Theme.Spacing.s30)
+            .background(isPicked ? Theme.Color.Content.Text.default : Theme.Color.Surface.Background.page)
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .overlay(
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(isPicked ? Theme.Color.Content.Text.default : Theme.Color.Border.default, lineWidth: 1)
             )
             .opacity(isThisTeamSubmitting ? 0.7 : (isOtherTeamSubmitting || (isDisabled && !isPicked)) ? 0.5 : 1.0)
             .scaleEffect((!reduceMotion && isPicked && celebratedTeamId == teamId) ? 1.05 : 1.0)
@@ -94,51 +117,8 @@ struct FixturePickRow: View {
                 reduceMotion ? nil : .spring(response: 0.3, dampingFraction: 0.5),
                 value: celebratedTeamId
             )
-            .overlay {
-                if showCelebration && celebratedTeamId == teamId {
-                    ConfettiView()
-                }
-            }
+            .overlay { if showCelebration && celebratedTeamId == teamId { ConfettiView() } }
         }
         .disabled(isDisabled && !isPicked)
-    }
-
-    @ViewBuilder
-    private func teamButtonLabel(
-        teamId: Int, teamName: String, shortName: String,
-        logoURL: String?, score: Int?, isPicked: Bool,
-        isUsed: Bool, isThisTeamSubmitting: Bool
-    ) -> some View {
-        VStack(spacing: Theme.Spacing.s10) {
-            if isThisTeamSubmitting {
-                ProgressView()
-                    .frame(height: 32)
-            } else {
-                if let score {
-                    Text("\(score)")
-                        .font(Theme.Typography.title2.bold())
-                        .foregroundStyle(Theme.Color.Content.Text.default)
-                }
-                TeamBadge(logoURL: logoURL, shortName: shortName, size: 32)
-                Text(teamName)
-                    .font(Theme.Typography.caption2)
-                    .foregroundStyle(isPicked ? Color.white.opacity(0.8) : Theme.Color.Content.Text.disabled)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.7)
-                if isUsed {
-                    Text("Used")
-                        .font(Theme.Typography.caption2)
-                        .foregroundStyle(Theme.Color.Status.Error.resting)
-                }
-            }
-        }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, Theme.Spacing.s30)
-        .background(isPicked ? Theme.Color.Content.Text.default : Theme.Color.Surface.Background.page)
-        .clipShape(RoundedRectangle(cornerRadius: 8))
-        .overlay(
-            RoundedRectangle(cornerRadius: 8)
-                .stroke(isPicked ? Theme.Color.Content.Text.default : Theme.Color.Border.default, lineWidth: 1)
-        )
     }
 }
