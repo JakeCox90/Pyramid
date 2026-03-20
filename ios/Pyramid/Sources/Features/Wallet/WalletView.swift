@@ -4,6 +4,7 @@ import SwiftUI
 
 struct WalletView: View {
     @StateObject private var viewModel = WalletViewModel()
+    @State private var showPendingInfo = false
 
     var body: some View {
         NavigationStack {
@@ -65,7 +66,8 @@ struct WalletView: View {
                     .font(.subheadline)
                     .foregroundStyle(Theme.Color.Content.Text.subtle)
                 Text(viewModel.wallet?.availableToPlayFormatted ?? "–")
-                    .font(.system(size: 48, weight: .bold, design: .rounded))
+                    .font(.system(.largeTitle, design: .rounded))
+                    .fontWeight(.bold)
                     .foregroundStyle(Theme.Color.Content.Text.default)
             }
 
@@ -90,9 +92,21 @@ struct WalletView: View {
                     .frame(width: 1, height: 32)
 
                 VStack(spacing: 2) {
-                    Text("Pending")
-                        .font(.caption)
-                        .foregroundStyle(Theme.Color.Content.Text.disabled)
+                    HStack(spacing: 4) {
+                        Text("Pending")
+                            .font(.caption)
+                            .foregroundStyle(Theme.Color.Content.Text.disabled)
+                        Button {
+                            showPendingInfo = true
+                        } label: {
+                            Image(systemName: "info.circle")
+                                .font(.caption)
+                                .foregroundStyle(Theme.Color.Content.Text.disabled)
+                        }
+                        .popover(isPresented: $showPendingInfo) {
+                            pendingInfoPopoverContent
+                        }
+                    }
                     Text(viewModel.wallet?.pendingFormatted ?? "–")
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(Theme.Color.Content.Text.subtle)
@@ -135,8 +149,28 @@ struct WalletView: View {
                 }
                 .disabled(withdrawable == 0)
             }
+
+            Text("Withdrawals processed within 3–5 business days")
+                .font(.caption)
+                .foregroundStyle(Theme.Color.Content.Text.disabled)
+                .multilineTextAlignment(.center)
+                .frame(maxWidth: .infinity)
         }
         .padding(.horizontal, 16)
+    }
+
+    // MARK: - Pending Info Popover
+
+    @ViewBuilder private var pendingInfoPopoverContent: some View {
+        let content = Text("Funds awaiting settlement from active leagues")
+            .font(.caption)
+            .foregroundStyle(Theme.Color.Content.Text.default)
+            .padding(12)
+        if #available(iOS 16.4, *) {
+            content.presentationCompactAdaptation(.popover)
+        } else {
+            content
+        }
     }
 
     // MARK: - Transaction History
@@ -182,101 +216,5 @@ struct WalletView: View {
         .background(Theme.Color.Surface.Background.container)
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .padding(.horizontal, 16)
-    }
-}
-
-// MARK: - Transaction Row
-
-private struct TransactionRow: View {
-    let transaction: WalletTransaction
-
-    var body: some View {
-        HStack(spacing: 12) {
-            ZStack {
-                Circle()
-                    .fill(iconBackgroundColor.opacity(0.15))
-                    .frame(width: 36, height: 36)
-                Image(systemName: iconName)
-                    .font(.system(size: 16, weight: .medium))
-                    .foregroundStyle(iconBackgroundColor)
-            }
-
-            VStack(alignment: .leading, spacing: 2) {
-                Text(transactionTitle)
-                    .font(.subheadline.weight(.medium))
-                    .foregroundStyle(Theme.Color.Content.Text.default)
-                if let notes = transaction.notes {
-                    Text(notes)
-                        .font(.caption)
-                        .foregroundStyle(Theme.Color.Content.Text.subtle)
-                } else {
-                    Text(formattedDate)
-                        .font(.caption)
-                        .foregroundStyle(Theme.Color.Content.Text.disabled)
-                }
-            }
-
-            Spacer()
-
-            Text((transaction.isCredit ? "+" : "-") + transaction.amountFormatted)
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(
-                    transaction.isCredit
-                        ? Theme.Color.Status.Success.resting
-                        : Theme.Color.Status.Error.resting
-                )
-        }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 12)
-    }
-
-    private var iconName: String {
-        switch transaction.type {
-        case .topUp:
-            return Theme.Icon.Wallet.topUp
-        case .stake:
-            return Theme.Icon.League.trophyCircle
-        case .stakeRefund:
-            return Theme.Icon.Wallet.refund
-        case .winnings:
-            return Theme.Icon.Wallet.winnings
-        case .withdrawal:
-            return Theme.Icon.Wallet.withdrawal
-        }
-    }
-
-    private var iconBackgroundColor: Color {
-        switch transaction.type {
-        case .topUp, .winnings:
-            return Theme.Color.Status.Success.resting
-        case .stake:
-            return Theme.Color.Primary.resting
-        case .stakeRefund:
-            return Theme.Color.Status.Warning.resting
-        case .withdrawal:
-            return Theme.Color.Status.Error.resting
-        }
-    }
-
-    private var transactionTitle: String {
-        switch transaction.type {
-        case .topUp:
-            return "Top Up"
-        case .stake:
-            return "Stake"
-        case .stakeRefund:
-            return "Stake Refund"
-        case .winnings:
-            return "Winnings"
-        case .withdrawal:
-            return "Withdrawal"
-        }
-    }
-
-    private var formattedDate: String {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .none
-        return formatter.string(from: transaction.createdAt)
     }
 }
