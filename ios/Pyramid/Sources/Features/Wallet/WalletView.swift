@@ -4,6 +4,7 @@ import SwiftUI
 
 struct WalletView: View {
     @StateObject private var viewModel = WalletViewModel()
+    @State private var showPendingInfo = false
 
     var body: some View {
         NavigationStack {
@@ -65,7 +66,8 @@ struct WalletView: View {
                     .font(.subheadline)
                     .foregroundStyle(Theme.Color.Content.Text.subtle)
                 Text(viewModel.wallet?.availableToPlayFormatted ?? "–")
-                    .font(.system(size: 48, weight: .bold, design: .rounded))
+                    .font(.system(.largeTitle, design: .rounded))
+                    .fontWeight(.bold)
                     .foregroundStyle(Theme.Color.Content.Text.default)
             }
 
@@ -90,9 +92,21 @@ struct WalletView: View {
                     .frame(width: 1, height: 32)
 
                 VStack(spacing: 2) {
-                    Text("Pending")
-                        .font(.caption)
-                        .foregroundStyle(Theme.Color.Content.Text.disabled)
+                    HStack(spacing: 4) {
+                        Text("Pending")
+                            .font(.caption)
+                            .foregroundStyle(Theme.Color.Content.Text.disabled)
+                        Button {
+                            showPendingInfo = true
+                        } label: {
+                            Image(systemName: "info.circle")
+                                .font(.caption)
+                                .foregroundStyle(Theme.Color.Content.Text.disabled)
+                        }
+                        .popover(isPresented: $showPendingInfo) {
+                            pendingInfoPopoverContent
+                        }
+                    }
                     Text(viewModel.wallet?.pendingFormatted ?? "–")
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(Theme.Color.Content.Text.subtle)
@@ -135,8 +149,29 @@ struct WalletView: View {
                 }
                 .disabled(withdrawable == 0)
             }
+
+            Text("Withdrawals processed within 3–5 business days")
+                .font(.caption)
+                .foregroundStyle(Theme.Color.Content.Text.disabled)
+                .multilineTextAlignment(.center)
+                .frame(maxWidth: .infinity)
         }
         .padding(.horizontal, 16)
+    }
+
+    // MARK: - Pending Info Popover
+
+    @ViewBuilder
+    private var pendingInfoPopoverContent: some View {
+        let content = Text("Funds awaiting settlement from active leagues")
+            .font(.caption)
+            .foregroundStyle(Theme.Color.Content.Text.default)
+            .padding(12)
+        if #available(iOS 16.4, *) {
+            content.presentationCompactAdaptation(.popover)
+        } else {
+            content
+        }
     }
 
     // MARK: - Transaction History

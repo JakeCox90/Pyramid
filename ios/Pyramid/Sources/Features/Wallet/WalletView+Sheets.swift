@@ -10,17 +10,6 @@ struct TopUpSheet: View {
 
     private let quickAmounts = [500, 1000, 2500, 5000]  // £5, £10, £25, £50
 
-    private var resolvedAmountPence: Int? {
-        if let selected = selectedAmountPence { return selected }
-        guard let value = Double(customAmountText), value >= 5 else { return nil }
-        return Int(value * 100)
-    }
-
-    private var continueEnabled: Bool {
-        guard let amount = resolvedAmountPence else { return false }
-        return amount >= 500  // £5 minimum
-    }
-
     var body: some View {
         NavigationStack {
             ZStack {
@@ -109,23 +98,16 @@ struct TopUpSheet: View {
 
                     Spacer()
 
-                    Button {
-                        // Stripe payment integration pending GATE decision
-                        isPresented = false
-                    } label: {
-                        Text("Continue")
+                    Button {} label: {
+                        Text("Payment processing coming soon")
                             .font(.headline)
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Theme.Color.Content.Text.disabled)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 16)
-                            .background(
-                                continueEnabled
-                                    ? Theme.Color.Primary.resting
-                                    : Theme.Color.Surface.Background.container
-                            )
+                            .background(Theme.Color.Surface.Background.container)
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
-                    .disabled(!continueEnabled)
+                    .disabled(true)
                     .padding(.horizontal, 16)
                     .padding(.bottom, 16)
                 }
