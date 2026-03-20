@@ -56,6 +56,14 @@ final class AppState: ObservableObject {
         showOnboarding = false
     }
 
+    #if DEBUG
+    func resetToOnboarding() {
+        guard let userId = session?.user.id.uuidString else { return }
+        UserDefaults.standard.set(false, forKey: onboardingKey(for: userId))
+        showOnboarding = true
+    }
+    #endif
+
     private func checkOnboardingStatus() {
         guard let userId = session?.user.id.uuidString else { return }
         let completed = UserDefaults.standard.bool(forKey: onboardingKey(for: userId))

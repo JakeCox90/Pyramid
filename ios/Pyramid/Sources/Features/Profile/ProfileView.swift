@@ -4,6 +4,12 @@ struct ProfileView: View {
     @EnvironmentObject private var appState: AppState
     @StateObject private var viewModel = ProfileViewModel()
 
+    #if DEBUG
+    @State private var isResettingGame = false
+    @State private var isResettingFull = false
+    @State private var resetMessage: String?
+    #endif
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -30,6 +36,10 @@ struct ProfileView: View {
                     }
 
                     settingsSection
+
+                    #if DEBUG
+                    devToolsSection
+                    #endif
 
                     if let error = viewModel.errorMessage {
                         Text(error)
@@ -112,6 +122,112 @@ private extension ProfileView {
         .accessibilityLabel("Sign Out")
     }
 }
+
+// MARK: - Developer Tools
+
+#if DEBUG
+private extension ProfileView {
+    var devToolsSection: some View {
+        VStack(spacing: Theme.Spacing.s20) {
+            Text("Developer Tools")
+                .font(Theme.Typography.footnote)
+                .foregroundStyle(Theme.Color.Content.Text.subtle)
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+            resetButton(
+                title: "Reset Game Data",
+                subtitle: "Re-seeds leagues, picks & fixtures",
+                isLoading: isResettingGame,
+                action: { await performReset(mode: "game") }
+            )
+
+            resetButton(
+                title: "Reset Everything",
+                subtitle: "Game data + restart onboarding",
+                isLoading: isResettingFull,
+                action: { await performReset(mode: "full") }
+            )
+
+            if let resetMessage {
+                Text(resetMessage)
+                    .font(Theme.Typography.footnote)
+                    .foregroundStyle(Theme.Color.Content.Text.subtle)
+                    .transition(.opacity)
+            }
+        }
+        .padding(.horizontal, Theme.Spacing.s40)
+    }
+
+    func resetButton(
+        title: String,
+        subtitle: String,
+        isLoading: Bool,
+        action: @escaping () async -> Void
+    ) -> some View {
+        Button {
+            Task { await action() }
+        } label: {
+            HStack {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title)
+                        .font(Theme.Typography.callout)
+                        .foregroundStyle(Theme.Color.Content.Text.default)
+                    Text(subtitle)
+                        .font(Theme.Typography.caption1)
+                        .foregroundStyle(Theme.Color.Content.Text.subtle)
+                }
+                Spacer()
+                if isLoading {
+                    ProgressView()
+                } else {
+                    Image(systemName: "arrow.counterclockwise")
+                        .foregroundStyle(Theme.Color.Content.Text.subtle)
+                }
+            }
+            .padding(Theme.Spacing.s30)
+            .background(Theme.Color.Surface.Background.container)
+            .clipShape(
+                RoundedRectangle(cornerRadius: Theme.Radius.default)
+            )
+        }
+        .buttonStyle(.plain)
+        .disabled(isResettingGame || isResettingFull)
+    }
+
+    func performReset(mode: String) async {
+        let isFull = mode == "full"
+        if isFull {
+            isResettingFull = true
+        } else {
+            isResettingGame = true
+        }
+        resetMessage = nil
+
+        do {
+            let client = SupabaseDependency.shared.client
+            let response = try await DevResetService.reset(
+                mode: mode,
+                client: client
+            )
+
+            if response.clearOnboarding {
+                appState.resetToOnboarding()
+            }
+
+            resetMessage = "Reset complete (\(mode))"
+        } catch {
+            Log.auth.error("DevReset failed: \(error.localizedDescription)")
+            resetMessage = "Reset failed: \(error.localizedDescription)"
+        }
+
+        if isFull {
+            isResettingFull = false
+        } else {
+            isResettingGame = false
+        }
+    }
+}
+#endif
 
 // MARK: - Preview
 
