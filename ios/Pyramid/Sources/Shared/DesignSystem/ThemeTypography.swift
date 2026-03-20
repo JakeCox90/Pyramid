@@ -3,16 +3,16 @@ import SwiftUI
 
 extension Theme {
     enum Typography {
-        static let display = Font.system(size: 40, weight: .bold)
-        static let title1 = Font.system(size: 28, weight: .bold)
-        static let title2 = Font.system(size: 24, weight: .semibold)
-        static let title3 = Font.system(size: 20, weight: .semibold)
-        static let headline = Font.system(size: 18, weight: .semibold)
-        static let body = Font.system(size: 16, weight: .regular)
-        static let callout = Font.system(size: 16, weight: .regular)
-        static let subheadline = Font.system(size: 14, weight: .regular)
-        static let footnote = Font.system(size: 14, weight: .regular)
-        static let caption1 = Font.system(size: 12, weight: .regular)
-        static let caption2 = Font.system(size: 12, weight: .regular)
+        static let display = Font.custom("Inter-Bold", size: 40)
+        static let title1 = Font.custom("Inter-Bold", size: 28)
+        static let title2 = Font.custom("Inter-SemiBold", size: 24)
+        static let title3 = Font.custom("Inter-SemiBold", size: 20)
+        static let headline = Font.custom("Inter-SemiBold", size: 18)
+        static let body = Font.custom("Inter-Regular", size: 16)
+        static let callout = Font.custom("Inter-Regular", size: 16)
+        static let subheadline = Font.custom("Inter-Regular", size: 14)
+        static let footnote = Font.custom("Inter-Regular", size: 14)
+        static let caption1 = Font.custom("Inter-Regular", size: 12)
+        static let caption2 = Font.custom("Inter-Regular", size: 12)
     }
 }

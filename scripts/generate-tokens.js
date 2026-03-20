@@ -225,7 +225,7 @@ function generateThemeColors() {
     // Surface.Background
     lines.push(`${indent12}enum Background {`);
     const surfaceBg = semanticColor.surface.background;
-    for (const name of ['container', 'highlight', 'page', 'disabled', 'transparent']) {
+    for (const name of ['container', 'elevated', 'highlight', 'page', 'disabled', 'transparent']) {
         lines.push(generateColorToken(name, surfaceBg[name].light.value, surfaceBg[name].dark.value, indent16));
     }
     lines.push(`${indent12}}`);
@@ -347,6 +347,18 @@ function generateThemeSpacing() {
     lines.push('        self.shadow(color: style.color, radius: style.radius, x: style.x, y: style.y)');
     lines.push('    }');
     lines.push('}');
+    lines.push('');
+
+    // Gradient — from Figma design system
+    lines.push('extension Theme {');
+    lines.push('    enum Gradient {');
+    lines.push('        static let primary = LinearGradient(');
+    lines.push('            colors: [Theme.color(light: "5E4E80", dark: "5E4E80"), Theme.color(light: "2C253D", dark: "2C253D")],');
+    lines.push('            startPoint: .top,');
+    lines.push('            endPoint: .bottom');
+    lines.push('        )');
+    lines.push('    }');
+    lines.push('}');
 
     return lines.join('\n') + '\n';
 }
@@ -354,16 +366,12 @@ function generateThemeSpacing() {
 // ─── Generate ThemeTypography.swift ──────────────────────────────────────────
 
 function generateThemeTypography() {
-    const fontWeightMap = {
-        'Thin': '.thin',
-        'Extra Light': '.ultraLight',
-        'Light': '.light',
-        'Regular': '.regular',
-        'Medium': '.medium',
-        'Semi Bold': '.semibold',
-        'Bold': '.bold',
-        'Extra Bold': '.heavy',
-        'Black': '.black',
+    // Map token weight names → Inter static font file names
+    const interFontNameMap = {
+        'Regular': 'Inter-Regular',
+        'Medium': 'Inter-Medium',
+        'Semi Bold': 'Inter-SemiBold',
+        'Bold': 'Inter-Bold',
     };
 
     // Semantic name → { fontSizeKey, fontWeightKey }
@@ -390,8 +398,11 @@ function generateThemeTypography() {
     for (const entry of typographyMap) {
         const fontSize = semanticTypography.fontSize[entry.fontSizeKey].value;
         const fontWeightName = semanticTypography.fontWeight[entry.fontWeightKey].value;
-        const swiftWeight = fontWeightMap[fontWeightName];
-        lines.push(`        static let ${entry.name} = Font.system(size: ${fontSize}, weight: ${swiftWeight})`);
+        const interName = interFontNameMap[fontWeightName];
+        if (!interName) {
+            throw new Error(`No Inter font mapped for weight: ${fontWeightName}`);
+        }
+        lines.push(`        static let ${entry.name} = Font.custom("${interName}", size: ${fontSize})`);
     }
 
     lines.push('    }');
