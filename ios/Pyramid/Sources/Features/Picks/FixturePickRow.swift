@@ -119,5 +119,7 @@ struct FixturePickRow: View {
             .overlay { if showCelebration && celebratedTeamId == teamId { ConfettiView() } }
         }
         .disabled(isDisabled && !isPicked)
+        .accessibilityLabel(isUsed ? "\(teamName), already used" : "Pick \(teamName)")
+        .accessibilityHint(isDisabled ? "" : "Double-tap to select this team")
     }
 }

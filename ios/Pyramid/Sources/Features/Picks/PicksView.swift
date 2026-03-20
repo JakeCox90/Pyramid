@@ -102,11 +102,13 @@ struct PicksView: View {
                     HStack {
                         Image(systemName: Theme.Icon.Pick.timeRemaining)
                             .foregroundStyle(Theme.Color.Status.Warning.resting)
+                            .accessibilityHidden(true)
                         Text(deadline)
                             .font(Theme.Typography.subheadline.bold())
                             .foregroundStyle(Theme.Color.Status.Warning.resting)
                     }
                     .padding(.horizontal, Theme.Spacing.s40)
+                    .accessibilityLabel("Deadline: \(deadline)")
                 }
 
                 Text("Tap a team to submit your pick. Teams already used this season are greyed out.")
@@ -139,6 +141,7 @@ struct PicksView: View {
         HStack {
             Image(systemName: pick.isLocked ? Theme.Icon.Pick.locked : Theme.Icon.Status.success)
                 .foregroundStyle(pick.isLocked ? Theme.Color.Content.Text.disabled : Theme.Color.Status.Success.resting)
+                .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 2) {
                 Text(pick.isLocked ? "Pick locked: \(pick.teamName)" : "Current pick: \(pick.teamName)")
                     .font(Theme.Typography.subheadline.bold())
@@ -161,6 +164,7 @@ struct PicksView: View {
         HStack {
             Image(systemName: Theme.Icon.Status.success)
                 .foregroundStyle(Theme.Color.Status.Success.resting)
+                .accessibilityHidden(true)
             Text(message)
                 .font(Theme.Typography.subheadline)
                 .foregroundStyle(Theme.Color.Content.Text.default)
@@ -170,12 +174,15 @@ struct PicksView: View {
         .background(Theme.Color.Status.Success.subtle)
         .clipShape(RoundedRectangle(cornerRadius: 10))
         .padding(.horizontal, Theme.Spacing.s40)
+        .accessibilityElement(children: .combine)
+        .accessibilityAddTraits(.isStaticText)
     }
 
     private func errorBanner(message: String) -> some View {
         HStack {
             Image(systemName: Theme.Icon.Status.errorFill)
                 .foregroundStyle(Theme.Color.Status.Error.resting)
+                .accessibilityHidden(true)
             Text(message)
                 .font(Theme.Typography.subheadline)
                 .foregroundStyle(Theme.Color.Content.Text.default)
@@ -185,5 +192,7 @@ struct PicksView: View {
         .background(Theme.Color.Status.Error.subtle)
         .clipShape(RoundedRectangle(cornerRadius: 10))
         .padding(.horizontal, Theme.Spacing.s40)
+        .accessibilityElement(children: .combine)
+        .accessibilityAddTraits(.isStaticText)
     }
 }

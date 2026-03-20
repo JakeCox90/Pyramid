@@ -33,19 +33,23 @@ struct LeagueDetailView: View {
                     } label: {
                         Image(systemName: Theme.Icon.Pick.history)
                     }
+                    .accessibilityLabel("Pick history")
                     Button {
                         showShareSheet = true
                     } label: {
                         Image(systemName: Theme.Icon.Action.share)
                     }
+                    .accessibilityLabel("Share league")
                     Button {
                         showResults = true
                     } label: {
                         Image(systemName: Theme.Icon.Pick.gameweek)
                     }
+                    .accessibilityLabel("View results")
                     if viewModel.league.status == .active {
                         Button("My Pick") { showPicks = true }
                             .buttonStyle(.borderedProminent)
+                            .accessibilityLabel("Make your pick")
                     }
                 }
             }
@@ -102,6 +106,7 @@ struct LeagueDetailView: View {
             Image(systemName: Theme.Icon.Status.error)
                 .font(.system(size: 48))
                 .foregroundStyle(Theme.Color.Border.default)
+                .accessibilityHidden(true)
             Text(message)
                 .font(Theme.Typography.subheadline)
                 .foregroundStyle(Theme.Color.Content.Text.disabled)
@@ -134,6 +139,7 @@ struct LeagueDetailView: View {
             Image(systemName: Theme.Icon.League.members)
                 .font(.system(size: 48))
                 .foregroundStyle(Theme.Color.Border.default)
+                .accessibilityHidden(true)
             Text("No other members yet")
                 .font(Theme.Typography.title3)
                 .foregroundStyle(Theme.Color.Content.Text.default)
@@ -152,6 +158,7 @@ struct LeagueDetailView: View {
                 HStack {
                     Image(systemName: Theme.Icon.Pick.locked)
                         .foregroundStyle(Theme.Color.Content.Text.disabled)
+                        .accessibilityHidden(true)
                     Text("Picks are hidden until kick-off")
                         .font(Theme.Typography.caption1)
                         .foregroundStyle(Theme.Color.Content.Text.disabled)
