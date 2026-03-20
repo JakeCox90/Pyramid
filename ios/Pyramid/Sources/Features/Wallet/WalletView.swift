@@ -3,7 +3,7 @@ import SwiftUI
 // MARK: - WalletView
 
 struct WalletView: View {
-    @StateObject private var viewModel = WalletViewModel()
+    @StateObject var viewModel = WalletViewModel()
     @State private var showPendingInfo = false
 
     var body: some View {
