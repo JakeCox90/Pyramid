@@ -9,6 +9,7 @@ final class AppState: ObservableObject {
     @Published var session: Session?
     @Published var isLoading = true
     @Published var showOnboarding = false
+    @Published var loadError: String?
 
     let supabase: SupabaseClient
 
@@ -17,19 +18,36 @@ final class AppState: ObservableObject {
     }
 
     func loadSession() async {
+        isLoading = true
+        loadError = nil
         do {
-            session = try await supabase.auth.session
+            let session = try await withTimeout(seconds: 10) {
+                try await self.supabase.auth.session
+            }
+            self.session = session
             Log.auth.info(
                 "Session loaded: user=\(self.session?.user.id.uuidString.prefix(8) ?? "nil")"
             )
             checkOnboardingStatus()
+        } catch is TimeoutError {
+            Log.auth.error("Session load timed out")
+            loadError = "Check your internet connection and try again."
         } catch {
             Log.auth.error("Session load failed: \(error.localizedDescription)")
+            loadError = "Your session has expired. Please sign in again."
             session = nil
         }
         isLoading = false
 
-        listenForAuthChanges()
+        if loadError == nil {
+            listenForAuthChanges()
+        }
+    }
+
+    func retryLoadSession() async {
+        loadError = nil
+        isLoading = true
+        await loadSession()
     }
 
     func completeOnboarding() {
@@ -58,6 +76,26 @@ final class AppState: ObservableObject {
                     self.checkOnboardingStatus()
                 }
             }
+        }
+    }
+
+    // MARK: - Timeout helpers
+
+    private struct TimeoutError: Error {}
+
+    private func withTimeout<T>(
+        seconds: TimeInterval,
+        operation: @escaping () async throws -> T
+    ) async throws -> T {
+        try await withThrowingTaskGroup(of: T.self) { group in
+            group.addTask { try await operation() }
+            group.addTask {
+                try await Task.sleep(nanoseconds: UInt64(seconds * 1_000_000_000))
+                throw TimeoutError()
+            }
+            let result = try await group.next()!
+            group.cancelAll()
+            return result
         }
     }
 }
