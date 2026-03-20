@@ -2,6 +2,7 @@ import SwiftUI
 
 struct PicksView: View {
     @StateObject private var viewModel: PicksViewModel
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     init(leagueId: String) {
         _viewModel = StateObject(wrappedValue: PicksViewModel(leagueId: leagueId))
@@ -87,7 +88,10 @@ struct PicksView: View {
                 if let success = viewModel.successMessage {
                     successBanner(message: success)
                         .transition(.move(edge: .top).combined(with: .opacity))
-                        .animation(.spring(response: 0.4), value: viewModel.successMessage)
+                        .animation(
+                            reduceMotion ? nil : .spring(response: 0.4),
+                            value: viewModel.successMessage
+                        )
                 }
                 if let error = viewModel.errorMessage {
                     errorBanner(message: error)
