@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		01DD6DAA1AB77AEBEB9E9445 /* Gameweek.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C8CA520C03B704C80A9EE64 /* Gameweek.swift */; };
 		036DD3A47815789A75D32912 /* JoinPaidLeagueView+Subviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90E51A69C9956AE38B5BC50D /* JoinPaidLeagueView+Subviews.swift */; };
+		067DB988E114446D5B88B2AE /* WalletView+Transactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8A69DA96FB2FEE16834DDB9 /* WalletView+Transactions.swift */; };
 		07D4065B76C454F135FBEEF6 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6F92FE092EC760C205458A7 /* ProfileView.swift */; };
 		09BA31524053D46EBF2F0A12 /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB29F01766DC5BCB51AB45C5 /* AppError.swift */; };
 		09C7D71D93EEFEBA179955E1 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AB86047F9178A4FF08B9548 /* HomeView.swift */; };
@@ -260,6 +261,7 @@
 		F4A917CC8D1E61EAB117893D /* HomeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeService.swift; sourceTree = "<group>"; };
 		F4C442226AEE75950E7DBF39 /* JoinPaidLeagueViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinPaidLeagueViewModel.swift; sourceTree = "<group>"; };
 		F63B37BEFCB4682687939E4D /* CreateLeagueViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateLeagueViewModel.swift; sourceTree = "<group>"; };
+		F8A69DA96FB2FEE16834DDB9 /* WalletView+Transactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WalletView+Transactions.swift"; sourceTree = "<group>"; };
 		FA78A7680CA200466833A894 /* LeagueDetailView+Complete.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LeagueDetailView+Complete.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -403,6 +405,7 @@
 				615CD21080A04466667FE8E9 /* TransactionRow.swift */,
 				B8BCD3F46DADD8CD42294C6C /* WalletView.swift */,
 				02AFA863A205D6EBCA08EA91 /* WalletView+Sheets.swift */,
+				F8A69DA96FB2FEE16834DDB9 /* WalletView+Transactions.swift */,
 				B48CA2CD03079EC7728A091F /* WalletViewModel.swift */,
 			);
 			path = Wallet;
@@ -790,6 +793,7 @@
 				7ED7DBFE127BB0BC6B8BFCE4 /* WalletService.swift in Sources */,
 				BFEFF38173238FF865088D99 /* WalletTransaction.swift in Sources */,
 				792AE4EF19C36B51EB6B1FC5 /* WalletView+Sheets.swift in Sources */,
+				067DB988E114446D5B88B2AE /* WalletView+Transactions.swift in Sources */,
 				96D1A82E790D90918DA4B672 /* WalletView.swift in Sources */,
 				7D436E5E9070E3F8F48E64CA /* WalletViewModel.swift in Sources */,
 				5333C5A849111C688BBCCD20 /* main.swift in Sources */,
