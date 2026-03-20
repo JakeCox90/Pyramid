@@ -57,10 +57,18 @@ struct TopUpSheet: View {
                                 } label: {
                                     Text(label)
                                         .font(.headline)
-                                        .foregroundStyle(selectedAmountPence == pence ? .white : Theme.Color.Content.Text.default)
+                                        .foregroundStyle(
+                                            selectedAmountPence == pence
+                                                ? .white
+                                                : Theme.Color.Content.Text.default
+                                        )
                                         .frame(maxWidth: .infinity)
                                         .padding(.vertical, 16)
-                                        .background(selectedAmountPence == pence ? Theme.Color.Primary.resting : Theme.Color.Surface.Background.container)
+                                        .background(
+                                            selectedAmountPence == pence
+                                                ? Theme.Color.Primary.resting
+                                                : Theme.Color.Surface.Background.container
+                                        )
                                         .clipShape(RoundedRectangle(cornerRadius: 12))
                                 }
                             }
@@ -110,7 +118,11 @@ struct TopUpSheet: View {
                             .foregroundStyle(.white)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 16)
-                            .background(continueEnabled ? Theme.Color.Primary.resting : Theme.Color.Surface.Background.container)
+                            .background(
+                                continueEnabled
+                                    ? Theme.Color.Primary.resting
+                                    : Theme.Color.Surface.Background.container
+                            )
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
                     .disabled(!continueEnabled)
@@ -245,7 +257,11 @@ struct WithdrawSheet: View {
                         }
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
-                        .background(withdrawEnabled ? Theme.Color.Status.Error.resting : Theme.Color.Surface.Background.container)
+                        .background(
+                            withdrawEnabled
+                                ? Theme.Color.Status.Error.resting
+                                : Theme.Color.Surface.Background.container
+                        )
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
                     .disabled(!withdrawEnabled)
