@@ -2,7 +2,8 @@ import SwiftUI
 
 struct PicksView: View {
     @StateObject private var viewModel: PicksViewModel
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.accessibilityReduceMotion)
+    private var reduceMotion
 
     init(leagueId: String) {
         _viewModel = StateObject(wrappedValue: PicksViewModel(leagueId: leagueId))

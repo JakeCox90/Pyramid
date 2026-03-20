@@ -11,7 +11,8 @@ struct FixturePickRow: View {
     var showCelebration: Bool = false
     let onPick: (Int, String) -> Void
 
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.accessibilityReduceMotion)
+    private var reduceMotion
 
     private var kickoffText: String {
         let formatter = DateFormatter()

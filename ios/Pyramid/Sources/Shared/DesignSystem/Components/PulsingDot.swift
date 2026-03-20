@@ -2,7 +2,8 @@ import SwiftUI
 
 struct PulsingDot: View {
     @State private var pulse = false
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.accessibilityReduceMotion)
+    private var reduceMotion
 
     var body: some View {
         Circle()

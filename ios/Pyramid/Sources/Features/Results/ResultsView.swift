@@ -2,7 +2,8 @@ import SwiftUI
 
 struct ResultsView: View {
     @StateObject private var viewModel: ResultsViewModel
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.accessibilityReduceMotion)
+    private var reduceMotion
 
     init(leagueId: String, season: Int) {
         _viewModel = StateObject(

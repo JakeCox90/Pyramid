@@ -3,7 +3,8 @@ import SwiftUI
 struct ConfettiView: View {
     @State private var particles: [ConfettiParticle] = []
     @State private var isAnimating = false
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.accessibilityReduceMotion)
+    private var reduceMotion
 
     private let colors: [Color] = [
         Theme.Color.Status.Success.resting,

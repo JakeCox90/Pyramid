@@ -9,7 +9,8 @@ struct MemberRow: View {
     let deadlinePassed: Bool
 
     @State private var livePulse = false
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.accessibilityReduceMotion)
+    private var reduceMotion
 
     var body: some View {
         DSCard {
