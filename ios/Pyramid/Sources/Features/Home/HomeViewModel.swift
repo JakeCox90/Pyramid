@@ -93,7 +93,8 @@ final class HomeViewModel: ObservableObject {
                 gameweek: data.gameweek,
                 picks: data.picks,
                 memberStatuses: data.memberStatuses,
-                fixtures: fixtureMap
+                fixtures: fixtureMap,
+                lastGwResults: data.lastGwResults
             )
             updatePolling()
         } catch {
