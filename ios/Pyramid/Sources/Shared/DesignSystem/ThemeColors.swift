@@ -76,17 +76,19 @@ extension Theme {
         }
         enum Surface {
             enum Background {
-                static let container = adaptive("FFFFFF", "2C3354")
+                static let container = adaptive("FFFFFF", "2C253D")
+                static let elevated = adaptive("FFFFFF", "3D3354")
                 static let highlight = adaptiveUI(
                     light: rgba(255, 255, 255, 0.1), dark: rgba(255, 255, 255, 0.1)
                 )
-                static let page = adaptive("F3F3F3", "20273B")
+                static let page = adaptive("F3F3F3", "231D31")
                 static let disabled = adaptiveUI(
                     light: Theme.hexToUIColor("E3E3E3"),
                     dark: rgba(255, 255, 255, 0.4)
                 )
                 static let transparent = adaptiveUI(
-                    light: rgba(255, 255, 255, 0), dark: rgba(44, 51, 84, 0)
+                    light: rgba(255, 255, 255, 0),
+                    dark: Theme.hexToUIColor("231D31")
                 )
             }
             enum Overlay {

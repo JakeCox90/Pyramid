@@ -22,6 +22,7 @@ struct HomeView: View {
             .background(
                 Theme.Color.Surface.Background.page.ignoresSafeArea()
             )
+            .task { await viewModel.load() }
         }
     }
 
@@ -51,7 +52,7 @@ struct HomeView: View {
     func contentView(_ data: HomeData) -> some View {
         ScrollView {
             VStack(alignment: .leading, spacing: Theme.Spacing.s40) {
-                summarySection(data)
+                picksNeededSection(data)
                 liveMatchSection()
                 lastGwResultsSection(data)
                 leaguesSection(data)
@@ -59,47 +60,85 @@ struct HomeView: View {
             .padding(Theme.Spacing.s40)
         }
         .refreshable { await viewModel.load() }
-        .task { await viewModel.load() }
         .onDisappear { viewModel.stopPolling() }
     }
 
-    func summarySection(_ data: HomeData) -> some View {
-        let aliveCount = data.memberStatuses.values
-            .filter { $0 == .active }.count
-        let picksNeeded = data.leagues.filter { league in
+    func picksNeededSection(_ data: HomeData) -> some View {
+        let leaguesNeedingPick = data.leagues.filter { league in
             data.picks[league.id] == nil
                 && data.memberStatuses[league.id] == .active
-        }.count
+        }
 
-        return VStack(alignment: .leading, spacing: Theme.Spacing.s20) {
-            HStack(spacing: Theme.Spacing.s20) {
-                Circle()
-                    .fill(
-                        aliveCount > 0
-                            ? Theme.Color.Status.Success.resting
-                            : Theme.Color.Status.Error.resting
-                    )
-                    .frame(width: 10, height: 10)
-                    .accessibilityHidden(true)
-                Text("Alive in \(aliveCount) league\(aliveCount == 1 ? "" : "s")")
-                    .font(Theme.Typography.headline)
-                    .foregroundStyle(Theme.Color.Content.Text.default)
+        return Group {
+            if !leaguesNeedingPick.isEmpty {
+                VStack(alignment: .leading, spacing: Theme.Spacing.s20) {
+                    Text("Picks Needed")
+                        .font(Theme.Typography.headline)
+                        .foregroundStyle(Theme.Color.Content.Text.default)
+
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: Theme.Spacing.s30) {
+                            ForEach(leaguesNeedingPick) { league in
+                                NavigationLink(
+                                    destination: LeagueDetailView(
+                                        league: league
+                                    )
+                                ) {
+                                    pickNeededCard(
+                                        league: league,
+                                        gameweek: data.gameweek
+                                    )
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+                    }
+                }
             }
+        }
+    }
 
-            if picksNeeded > 0 {
-                Text("\(picksNeeded) pick\(picksNeeded == 1 ? "" : "s") needed")
-                    .font(Theme.Typography.subheadline)
-                    .foregroundStyle(Theme.Color.Status.Warning.resting)
-            }
+    private func pickNeededCard(
+        league: League,
+        gameweek: Gameweek?
+    ) -> some View {
+        VStack(alignment: .leading, spacing: Theme.Spacing.s20) {
+            Text(league.name)
+                .font(Theme.Typography.headline)
+                .foregroundStyle(Theme.Color.Content.Text.default)
+                .lineLimit(1)
 
-            if let gw = data.gameweek {
+            if let gw = gameweek {
                 Text(gw.name)
                     .font(Theme.Typography.caption1)
                     .foregroundStyle(Theme.Color.Content.Text.subtle)
             }
+
+            if let deadline = gameweek?.deadlineAt {
+                Text(deadline, style: .relative)
+                    .font(Theme.Typography.caption1)
+                    .foregroundStyle(
+                        Theme.Color.Status.Warning.resting
+                    )
+            }
+
+            HStack {
+                Text("Select a pick")
+                    .font(Theme.Typography.callout)
+                    .foregroundStyle(Theme.Color.Primary.text)
+                Image(systemName: "chevron.right")
+                    .font(Theme.Typography.caption1)
+                    .foregroundStyle(Theme.Color.Primary.text)
+            }
+            .padding(.horizontal, Theme.Spacing.s30)
+            .padding(.vertical, Theme.Spacing.s20)
+            .background(Theme.Color.Primary.resting)
+            .clipShape(
+                RoundedRectangle(cornerRadius: Theme.Radius.default)
+            )
         }
         .padding(Theme.Spacing.s40)
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(width: 200, alignment: .leading)
         .background(Theme.Color.Surface.Background.container)
         .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.r40))
     }

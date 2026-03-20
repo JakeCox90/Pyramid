@@ -56,3 +56,13 @@ extension View {
         self.shadow(color: style.color, radius: style.radius, x: style.x, y: style.y)
     }
 }
+
+extension Theme {
+    enum Gradient {
+        static let primary = LinearGradient(
+            colors: [Theme.color(light: "5E4E80", dark: "5E4E80"), Theme.color(light: "2C253D", dark: "2C253D")],
+            startPoint: .top,
+            endPoint: .bottom
+        )
+    }
+}
