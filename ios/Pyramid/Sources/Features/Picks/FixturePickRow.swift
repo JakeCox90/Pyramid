@@ -89,7 +89,7 @@ struct FixturePickRow: View {
                             .font(Theme.Typography.title2.bold())
                             .foregroundStyle(Theme.Color.Content.Text.default)
                     }
-                    TeamBadge(logoURL: logoURL, shortName: shortName, size: 32)
+                    TeamBadge(teamName: teamName, logoURL: logoURL, size: 32)
                     Text(teamName)
                         .font(Theme.Typography.caption2)
                         .foregroundStyle(
