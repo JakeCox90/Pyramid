@@ -117,6 +117,7 @@ struct PicksView: View {
                         usedTeamIds: viewModel.usedTeamIds,
                         isLocked: viewModel.isFixtureLocked(fixture),
                         isSubmitting: viewModel.isSubmitting,
+                        submittingTeamId: viewModel.submittingTeamId,
                         celebratedTeamId: viewModel.celebratedTeamId,
                         showCelebration: viewModel.showCelebration
                     ) { teamId, teamName in

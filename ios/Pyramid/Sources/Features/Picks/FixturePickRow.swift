@@ -6,6 +6,7 @@ struct FixturePickRow: View {
     let usedTeamIds: Set<Int>
     let isLocked: Bool
     let isSubmitting: Bool
+    var submittingTeamId: Int?
     var celebratedTeamId: Int?
     var showCelebration: Bool = false
     let onPick: (Int, String) -> Void
@@ -71,6 +72,8 @@ struct FixturePickRow: View {
     ) -> some View {
         let isPicked = selectedTeamId == teamId
         let isUsed = usedTeamIds.contains(teamId) && !isPicked
+        let isThisTeamSubmitting = submittingTeamId == teamId
+        let isOtherTeamSubmitting = submittingTeamId != nil && !isThisTeamSubmitting
         let isDisabled = isLocked || isSubmitting || isUsed
 
         Button {
@@ -78,21 +81,26 @@ struct FixturePickRow: View {
             onPick(teamId, teamName)
         } label: {
             VStack(spacing: Theme.Spacing.s10) {
-                if let score {
-                    Text("\(score)")
-                        .font(Theme.Typography.title2.bold())
-                        .foregroundStyle(Theme.Color.Content.Text.default)
-                }
-                TeamBadge(logoURL: logoURL, shortName: shortName, size: 32)
-                Text(teamName)
-                    .font(Theme.Typography.caption2)
-                    .foregroundStyle(isPicked ? Color.white.opacity(0.8) : Theme.Color.Content.Text.disabled)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.7)
-                if isUsed {
-                    Text("Used")
+                if isThisTeamSubmitting {
+                    ProgressView()
+                        .frame(height: 32)
+                } else {
+                    if let score {
+                        Text("\(score)")
+                            .font(Theme.Typography.title2.bold())
+                            .foregroundStyle(Theme.Color.Content.Text.default)
+                    }
+                    TeamBadge(logoURL: logoURL, shortName: shortName, size: 32)
+                    Text(teamName)
                         .font(Theme.Typography.caption2)
-                        .foregroundStyle(Theme.Color.Status.Error.resting)
+                        .foregroundStyle(isPicked ? Color.white.opacity(0.8) : Theme.Color.Content.Text.disabled)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
+                    if isUsed {
+                        Text("Used")
+                            .font(Theme.Typography.caption2)
+                            .foregroundStyle(Theme.Color.Status.Error.resting)
+                    }
                 }
             }
             .frame(maxWidth: .infinity)
@@ -103,7 +111,7 @@ struct FixturePickRow: View {
                 RoundedRectangle(cornerRadius: 8)
                     .stroke(isPicked ? Theme.Color.Content.Text.default : Theme.Color.Border.default, lineWidth: 1)
             )
-            .opacity(isDisabled && !isPicked ? 0.5 : 1.0)
+            .opacity(isThisTeamSubmitting ? 0.7 : (isOtherTeamSubmitting || (isDisabled && !isPicked)) ? 0.5 : 1.0)
             .scaleEffect(isPicked && celebratedTeamId == teamId ? 1.05 : 1.0)
             .animation(.spring(response: 0.3, dampingFraction: 0.5), value: celebratedTeamId)
             .overlay {
