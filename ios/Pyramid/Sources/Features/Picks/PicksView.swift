@@ -1,30 +1,57 @@
 import SwiftUI
 
 struct PicksView: View {
-    @StateObject private var viewModel: PicksViewModel
+    @StateObject var viewModel: PicksViewModel
+
+    @Environment(\.dismiss)
+    private var dismiss
+
     @Environment(\.accessibilityReduceMotion)
-    private var reduceMotion
+    var reduceMotion
 
     init(leagueId: String) {
-        _viewModel = StateObject(wrappedValue: PicksViewModel(leagueId: leagueId))
+        _viewModel = StateObject(
+            wrappedValue: PicksViewModel(leagueId: leagueId)
+        )
     }
 
     var body: some View {
         NavigationStack {
-            Group {
-                if viewModel.isLoading && viewModel.fixtures.isEmpty {
-                    loadingView
-                } else if let error = viewModel.errorMessage, viewModel.fixtures.isEmpty {
-                    errorView(message: error)
-                } else if viewModel.fixtures.isEmpty {
-                    emptyStateView
-                } else {
-                    fixturesList
+            ZStack {
+                Theme.Color.Surface.Background.page
+                    .ignoresSafeArea()
+
+                Group {
+                    if viewModel.isLoading
+                        && viewModel.fixtures.isEmpty {
+                        loadingView
+                    } else if let error = viewModel.errorMessage,
+                              viewModel.fixtures.isEmpty {
+                        errorView(message: error)
+                    } else if viewModel.fixtures.isEmpty {
+                        emptyStateView
+                    } else {
+                        fixturesList
+                    }
                 }
             }
-            .navigationTitle("Make Your Pick")
-            .navigationBarTitleDisplayMode(.large)
-            .background(Theme.Color.Surface.Background.page.ignoresSafeArea())
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "chevron.left")
+                            .font(
+                                .system(
+                                    size: 16,
+                                    weight: .semibold
+                                )
+                            )
+                            .foregroundStyle(Color.white)
+                    }
+                }
+            }
             .task {
                 await viewModel.load()
             }
@@ -33,11 +60,63 @@ struct PicksView: View {
             }
         }
     }
+}
 
-    // MARK: - Subviews
+// MARK: - Header
 
+extension PicksView {
+    var headerSection: some View {
+        VStack(alignment: .leading, spacing: Theme.Spacing.s20) {
+            if let gameweek = viewModel.gameweek {
+                Text("GAMEWEEK \(gameweek.roundNumber)")
+                    .font(
+                        Font.custom("Inter-Bold", size: 12)
+                    )
+                    .textCase(.uppercase)
+                    .foregroundStyle(
+                        Color.white.opacity(0.6)
+                    )
+            }
+
+            Text("Pick a team")
+                .font(.custom("Inter-Bold", size: 44))
+                .foregroundStyle(Color.white)
+
+            if !viewModel.usedTeamIds.isEmpty {
+                TeamsUsedPill(
+                    teamNames: viewModel.usedTeamNames,
+                    count: viewModel.usedTeamIds.count
+                )
+            }
+
+            if let deadline = viewModel.deadlineText {
+                HStack(spacing: Theme.Spacing.s10) {
+                    Image(
+                        systemName: Theme.Icon.Pick
+                            .timeRemaining
+                    )
+                    .font(.system(size: 12))
+                    .accessibilityHidden(true)
+                    Text(deadline)
+                        .font(Theme.Typography.caption1)
+                }
+                .foregroundStyle(
+                    Theme.Color.Status.Warning.resting
+                )
+                .padding(.top, Theme.Spacing.s10)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, Theme.Spacing.s60)
+    }
+}
+
+// MARK: - States & Fixtures List
+
+extension PicksView {
     private var loadingView: some View {
         ProgressView()
+            .tint(Color.white)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
@@ -45,10 +124,14 @@ struct PicksView: View {
         VStack(spacing: Theme.Spacing.s40) {
             Image(systemName: Theme.Icon.Status.error)
                 .font(.system(size: 48))
-                .foregroundStyle(Theme.Color.Border.default)
+                .foregroundStyle(
+                    Color.white.opacity(0.3)
+                )
             Text(message)
                 .font(Theme.Typography.subheadline)
-                .foregroundStyle(Theme.Color.Content.Text.disabled)
+                .foregroundStyle(
+                    Color.white.opacity(0.6)
+                )
                 .multilineTextAlignment(.center)
         }
         .padding(.horizontal, Theme.Spacing.s40)
@@ -59,140 +142,62 @@ struct PicksView: View {
         VStack(spacing: Theme.Spacing.s40) {
             Image(systemName: Theme.Icon.Pick.deadline)
                 .font(.system(size: 56))
-                .foregroundStyle(Theme.Color.Border.default)
+                .foregroundStyle(
+                    Color.white.opacity(0.3)
+                )
             Text("No fixtures this week")
                 .font(Theme.Typography.title3)
-                .foregroundStyle(Theme.Color.Content.Text.default)
-            Text("Check back when the gameweek schedule is available.")
-                .font(Theme.Typography.subheadline)
-                .foregroundStyle(Theme.Color.Content.Text.disabled)
-                .multilineTextAlignment(.center)
+                .foregroundStyle(Color.white)
+            Text(
+                "Check back when the gameweek schedule is available."
+            )
+            .font(Theme.Typography.subheadline)
+            .foregroundStyle(
+                Color.white.opacity(0.6)
+            )
+            .multilineTextAlignment(.center)
         }
         .padding(.horizontal, Theme.Spacing.s40)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
-    private var fixturesList: some View {
+    var fixturesList: some View {
         ScrollView {
-            VStack(spacing: Theme.Spacing.s30) {
-                if let gameweek = viewModel.gameweek {
-                    Text("Gameweek \(gameweek.roundNumber)")
-                        .font(Theme.Typography.subheadline)
-                        .foregroundStyle(Theme.Color.Content.Text.disabled)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.horizontal, Theme.Spacing.s40)
-                }
+            VStack(spacing: Theme.Spacing.s60) {
+                headerSection
+                bannerSection
 
-                if let pick = viewModel.currentPick {
-                    currentPickBanner(pick: pick)
-                }
-                if let success = viewModel.successMessage {
-                    successBanner(message: success)
-                        .transition(.move(edge: .top).combined(with: .opacity))
-                        .animation(
-                            reduceMotion ? nil : .spring(response: 0.4),
-                            value: viewModel.successMessage
-                        )
-                }
-                if let error = viewModel.errorMessage {
-                    errorBanner(message: error)
-                }
-
-                if let deadline = viewModel.deadlineText {
-                    HStack {
-                        Image(systemName: Theme.Icon.Pick.timeRemaining)
-                            .foregroundStyle(Theme.Color.Status.Warning.resting)
-                            .accessibilityHidden(true)
-                        Text(deadline)
-                            .font(Theme.Typography.subheadline.bold())
-                            .foregroundStyle(Theme.Color.Status.Warning.resting)
+                VStack(spacing: Theme.Spacing.s60) {
+                    ForEach(viewModel.fixtures) { fixture in
+                        FixturePickRow(
+                            fixture: fixture,
+                            selectedTeamId: viewModel
+                                .currentPick?.teamId,
+                            usedTeamIds: viewModel.usedTeamIds,
+                            isLocked: viewModel
+                                .isFixtureLocked(fixture),
+                            isSubmitting: viewModel
+                                .isSubmitting,
+                            submittingTeamId: viewModel
+                                .submittingTeamId,
+                            celebratedTeamId: viewModel
+                                .celebratedTeamId,
+                            showCelebration: viewModel
+                                .showCelebration
+                        ) { teamId, teamName in
+                            Task {
+                                await viewModel.submitPick(
+                                    fixtureId: fixture.id,
+                                    teamId: teamId,
+                                    teamName: teamName
+                                )
+                            }
+                        }
                     }
-                    .padding(.horizontal, Theme.Spacing.s40)
-                    .accessibilityLabel("Deadline: \(deadline)")
                 }
-
-                Text("Tap a team to submit your pick. Teams already used this season are greyed out.")
-                    .font(Theme.Typography.caption1)
-                    .foregroundStyle(Theme.Color.Content.Text.disabled)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, Theme.Spacing.s40)
-
-                ForEach(viewModel.fixtures) { fixture in
-                    FixturePickRow(
-                        fixture: fixture,
-                        selectedTeamId: viewModel.currentPick?.teamId,
-                        usedTeamIds: viewModel.usedTeamIds,
-                        isLocked: viewModel.isFixtureLocked(fixture),
-                        isSubmitting: viewModel.isSubmitting,
-                        submittingTeamId: viewModel.submittingTeamId,
-                        celebratedTeamId: viewModel.celebratedTeamId,
-                        showCelebration: viewModel.showCelebration
-                    ) { teamId, teamName in
-                        Task { await viewModel.submitPick(fixtureId: fixture.id, teamId: teamId, teamName: teamName) }
-                    }
-                    .padding(.horizontal, Theme.Spacing.s40)
-                }
+                .padding(.horizontal, Theme.Spacing.s60)
             }
             .padding(.vertical, Theme.Spacing.s40)
         }
-    }
-
-    private func currentPickBanner(pick: Pick) -> some View {
-        HStack {
-            Image(systemName: pick.isLocked ? Theme.Icon.Pick.locked : Theme.Icon.Status.success)
-                .foregroundStyle(pick.isLocked ? Theme.Color.Content.Text.disabled : Theme.Color.Status.Success.resting)
-                .accessibilityHidden(true)
-            VStack(alignment: .leading, spacing: 2) {
-                Text(pick.isLocked ? "Pick locked: \(pick.teamName)" : "Current pick: \(pick.teamName)")
-                    .font(Theme.Typography.subheadline.bold())
-                    .foregroundStyle(Theme.Color.Content.Text.default)
-                if !pick.isLocked {
-                    Text("You can change your pick until kick-off.")
-                        .font(Theme.Typography.caption1)
-                        .foregroundStyle(Theme.Color.Content.Text.disabled)
-                }
-            }
-            Spacer()
-        }
-        .padding(Theme.Spacing.s30)
-        .background(Theme.Color.Surface.Background.page)
-        .clipShape(RoundedRectangle(cornerRadius: 10))
-        .padding(.horizontal, Theme.Spacing.s40)
-    }
-
-    private func successBanner(message: String) -> some View {
-        HStack {
-            Image(systemName: Theme.Icon.Status.success)
-                .foregroundStyle(Theme.Color.Status.Success.resting)
-                .accessibilityHidden(true)
-            Text(message)
-                .font(Theme.Typography.subheadline)
-                .foregroundStyle(Theme.Color.Content.Text.default)
-            Spacer()
-        }
-        .padding(Theme.Spacing.s30)
-        .background(Theme.Color.Status.Success.subtle)
-        .clipShape(RoundedRectangle(cornerRadius: 10))
-        .padding(.horizontal, Theme.Spacing.s40)
-        .accessibilityElement(children: .combine)
-        .accessibilityAddTraits(.isStaticText)
-    }
-
-    private func errorBanner(message: String) -> some View {
-        HStack {
-            Image(systemName: Theme.Icon.Status.errorFill)
-                .foregroundStyle(Theme.Color.Status.Error.resting)
-                .accessibilityHidden(true)
-            Text(message)
-                .font(Theme.Typography.subheadline)
-                .foregroundStyle(Theme.Color.Content.Text.default)
-            Spacer()
-        }
-        .padding(Theme.Spacing.s30)
-        .background(Theme.Color.Status.Error.subtle)
-        .clipShape(RoundedRectangle(cornerRadius: 10))
-        .padding(.horizontal, Theme.Spacing.s40)
-        .accessibilityElement(children: .combine)
-        .accessibilityAddTraits(.isStaticText)
     }
 }

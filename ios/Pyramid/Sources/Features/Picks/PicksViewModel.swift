@@ -7,6 +7,7 @@ final class PicksViewModel: ObservableObject {
     @Published var fixtures: [Fixture] = []
     @Published var currentPick: Pick?
     @Published var usedTeamIds: Set<Int> = []
+    @Published var usedTeamNames: [String] = []
     @Published var isLoading = false
     @Published var isSubmitting = false
     @Published var submittingTeamId: Int?
@@ -50,10 +51,12 @@ final class PicksViewModel: ObservableObject {
             gameweek = gw
             async let fixturesFetch = pickService.fetchFixtures(for: gw.id)
             async let pickFetch = pickService.fetchMyPick(leagueId: leagueId, gameweekId: gw.id)
-            async let usedTeamsFetch = pickService.fetchUsedTeamIds(leagueId: leagueId)
+            async let usedTeamsFetch = pickService.fetchUsedTeams(leagueId: leagueId)
             fixtures = try await fixturesFetch
             currentPick = try await pickFetch
-            usedTeamIds = try await usedTeamsFetch
+            let usedTeams = try await usedTeamsFetch
+            usedTeamIds = Set(usedTeams.keys)
+            usedTeamNames = Array(usedTeams.values)
         } catch {
             errorMessage = AppError.from(error).userMessage
         }

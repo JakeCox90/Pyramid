@@ -45,7 +45,23 @@ extension HomeService {
 
         guard !picks.isEmpty else { return [] }
 
-        let fixtureIds = picks.map(\.fixtureId)
+        let fixtureMap = try await fetchFixtureMap(
+            for: picks.map(\.fixtureId)
+        )
+
+        return picks.compactMap { pick in
+            makeLeagueResult(
+                pick: pick,
+                gameweek: gameweek,
+                fixtureMap: fixtureMap,
+                leagueNames: leagueNames
+            )
+        }
+    }
+
+    private func fetchFixtureMap(
+        for fixtureIds: [Int]
+    ) async throws -> [Int: Fixture] {
         let fixtures: [Fixture] = try await client
             .from("fixtures")
             .select(
@@ -60,26 +76,35 @@ extension HomeService {
             .execute()
             .value
 
-        let fixtureMap = Dictionary(
+        return Dictionary(
             uniqueKeysWithValues: fixtures.map { ($0.id, $0) }
         )
+    }
 
-        return picks.compactMap { pick in
-            guard let fixture = fixtureMap[pick.fixtureId],
-                  let name = leagueNames[pick.leagueId] else {
-                return nil
-            }
-            return LeagueResult(
-                leagueId: pick.leagueId,
-                leagueName: name,
-                gameweekName: gameweek.name,
-                teamName: pick.teamName,
-                result: pick.result,
-                homeTeamShort: fixture.homeTeamShort,
-                awayTeamShort: fixture.awayTeamShort,
-                homeScore: fixture.homeScore ?? 0,
-                awayScore: fixture.awayScore ?? 0
-            )
+    private func makeLeagueResult(
+        pick: Pick,
+        gameweek: Gameweek,
+        fixtureMap: [Int: Fixture],
+        leagueNames: [String: String]
+    ) -> LeagueResult? {
+        guard let fixture = fixtureMap[pick.fixtureId],
+              let name = leagueNames[pick.leagueId] else {
+            return nil
         }
+        return LeagueResult(
+            leagueId: pick.leagueId,
+            leagueName: name,
+            gameweekName: gameweek.name,
+            teamName: pick.teamName,
+            result: pick.result,
+            homeTeamName: fixture.homeTeamName,
+            homeTeamShort: fixture.homeTeamShort,
+            homeTeamLogo: fixture.homeTeamLogo,
+            awayTeamName: fixture.awayTeamName,
+            awayTeamShort: fixture.awayTeamShort,
+            awayTeamLogo: fixture.awayTeamLogo,
+            homeScore: fixture.homeScore ?? 0,
+            awayScore: fixture.awayScore ?? 0
+        )
     }
 }

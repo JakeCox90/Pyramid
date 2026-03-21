@@ -1,5 +1,12 @@
 import SwiftUI
 
+// Figma: Pick Card component (node 7:7935)
+// layout_3WWVIL: fill width, fixed height 212
+// fill_CRMJ7P: linear-gradient(225deg, rgba(94,78,129,1) 0%,
+//              rgba(45,37,61,1) 72%) over #241E31
+// stroke_5G2A2W: 1px rgba(255,255,255,0.1)
+// border-radius: 24px
+
 struct FixturePickRow: View {
     let fixture: Fixture
     let selectedTeamId: Int?
@@ -12,114 +19,189 @@ struct FixturePickRow: View {
     let onPick: (Int, String) -> Void
 
     @Environment(\.accessibilityReduceMotion)
-    private var reduceMotion
-
-    private var kickoffText: String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "EEE dd MMM, HH:mm"
-        return formatter.string(from: fixture.kickoffAt)
-    }
+    var reduceMotion
 
     var body: some View {
-        DSCard {
-            VStack(spacing: Theme.Spacing.s30) {
-                Text(kickoffText)
-                    .font(Theme.Typography.caption1)
-                    .foregroundStyle(Theme.Color.Content.Text.disabled)
-                    .frame(maxWidth: .infinity)
+        ZStack {
+            cardBackground
+            cardContent
+        }
+        .frame(height: 212)
+        .clipShape(RoundedRectangle(cornerRadius: 24))
+        .overlay(
+            RoundedRectangle(cornerRadius: 24)
+                .stroke(
+                    Color.white.opacity(0.1),
+                    lineWidth: 1
+                )
+        )
+    }
 
-                HStack(spacing: Theme.Spacing.s30) {
-                    teamButton(
-                        teamId: fixture.homeTeamId,
-                        teamName: fixture.homeTeamName,
-                        shortName: fixture.homeTeamShort,
-                        logoURL: fixture.homeTeamLogo,
-                        score: fixture.homeScore
+    // fill_CRMJ7P: gradient 225deg, 0% → 72%
+    var cardBackground: some View {
+        ZStack {
+            Color(hex: "241E31")
+            LinearGradient(
+                stops: [
+                    .init(
+                        color: Color(
+                            red: 94 / 255,
+                            green: 78 / 255,
+                            blue: 129 / 255
+                        ),
+                        location: 0.0
+                    ),
+                    .init(
+                        color: Color(
+                            red: 45 / 255,
+                            green: 37 / 255,
+                            blue: 61 / 255
+                        ),
+                        location: 0.72
                     )
-
-                    VStack(spacing: Theme.Spacing.s10) {
-                        if fixture.status.isLive || fixture.status.isFinished {
-                            Text(fixture.status.displayLabel)
-                                .font(Theme.Typography.caption1.bold())
-                                .foregroundStyle(
-                                    fixture.status.isLive
-                                        ? Theme.Color.Status.Error.resting
-                                        : Theme.Color.Content.Text.disabled
-                                )
-                        } else {
-                            Text("vs")
-                                .font(Theme.Typography.caption1)
-                                .foregroundStyle(Theme.Color.Content.Text.disabled)
-                        }
-                    }
-
-                    teamButton(
-                        teamId: fixture.awayTeamId,
-                        teamName: fixture.awayTeamName,
-                        shortName: fixture.awayTeamShort,
-                        logoURL: fixture.awayTeamLogo,
-                        score: fixture.awayScore
-                    )
-                }
-            }
+                ],
+                startPoint: .topTrailing,
+                endPoint: .bottomLeading
+            )
         }
     }
 
-    @ViewBuilder
-    private func teamButton(
-        teamId: Int, teamName: String,
-        shortName: String, logoURL: String?, score: Int?
-    ) -> some View {
-        let isPicked = selectedTeamId == teamId
-        let isUsed = usedTeamIds.contains(teamId) && !isPicked
-        let isThisTeamSubmitting = submittingTeamId == teamId
-        let isOtherTeamSubmitting = submittingTeamId != nil && !isThisTeamSubmitting
-        let isDisabled = isLocked || isSubmitting || isUsed
-
-        Button {
-            guard !isDisabled else { return }
-            onPick(teamId, teamName)
-        } label: {
-            VStack(spacing: Theme.Spacing.s10) {
-                if isThisTeamSubmitting {
-                    ProgressView().frame(height: 32)
-                } else {
-                    if let score {
-                        Text("\(score)")
-                            .font(Theme.Typography.title2.bold())
-                            .foregroundStyle(Theme.Color.Content.Text.default)
-                    }
-                    TeamBadge(logoURL: logoURL, shortName: shortName, size: 32)
-                    Text(teamName)
-                        .font(Theme.Typography.caption2)
-                        .foregroundStyle(
-                            isPicked ? Color.white.opacity(0.8) : Theme.Color.Content.Text.disabled
-                        )
-                        .lineLimit(1).minimumScaleFactor(0.7)
-                    if isUsed {
-                        Text("Used").font(Theme.Typography.caption2)
-                            .foregroundStyle(Theme.Color.Status.Error.resting)
-                    }
-                }
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, Theme.Spacing.s30)
-            .background(isPicked ? Theme.Color.Content.Text.default : Theme.Color.Surface.Background.page)
-            .clipShape(RoundedRectangle(cornerRadius: 8))
-            .overlay(
-                RoundedRectangle(cornerRadius: 8)
-                    .stroke(isPicked ? Theme.Color.Content.Text.default : Theme.Color.Border.default, lineWidth: 1)
-            )
-            .opacity(isThisTeamSubmitting ? 0.7 : (isOtherTeamSubmitting || (isDisabled && !isPicked)) ? 0.5 : 1.0)
-            .scaleEffect((!reduceMotion && isPicked && celebratedTeamId == teamId) ? 1.05 : 1.0)
-            .animation(
-                reduceMotion ? nil : .spring(response: 0.3, dampingFraction: 0.5),
-                value: celebratedTeamId
-            )
-            .overlay { if showCelebration && celebratedTeamId == teamId { ConfettiView() } }
+    private var cardContent: some View {
+        VStack(spacing: 0) {
+            matchupArea
+            pickTeamDivider
+            pickButtons
         }
-        .disabled(isDisabled && !isPicked)
-        .accessibilityLabel(isUsed ? "\(teamName), already used" : "Pick \(teamName)")
-        .accessibilityHint(isDisabled ? "" : "Double-tap to select this team")
+    }
+}
+
+// MARK: - Matchup Area
+
+extension FixturePickRow {
+    // Badges at y:11, names at y:106, VS at y:65
+    var matchupArea: some View {
+        ZStack {
+            HStack(spacing: 0) {
+                homeBadgeSide
+                Spacer()
+                awayBadgeSide
+            }
+            .padding(.horizontal, 34)
+            .padding(.top, 11)
+
+            vsLabel
+                .position(x: 176, y: 72.5)
+        }
+        .frame(height: 121)
+    }
+
+    private var homeBadgeSide: some View {
+        let isUsed = usedTeamIds.contains(
+            fixture.homeTeamId
+        ) && selectedTeamId != fixture.homeTeamId
+
+        return VStack(spacing: 8) {
+            // layout_IFTOR2: 76.38 × 74
+            TeamBadge(
+                teamName: fixture.homeTeamName,
+                logoURL: fixture.homeTeamLogo,
+                size: 76
+            )
+            .opacity(isUsed ? 0.2 : 1.0)
+
+            teamNameLabel(
+                fixture.homeTeamName, isUsed: isUsed
+            )
+        }
+    }
+
+    private var awayBadgeSide: some View {
+        let isUsed = usedTeamIds.contains(
+            fixture.awayTeamId
+        ) && selectedTeamId != fixture.awayTeamId
+
+        return VStack(spacing: 8) {
+            // layout_7IOOAX: 74 × 74
+            TeamBadge(
+                teamName: fixture.awayTeamName,
+                logoURL: fixture.awayTeamLogo,
+                size: 74
+            )
+            .opacity(isUsed ? 0.2 : 1.0)
+
+            teamNameLabel(
+                fixture.awayTeamName, isUsed: isUsed
+            )
+        }
+    }
+
+    // style_U4AW74: Inter Bold 12, uppercase, center
+    // fill_2XNJIC: #FFFFFF, opacity 0.4
+    private func teamNameLabel(
+        _ name: String, isUsed: Bool
+    ) -> some View {
+        Text(name.uppercased())
+            .font(Font.custom("Inter-Bold", size: 12))
+            .foregroundStyle(Color.white)
+            .opacity(isUsed ? 0.2 : 0.4)
+            .lineLimit(1)
+            .minimumScaleFactor(0.7)
+    }
+
+    // layout_38AZYE: 17×15 at x:167.21, y:65
+    // style_U4AW74: Inter Bold 12, uppercase
+    var vsLabel: some View {
+        Group {
+            if fixture.status.isLive
+                || fixture.status.isFinished,
+               let home = fixture.homeScore,
+               let away = fixture.awayScore {
+                Text("\(home) - \(away)")
+                    .font(
+                        Font.custom(
+                            "Inter-SemiBold", size: 20
+                        )
+                    )
+                    .foregroundStyle(Color.white)
+                    .monospacedDigit()
+            } else {
+                Text("VS")
+                    .font(
+                        Font.custom(
+                            "Inter-Bold", size: 12
+                        )
+                    )
+                    .foregroundStyle(Color.white)
+            }
+        }
+    }
+}
+
+// MARK: - Pick Team Divider
+
+extension FixturePickRow {
+    // layout_KGNZ8S: x:6, y:127, width:340, height:15
+    // Divider lines: stroke_53XB8X = rgba(255,255,255,0.2), 1px
+    // Text: style_U4AW74 = Inter Bold 12, uppercase
+    var pickTeamDivider: some View {
+        HStack(spacing: 0) {
+            dividerLine
+            Text("PICK TEAM")
+                .font(
+                    Font.custom("Inter-Bold", size: 12)
+                )
+                .foregroundStyle(
+                    Color.white.opacity(0.4)
+                )
+                .padding(.horizontal, 12)
+            dividerLine
+        }
+        .padding(.horizontal, 6)
+    }
+
+    var dividerLine: some View {
+        Rectangle()
+            .fill(Color.white.opacity(0.2))
+            .frame(height: 1)
     }
 }

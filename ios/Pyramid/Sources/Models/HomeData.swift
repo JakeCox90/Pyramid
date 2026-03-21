@@ -44,8 +44,12 @@ struct LeagueResult: Identifiable, Sendable, Equatable {
     let gameweekName: String
     let teamName: String
     let result: PickResult
+    let homeTeamName: String
     let homeTeamShort: String
+    let homeTeamLogo: String?
+    let awayTeamName: String
     let awayTeamShort: String
+    let awayTeamLogo: String?
     let homeScore: Int
     let awayScore: Int
     var id: String { leagueId }
