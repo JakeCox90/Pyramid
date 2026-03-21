@@ -37,6 +37,39 @@ final class AuthViewModelTests: XCTestCase {
         XCTAssertNotNil(vm.errorMessage)
         XCTAssertFalse(vm.isLoading)
     }
+
+    // MARK: - Google Sign-In
+
+    func testGoogleSignInSuccessClearsError() async {
+        let mock = MockAuthService()
+        let vm = AuthViewModel(authService: mock)
+
+        await vm.signInWithGoogle()
+
+        XCTAssertTrue(mock.googleSignInCalled)
+        XCTAssertNil(vm.errorMessage)
+        XCTAssertFalse(vm.isSocialLoading)
+    }
+
+    func testGoogleSignInFailureSetsErrorMessage() async {
+        let mock = MockAuthService(shouldFail: true)
+        let vm = AuthViewModel(authService: mock)
+
+        await vm.signInWithGoogle()
+
+        XCTAssertNotNil(vm.errorMessage)
+        XCTAssertFalse(vm.isSocialLoading)
+    }
+
+    func testGoogleSignInCancellationShowsNoError() async {
+        let mock = MockAuthService(cancelGoogle: true)
+        let vm = AuthViewModel(authService: mock)
+
+        await vm.signInWithGoogle()
+
+        XCTAssertNil(vm.errorMessage)
+        XCTAssertFalse(vm.isSocialLoading)
+    }
 }
 
 // MARK: - Mock
@@ -44,10 +77,13 @@ final class AuthViewModelTests: XCTestCase {
 final class MockAuthService: AuthServiceProtocol {
     var signInCalled = false
     var signUpCalled = false
+    var googleSignInCalled = false
     var shouldFail: Bool
+    var cancelGoogle: Bool
 
-    init(shouldFail: Bool = false) {
+    init(shouldFail: Bool = false, cancelGoogle: Bool = false) {
         self.shouldFail = shouldFail
+        self.cancelGoogle = cancelGoogle
     }
 
     func signIn(email: String, password: String) async throws {
@@ -67,6 +103,14 @@ final class MockAuthService: AuthServiceProtocol {
     }
 
     func signInWithGoogle() async throws {
+        googleSignInCalled = true
+        if cancelGoogle {
+            throw NSError(
+                domain: "com.apple.AuthenticationServices.WebAuthenticationSession",
+                code: 1,
+                userInfo: [NSLocalizedDescriptionKey: "The operation couldn't be completed."]
+            )
+        }
         if shouldFail { throw URLError(.badServerResponse) }
     }
 }

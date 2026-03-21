@@ -71,6 +71,10 @@ final class AuthViewModel: ObservableObject {
         do {
             try await authService.signInWithGoogle()
             Log.auth.info("Google sign-in succeeded")
+        } catch let error as NSError
+            where error.domain == "com.apple.AuthenticationServices.WebAuthenticationSession"
+            && error.code == 1 {
+            Log.auth.info("Google sign-in cancelled by user")
         } catch {
             Log.auth.error("Google sign-in failed: \(String(describing: error))")
             errorMessage = friendlyMessage(for: error)
