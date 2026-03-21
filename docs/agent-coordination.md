@@ -7,14 +7,30 @@
 
 | Ticket | Branch | Agent | Status | Key Files | Started |
 |--------|--------|-------|--------|-----------|---------|
-| — | — | — | — | — | — |
-
-> No active work as of 2026-03-14. All Phase 3 tickets merged.
+| PYR-95 | claude/next-best-action-ErNi3 | Backend | PR pending | supabase/functions/update-profile/index.ts | 2026-03-21 |
 
 ## Recently Completed
 
 | Ticket | Branch | PR | Merged |
 |--------|--------|----|--------|
+| PYR-122 | feature/PYR-122-picks-redesign | #82 | 2026-03-21 |
+| — | fix/home-screen-loading | #81 | 2026-03-20 |
+| PYR-117 | feature/PYR-117-voiceover-labels | #76 | 2026-03-20 |
+| PYR-130 | feature/PYR-130-reset-dev-script | #80 | 2026-03-20 |
+| PYR-129 | feature/PYR-129-debug-reset-ui | #79 | 2026-03-20 |
+| PYR-128 | feature/PYR-128-reset-edge-function | #78 | 2026-03-20 |
+| PYR-127 | feature/PYR-127-dev-seed | #77 | 2026-03-20 |
+| PYR-125 | feature/PYR-125-reduce-motion | #75 | 2026-03-20 |
+| PYR-123 | feature/PYR-123-wallet-ux | #74 | 2026-03-20 |
+| PYR-120 | feature/PYR-120-session-timeout | #73 | 2026-03-20 |
+| PYR-121 | feature/PYR-121-pick-loading | #72 | 2026-03-20 |
+| PYR-119 | feature/PYR-119-shared-state-views | #71 | 2026-03-20 |
+| PYR-116 | feature/PYR-116-touch-targets | #70 | 2026-03-20 |
+| PYR-118 | feature/PYR-118-hardcoded-colors | #69 | 2026-03-20 |
+| PYR-124 | feature/PYR-124-dark-mode-root | #68 | 2026-03-20 |
+| PYR-122 | feature/PYR-122-error-messages | #67 | 2026-03-20 |
+| PYR-92 | feature/PYR-92-last-gw-results | #66 | 2026-03-20 |
+| PYR-91 | feature/PYR-91-live-match-day-card | #65 | 2026-03-20 |
 | PYR-39 | feature/PYR-39-social-sign-on | #63 | 2026-03-14 |
 | PYR-77 | feature/PYR-77-profile-overhaul | #62 | 2026-03-14 |
 | PYR-74 | feature/PYR-74-my-pick-card-agent | #60 | 2026-03-13 |
