@@ -138,13 +138,8 @@ extension HomeView {
     }
 
     private var changPickPill: some View {
-        Text("CHANGE PICK")
-            .font(Theme.Typography.label01)
-            .foregroundStyle(.white)
-            .padding(.horizontal, Theme.Spacing.s50)
-            .padding(.vertical, Theme.Spacing.s20)
-            .background(Color.white.opacity(0.1))
-            .clipShape(Capsule())
+        Button("CHANGE PICK") {}
+            .dsStyle(.secondary, fullWidth: false)
     }
 
     private func kickoffLabel(_ date: Date) -> String {

@@ -101,7 +101,7 @@ extension FixturePickRow {
 
         // fill_RNW9LA: rgba(255,255,255,0.1)
         let fill = isPicked
-            ? Theme.Color.Primary.resting
+            ? Color(hex: "FFC758")
             : Color.white.opacity(0.1) // fill_RNW9LA
 
         var alpha = 1.0
@@ -143,12 +143,10 @@ extension FixturePickRow {
     ) -> some View {
         if state.isThisSubmitting {
             ProgressView()
-                .tint(Color.white)
+                .tint(Color.black)
         } else if state.isUsed {
             Text("USED")
-                .font(
-                    Font.custom("Inter-Bold", size: 12)
-                )
+                .font(Theme.Typography.overline)
                 .foregroundStyle(Color.white)
                 .opacity(0.2)
                 .tracking(0.8)
@@ -158,10 +156,10 @@ extension FixturePickRow {
                     ? "PICKED"
                     : label.uppercased()
             )
-            .font(Font.custom("Inter-Bold", size: 12))
+            .font(Theme.Typography.overline)
             .foregroundStyle(
                 state.isPicked
-                    ? Theme.Color.Primary.text
+                    ? Color.black
                     : Color.white
             )
             .tracking(0.8)
