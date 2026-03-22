@@ -85,14 +85,14 @@ struct BrowseLeaguesView: View {
 
             VStack(spacing: Theme.Spacing.s20) {
                 Text("No open leagues")
-                    .font(Theme.Typography.title3)
+                    .font(Theme.Typography.subhead)
                     .foregroundStyle(Theme.Color.Content.Text.default)
 
                 Text(
                     "There are no free leagues available to join right now. "
                     + "Why not create one?"
                 )
-                    .font(Theme.Typography.subheadline)
+                    .font(Theme.Typography.body)
                     .foregroundStyle(Theme.Color.Content.Text.disabled)
                     .multilineTextAlignment(.center)
             }
@@ -133,7 +133,7 @@ private struct BrowseLeagueCardView: View {
             HStack {
                 VStack(alignment: .leading, spacing: Theme.Spacing.s10) {
                     Text(league.name)
-                        .font(Theme.Typography.headline)
+                        .font(Theme.Typography.subhead)
                         .foregroundStyle(Theme.Color.Content.Text.default)
 
                     HStack(spacing: Theme.Spacing.s20) {
@@ -141,14 +141,14 @@ private struct BrowseLeagueCardView: View {
                             "\(league.memberCount) players",
                             systemImage: Theme.Icon.League.members
                         )
-                        .font(Theme.Typography.caption1)
+                        .font(Theme.Typography.overline)
                         .foregroundStyle(Theme.Color.Content.Text.disabled)
 
                         Text(
                             league.status == .pending
                                 ? "Waiting" : "Active"
                         )
-                            .font(Theme.Typography.caption1)
+                            .font(Theme.Typography.overline)
                             .foregroundStyle(
                                 league.status == .active
                                     ? Theme.Color.Status.Success.resting
@@ -163,7 +163,7 @@ private struct BrowseLeagueCardView: View {
                     ProgressView()
                 } else {
                     Button("Join") { onJoin() }
-                        .dsStyle(.primary, size: .small, fullWidth: false)
+                        .dsStyle(.primary, fullWidth: false)
                 }
             }
         }

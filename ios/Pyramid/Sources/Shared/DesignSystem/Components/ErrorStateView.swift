@@ -27,11 +27,11 @@ struct ErrorStateView: View {
                 .accessibilityHidden(true)
 
             Text(title)
-                .font(Theme.Typography.headline)
+                .font(Theme.Typography.subhead)
                 .foregroundStyle(Theme.Color.Content.Text.default)
 
             Text(message)
-                .font(Theme.Typography.subheadline)
+                .font(Theme.Typography.body)
                 .foregroundStyle(Theme.Color.Content.Text.subtle)
                 .multilineTextAlignment(.center)
 
@@ -41,7 +41,7 @@ struct ErrorStateView: View {
                 } label: {
                     Text("Try Again")
                 }
-                .dsStyle(.primary, size: .medium)
+                .dsStyle(.primary)
                 .padding(.top, Theme.Spacing.s20)
             }
         }

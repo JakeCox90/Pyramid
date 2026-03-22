@@ -1,98 +1,83 @@
 import SwiftUI
 
-// MARK: - DS Button Style
+// MARK: - DS Button Variant
 
 enum DSButtonVariant {
     case primary, secondary, destructive, ghost
 }
 
-enum DSButtonSize {
-    case large, medium, small
-
-    var height: CGFloat {
-        switch self {
-        case .large:  return 50
-        case .medium: return 44
-        case .small:  return 44
-        }
-    }
-
-    var font: Font {
-        switch self {
-        case .large:  return Theme.Typography.headline
-        case .medium: return Theme.Typography.subheadline
-        case .small:  return Theme.Typography.footnote
-        }
-    }
-
-    var horizontalPadding: CGFloat {
-        switch self {
-        case .large:  return Theme.Spacing.s40
-        case .medium: return Theme.Spacing.s30
-        case .small:  return Theme.Spacing.s20
-        }
-    }
-}
+// MARK: - DS Button Style
 
 struct DSButtonStyle: ButtonStyle {
     let variant: DSButtonVariant
-    let size: DSButtonSize
     var isLoading: Bool = false
     var isFullWidth: Bool = true
 
     @Environment(\.isEnabled)
     private var isEnabled
 
-    func makeBody(configuration: Configuration) -> some View {
+    func makeBody(
+        configuration: Configuration
+    ) -> some View {
         ZStack {
             if isLoading {
                 ProgressView()
-                    .tint(foregroundColor(pressed: false))
+                    .tint(foregroundColor)
             } else {
                 configuration.label
-                    .font(size.font)
-                    .foregroundStyle(foregroundColor(pressed: configuration.isPressed))
+                    .font(Theme.Typography.label01)
+                    .foregroundStyle(foregroundColor)
             }
         }
         .frame(maxWidth: isFullWidth ? .infinity : nil)
-        .frame(height: size.height)
-        .padding(.horizontal, isFullWidth ? 0 : size.horizontalPadding)
-        .background(backgroundColor(pressed: configuration.isPressed))
-        .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.default))
-        .overlay(
-            RoundedRectangle(cornerRadius: Theme.Radius.default)
-                .strokeBorder(borderColor, lineWidth: variant == .secondary ? 1.5 : 0)
+        .frame(height: 44)
+        .padding(
+            .horizontal,
+            isFullWidth ? 0 : Theme.Spacing.s60
         )
+        .background(
+            backgroundColor(
+                pressed: configuration.isPressed
+            )
+        )
+        .clipShape(Capsule())
         .opacity(isEnabled ? 1 : 0.4)
-        .animation(.easeInOut(duration: 0.1), value: configuration.isPressed)
+        .animation(
+            .easeInOut(duration: 0.1),
+            value: configuration.isPressed
+        )
     }
 
-    private func backgroundColor(pressed: Bool) -> Color {
+    private func backgroundColor(
+        pressed: Bool
+    ) -> Color {
         switch variant {
         case .primary:
-            return pressed ? Theme.Color.Primary.pressed : Theme.Color.Primary.resting
+            return pressed
+                ? Color(hex: "E5B24E")
+                : Color(hex: "FFC758")
         case .secondary:
-            return pressed ? Theme.Color.Surface.Background.page : .clear
+            return pressed
+                ? Color.white.opacity(0.15)
+                : Color.white.opacity(0.1)
         case .destructive:
-            return pressed ? Theme.Color.Status.Error.resting.opacity(0.85) : Theme.Color.Status.Error.resting
+            return pressed
+                ? Theme.Color.Status.Error.resting
+                    .opacity(0.85)
+                : Theme.Color.Status.Error.resting
         case .ghost:
-            return pressed ? Theme.Color.Surface.Background.page : .clear
+            return pressed
+                ? Color.white.opacity(0.05)
+                : .clear
         }
     }
 
-    private func foregroundColor(pressed: Bool) -> Color {
+    private var foregroundColor: Color {
         switch variant {
-        case .primary:     return Theme.Color.Surface.Background.container
-        case .secondary:   return Theme.Color.Primary.resting
-        case .destructive: return Theme.Color.Surface.Background.container
-        case .ghost:       return Theme.Color.Primary.resting
-        }
-    }
-
-    private var borderColor: Color {
-        switch variant {
-        case .secondary: return Theme.Color.Primary.resting
-        default:         return .clear
+        case .primary:     return .black
+        case .secondary:   return .white
+        case .destructive: return .white
+        case .ghost:       return .white
         }
     }
 }
@@ -102,12 +87,15 @@ struct DSButtonStyle: ButtonStyle {
 extension Button {
     func dsStyle(
         _ variant: DSButtonVariant = .primary,
-        size: DSButtonSize = .large,
         isLoading: Bool = false,
         fullWidth: Bool = true
     ) -> some View {
         self.buttonStyle(
-            DSButtonStyle(variant: variant, size: size, isLoading: isLoading, isFullWidth: fullWidth)
+            DSButtonStyle(
+                variant: variant,
+                isLoading: isLoading,
+                isFullWidth: fullWidth
+            )
         )
     }
 }

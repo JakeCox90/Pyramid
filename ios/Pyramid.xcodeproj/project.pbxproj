@@ -122,6 +122,7 @@
 		D410036FE35A8276567F5B38 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55D9C15250977E3B8C1AF32D /* OnboardingView.swift */; };
 		D5041528D2C8943C2B8AC90E /* PickCarouselView+Page.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7B48E8886A13195E0B2598 /* PickCarouselView+Page.swift */; };
 		DBC5846C7E8E8D601DAB0F6B /* ThemeColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D3DBB275023CAAEE77B7E6 /* ThemeColors.swift */; };
+		DC04E7DEBB55D2FA6D51F4A5 /* DSIconButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9736AE5B6F805F6B20A5D0E /* DSIconButton.swift */; };
 		E0541239BC012BD8CF86F558 /* League+Paid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CE85F3F7E44F4D13D7C0555 /* League+Paid.swift */; };
 		E19D354135AFF1048D946323 /* PyramidApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57CD810A22A171F8ABC04150 /* PyramidApp.swift */; };
 		E280E02205887CCD8FE949C0 /* FixturePickRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A737D337CC0D9C3DD7714DB /* FixturePickRow.swift */; };
@@ -266,6 +267,7 @@
 		C6081BF5D459A20E3A05CF49 /* ProfileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileService.swift; sourceTree = "<group>"; };
 		C79B2CA606CE4F01DE5A3463 /* WalletTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletTransaction.swift; sourceTree = "<group>"; };
 		C85AC94E06CB38EE15F06FBD /* LeaguesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaguesViewModel.swift; sourceTree = "<group>"; };
+		C9736AE5B6F805F6B20A5D0E /* DSIconButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSIconButton.swift; sourceTree = "<group>"; };
 		CA2AB64C6D691C6A43512A0F /* PaidLeagueService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaidLeagueService.swift; sourceTree = "<group>"; };
 		CB29F01766DC5BCB51AB45C5 /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
 		CC95918095D0EA3F4C29A0AA /* AuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthView.swift; sourceTree = "<group>"; };
@@ -414,6 +416,7 @@
 			children = (
 				733C2CAA42033AF98772CA35 /* DSButton.swift */,
 				A9DF242F38270F8CEB654549 /* DSCard.swift */,
+				C9736AE5B6F805F6B20A5D0E /* DSIconButton.swift */,
 				0B4AD36135713033ED1110B6 /* DSTextField.swift */,
 				ED3599088E164230E495EE2F /* EmptyStateView.swift */,
 				C2CA338E776E2FFBD7E7A7AA /* ErrorStateView.swift */,
@@ -774,6 +777,7 @@
 				5B1D3BD5BF64D0868A40FD12 /* CreateLeagueViewModel.swift in Sources */,
 				FBB9430147FB54171E83FFCD /* DSButton.swift in Sources */,
 				2BC557CC3EADA62F50338CCA /* DSCard.swift in Sources */,
+				DC04E7DEBB55D2FA6D51F4A5 /* DSIconButton.swift in Sources */,
 				56CC2E236030EE4F473EB416 /* DSTextField.swift in Sources */,
 				29A2206B22EE30D254A97647 /* DevResetService.swift in Sources */,
 				4D0DF1D18E3E6CECED885E65 /* EmptyStateView.swift in Sources */,

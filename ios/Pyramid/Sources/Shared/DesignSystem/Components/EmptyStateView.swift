@@ -16,17 +16,17 @@ struct EmptyStateView: View {
                 .accessibilityHidden(true)
 
             Text(title)
-                .font(Theme.Typography.headline)
+                .font(Theme.Typography.subhead)
                 .foregroundStyle(Theme.Color.Content.Text.default)
 
             Text(subtitle)
-                .font(Theme.Typography.subheadline)
+                .font(Theme.Typography.body)
                 .foregroundStyle(Theme.Color.Content.Text.subtle)
                 .multilineTextAlignment(.center)
 
             if let buttonTitle, let buttonAction {
                 Button(buttonTitle, action: buttonAction)
-                    .dsStyle(.primary, size: .medium)
+                    .dsStyle(.primary)
                     .padding(.top, Theme.Spacing.s20)
             }
         }
