@@ -194,20 +194,10 @@ struct MatchCarouselCard: View {
         .frame(width: 40, height: 40)
     }
 
-    @ViewBuilder private var vsText: some View {
-        if fixture.status.isLive
-            || fixture.status.isFinished,
-            let home = fixture.homeScore,
-            let away = fixture.awayScore {
-            Text("\(home) - \(away)")
-                .font(Theme.Typography.overline)
-                .foregroundStyle(Color.white)
-                .monospacedDigit()
-        } else {
-            Text("VS")
-                .font(Theme.Typography.overline)
-                .foregroundStyle(Color.white)
-        }
+    private var vsText: some View {
+        Text("VS")
+            .font(Theme.Typography.overline)
+            .foregroundStyle(Color.white)
     }
 
     private var fixtureDetails: some View {

@@ -53,7 +53,10 @@ final class PicksViewModel: ObservableObject {
             async let fixturesFetch = pickService.fetchFixtures(for: gw.id)
             async let pickFetch = pickService.fetchMyPick(leagueId: leagueId, gameweekId: gw.id)
             async let usedTeamsFetch = pickService.fetchUsedTeams(leagueId: leagueId)
-            fixtures = try await fixturesFetch
+            let allFixtures = try await fixturesFetch
+            fixtures = allFixtures.filter {
+                $0.status == .notStarted
+            }
             currentPick = try await pickFetch
             let usedTeams = try await usedTeamsFetch
             usedTeamIds = Set(usedTeams.keys)
