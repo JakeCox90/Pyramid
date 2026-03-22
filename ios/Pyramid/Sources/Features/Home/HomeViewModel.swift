@@ -110,11 +110,30 @@ final class HomeViewModel: ObservableObject {
         } ?? false
     }
 
-    /// Gameweek is locked once the deadline has passed
+    /// Gameweek is locked once the first fixture has kicked off.
+    /// Rules §3.3: deadline = kick-off of the first match of the GW.
+    /// We check both deadline_at AND actual fixture statuses as a
+    /// belt-and-braces approach.
     var isGameweekLocked: Bool {
-        guard let deadline = homeData?.gameweek?.deadlineAt
-        else { return false }
-        return deadline <= Date()
+        // If any fixture is live or finished, the GW has started
+        if let fixtures = homeData?.fixtures.values,
+           fixtures.contains(where: {
+               $0.status.isLive || $0.status.isFinished
+           }) {
+            return true
+        }
+        // Also check the earliest kickoff time across all fixtures
+        if let fixtures = homeData?.fixtures.values,
+           let earliest = fixtures.map(\.kickoffAt).min(),
+           earliest <= Date() {
+            return true
+        }
+        // Fallback to deadline_at (should equal first kickoff)
+        if let deadline = homeData?.gameweek?.deadlineAt,
+           deadline <= Date() {
+            return true
+        }
+        return false
     }
 
     /// Previous pick results for the current or selected GW.

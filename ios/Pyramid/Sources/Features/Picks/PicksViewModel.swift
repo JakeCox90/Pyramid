@@ -5,6 +5,8 @@ import UIKit
 final class PicksViewModel: ObservableObject {
     @Published var gameweek: Gameweek?
     @Published var fixtures: [Fixture] = []
+    /// All fixtures (including started) for GW lock detection
+    private var allFixtures: [Fixture] = []
     @Published var currentPick: Pick?
     @Published var usedTeamIds: Set<Int> = []
     @Published var usedTeamNames: [String] = []
@@ -55,7 +57,7 @@ final class PicksViewModel: ObservableObject {
             async let fixturesFetch = pickService.fetchFixtures(for: gw.id)
             async let pickFetch = pickService.fetchMyPick(leagueId: leagueId, gameweekId: gw.id)
             async let usedTeamsFetch = pickService.fetchUsedTeams(leagueId: leagueId)
-            let allFixtures = try await fixturesFetch
+            allFixtures = try await fixturesFetch
             fixtures = allFixtures.filter {
                 $0.status == .notStarted
             }
@@ -118,11 +120,19 @@ final class PicksViewModel: ObservableObject {
         return usedTeamIds.contains(teamId)
     }
 
+    /// Rules §3.3: once the first fixture of the GW kicks off,
+    /// ALL picks are locked — no new picks or changes allowed.
+    var isGameweekLocked: Bool {
+        allFixtures.contains {
+            $0.status.isLive || $0.status.isFinished
+        }
+    }
+
     func isFixtureLocked(_ fixture: Fixture) -> Bool {
-        // Trust API status over local time comparison —
-        // a fixture is only locked if it's actually live/finished
-        // or the user's pick on this fixture is server-locked
-        fixture.status.isLive
+        // If any GW fixture has kicked off, everything is locked
+        if isGameweekLocked { return true }
+        // Individual fixture check
+        return fixture.status.isLive
             || fixture.status.isFinished
             || (currentPick?.isLocked == true
                 && currentPick?.fixtureId == fixture.id)
