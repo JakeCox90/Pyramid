@@ -38,10 +38,10 @@ extension LeagueDetailView {
         DSCard {
             VStack(spacing: Theme.Spacing.s10) {
                 Text(value)
-                    .font(Theme.Typography.title2)
+                    .font(Theme.Typography.h3)
                     .foregroundStyle(color)
                 Text(label)
-                    .font(Theme.Typography.caption1)
+                    .font(Theme.Typography.overline)
                     .foregroundStyle(Theme.Color.Content.Text.disabled)
             }
             .frame(maxWidth: .infinity)

@@ -40,10 +40,10 @@ extension ProfileView {
         DSCard {
             VStack(spacing: Theme.Spacing.s10) {
                 Text(value)
-                    .font(Theme.Typography.title2)
+                    .font(Theme.Typography.h3)
                     .foregroundStyle(color)
                 Text(label)
-                    .font(Theme.Typography.caption1)
+                    .font(Theme.Typography.overline)
                     .foregroundStyle(
                         Theme.Color.Content.Text.disabled
                     )
@@ -63,7 +63,7 @@ extension ProfileView {
     ) -> some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s20) {
             Text("Current Streaks")
-                .font(Theme.Typography.headline)
+                .font(Theme.Typography.subhead)
                 .foregroundStyle(Theme.Color.Content.Text.default)
                 .padding(.horizontal, Theme.Spacing.s40)
 
@@ -95,7 +95,7 @@ extension ProfileView {
                         )
                         .accessibilityHidden(true)
                     Text("\(streak.currentStreak)")
-                        .font(Theme.Typography.headline)
+                        .font(Theme.Typography.subhead)
                         .foregroundStyle(
                             Theme.Color.Status.Warning.resting
                         )
@@ -115,7 +115,7 @@ extension ProfileView {
     ) -> some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s20) {
             Text("League History")
-                .font(Theme.Typography.headline)
+                .font(Theme.Typography.subhead)
                 .foregroundStyle(Theme.Color.Content.Text.default)
                 .padding(.horizontal, Theme.Spacing.s40)
 
@@ -141,7 +141,7 @@ extension ProfileView {
                         )
                         .lineLimit(1)
                     Text("Season \(league.season)")
-                        .font(Theme.Typography.caption1)
+                        .font(Theme.Typography.overline)
                         .foregroundStyle(
                             Theme.Color.Content.Text.subtle
                         )
@@ -161,20 +161,20 @@ extension ProfileView {
         switch league.result {
         case .winner:
             Label("Winner", systemImage: "trophy.fill")
-                .font(Theme.Typography.caption1)
+                .font(Theme.Typography.overline)
                 .foregroundStyle(
                     Theme.Color.Status.Warning.resting
                 )
         case .eliminated:
             if let gw = league.eliminatedGameweek {
                 Text("Eliminated GW\(gw)")
-                    .font(Theme.Typography.caption1)
+                    .font(Theme.Typography.overline)
                     .foregroundStyle(
                         Theme.Color.Status.Error.text
                     )
             } else {
                 Text("Eliminated")
-                    .font(Theme.Typography.caption1)
+                    .font(Theme.Typography.overline)
                     .foregroundStyle(
                         Theme.Color.Status.Error.text
                     )

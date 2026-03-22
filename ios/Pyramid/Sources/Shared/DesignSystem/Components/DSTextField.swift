@@ -14,7 +14,7 @@ struct DSTextField: View {
     var body: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s10) {
             Text(label)
-                .font(Theme.Typography.subheadline)
+                .font(Theme.Typography.body)
                 .foregroundStyle(Theme.Color.Content.Text.subtle)
 
             Group {
@@ -38,7 +38,7 @@ struct DSTextField: View {
 
             if let error = errorMessage {
                 Text(error)
-                    .font(Theme.Typography.caption1)
+                    .font(Theme.Typography.overline)
                     .foregroundStyle(Theme.Color.Status.Error.resting)
             }
         }

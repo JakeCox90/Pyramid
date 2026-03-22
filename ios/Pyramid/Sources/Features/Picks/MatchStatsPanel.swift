@@ -89,9 +89,7 @@ extension MatchStatsPanel {
     private var teamHeaders: some View {
         HStack {
             Text(fixture.homeTeamName.uppercased())
-                .font(
-                    Font.custom("Inter-Bold", size: 16)
-                )
+                .font(Theme.Typography.subhead)
                 .foregroundStyle(Color.white)
                 .opacity(0.4)
                 .lineLimit(1)
@@ -104,9 +102,7 @@ extension MatchStatsPanel {
                 .frame(width: 1, height: 20)
 
             Text(fixture.awayTeamName.uppercased())
-                .font(
-                    Font.custom("Inter-Bold", size: 16)
-                )
+                .font(Theme.Typography.subhead)
                 .foregroundStyle(Color.white)
                 .opacity(0.4)
                 .lineLimit(1)
@@ -124,9 +120,7 @@ extension MatchStatsPanel {
     private var formSection: some View {
         VStack(spacing: 12) {
             Text("FORM")
-                .font(
-                    Font.custom("Inter-Bold", size: 12)
-                )
+                .font(Theme.Typography.overline)
                 .foregroundStyle(Color.white)
                 .opacity(0.4)
 
@@ -160,9 +154,7 @@ extension MatchStatsPanel {
                 }
             }
             Text("\(winPct)% WIN")
-                .font(
-                    Font.custom("Inter-Bold", size: 12)
-                )
+                .font(Theme.Typography.overline)
                 .foregroundStyle(Color.white)
                 .opacity(0.4)
         }
@@ -179,9 +171,7 @@ extension MatchStatsPanel {
     private var oddsSection: some View {
         VStack(spacing: 12) {
             Text("ODDS")
-                .font(
-                    Font.custom("Inter-Bold", size: 12)
-                )
+                .font(Theme.Typography.overline)
                 .foregroundStyle(Color.white)
                 .opacity(0.4)
 
@@ -201,15 +191,11 @@ extension MatchStatsPanel {
     ) -> some View {
         VStack(spacing: 4) {
             Text(label)
-                .font(
-                    Font.custom("Inter-Bold", size: 12)
-                )
+                .font(Theme.Typography.overline)
                 .foregroundStyle(Color.white)
                 .opacity(0.4)
             Text(value)
-                .font(
-                    Font.custom("Inter-Bold", size: 12)
-                )
+                .font(Theme.Typography.overline)
                 .foregroundStyle(Color.white)
                 .opacity(0.4)
         }

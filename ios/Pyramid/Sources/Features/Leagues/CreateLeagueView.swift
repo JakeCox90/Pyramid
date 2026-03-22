@@ -57,7 +57,7 @@ struct CreateLeagueView: View {
                 .autocorrectionDisabled()
 
                 Text("Give your league a unique name. You'll get a join code to share with friends.")
-                    .font(Theme.Typography.caption1)
+                    .font(Theme.Typography.overline)
                     .foregroundStyle(Theme.Color.Content.Text.disabled)
             }
 

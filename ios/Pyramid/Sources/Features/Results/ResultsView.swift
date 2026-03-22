@@ -101,7 +101,7 @@ private struct RoundSection: View {
             HStack {
                 VStack(alignment: .leading, spacing: Theme.Spacing.s10) {
                     Text(round.gameweek.name)
-                        .font(Theme.Typography.headline)
+                        .font(Theme.Typography.subhead)
                         .foregroundStyle(
                             Theme.Color.Content.Text.default
                         )
@@ -130,7 +130,7 @@ private struct RoundSection: View {
                             )
                         }
                     }
-                    .font(Theme.Typography.caption1)
+                    .font(Theme.Typography.overline)
                 }
 
                 Spacer()
@@ -140,7 +140,7 @@ private struct RoundSection: View {
                         ? "chevron.up"
                         : "chevron.down"
                 )
-                .font(Theme.Typography.subheadline)
+                .font(Theme.Typography.body)
                 .foregroundStyle(Theme.Color.Content.Text.subtle)
             }
             .padding(Theme.Spacing.s40)
@@ -177,19 +177,19 @@ private struct RoundPickRowView: View {
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(pick.profiles.displayLabel)
-                    .font(Theme.Typography.subheadline)
+                    .font(Theme.Typography.body)
                     .foregroundStyle(
                         Theme.Color.Content.Text.default
                     )
                 HStack(spacing: Theme.Spacing.s10) {
                     Text(pick.teamName)
-                        .font(Theme.Typography.caption1)
+                        .font(Theme.Typography.overline)
                         .foregroundStyle(
                             Theme.Color.Content.Text.subtle
                         )
                     if let fixture {
                         Text(fixture.scoreLabel)
-                            .font(Theme.Typography.caption2)
+                            .font(Theme.Typography.overline)
                             .foregroundStyle(
                                 Theme.Color.Content.Text.disabled
                             )

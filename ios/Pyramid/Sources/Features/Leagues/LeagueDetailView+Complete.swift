@@ -13,7 +13,7 @@ extension LeagueDetailView {
 
                     VStack(alignment: .leading, spacing: Theme.Spacing.s10) {
                         Text("League Complete")
-                            .font(Theme.Typography.headline)
+                            .font(Theme.Typography.subhead)
                             .foregroundStyle(Theme.Color.Content.Text.default)
 
                         winnerSubtitle
@@ -22,7 +22,7 @@ extension LeagueDetailView {
                     Spacer()
 
                     Image(systemName: "chevron.right")
-                        .font(Theme.Typography.caption1)
+                        .font(Theme.Typography.overline)
                         .foregroundStyle(Theme.Color.Content.Text.disabled)
                 }
             }
@@ -35,11 +35,11 @@ extension LeagueDetailView {
         if viewModel.winnerCount == 1,
            let winner = viewModel.winners.first {
             Text("\(winner.profiles.displayLabel) wins!")
-                .font(Theme.Typography.subheadline)
+                .font(Theme.Typography.body)
                 .foregroundStyle(Theme.Color.Status.Warning.resting)
         } else if viewModel.winnerCount > 1 {
             Text("\(viewModel.winnerCount) Joint Winners")
-                .font(Theme.Typography.subheadline)
+                .font(Theme.Typography.body)
                 .foregroundStyle(Theme.Color.Status.Warning.resting)
         }
     }

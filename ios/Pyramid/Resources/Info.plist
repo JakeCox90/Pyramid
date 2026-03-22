@@ -33,10 +33,10 @@
     <!-- Custom fonts — Inter (primary typeface from design system) -->
     <key>UIAppFonts</key>
     <array>
-        <string>Fonts/Inter-Regular.ttf</string>
-        <string>Fonts/Inter-Medium.ttf</string>
-        <string>Fonts/Inter-SemiBold.ttf</string>
-        <string>Fonts/Inter-Bold.ttf</string>
+        <string>Inter-Regular.ttf</string>
+        <string>Inter-Medium.ttf</string>
+        <string>Inter-SemiBold.ttf</string>
+        <string>Inter-Bold.ttf</string>
     </array>
     <!-- Supabase config — values injected via xcconfig per scheme, never hardcoded -->
     <key>SUPABASE_URL</key>

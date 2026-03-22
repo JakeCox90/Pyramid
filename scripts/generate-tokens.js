@@ -374,35 +374,34 @@ function generateThemeTypography() {
         'Bold': 'Inter-Bold',
     };
 
-    // Semantic name → { fontSizeKey, fontWeightKey }
-    const typographyMap = [
-        { name: 'display', fontSizeKey: '90', fontWeightKey: '70' },
-        { name: 'title1', fontSizeKey: '70', fontWeightKey: '70' },
-        { name: 'title2', fontSizeKey: '60', fontWeightKey: '60' },
-        { name: 'title3', fontSizeKey: '50', fontWeightKey: '60' },
-        { name: 'headline', fontSizeKey: '40', fontWeightKey: '60' },
-        { name: 'body', fontSizeKey: '30', fontWeightKey: '40' },
-        { name: 'callout', fontSizeKey: '30', fontWeightKey: '40' },
-        { name: 'subheadline', fontSizeKey: '20', fontWeightKey: '40' },
-        { name: 'footnote', fontSizeKey: '20', fontWeightKey: '40' },
-        { name: 'caption1', fontSizeKey: '10', fontWeightKey: '40' },
-        { name: 'caption2', fontSizeKey: '10', fontWeightKey: '40' },
-    ];
+    const textStyles = semanticTypography.textStyles;
 
     const lines = [];
     lines.push(GENERATED_HEADER + 'import SwiftUI');
     lines.push('');
+    lines.push('// MARK: - Theme.Typography — Text styles from Figma');
+    lines.push('');
     lines.push('extension Theme {');
     lines.push('    enum Typography {');
 
-    for (const entry of typographyMap) {
-        const fontSize = semanticTypography.fontSize[entry.fontSizeKey].value;
-        const fontWeightName = semanticTypography.fontWeight[entry.fontWeightKey].value;
-        const interName = interFontNameMap[fontWeightName];
+    for (const [name, style] of Object.entries(textStyles)) {
+        const interName = interFontNameMap[style.fontWeight];
         if (!interName) {
-            throw new Error(`No Inter font mapped for weight: ${fontWeightName}`);
+            throw new Error(`No Inter font mapped for weight: ${style.fontWeight}`);
         }
-        lines.push(`        static let ${entry.name} = Font.custom("${interName}", size: ${fontSize})`);
+        lines.push(`        static let ${name} = Font.custom("${interName}", size: ${style.fontSize})`);
+    }
+
+    lines.push('    }');
+    lines.push('}');
+    lines.push('');
+
+    // Line heights — useful for custom lineSpacing calculations
+    lines.push('extension Theme {');
+    lines.push('    enum LineHeight {');
+
+    for (const [name, style] of Object.entries(textStyles)) {
+        lines.push(`        static let ${name}: CGFloat = ${style.lineHeight}`);
     }
 
     lines.push('    }');

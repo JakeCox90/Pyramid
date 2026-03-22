@@ -56,7 +56,7 @@ struct PickStatusBadge: View {
 
     var body: some View {
         Text(status.label)
-            .font(Theme.Typography.caption1)
+            .font(Theme.Typography.overline)
             .fontWeight(.semibold)
             .foregroundStyle(status.foreground)
             .padding(.vertical, Theme.Spacing.s10)
@@ -79,7 +79,7 @@ struct LeagueCard: View {
             VStack(alignment: .leading, spacing: Theme.Spacing.s30) {
                 HStack {
                     Text(leagueName)
-                        .font(Theme.Typography.title3)
+                        .font(Theme.Typography.subhead)
                         .foregroundStyle(Theme.Color.Content.Text.default)
                     Spacer()
                     PickStatusBadge(status: pickStatus)
@@ -89,7 +89,7 @@ struct LeagueCard: View {
                     Label("\(memberCount) players", systemImage: Theme.Icon.League.members)
                     Label("GW\(gameweek)", systemImage: Theme.Icon.Pick.gameweek)
                 }
-                .font(Theme.Typography.subheadline)
+                .font(Theme.Typography.body)
                 .foregroundStyle(Theme.Color.Content.Text.disabled)
             }
         }

@@ -52,7 +52,7 @@ struct TeamsUsedPill: View {
         Text(
             "\(count) team\(count == 1 ? "" : "s") used"
         )
-        .font(Font.custom("Inter-Bold", size: 12))
+        .font(Theme.Typography.label02)
         .foregroundStyle(Color.white)
     }
 }

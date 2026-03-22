@@ -19,12 +19,12 @@ struct MemberRow: View {
 
                 VStack(alignment: .leading, spacing: Theme.Spacing.s10) {
                     Text(member.profiles.displayLabel)
-                        .font(Theme.Typography.headline)
+                        .font(Theme.Typography.subhead)
                         .foregroundStyle(Theme.Color.Content.Text.default)
 
                     if let eliminatedGw = member.eliminatedInGameweekId {
                         Text("Eliminated GW\(eliminatedGw)")
-                            .font(Theme.Typography.caption1)
+                            .font(Theme.Typography.overline)
                             .foregroundStyle(Theme.Color.Status.Error.resting)
                     }
                 }
@@ -57,7 +57,7 @@ struct MemberRow: View {
     @ViewBuilder private var pickView: some View {
         if !deadlinePassed {
             Image(systemName: Theme.Icon.Pick.locked)
-                .font(Theme.Typography.caption1)
+                .font(Theme.Typography.overline)
                 .foregroundStyle(Theme.Color.Border.default)
                 .accessibilityLabel("Pick hidden until kick-off")
         } else if let pick {
@@ -66,14 +66,14 @@ struct MemberRow: View {
             } else {
                 VStack(alignment: .trailing, spacing: 2) {
                     Text(pick.teamName)
-                        .font(Theme.Typography.subheadline)
+                        .font(Theme.Typography.body)
                         .foregroundStyle(Theme.Color.Content.Text.default)
                     resultBadge(for: pick.result)
                 }
             }
         } else {
             Text("No pick")
-                .font(Theme.Typography.caption1)
+                .font(Theme.Typography.overline)
                 .foregroundStyle(Theme.Color.Border.default)
         }
     }
@@ -103,16 +103,16 @@ struct MemberRow: View {
                         .accessibilityLabel("Live match in progress")
                 }
                 Text("\(homeScore) - \(awayScore)")
-                    .font(Theme.Typography.subheadline)
+                    .font(Theme.Typography.body)
                     .foregroundStyle(Theme.Color.Content.Text.default)
                     .monospacedDigit()
             }
             HStack(spacing: Theme.Spacing.s10) {
                 Text(pick.teamName)
-                    .font(Theme.Typography.caption1)
+                    .font(Theme.Typography.overline)
                     .foregroundStyle(Theme.Color.Content.Text.subtle)
                 Text(fixture.status.displayLabel)
-                    .font(Theme.Typography.caption2)
+                    .font(Theme.Typography.overline)
                     .foregroundStyle(
                         isLive
                             ? Theme.Color.Status.Error.resting
@@ -130,19 +130,19 @@ struct MemberRow: View {
         switch result {
         case .survived:
             Text("Survived")
-                .font(Theme.Typography.caption2)
+                .font(Theme.Typography.overline)
                 .foregroundStyle(Theme.Color.Status.Success.resting)
         case .eliminated:
             Text("Eliminated")
-                .font(Theme.Typography.caption2)
+                .font(Theme.Typography.overline)
                 .foregroundStyle(Theme.Color.Status.Error.resting)
         case .pending:
             Text("Pending")
-                .font(Theme.Typography.caption2)
+                .font(Theme.Typography.overline)
                 .foregroundStyle(Theme.Color.Content.Text.disabled)
         case .void:
             Text("Void")
-                .font(Theme.Typography.caption2)
+                .font(Theme.Typography.overline)
                 .foregroundStyle(Theme.Color.Status.Warning.resting)
         }
     }

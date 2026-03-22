@@ -108,7 +108,7 @@ struct LeagueDetailView: View {
                 .foregroundStyle(Theme.Color.Border.default)
                 .accessibilityHidden(true)
             Text(message)
-                .font(Theme.Typography.subheadline)
+                .font(Theme.Typography.body)
                 .foregroundStyle(Theme.Color.Content.Text.disabled)
                 .multilineTextAlignment(.center)
         }
@@ -141,10 +141,10 @@ struct LeagueDetailView: View {
                 .foregroundStyle(Theme.Color.Border.default)
                 .accessibilityHidden(true)
             Text("No other members yet")
-                .font(Theme.Typography.title3)
+                .font(Theme.Typography.subhead)
                 .foregroundStyle(Theme.Color.Content.Text.default)
             Text("Share the join code to invite players.")
-                .font(Theme.Typography.subheadline)
+                .font(Theme.Typography.body)
                 .foregroundStyle(Theme.Color.Content.Text.disabled)
                 .multilineTextAlignment(.center)
         }
@@ -160,7 +160,7 @@ struct LeagueDetailView: View {
                         .foregroundStyle(Theme.Color.Content.Text.disabled)
                         .accessibilityHidden(true)
                     Text("Picks are hidden until kick-off")
-                        .font(Theme.Typography.caption1)
+                        .font(Theme.Typography.overline)
                         .foregroundStyle(Theme.Color.Content.Text.disabled)
                     Spacer()
                 }

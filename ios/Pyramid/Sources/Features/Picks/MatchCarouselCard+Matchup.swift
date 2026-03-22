@@ -105,20 +105,12 @@ extension MatchCarouselCard {
             let home = fixture.homeScore,
             let away = fixture.awayScore {
             Text("\(home) - \(away)")
-                .font(
-                    Font.custom(
-                        "Inter-SemiBold", size: 14
-                    )
-                )
+                .font(Theme.Typography.overline)
                 .foregroundStyle(Color.white)
                 .monospacedDigit()
         } else {
             Text("VS")
-                .font(
-                    Font.custom(
-                        "Inter-Bold", size: 12
-                    )
-                )
+                .font(Theme.Typography.overline)
                 .foregroundStyle(Color.white)
         }
     }
@@ -131,10 +123,8 @@ extension MatchCarouselCard {
     // Home: (29.42, 229), Away: (228, 229)
     var teamNames: some View {
         ZStack {
-            Text(fixture.homeTeamShort.uppercased())
-                .font(
-                    Font.custom("Inter-Bold", size: 24)
-                )
+            Text(fixture.homeTeamShort)
+                .font(Theme.Typography.h3)
                 .foregroundStyle(Color.white)
                 .opacity(homeIsUsed ? 0.2 : 1.0)
                 .lineLimit(1)
@@ -142,10 +132,8 @@ extension MatchCarouselCard {
                 .frame(width: 150)
                 .position(x: 88, y: 243.5)
 
-            Text(fixture.awayTeamShort.uppercased())
-                .font(
-                    Font.custom("Inter-Bold", size: 24)
-                )
+            Text(fixture.awayTeamShort)
+                .font(Theme.Typography.h3)
                 .foregroundStyle(Color.white)
                 .opacity(awayIsUsed ? 0.2 : 1.0)
                 .lineLimit(1)

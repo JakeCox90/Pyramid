@@ -6,7 +6,7 @@ extension WalletView {
     var transactionHistorySection: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Transaction History")
-                .font(.headline)
+                .font(Theme.Typography.subhead)
                 .foregroundStyle(Theme.Color.Content.Text.default)
                 .padding(.horizontal, 16)
 
@@ -37,7 +37,7 @@ extension WalletView {
                 .foregroundStyle(Theme.Color.Content.Text.disabled)
                 .accessibilityHidden(true)
             Text("No transactions yet")
-                .font(.subheadline)
+                .font(Theme.Typography.body)
                 .foregroundStyle(Theme.Color.Content.Text.subtle)
         }
         .frame(maxWidth: .infinity)

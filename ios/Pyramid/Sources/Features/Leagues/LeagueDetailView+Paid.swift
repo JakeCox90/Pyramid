@@ -8,9 +8,9 @@ struct PaidLeagueBadge: View {
     var body: some View {
         HStack(spacing: 6) {
             Image(systemName: Theme.Icon.League.trophyFill)
-                .font(.caption)
+                .font(Theme.Typography.caption)
             Text("Paid League")
-                .font(Theme.Typography.caption1)
+                .font(Theme.Typography.overline)
         }
         .foregroundStyle(Theme.Color.Status.Warning.resting)
         .padding(.horizontal, Theme.Spacing.s30)
@@ -65,12 +65,12 @@ struct PaidMemberRow: View {
     private var memberInfo: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s10) {
             Text(member.pseudonym ?? member.profiles.displayLabel)
-                .font(Theme.Typography.headline)
+                .font(Theme.Typography.subhead)
                 .foregroundStyle(Theme.Color.Content.Text.default)
 
             if let eliminatedGw = member.eliminatedInGameweekId {
                 Text("Eliminated GW\(eliminatedGw)")
-                    .font(Theme.Typography.caption1)
+                    .font(Theme.Typography.overline)
                     .foregroundStyle(Theme.Color.Status.Error.resting)
             }
         }
@@ -80,15 +80,15 @@ struct PaidMemberRow: View {
         if let prizePence = member.prizePence, prizePence > 0 {
             VStack(alignment: .trailing, spacing: Theme.Spacing.s10) {
                 Text(formatPence(prizePence))
-                    .font(Theme.Typography.headline)
+                    .font(Theme.Typography.subhead)
                     .foregroundStyle(Theme.Color.Status.Success.resting)
                 Text("Prize")
-                    .font(Theme.Typography.caption2)
+                    .font(Theme.Typography.overline)
                     .foregroundStyle(Theme.Color.Content.Text.disabled)
             }
         } else if !deadlinePassed {
             Image(systemName: Theme.Icon.Pick.locked)
-                .font(Theme.Typography.caption1)
+                .font(Theme.Typography.overline)
                 .foregroundStyle(Theme.Color.Border.default)
         }
     }

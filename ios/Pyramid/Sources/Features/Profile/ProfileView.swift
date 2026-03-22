@@ -43,7 +43,7 @@ struct ProfileView: View {
 
                     if let error = viewModel.errorMessage {
                         Text(error)
-                            .font(Theme.Typography.footnote)
+                            .font(Theme.Typography.caption)
                             .foregroundStyle(
                                 Theme.Color.Status.Error.text
                             )
@@ -77,7 +77,7 @@ private extension ProfileView {
                 .foregroundStyle(Theme.Color.Content.Text.subtle)
                 .accessibilityHidden(true)
             Text("Profile")
-                .font(Theme.Typography.title2)
+                .font(Theme.Typography.h3)
                 .foregroundStyle(Theme.Color.Content.Text.default)
         }
     }
@@ -131,7 +131,7 @@ private extension ProfileView {
     var devToolsSection: some View {
         VStack(spacing: Theme.Spacing.s20) {
             Text("Developer Tools")
-                .font(Theme.Typography.footnote)
+                .font(Theme.Typography.caption)
                 .foregroundStyle(Theme.Color.Content.Text.subtle)
                 .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -151,7 +151,7 @@ private extension ProfileView {
 
             if let resetMessage {
                 Text(resetMessage)
-                    .font(Theme.Typography.footnote)
+                    .font(Theme.Typography.caption)
                     .foregroundStyle(Theme.Color.Content.Text.subtle)
                     .transition(.opacity)
             }
@@ -171,10 +171,10 @@ private extension ProfileView {
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(title)
-                        .font(Theme.Typography.callout)
+                        .font(Theme.Typography.body)
                         .foregroundStyle(Theme.Color.Content.Text.default)
                     Text(subtitle)
-                        .font(Theme.Typography.caption1)
+                        .font(Theme.Typography.overline)
                         .foregroundStyle(Theme.Color.Content.Text.subtle)
                 }
                 Spacer()

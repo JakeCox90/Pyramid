@@ -50,7 +50,7 @@ extension PicksView {
                         ? "Pick locked: \(pick.teamName)"
                         : "Current pick: \(pick.teamName)"
                 )
-                .font(Theme.Typography.subheadline.bold())
+                .font(Theme.Typography.body.bold())
                 .foregroundStyle(
                     Theme.Color.Content.Text.default
                 )
@@ -58,7 +58,7 @@ extension PicksView {
                     Text(
                         "You can change your pick until kick-off."
                     )
-                    .font(Theme.Typography.caption1)
+                    .font(Theme.Typography.overline)
                     .foregroundStyle(
                         Theme.Color.Content.Text.disabled
                     )
@@ -84,7 +84,7 @@ extension PicksView {
                 )
                 .accessibilityHidden(true)
             Text(message)
-                .font(Theme.Typography.subheadline)
+                .font(Theme.Typography.body)
                 .foregroundStyle(
                     Theme.Color.Content.Text.default
                 )
@@ -109,7 +109,7 @@ extension PicksView {
                 )
                 .accessibilityHidden(true)
             Text(message)
-                .font(Theme.Typography.subheadline)
+                .font(Theme.Typography.body)
                 .foregroundStyle(
                     Theme.Color.Content.Text.default
                 )

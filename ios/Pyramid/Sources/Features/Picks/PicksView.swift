@@ -23,77 +23,71 @@ struct PicksView: View {
     }
 
     var body: some View {
-        NavigationStack {
-            ZStack {
-                Theme.Color.Surface.Background.page
-                    .ignoresSafeArea()
+        ZStack {
+            Theme.Color.Surface.Background.page
+                .ignoresSafeArea()
 
-                Group {
-                    if viewModel.isLoading
-                        && viewModel.fixtures.isEmpty {
-                        loadingView
-                    } else if let error = viewModel.errorMessage,
-                              viewModel.fixtures.isEmpty {
-                        errorView(message: error)
-                    } else if viewModel.fixtures.isEmpty {
-                        emptyStateView
-                    } else if viewMode
-                        == PickViewMode.carousel.rawValue {
-                        PickCarouselView(
-                            viewModel: viewModel
-                        )
-                    } else {
-                        fixturesList
-                    }
+            Group {
+                if viewModel.isLoading
+                    && viewModel.fixtures.isEmpty {
+                    loadingView
+                } else if let error = viewModel.errorMessage,
+                          viewModel.fixtures.isEmpty {
+                    errorView(message: error)
+                } else if viewModel.fixtures.isEmpty {
+                    emptyStateView
+                } else if viewMode
+                    == PickViewMode.carousel.rawValue {
+                    PickCarouselView(
+                        viewModel: viewModel
+                    )
+                } else {
+                    fixturesList
                 }
             }
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "chevron.left")
-                            .font(
-                                .system(
-                                    size: 16,
-                                    weight: .semibold
-                                )
-                            )
-                            .foregroundStyle(Color.white)
-                    }
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        withAnimation(.easeInOut(duration: 0.2)) {
-                            viewMode = viewMode
-                                == PickViewMode.carousel.rawValue
-                                ? PickViewMode.list.rawValue
-                                : PickViewMode.carousel.rawValue
-                        }
-                    } label: {
-                        Image(
-                            systemName: viewMode
-                                == PickViewMode.carousel.rawValue
-                                ? "list.bullet"
-                                : "rectangle.stack"
-                        )
-                        .font(
-                            .system(
-                                size: 16,
-                                weight: .semibold
-                            )
-                        )
+        }
+        .navigationBarBackButtonHidden(true)
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .font(Theme.Typography.subhead)
                         .foregroundStyle(Color.white)
-                    }
                 }
             }
-            .task {
-                await viewModel.load()
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        viewMode = viewMode
+                            == PickViewMode.carousel.rawValue
+                            ? PickViewMode.list.rawValue
+                            : PickViewMode.carousel.rawValue
+                    }
+                } label: {
+                    Image(
+                        systemName: viewMode
+                            == PickViewMode.carousel.rawValue
+                            ? "list.bullet"
+                            : "rectangle.stack"
+                    )
+                    .font(
+                        .system(
+                            size: 16,
+                            weight: .semibold
+                        )
+                    )
+                    .foregroundStyle(Color.white)
+                }
             }
-            .refreshable {
-                await viewModel.load()
-            }
+        }
+        .task {
+            await viewModel.load()
+        }
+        .refreshable {
+            await viewModel.load()
         }
     }
 }
@@ -105,9 +99,7 @@ extension PicksView {
         VStack(alignment: .leading, spacing: Theme.Spacing.s20) {
             if let gameweek = viewModel.gameweek {
                 Text("GAMEWEEK \(gameweek.roundNumber)")
-                    .font(
-                        Font.custom("Inter-Bold", size: 12)
-                    )
+                    .font(Theme.Typography.overline)
                     .textCase(.uppercase)
                     .foregroundStyle(
                         Color.white.opacity(0.6)
@@ -115,7 +107,7 @@ extension PicksView {
             }
 
             Text("Pick a team")
-                .font(.custom("Inter-Bold", size: 44))
+                .font(Theme.Typography.h1)
                 .foregroundStyle(Color.white)
 
             if !viewModel.usedTeamIds.isEmpty {
@@ -131,10 +123,10 @@ extension PicksView {
                         systemName: Theme.Icon.Pick
                             .timeRemaining
                     )
-                    .font(.system(size: 12))
+                    .font(Theme.Typography.overline)
                     .accessibilityHidden(true)
                     Text(deadline)
-                        .font(Theme.Typography.caption1)
+                        .font(Theme.Typography.overline)
                 }
                 .foregroundStyle(
                     Theme.Color.Status.Warning.resting
@@ -164,7 +156,7 @@ extension PicksView {
                     Color.white.opacity(0.3)
                 )
             Text(message)
-                .font(Theme.Typography.subheadline)
+                .font(Theme.Typography.body)
                 .foregroundStyle(
                     Color.white.opacity(0.6)
                 )
@@ -182,12 +174,12 @@ extension PicksView {
                     Color.white.opacity(0.3)
                 )
             Text("No fixtures this week")
-                .font(Theme.Typography.title3)
+                .font(Theme.Typography.subhead)
                 .foregroundStyle(Color.white)
             Text(
                 "Check back when the gameweek schedule is available."
             )
-            .font(Theme.Typography.subheadline)
+            .font(Theme.Typography.body)
             .foregroundStyle(
                 Color.white.opacity(0.6)
             )

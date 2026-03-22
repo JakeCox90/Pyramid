@@ -10,7 +10,7 @@ import SwiftUI
 
 extension MatchCarouselCard {
     var pickButtons: some View {
-        HStack(spacing: 24) {
+        HStack(spacing: 12) {
             pickButton(
                 teamId: fixture.homeTeamId,
                 teamName: fixture.homeTeamName,
@@ -83,16 +83,12 @@ extension MatchCarouselCard {
                 .tint(Color.black)
         } else if isUsed {
             Text("USED")
-                .font(
-                    Font.custom("Inter-Bold", size: 12)
-                )
+                .font(Theme.Typography.overline)
                 .foregroundStyle(Color.white)
                 .opacity(0.3)
         } else {
             Text(isPicked ? "PICKED" : label)
-                .font(
-                    Font.custom("Inter-Bold", size: 12)
-                )
+                .font(Theme.Typography.overline)
                 .foregroundStyle(
                     isPicked
                         ? Color.white

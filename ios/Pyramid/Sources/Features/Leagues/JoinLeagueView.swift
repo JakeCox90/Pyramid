@@ -58,7 +58,7 @@ struct JoinLeagueView: View {
                 }
 
                 Text("Ask the league creator for the 6-character code.")
-                    .font(Theme.Typography.caption1)
+                    .font(Theme.Typography.overline)
                     .foregroundStyle(Theme.Color.Content.Text.disabled)
             }
 
@@ -88,14 +88,14 @@ struct JoinLeagueView: View {
                 DSCard {
                     VStack(alignment: .leading, spacing: Theme.Spacing.s30) {
                         Text(preview.name)
-                            .font(Theme.Typography.title3)
+                            .font(Theme.Typography.subhead)
                             .foregroundStyle(Theme.Color.Content.Text.default)
 
                         HStack(spacing: Theme.Spacing.s40) {
                             Label("\(preview.memberCount) members", systemImage: Theme.Icon.League.members)
                             Label("Season \(preview.season)", systemImage: Theme.Icon.Pick.gameweek)
                         }
-                        .font(Theme.Typography.subheadline)
+                        .font(Theme.Typography.body)
                         .foregroundStyle(Theme.Color.Content.Text.disabled)
                     }
                 }
@@ -104,7 +104,7 @@ struct JoinLeagueView: View {
 
             if let error = viewModel.errorMessage {
                 Text(error)
-                    .font(Theme.Typography.caption1)
+                    .font(Theme.Typography.overline)
                     .foregroundStyle(Theme.Color.Status.Error.resting)
                     .padding(.horizontal, Theme.Spacing.s40)
             }
@@ -140,11 +140,11 @@ struct JoinLeagueView: View {
 
             VStack(spacing: Theme.Spacing.s20) {
                 Text("You're in!")
-                    .font(Theme.Typography.title1)
+                    .font(Theme.Typography.h2)
                     .foregroundStyle(Theme.Color.Content.Text.default)
 
                 Text(response.name)
-                    .font(Theme.Typography.headline)
+                    .font(Theme.Typography.subhead)
                     .foregroundStyle(Theme.Color.Content.Text.subtle)
             }
 
