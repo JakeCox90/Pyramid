@@ -143,11 +143,15 @@ extension HomeView {
             }
 
             if locked {
-                Text("LOCKED")
-                    .font(Theme.Typography.overline)
-                    .foregroundStyle(
-                        Color.white.opacity(0.4)
-                    )
+                HStack(spacing: 6) {
+                    Image(systemName: "lock.fill")
+                        .font(.system(size: 12))
+                    Text("LOCKED")
+                        .font(Theme.Typography.overline)
+                }
+                .foregroundStyle(
+                    Color.white.opacity(0.4)
+                )
             } else {
                 changePickButton
             }
