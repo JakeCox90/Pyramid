@@ -2,6 +2,7 @@ import SwiftUI
 
 struct HomeView: View {
     @StateObject var viewModel = HomeViewModel()
+    @State var showPicks = false
 
     var body: some View {
         NavigationStack {
@@ -24,6 +25,14 @@ struct HomeView: View {
                     .ignoresSafeArea()
             )
             .task { await viewModel.load() }
+            .navigationDestination(
+                isPresented: $showPicks
+            ) {
+                if let leagueId = viewModel
+                    .currentPick?.pick.leagueId {
+                    PicksView(leagueId: leagueId)
+                }
+            }
         }
     }
 

@@ -47,7 +47,7 @@ extension HomeView {
                 Text("Make your pick")
                     .font(Theme.Typography.h2)
                     .foregroundStyle(.white)
-                changPickPill
+                changePickButton
             }
         }
         .frame(maxWidth: .infinity)
@@ -116,7 +116,7 @@ extension HomeView {
                     )
             }
 
-            changPickPill
+            changePickButton
         }
         .padding(.horizontal, Theme.Spacing.s40)
     }
@@ -137,9 +137,11 @@ extension HomeView {
             )
     }
 
-    private var changPickPill: some View {
-        Button("CHANGE PICK") {}
-            .dsStyle(.secondary, fullWidth: false)
+    var changePickButton: some View {
+        Button("CHANGE PICK") {
+            showPicks = true
+        }
+        .dsStyle(.secondary, fullWidth: false)
     }
 
     private func kickoffLabel(_ date: Date) -> String {
