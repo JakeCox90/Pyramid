@@ -29,6 +29,37 @@ struct PickCarouselView: View {
             carouselHeader
                 .padding(.horizontal, 24)
             carouselArea
+            paginationDots
+        }
+    }
+}
+
+// MARK: - Pagination Dots
+
+extension PickCarouselView {
+    var paginationDots: some View {
+        HStack(spacing: 6) {
+            ForEach(
+                0..<viewModel.fixtures.count,
+                id: \.self
+            ) { index in
+                Circle()
+                    .fill(
+                        index == currentIndex
+                            ? Color.white
+                            : Color.white.opacity(0.3)
+                    )
+                    .frame(
+                        width: index == currentIndex
+                            ? 8 : 6,
+                        height: index == currentIndex
+                            ? 8 : 6
+                    )
+                    .animation(
+                        .easeInOut(duration: 0.2),
+                        value: currentIndex
+                    )
+            }
         }
     }
 }
