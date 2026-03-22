@@ -21,7 +21,7 @@ struct MatchCarouselCard: View {
             cardBackground
             cardOverlay
         }
-        .frame(width: 352, height: 452)
+        .frame(height: 500)
         .clipShape(RoundedRectangle(cornerRadius: 24))
         .overlay(
             RoundedRectangle(cornerRadius: 24)
@@ -66,19 +66,184 @@ struct MatchCarouselCard: View {
     }
 
     private var cardOverlay: some View {
-        ZStack {
-            halfTints
-            verticalDividers
-            badges
-            vsCircle
-            teamNames
-            VStack {
-                Spacer()
-                pickButtons
-                    .padding(.horizontal, 12)
-                    .padding(.bottom, 17)
-            }
+        VStack(spacing: 0) {
+            matchupSection
+                .frame(height: 280)
+            Spacer(minLength: 0)
+            fixtureDetails
+            pickButtons
+                .padding(.horizontal, 12)
+                .padding(.bottom, 17)
         }
+    }
+
+    /// Top section: badges, divider, VS, team names
+    private var matchupSection: some View {
+        GeometryReader { geo in
+            let w = geo.size.width
+            let midX = w / 2
+            let quarterX = w / 4
+
+            // Half-tint backgrounds
+            halfTintLayer(
+                width: w, midX: midX
+            )
+
+            // Vertical divider
+            Rectangle()
+                .fill(Color.white.opacity(0.2))
+                .frame(width: 1, height: 217)
+                .position(x: midX, y: 108.5)
+
+            // Badges
+            TeamBadge(
+                teamName: fixture.homeTeamName,
+                logoURL: fixture.homeTeamLogo,
+                size: 76
+            )
+            .opacity(homeIsUsed ? 0.2 : 1.0)
+            .position(x: quarterX, y: 100)
+
+            TeamBadge(
+                teamName: fixture.awayTeamName,
+                logoURL: fixture.awayTeamLogo,
+                size: 74
+            )
+            .opacity(awayIsUsed ? 0.2 : 1.0)
+            .position(
+                x: w - quarterX, y: 100
+            )
+
+            // VS circle
+            vsCircleView
+                .position(x: midX, y: 200)
+
+            // Team names
+            Text(fixture.homeTeamShort)
+                .font(Theme.Typography.h3)
+                .foregroundStyle(Color.white)
+                .opacity(homeIsUsed ? 0.2 : 1.0)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+                .frame(width: w / 2 - 30)
+                .position(x: quarterX, y: 250)
+
+            Text(fixture.awayTeamShort)
+                .font(Theme.Typography.h3)
+                .foregroundStyle(Color.white)
+                .opacity(awayIsUsed ? 0.2 : 1.0)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+                .frame(width: w / 2 - 30)
+                .position(
+                    x: w - quarterX, y: 250
+                )
+        }
+    }
+
+    private func halfTintLayer(
+        width w: CGFloat,
+        midX: CGFloat
+    ) -> some View {
+        ZStack {
+            UnevenRoundedRectangle(
+                topLeadingRadius: 8,
+                bottomLeadingRadius: 8,
+                bottomTrailingRadius: 200,
+                topTrailingRadius: 200
+            )
+            .fill(Color(hex: "241E31"))
+            .frame(
+                width: midX - 10,
+                height: 152
+            )
+            .position(
+                x: (midX - 10) / 2,
+                y: 100
+            )
+
+            UnevenRoundedRectangle(
+                topLeadingRadius: 200,
+                bottomLeadingRadius: 200,
+                bottomTrailingRadius: 8,
+                topTrailingRadius: 8
+            )
+            .fill(Color(hex: "241E31"))
+            .frame(
+                width: midX - 10,
+                height: 152
+            )
+            .position(
+                x: w - (midX - 10) / 2,
+                y: 100
+            )
+        }
+    }
+
+    private var vsCircleView: some View {
+        ZStack {
+            Circle()
+                .fill(Color(hex: "3D3354"))
+            Circle()
+                .stroke(
+                    Color.white.opacity(0.2),
+                    lineWidth: 1
+                )
+            vsText
+        }
+        .frame(width: 40, height: 40)
+    }
+
+    @ViewBuilder private var vsText: some View {
+        if fixture.status.isLive
+            || fixture.status.isFinished,
+            let home = fixture.homeScore,
+            let away = fixture.awayScore {
+            Text("\(home) - \(away)")
+                .font(Theme.Typography.overline)
+                .foregroundStyle(Color.white)
+                .monospacedDigit()
+        } else {
+            Text("VS")
+                .font(Theme.Typography.overline)
+                .foregroundStyle(Color.white)
+        }
+    }
+
+    private var fixtureDetails: some View {
+        VStack(spacing: 3) {
+            if let venue = FixtureMetadata.venue(
+                forHomeTeam: fixture.homeTeamName
+            ) {
+                Text(venue)
+                    .font(Theme.Typography.label01)
+                    .foregroundStyle(
+                        Color.white.opacity(0.5)
+                    )
+            }
+            Text(
+                fixture.kickoffAt,
+                format: .dateTime
+                    .weekday(.abbreviated)
+                    .day(.defaultDigits)
+                    .month(.abbreviated)
+                    .hour(.defaultDigits(
+                        amPM: .abbreviated
+                    ))
+                    .minute(.twoDigits)
+            )
+            .font(Theme.Typography.label01)
+            .textCase(.uppercase)
+            .foregroundStyle(
+                Color.white.opacity(0.4)
+            )
+            Text(FixtureMetadata.broadcastNote)
+                .font(Theme.Typography.caption)
+                .foregroundStyle(
+                    Color.white.opacity(0.3)
+                )
+        }
+        .padding(.bottom, 12)
     }
 
     var homeIsUsed: Bool {

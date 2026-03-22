@@ -12,11 +12,17 @@ struct PickCarouselView: View {
     @State var cardOffsetY: CGFloat = 0
     @State var isStatsRevealed = false
     @State var dragOffsetX: CGFloat = 0
+    /// Tracks initial drag direction to lock gesture axis
+    @State var dragAxis: DragAxis = .undecided
 
-    // Figma: main card 352w, adjacent ~304w → 0.86 scale
-    private let cardWidth: CGFloat = 352
+    enum DragAxis {
+        case undecided, horizontal, vertical
+    }
+
     private let cardSpacing: CGFloat = 16
     private let peekScale: CGFloat = 0.86
+    /// Horizontal inset on each side for adjacent card peek
+    private let peekInset: CGFloat = 32
 
     var body: some View {
         VStack(spacing: 16) {
@@ -64,19 +70,30 @@ extension PickCarouselView {
 // MARK: - Carousel Area
 
 extension PickCarouselView {
+    /// Card width based on screen, leaving room for peek
+    func cardWidth(in screenWidth: CGFloat) -> CGFloat {
+        screenWidth - peekInset * 2
+    }
+
     /// Step size: card width + spacing between cards
-    private var stepSize: CGFloat {
-        cardWidth + cardSpacing
+    func stepSize(in screenWidth: CGFloat) -> CGFloat {
+        cardWidth(in: screenWidth) + cardSpacing
     }
 
     /// Horizontal offset for the entire card strip
-    private var stripOffset: CGFloat {
-        -CGFloat(currentIndex) * stepSize + dragOffsetX
+    func stripOffset(in screenWidth: CGFloat) -> CGFloat {
+        let step = stepSize(in: screenWidth)
+        return -CGFloat(currentIndex) * step + dragOffsetX
     }
 
     var carouselArea: some View {
         GeometryReader { geo in
-            let midX = geo.size.width / 2
+            let sw = geo.size.width
+            let cw = cardWidth(in: sw)
+            let step = stepSize(in: sw)
+            let offset = stripOffset(in: sw)
+            let midX = sw / 2
+
             HStack(spacing: cardSpacing) {
                 ForEach(
                     Array(
@@ -84,22 +101,21 @@ extension PickCarouselView {
                     ),
                     id: \.element.id
                 ) { index, fixture in
-                    let distance = abs(
-                        stripOffset
-                            + CGFloat(index) * stepSize
-                            + cardWidth / 2
+                    let dist = abs(
+                        offset
+                            + CGFloat(index) * step
+                            + cw / 2
                             - midX
                     )
-                    let progress = min(
-                        distance / stepSize, 1
-                    )
-                    let scale = 1 - (1 - peekScale) * progress
+                    let progress = min(dist / step, 1)
+                    let scale =
+                        1 - (1 - peekScale) * progress
                     carouselPage(
                         fixture: fixture,
                         index: index,
-                        cardWidth: cardWidth
+                        cardWidth: cw
                     )
-                    .frame(width: cardWidth)
+                    .frame(width: cw)
                     .scaleEffect(scale)
                     .opacity(
                         index == currentIndex ? 1 : 0.7
@@ -109,12 +125,9 @@ extension PickCarouselView {
                     )
                 }
             }
-            .offset(
-                x: stripOffset
-                    + midX
-                    - cardWidth / 2
-            )
-            .gesture(horizontalDrag)
+            .offset(x: offset + midX - cw / 2)
+            .contentShape(Rectangle())
+            .gesture(unifiedDrag(cardWidth: cw))
             .animation(
                 .spring(
                     response: 0.4,
@@ -126,44 +139,113 @@ extension PickCarouselView {
                 .interactiveSpring(),
                 value: dragOffsetX
             )
+            .animation(
+                .spring(
+                    response: 0.4,
+                    dampingFraction: 0.8
+                ),
+                value: isStatsRevealed
+            )
+            .animation(
+                .spring(
+                    response: 0.4,
+                    dampingFraction: 0.8
+                ),
+                value: cardOffsetY
+            )
         }
-        .frame(height: 530)
+        .frame(height: 520)
     }
 
-    private var horizontalDrag: some Gesture {
-        DragGesture(minimumDistance: 15)
+    /// Single drag gesture handling both horizontal
+    /// (swipe between cards) and vertical (stats reveal)
+    private func unifiedDrag(
+        cardWidth cw: CGFloat
+    ) -> some Gesture {
+        DragGesture(minimumDistance: 12)
             .onChanged { value in
                 let dx = value.translation.width
                 let dy = value.translation.height
-                // Only handle horizontal drags
-                // (vertical is for stats reveal)
-                guard abs(dx) > abs(dy) else { return }
-                // Rubber-band at edges
-                let atStart = currentIndex == 0 && dx > 0
-                let atEnd = currentIndex == viewModel.fixtures.count - 1 && dx < 0
-                if atStart || atEnd {
-                    dragOffsetX = dx * 0.3
-                } else {
-                    dragOffsetX = dx
+                // Lock axis on first significant movement
+                if dragAxis == .undecided {
+                    if abs(dx) > 8 || abs(dy) > 8 {
+                        dragAxis = abs(dx) >= abs(dy)
+                            ? .horizontal : .vertical
+                    }
+                }
+                switch dragAxis {
+                case .horizontal:
+                    handleHorizontalDrag(dx: dx)
+                case .vertical:
+                    handleVerticalDrag(dy: dy)
+                case .undecided:
+                    break
                 }
             }
             .onEnded { value in
                 let dx = value.translation.width
-                let velocity = value.predictedEndTranslation
-                    .width
-                let threshold = cardWidth * 0.3
-                var newIndex = currentIndex
-                if dx < -threshold || velocity < -cardWidth {
-                    newIndex = min(currentIndex + 1, viewModel.fixtures.count - 1)
-                } else if dx > threshold || velocity > cardWidth {
-                    newIndex = max(currentIndex - 1, 0)
+                let dy = value.translation.height
+                let vel = value.predictedEndTranslation
+                switch dragAxis {
+                case .horizontal:
+                    endHorizontalDrag(
+                        dx: dx,
+                        velocityX: vel.width,
+                        cardWidth: cw
+                    )
+                case .vertical:
+                    endVerticalDrag(dy: dy)
+                case .undecided:
+                    break
                 }
-                dragOffsetX = 0
-                if newIndex != currentIndex {
-                    currentIndex = newIndex
-                    isStatsRevealed = false
-                    cardOffsetY = 0
-                }
+                dragAxis = .undecided
             }
+    }
+
+    private func handleHorizontalDrag(dx: CGFloat) {
+        let count = viewModel.fixtures.count
+        let atStart = currentIndex == 0 && dx > 0
+        let atEnd =
+            currentIndex == count - 1 && dx < 0
+        dragOffsetX = (atStart || atEnd)
+            ? dx * 0.3 : dx
+    }
+
+    private func endHorizontalDrag(
+        dx: CGFloat,
+        velocityX: CGFloat,
+        cardWidth cw: CGFloat
+    ) {
+        let threshold = cw * 0.25
+        let count = viewModel.fixtures.count
+        var newIndex = currentIndex
+        if dx < -threshold || velocityX < -cw {
+            newIndex = min(currentIndex + 1, count - 1)
+        } else if dx > threshold || velocityX > cw {
+            newIndex = max(currentIndex - 1, 0)
+        }
+        dragOffsetX = 0
+        if newIndex != currentIndex {
+            currentIndex = newIndex
+            isStatsRevealed = false
+            cardOffsetY = 0
+        }
+    }
+
+    private func handleVerticalDrag(dy: CGFloat) {
+        if isStatsRevealed && dy > 0 {
+            cardOffsetY = dy
+        } else if !isStatsRevealed && dy < 0 {
+            cardOffsetY = dy
+        }
+    }
+
+    private func endVerticalDrag(dy: CGFloat) {
+        if isStatsRevealed && dy > 80 {
+            isStatsRevealed = false
+        } else if !isStatsRevealed && dy < -100 {
+            isStatsRevealed = true
+        }
+        cardOffsetY = 0
     }
 }
