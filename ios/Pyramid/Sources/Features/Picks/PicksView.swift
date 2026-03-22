@@ -89,6 +89,11 @@ struct PicksView: View {
         .refreshable {
             await viewModel.load()
         }
+        .onChange(of: viewModel.pickConfirmed) { confirmed in
+            if confirmed {
+                dismiss()
+            }
+        }
     }
 }
 

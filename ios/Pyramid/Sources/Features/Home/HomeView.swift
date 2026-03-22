@@ -33,6 +33,11 @@ struct HomeView: View {
                     PicksView(leagueId: leagueId)
                 }
             }
+            .onChange(of: showPicks) { showing in
+                if !showing {
+                    Task { await viewModel.load() }
+                }
+            }
         }
     }
 

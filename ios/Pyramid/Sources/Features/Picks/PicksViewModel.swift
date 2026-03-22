@@ -15,6 +15,7 @@ final class PicksViewModel: ObservableObject {
     @Published var successMessage: String?
     @Published var showCelebration = false
     @Published var celebratedTeamId: Int?
+    @Published var pickConfirmed = false
 
     let leagueId: String
 
@@ -84,10 +85,11 @@ final class PicksViewModel: ObservableObject {
                 currentPick = try await pickService.fetchMyPick(leagueId: leagueId, gameweekId: gw.id)
             }
             Task { [weak self] in
-                try? await Task.sleep(nanoseconds: 3_000_000_000)
+                try? await Task.sleep(nanoseconds: 2_000_000_000)
                 self?.successMessage = nil
                 self?.showCelebration = false
                 self?.celebratedTeamId = nil
+                self?.pickConfirmed = true
             }
         } catch {
             errorMessage = AppError.from(error).userMessage
