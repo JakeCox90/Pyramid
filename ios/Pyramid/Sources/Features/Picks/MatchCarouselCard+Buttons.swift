@@ -42,6 +42,7 @@ extension MatchCarouselCard {
         } label: {
             buttonContent(
                 label: label,
+                teamId: teamId,
                 isPicked: isPicked,
                 isUsed: isUsed,
                 isLoading: isThisSub
@@ -74,6 +75,7 @@ extension MatchCarouselCard {
     @ViewBuilder
     private func buttonContent(
         label: String,
+        teamId: Int,
         isPicked: Bool,
         isUsed: Bool,
         isLoading: Bool
@@ -82,7 +84,7 @@ extension MatchCarouselCard {
             ProgressView()
                 .tint(Color.black)
         } else if isUsed {
-            Text("USED")
+            Text(usedLabel(for: teamId))
                 .font(Theme.Typography.overline)
                 .foregroundStyle(Color.white)
                 .opacity(0.3)
@@ -130,5 +132,12 @@ extension MatchCarouselCard {
         if isUsed { return 1.0 }
         if disabled && !isPicked { return 0.4 }
         return 1.0
+    }
+
+    private func usedLabel(for teamId: Int) -> String {
+        if let round = usedTeamRounds[teamId] {
+            return "USED GW\(round)"
+        }
+        return "USED"
     }
 }

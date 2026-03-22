@@ -11,6 +11,7 @@ struct MatchCarouselCard: View {
     let fixture: Fixture
     let selectedTeamId: Int?
     let usedTeamIds: Set<Int>
+    let usedTeamRounds: [Int: Int]
     let isLocked: Bool
     let isSubmitting: Bool
     var submittingTeamId: Int?

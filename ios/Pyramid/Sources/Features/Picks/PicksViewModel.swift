@@ -8,6 +8,8 @@ final class PicksViewModel: ObservableObject {
     @Published var currentPick: Pick?
     @Published var usedTeamIds: Set<Int> = []
     @Published var usedTeamNames: [String] = []
+    /// Maps team ID → gameweek round number it was used in
+    @Published var usedTeamRounds: [Int: Int] = [:]
     @Published var isLoading = false
     @Published var isSubmitting = false
     @Published var submittingTeamId: Int?
@@ -60,7 +62,8 @@ final class PicksViewModel: ObservableObject {
             currentPick = try await pickFetch
             let usedTeams = try await usedTeamsFetch
             usedTeamIds = Set(usedTeams.keys)
-            usedTeamNames = Array(usedTeams.values)
+            usedTeamNames = usedTeams.values.map(\.teamName)
+            usedTeamRounds = usedTeams.mapValues(\.roundNumber)
         } catch {
             errorMessage = AppError.from(error).userMessage
         }

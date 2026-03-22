@@ -40,6 +40,7 @@ extension PickCarouselView {
             fixture: fixture,
             selectedTeamId: viewModel.currentPick?.teamId,
             usedTeamIds: viewModel.usedTeamIds,
+            usedTeamRounds: viewModel.usedTeamRounds,
             isLocked: viewModel.isFixtureLocked(fixture),
             isSubmitting: viewModel.isSubmitting,
             submittingTeamId: viewModel.submittingTeamId
