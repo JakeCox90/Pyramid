@@ -27,6 +27,7 @@
 		14E2ECAD13057A938E1C4719 /* FeatureFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C9C8665BDFF415589ABE7A /* FeatureFlags.swift */; };
 		155C54060AD809FA40F6602B /* LeaguesView+EmptyState.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB8658DE59E52977533B5D63 /* LeaguesView+EmptyState.swift */; };
 		18E72417EAA25C39CDB7DA80 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 9BBCF177D8E7D14FC85A2F79 /* Supabase */; };
+		1BB2C3BD0EE9C5B2133AB206 /* FixtureMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDFA8AC5EC2791C6F4611AFD /* FixtureMetadata.swift */; };
 		207E8C9BF76282B3C6BF33F0 /* Inter-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6E8FE1A7D9508B6D441BD6EF /* Inter-Bold.ttf */; };
 		221D54F9C05D7B44FFAB4AC0 /* NotificationPreferencesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91C9DFA9DF708B041B1E1F5E /* NotificationPreferencesView.swift */; };
 		225029DF0BEC0AFD0598257B /* TeamBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3B420A835DBEB60E1455BEC /* TeamBadge.swift */; };
@@ -272,6 +273,7 @@
 		CB29F01766DC5BCB51AB45C5 /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
 		CC95918095D0EA3F4C29A0AA /* AuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthView.swift; sourceTree = "<group>"; };
 		CCB24355D187DD94CBEFDA16 /* LeagueMember.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeagueMember.swift; sourceTree = "<group>"; };
+		CDFA8AC5EC2791C6F4611AFD /* FixtureMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixtureMetadata.swift; sourceTree = "<group>"; };
 		CF4DADA2C9FF80E845DDCCCB /* MatchCarouselCard+Matchup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MatchCarouselCard+Matchup.swift"; sourceTree = "<group>"; };
 		D45FA7FC994C841B0871B333 /* PicksViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PicksViewModelTests.swift; sourceTree = "<group>"; };
 		D4AF1884F1347AC43C09AC4D /* Inter-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Regular.ttf"; sourceTree = "<group>"; };
@@ -545,6 +547,7 @@
 			isa = PBXGroup;
 			children = (
 				2D9EB9DDBE53CF7BEF9B305D /* ConfettiView.swift */,
+				CDFA8AC5EC2791C6F4611AFD /* FixtureMetadata.swift */,
 				6A737D337CC0D9C3DD7714DB /* FixturePickRow.swift */,
 				1EFEA32E0388B0F6D0B754C3 /* FixturePickRow+Buttons.swift */,
 				C05C376219D2C470918CCE3B /* MatchCarouselCard.swift */,
@@ -784,6 +787,7 @@
 				96FEC9F9271033CA619EAD6C /* ErrorStateView.swift in Sources */,
 				14E2ECAD13057A938E1C4719 /* FeatureFlags.swift in Sources */,
 				E4740370A7568165D66364B7 /* Fixture.swift in Sources */,
+				1BB2C3BD0EE9C5B2133AB206 /* FixtureMetadata.swift in Sources */,
 				0670E5D6AF2D96EEE6B490B2 /* FixturePickRow+Buttons.swift in Sources */,
 				E280E02205887CCD8FE949C0 /* FixturePickRow.swift in Sources */,
 				01DD6DAA1AB77AEBEB9E9445 /* Gameweek.swift in Sources */,
