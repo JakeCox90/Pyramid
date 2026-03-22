@@ -27,6 +27,11 @@ extension HomeViewModel {
         }
         let remaining = deadline.timeIntervalSinceNow
         guard remaining > 0 else {
+            // Countdown just expired — refresh data to get
+            // latest gameweek status (in progress / finished)
+            if !countdown.isExpired {
+                Task { await load() }
+            }
             countdown = .zero
             return
         }

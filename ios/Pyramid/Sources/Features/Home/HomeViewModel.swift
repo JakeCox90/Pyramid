@@ -16,6 +16,18 @@ struct CountdownComponents: Equatable {
     )
 }
 
+/// Describes the current phase of the gameweek
+enum GameweekPhase: Equatable {
+    /// Countdown is ticking — GW hasn't started
+    case upcoming
+    /// All fixtures are live or some are in progress
+    case inProgress
+    /// All fixtures have finished
+    case finished
+    /// No gameweek data available
+    case unknown
+}
+
 // MARK: - ViewModel
 
 @MainActor
@@ -134,6 +146,23 @@ final class HomeViewModel: ObservableObject {
             return true
         }
         return false
+    }
+
+    var gameweekPhase: GameweekPhase {
+        guard let fixtures = homeData?.fixtures.values,
+              !fixtures.isEmpty
+        else { return .unknown }
+        let allFinished = fixtures.allSatisfy {
+            $0.status.isFinished
+        }
+        if allFinished { return .finished }
+        let anyStarted = fixtures.contains {
+            $0.status.isLive || $0.status.isFinished
+        }
+        if anyStarted || isGameweekLocked {
+            return .inProgress
+        }
+        return .upcoming
     }
 
     /// Previous pick results for the current or selected GW.

@@ -3,7 +3,30 @@ import SwiftUI
 // MARK: - Countdown Header (in-page, not toolbar)
 
 extension HomeView {
-    var countdownHeader: some View {
+    @ViewBuilder var countdownHeader: some View {
+        switch viewModel.gameweekPhase {
+        case .upcoming:
+            countdownTimerView
+        case .inProgress:
+            gameweekStatusView(
+                overline: "GAMEWEEK",
+                title: "In Progress",
+                icon: "sportscourt.fill",
+                color: Color(hex: "30D158")
+            )
+        case .finished:
+            gameweekStatusView(
+                overline: "GAMEWEEK",
+                title: "Complete",
+                icon: "checkmark.circle.fill",
+                color: Color.white.opacity(0.5)
+            )
+        case .unknown:
+            EmptyView()
+        }
+    }
+
+    private var countdownTimerView: some View {
         VStack(alignment: .leading, spacing: 2) {
             Text("GAMEWEEK BEGINS")
                 .font(Theme.Typography.overline)
@@ -24,6 +47,31 @@ extension HomeView {
                     .foregroundStyle(
                         Color.white.opacity(0.4)
                     )
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private func gameweekStatusView(
+        overline: String,
+        title: String,
+        icon: String,
+        color: Color
+    ) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(overline)
+                .font(Theme.Typography.overline)
+                .foregroundStyle(
+                    Color.white.opacity(0.4)
+                )
+
+            HStack(spacing: 10) {
+                Image(systemName: icon)
+                    .font(.system(size: 24))
+                    .foregroundStyle(color)
+                Text(title)
+                    .font(Theme.Typography.h2)
+                    .foregroundStyle(.white)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
