@@ -19,10 +19,10 @@ struct PickCarouselView: View {
         case undecided, horizontal, vertical
     }
 
-    private let cardSpacing: CGFloat = 16
-    private let peekScale: CGFloat = 0.86
+    private let cardSpacing: CGFloat = 8
+    private let peekScale: CGFloat = 0.88
     /// Horizontal inset on each side for adjacent card peek
-    private let peekInset: CGFloat = 32
+    private let peekInset: CGFloat = 24
 
     var body: some View {
         VStack(spacing: 16) {
