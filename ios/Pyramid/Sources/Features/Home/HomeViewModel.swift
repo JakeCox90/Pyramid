@@ -110,6 +110,13 @@ final class HomeViewModel: ObservableObject {
         } ?? false
     }
 
+    /// Gameweek is locked once the deadline has passed
+    var isGameweekLocked: Bool {
+        guard let deadline = homeData?.gameweek?.deadlineAt
+        else { return false }
+        return deadline <= Date()
+    }
+
     /// Previous pick results for the current or selected GW.
     var previousPicks: [LeagueResult] {
         if selectedGameweek?.id == homeData?.gameweek?.id {

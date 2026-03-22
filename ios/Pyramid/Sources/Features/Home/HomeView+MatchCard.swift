@@ -24,7 +24,8 @@ extension HomeView {
                 opponent: opponent,
                 badgeName: pickedTeam,
                 badgeLogo: badgeLogo,
-                kickoff: fixture.kickoffAt
+                kickoff: fixture.kickoffAt,
+                fixture: fixture
             )
         }
         .frame(maxWidth: .infinity)
@@ -36,18 +37,35 @@ extension HomeView {
 
     @ViewBuilder
     func matchCardEmpty() -> some View {
+        let locked = viewModel.isGameweekLocked
         ZStack {
             matchCardBackground
             VStack(spacing: Theme.Spacing.s40) {
-                Text("NO PICK YET")
-                    .font(Theme.Typography.overline)
-                    .foregroundStyle(
-                        Color.white.opacity(0.4)
-                    )
-                Text("Make your pick")
-                    .font(Theme.Typography.h2)
-                    .foregroundStyle(.white)
-                changePickButton
+                if locked {
+                    Image(systemName: "lock.fill")
+                        .font(.system(size: 32))
+                        .foregroundStyle(
+                            Color.white.opacity(0.4)
+                        )
+                    Text("LOCKED")
+                        .font(Theme.Typography.overline)
+                        .foregroundStyle(
+                            Color.white.opacity(0.4)
+                        )
+                    Text("Gameweek in progress")
+                        .font(Theme.Typography.h3)
+                        .foregroundStyle(.white)
+                } else {
+                    Text("NO PICK YET")
+                        .font(Theme.Typography.overline)
+                        .foregroundStyle(
+                            Color.white.opacity(0.4)
+                        )
+                    Text("Make your pick")
+                        .font(Theme.Typography.h2)
+                        .foregroundStyle(.white)
+                    changePickButton
+                }
             }
         }
         .frame(maxWidth: .infinity)
@@ -77,9 +95,13 @@ extension HomeView {
         opponent: String,
         badgeName: String,
         badgeLogo: String?,
-        kickoff: Date?
+        kickoff: Date?,
+        fixture: Fixture
     ) -> some View {
-        VStack(spacing: Theme.Spacing.s30) {
+        let locked = viewModel.isGameweekLocked
+        let isLive = fixture.status.isLive
+
+        return VStack(spacing: Theme.Spacing.s30) {
             Spacer().frame(height: Theme.Spacing.s20)
 
             TeamBadge(
@@ -92,6 +114,10 @@ extension HomeView {
                 radius: 16, x: 0, y: 8
             )
 
+            if isLive {
+                liveIndicator
+            }
+
             Text("YOUR PICK")
                 .font(Theme.Typography.overline)
                 .foregroundStyle(
@@ -102,13 +128,13 @@ extension HomeView {
                 .font(Theme.Typography.h2)
                 .foregroundStyle(.white)
 
-            vsCircle
+            liveVsCircle(fixture: fixture)
 
             Text(opponent)
                 .font(Theme.Typography.h3)
                 .foregroundStyle(.white)
 
-            if let kickoff {
+            if let kickoff, !isLive {
                 Text(kickoffLabel(kickoff))
                     .font(Theme.Typography.overline)
                     .foregroundStyle(
@@ -116,25 +142,53 @@ extension HomeView {
                     )
             }
 
-            changePickButton
+            if locked {
+                Text("LOCKED")
+                    .font(Theme.Typography.overline)
+                    .foregroundStyle(
+                        Color.white.opacity(0.4)
+                    )
+            } else {
+                changePickButton
+            }
         }
         .padding(.horizontal, Theme.Spacing.s40)
     }
 
-    private var vsCircle: some View {
-        Text("vs")
-            .font(Theme.Typography.label01)
-            .foregroundStyle(.white)
-            .frame(width: 36, height: 36)
-            .background(Color(hex: "3D3354"))
-            .clipShape(Circle())
-            .overlay(
-                Circle()
-                    .strokeBorder(
-                        Color.white.opacity(0.2),
-                        lineWidth: 1
-                    )
-            )
+    private var liveIndicator: some View {
+        HStack(spacing: 6) {
+            Circle()
+                .fill(Color(hex: "30D158"))
+                .frame(width: 8, height: 8)
+            Text("LIVE")
+                .font(Theme.Typography.overline)
+                .foregroundStyle(Color(hex: "30D158"))
+        }
+    }
+
+    private func liveVsCircle(
+        fixture: Fixture
+    ) -> some View {
+        let showScore = fixture.status.isLive
+            || fixture.status.isFinished
+        return Text(
+            showScore
+                ? "\(fixture.homeScore ?? 0) - \(fixture.awayScore ?? 0)"
+                : "vs"
+        )
+        .font(Theme.Typography.label01)
+        .foregroundStyle(.white)
+        .monospacedDigit()
+        .frame(width: showScore ? 56 : 36, height: 36)
+        .background(Color(hex: "3D3354"))
+        .clipShape(Capsule())
+        .overlay(
+            Capsule()
+                .strokeBorder(
+                    Color.white.opacity(0.2),
+                    lineWidth: 1
+                )
+        )
     }
 
     var changePickButton: some View {
