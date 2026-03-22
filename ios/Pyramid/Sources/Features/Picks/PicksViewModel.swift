@@ -116,6 +116,12 @@ final class PicksViewModel: ObservableObject {
     }
 
     func isFixtureLocked(_ fixture: Fixture) -> Bool {
-        fixture.hasKickedOff || (currentPick?.isLocked == true && currentPick?.fixtureId == fixture.id)
+        // Trust API status over local time comparison —
+        // a fixture is only locked if it's actually live/finished
+        // or the user's pick on this fixture is server-locked
+        fixture.status.isLive
+            || fixture.status.isFinished
+            || (currentPick?.isLocked == true
+                && currentPick?.fixtureId == fixture.id)
     }
 }
