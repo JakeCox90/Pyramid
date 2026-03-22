@@ -1,7 +1,14 @@
 import SwiftUI
 
+enum PickViewMode: String {
+    case carousel, list
+}
+
 struct PicksView: View {
     @StateObject var viewModel: PicksViewModel
+
+    @AppStorage("pickViewMode")
+    private var viewMode: String = PickViewMode.carousel.rawValue
 
     @Environment(\.dismiss)
     private var dismiss
@@ -30,6 +37,11 @@ struct PicksView: View {
                         errorView(message: error)
                     } else if viewModel.fixtures.isEmpty {
                         emptyStateView
+                    } else if viewMode
+                        == PickViewMode.carousel.rawValue {
+                        PickCarouselView(
+                            viewModel: viewModel
+                        )
                     } else {
                         fixturesList
                     }
@@ -49,6 +61,30 @@ struct PicksView: View {
                                 )
                             )
                             .foregroundStyle(Color.white)
+                    }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            viewMode = viewMode
+                                == PickViewMode.carousel.rawValue
+                                ? PickViewMode.list.rawValue
+                                : PickViewMode.carousel.rawValue
+                        }
+                    } label: {
+                        Image(
+                            systemName: viewMode
+                                == PickViewMode.carousel.rawValue
+                                ? "list.bullet"
+                                : "rectangle.stack"
+                        )
+                        .font(
+                            .system(
+                                size: 16,
+                                weight: .semibold
+                            )
+                        )
+                        .foregroundStyle(Color.white)
                     }
                 }
             }

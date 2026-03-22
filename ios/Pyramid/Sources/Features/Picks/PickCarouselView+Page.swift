@@ -1,0 +1,98 @@
+import SwiftUI
+
+// MARK: - Carousel Page (Card + Stats)
+
+extension PickCarouselView {
+    func carouselPage(
+        fixture: Fixture,
+        index: Int,
+        cardWidth: CGFloat
+    ) -> some View {
+        ZStack {
+            // Stats panel behind the card
+            MatchStatsPanel(
+                fixture: fixture,
+                stats: .placeholder
+            )
+            .frame(width: cardWidth)
+
+            // Card in front, slides up on drag
+            cardWithGesture(
+                fixture: fixture,
+                cardWidth: cardWidth
+            )
+        }
+        .frame(height: 500)
+    }
+
+    private func cardWithGesture(
+        fixture: Fixture,
+        cardWidth: CGFloat
+    ) -> some View {
+        MatchCarouselCard(
+            fixture: fixture,
+            selectedTeamId: viewModel.currentPick?.teamId,
+            usedTeamIds: viewModel.usedTeamIds,
+            isLocked: viewModel.isFixtureLocked(fixture),
+            isSubmitting: viewModel.isSubmitting,
+            submittingTeamId: viewModel.submittingTeamId
+        ) { teamId, teamName in
+            Task {
+                await viewModel.submitPick(
+                    fixtureId: fixture.id,
+                    teamId: teamId,
+                    teamName: teamName
+                )
+            }
+        }
+        .offset(y: isStatsRevealed ? -380 : cardOffsetY)
+        .gesture(verticalDragGesture)
+        .animation(
+            .spring(
+                response: 0.4,
+                dampingFraction: 0.8
+            ),
+            value: isStatsRevealed
+        )
+        .animation(
+            .spring(
+                response: 0.4,
+                dampingFraction: 0.8
+            ),
+            value: cardOffsetY
+        )
+    }
+
+    private var verticalDragGesture: some Gesture {
+        DragGesture(minimumDistance: 20)
+            .onChanged { value in
+                let translationY = value.translation.height
+                if isStatsRevealed {
+                    // When stats shown, only allow drag down
+                    if translationY > 0 {
+                        cardOffsetY = translationY
+                    }
+                } else {
+                    // When card shown, only allow drag up
+                    if translationY < 0 {
+                        cardOffsetY = translationY
+                    }
+                }
+            }
+            .onEnded { value in
+                let threshold: CGFloat = 100
+                if isStatsRevealed {
+                    // Drag down to dismiss stats
+                    if value.translation.height > threshold {
+                        isStatsRevealed = false
+                    }
+                } else {
+                    // Drag up to reveal stats
+                    if value.translation.height < -threshold {
+                        isStatsRevealed = true
+                    }
+                }
+                cardOffsetY = 0
+            }
+    }
+}
