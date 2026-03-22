@@ -18,7 +18,7 @@ struct HomeView: View {
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar { countdownToolbar }
+            .toolbar { gameweekToolbar }
             .toolbarBackground(.hidden, for: .navigationBar)
             .background(
                 Theme.Color.Surface.Background.page
@@ -61,9 +61,13 @@ struct HomeView: View {
     private func errorView(
         _ message: String
     ) -> some View {
-        ErrorStateView(message: message) {
-            await viewModel.load()
-        }
+        PlaceholderView(
+            icon: Theme.Icon.Status.error,
+            title: "Something went wrong",
+            message: message,
+            buttonTitle: "Try Again",
+            onAsyncAction: { await viewModel.load() }
+        )
     }
 
     // MARK: - Content
@@ -71,6 +75,8 @@ struct HomeView: View {
     private var contentView: some View {
         ScrollView {
             VStack(spacing: Theme.Spacing.s40) {
+                countdownHeader
+
                 if let context = viewModel.currentPick {
                     matchCard(context)
                 } else {

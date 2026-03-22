@@ -1,38 +1,32 @@
 import SwiftUI
 
-// MARK: - Countdown Timer & Gameweek Dropdown
+// MARK: - Countdown Header (in-page, not toolbar)
 
 extension HomeView {
-    @ToolbarContentBuilder var countdownToolbar: some ToolbarContent {
-        ToolbarItem(placement: .navigationBarLeading) {
-            countdownBlock
-        }
-        ToolbarItem(placement: .navigationBarTrailing) {
-            gameweekDropdown
-        }
-    }
-
-    private var countdownBlock: some View {
-        VStack(alignment: .leading, spacing: 0) {
+    var countdownHeader: some View {
+        VStack(alignment: .leading, spacing: 2) {
             Text("GAMEWEEK BEGINS")
                 .font(Theme.Typography.overline)
                 .foregroundStyle(
-                    Theme.Color.Content.Text.disabled
+                    Color.white.opacity(0.4)
                 )
 
-            Text(countdownPrimary)
-                .font(Theme.Typography.h1)
-                .foregroundStyle(
-                    Theme.Color.Content.Text.default
-                )
+            HStack(
+                alignment: .firstTextBaseline,
+                spacing: 8
+            ) {
+                Text(countdownPrimary)
+                    .font(Theme.Typography.h1)
+                    .foregroundStyle(.white)
 
-            Text(countdownSecondary)
-                .font(Theme.Typography.h3)
-                .foregroundStyle(
-                    Theme.Color.Content.Text.default
-                        .opacity(0.4)
-                )
+                Text(countdownSecondary)
+                    .font(Theme.Typography.h3)
+                    .foregroundStyle(
+                        Color.white.opacity(0.4)
+                    )
+            }
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private var countdownPrimary: String {
@@ -46,6 +40,16 @@ extension HomeView {
         if c.isExpired { return "00m 00s" }
         return "\(c.minutes)m \(c.seconds)s"
     }
+}
+
+// MARK: - Gameweek Dropdown (toolbar)
+
+extension HomeView {
+    @ToolbarContentBuilder var gameweekToolbar: some ToolbarContent {
+        ToolbarItem(placement: .navigationBarTrailing) {
+            gameweekDropdown
+        }
+    }
 
     private var gameweekDropdown: some View {
         Menu {
@@ -53,8 +57,13 @@ extension HomeView {
                 Button {
                     viewModel.selectGameweek(gw)
                 } label: {
-                    if gw.id == viewModel.selectedGameweek?.id {
-                        Label(gw.name, systemImage: "checkmark")
+                    if gw.id
+                        == viewModel.selectedGameweek?.id
+                    {
+                        Label(
+                            gw.name,
+                            systemImage: "checkmark"
+                        )
                     } else {
                         Text(gw.name)
                     }
@@ -74,9 +83,11 @@ extension HomeView {
             .font(Theme.Typography.label01)
 
             Image(systemName: "chevron.down")
-                .font(.system(size: 10, weight: .bold))
+                .font(
+                    .system(size: 10, weight: .bold)
+                )
         }
-        .foregroundStyle(Theme.Color.Content.Text.default)
+        .foregroundStyle(.white)
         .padding(.horizontal, Theme.Spacing.s40)
         .padding(.vertical, Theme.Spacing.s20)
         .background(Color.white.opacity(0.1))
