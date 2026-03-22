@@ -14,6 +14,12 @@ struct HomeData: Sendable, Equatable {
     let fixtures: [Int: Fixture]
     /// User's settled results from the last finished gameweek.
     let lastGwResults: [LeagueResult]
+    /// All gameweeks for the season (dropdown selector).
+    let allGameweeks: [Gameweek]
+    /// Active player count in the user's primary league.
+    let activePlayerCount: Int
+    /// Total player count in the user's primary league.
+    let totalPlayerCount: Int
 }
 
 /// A user's pick paired with its fixture and league name for homepage display.
@@ -37,20 +43,26 @@ struct LivePickContext: Identifiable, Equatable {
     }
 }
 
-/// A single league result from the previous settled gameweek.
+/// A single league result from a settled gameweek.
 struct LeagueResult: Identifiable, Sendable, Equatable {
     let leagueId: String
     let leagueName: String
     let gameweekName: String
     let teamName: String
+    let teamId: Int
     let result: PickResult
+    let homeTeamId: Int
     let homeTeamName: String
     let homeTeamShort: String
     let homeTeamLogo: String?
+    let awayTeamId: Int
     let awayTeamName: String
     let awayTeamShort: String
     let awayTeamLogo: String?
     let homeScore: Int
     let awayScore: Int
     var id: String { leagueId }
+
+    /// Whether the picked team was the home team.
+    var pickedHome: Bool { teamId == homeTeamId }
 }

@@ -63,6 +63,15 @@ private struct HomeMemberIdRow: Decodable {
 protocol HomeServiceProtocol: Sendable {
     func fetchHomeData() async throws -> HomeData
     func fetchFixtures(gameweekId: Int) async throws -> [Fixture]
+    func fetchAllGameweeks(
+        season: Int
+    ) async throws -> [Gameweek]
+    func fetchPicksForGameweek(
+        userId: String,
+        gameweek: Gameweek,
+        leagueIds: [String],
+        leagueNames: [String: String]
+    ) async throws -> [LeagueResult]
 }
 
 // MARK: - Implementation
@@ -75,59 +84,103 @@ final class HomeService: HomeServiceProtocol {
     }
 
     func fetchHomeData() async throws -> HomeData {
-        let userId = try await client.auth.session.user.id.uuidString
+        let userId = try await client.auth.session.user.id
+            .uuidString
         Log.home.info("Fetching home data for user")
 
-        async let leaguesFetch = fetchLeaguesWithCounts(userId: userId)
-        async let memberStatusesFetch = fetchMemberStatuses(userId: userId)
-        async let gameweekFetch = fetchCurrentGameweek()
+        async let leaguesFetch = fetchLeaguesWithCounts(
+            userId: userId
+        )
+        async let statusFetch = fetchMemberStatuses(
+            userId: userId
+        )
+        async let gwFetch = fetchCurrentGameweek()
         async let lastGwFetch = fetchLastFinishedGameweek()
 
         let leagues = try await leaguesFetch
-        let memberStatuses = try await memberStatusesFetch
-        let gameweek = try await gameweekFetch
+        let statuses = try await statusFetch
+        let gameweek = try await gwFetch
         let lastGw = try await lastGwFetch
-
+        let leagueIds = leagues.map(\.id)
         let leagueMap = Dictionary(
-            uniqueKeysWithValues: leagues.map { ($0.id, $0.name) }
+            uniqueKeysWithValues: leagues.map {
+                ($0.id, $0.name)
+            }
         )
 
-        var picks: [String: Pick] = [:]
-        var fixtures: [Int: Fixture] = [:]
-        if let gw = gameweek {
-            async let picksFetch = fetchPicks(
-                userId: userId,
-                gameweekId: gw.id,
-                leagueIds: leagues.map(\.id)
-            )
-            async let fixturesFetch = fetchFixtures(gameweekId: gw.id)
+        let (picks, fixtures) = try await fetchPicksAndFixtures(
+            userId: userId, gameweek: gameweek, leagueIds: leagueIds
+        )
+        let lastGwResults = try await fetchResults(
+            userId: userId, lastGw: lastGw,
+            leagueIds: leagueIds, leagueNames: leagueMap
+        )
+        let season = gameweek?.season ?? lastGw?.season ?? 2025
+        let allGws = try await fetchAllGameweeks(season: season)
+        let counts = await fetchPlayerCountsSafe(
+            leagueId: leagues.first?.id
+        )
 
-            picks = try await picksFetch
-            let fixturesList = try await fixturesFetch
-            fixtures = Dictionary(
-                uniqueKeysWithValues: fixturesList.map { ($0.id, $0) }
-            )
-        }
-
-        var lastGwResults: [LeagueResult] = []
-        if let lastGw, !leagues.isEmpty {
-            lastGwResults = try await fetchLastGwResults(
-                userId: userId,
-                gameweek: lastGw,
-                leagueIds: leagues.map(\.id),
-                leagueNames: leagueMap
-            )
-        }
-
-        Log.home.info("Home data fetched: \(leagues.count) leagues, gameweek=\(gameweek?.id ?? -1, privacy: .public)")
         return HomeData(
-            leagues: leagues,
-            gameweek: gameweek,
-            picks: picks,
-            memberStatuses: memberStatuses,
+            leagues: leagues, gameweek: gameweek,
+            picks: picks, memberStatuses: statuses,
             fixtures: fixtures,
-            lastGwResults: lastGwResults
+            lastGwResults: lastGwResults,
+            allGameweeks: allGws,
+            activePlayerCount: counts.active,
+            totalPlayerCount: counts.total
         )
+    }
+
+    private func fetchPicksAndFixtures(
+        userId: String,
+        gameweek: Gameweek?,
+        leagueIds: [String]
+    ) async throws -> ([String: Pick], [Int: Fixture]) {
+        guard let gw = gameweek else { return ([:], [:]) }
+        async let picksFetch = fetchPicks(
+            userId: userId, gameweekId: gw.id,
+            leagueIds: leagueIds
+        )
+        async let fixturesFetch = fetchFixtures(
+            gameweekId: gw.id
+        )
+        let picks = try await picksFetch
+        let list = try await fixturesFetch
+        let fixtures = Dictionary(
+            uniqueKeysWithValues: list.map { ($0.id, $0) }
+        )
+        return (picks, fixtures)
+    }
+
+    private func fetchResults(
+        userId: String,
+        lastGw: Gameweek?,
+        leagueIds: [String],
+        leagueNames: [String: String]
+    ) async throws -> [LeagueResult] {
+        guard let lastGw, !leagueIds.isEmpty else { return [] }
+        return try await fetchLastGwResults(
+            userId: userId, gameweek: lastGw,
+            leagueIds: leagueIds, leagueNames: leagueNames
+        )
+    }
+
+    /// Safe wrapper that returns zeroes on failure.
+    private func fetchPlayerCountsSafe(
+        leagueId: String?
+    ) async -> (active: Int, total: Int) {
+        guard let leagueId else { return (0, 0) }
+        do {
+            return try await fetchPlayerCounts(
+                leagueId: leagueId
+            )
+        } catch {
+            Log.home.error(
+                "Failed to fetch player counts: \(error)"
+            )
+            return (0, 0)
+        }
     }
 
     func fetchFixtures(gameweekId: Int) async throws -> [Fixture] {

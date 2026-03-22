@@ -1,10 +1,14 @@
 import Foundation
 import Supabase
 
-// MARK: - Last Gameweek Results
+// MARK: - Gameweeks & Player Counts
 
 extension HomeService {
-    func fetchLastFinishedGameweek() async throws -> Gameweek? {
+    /// Fetches all gameweeks for the given season, ordered
+    /// by round number descending (newest first).
+    func fetchAllGameweeks(
+        season: Int
+    ) async throws -> [Gameweek] {
         let rows: [Gameweek] = try await client
             .from("gameweeks")
             .select(
@@ -13,45 +17,83 @@ extension HomeService {
                 deadline_at, is_current, is_finished
                 """
             )
-            .eq("is_finished", value: true)
+            .eq("season", value: season)
             .order("round_number", ascending: false)
-            .limit(1)
             .execute()
             .value
 
-        return rows.first
+        return rows
     }
 
-    func fetchLastGwResults(
+    /// Fetches active and total player counts for a league.
+    func fetchPlayerCounts(
+        leagueId: String
+    ) async throws -> (active: Int, total: Int) {
+        let rows: [PlayerCountRow] = try await client
+            .from("league_members")
+            .select("status")
+            .eq("league_id", value: leagueId)
+            .execute()
+            .value
+
+        let total = rows.count
+        let active = rows.filter { $0.status == .active }.count
+        return (active: active, total: total)
+    }
+
+    /// Fetches settled picks for a user in a specific gameweek
+    /// across given leagues, paired with fixture data.
+    func fetchPicksForGameweek(
         userId: String,
         gameweek: Gameweek,
         leagueIds: [String],
         leagueNames: [String: String]
     ) async throws -> [LeagueResult] {
+        guard !leagueIds.isEmpty else { return [] }
+
         let picks: [Pick] = try await client
             .from("picks")
             .select(
                 """
-                id, league_id, user_id, gameweek_id, fixture_id, \
-                team_id, team_name, is_locked, result, submitted_at
+                id, league_id, user_id, gameweek_id, \
+                fixture_id, team_id, team_name, \
+                is_locked, result, submitted_at
                 """
             )
             .eq("user_id", value: userId)
             .eq("gameweek_id", value: gameweek.id)
             .in("league_id", values: leagueIds)
-            .neq("result", value: "pending")
             .execute()
             .value
 
         guard !picks.isEmpty else { return [] }
 
-        let fixtureMap = try await fetchFixtureMap(
-            for: picks.map(\.fixtureId)
+        let fixtureIds = Array(Set(picks.map(\.fixtureId)))
+        let fixtures: [Fixture] = try await client
+            .from("fixtures")
+            .select(
+                """
+                id, gameweek_id, home_team_id, \
+                home_team_name, home_team_short, \
+                home_team_logo, away_team_id, \
+                away_team_name, away_team_short, \
+                away_team_logo, kickoff_at, status, \
+                home_score, away_score
+                """
+            )
+            .in("id", values: fixtureIds)
+            .execute()
+            .value
+
+        let fixtureMap = Dictionary(
+            uniqueKeysWithValues: fixtures.map {
+                ($0.id, $0)
+            }
         )
 
-        return picks.compactMap { pick in
-            makeLeagueResult(
-                pick: pick,
+        return picks.compactMap {
+            Self.buildResult(
+                pick: $0,
                 gameweek: gameweek,
                 fixtureMap: fixtureMap,
                 leagueNames: leagueNames
@@ -59,38 +101,15 @@ extension HomeService {
         }
     }
 
-    private func fetchFixtureMap(
-        for fixtureIds: [Int]
-    ) async throws -> [Int: Fixture] {
-        let fixtures: [Fixture] = try await client
-            .from("fixtures")
-            .select(
-                """
-                id, gameweek_id, home_team_id, home_team_name, \
-                home_team_short, home_team_logo, away_team_id, \
-                away_team_name, away_team_short, away_team_logo, \
-                kickoff_at, status, home_score, away_score
-                """
-            )
-            .in("id", values: fixtureIds)
-            .execute()
-            .value
-
-        return Dictionary(
-            uniqueKeysWithValues: fixtures.map { ($0.id, $0) }
-        )
-    }
-
-    private func makeLeagueResult(
+    private static func buildResult(
         pick: Pick,
         gameweek: Gameweek,
         fixtureMap: [Int: Fixture],
         leagueNames: [String: String]
     ) -> LeagueResult? {
         guard let fixture = fixtureMap[pick.fixtureId],
-              let name = leagueNames[pick.leagueId] else {
-            return nil
-        }
+              let name = leagueNames[pick.leagueId]
+        else { return nil }
         return LeagueResult(
             leagueId: pick.leagueId,
             leagueName: name,
@@ -110,4 +129,10 @@ extension HomeService {
             awayScore: fixture.awayScore ?? 0
         )
     }
+}
+
+// MARK: - Private Types
+
+private struct PlayerCountRow: Decodable {
+    let status: LeagueMember.MemberStatus
 }
