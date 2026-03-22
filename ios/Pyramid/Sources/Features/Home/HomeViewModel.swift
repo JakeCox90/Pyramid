@@ -1,109 +1,120 @@
 import SwiftUI
 
+// MARK: - Countdown Components
+
+struct CountdownComponents: Equatable {
+    let days: String
+    let hours: String
+    let minutes: String
+    let seconds: String
+    let isExpired: Bool
+
+    static let zero = CountdownComponents(
+        days: "0", hours: "00",
+        minutes: "00", seconds: "00",
+        isExpired: true
+    )
+}
+
+// MARK: - ViewModel
+
 @MainActor
 final class HomeViewModel: ObservableObject {
     @Published var homeData: HomeData?
     @Published var isLoading = false
     @Published var errorMessage: String?
+    @Published var countdown = CountdownComponents.zero
+    @Published var selectedGameweek: Gameweek?
+    @Published var selectedGwPicks: [LeagueResult] = []
 
-    private let homeService: HomeServiceProtocol
-    private var pollingTask: Task<Void, Never>?
+    let homeService: HomeServiceProtocol
+    var pollingTask: Task<Void, Never>?
+    var timerTask: Task<Void, Never>?
 
-    init(homeService: HomeServiceProtocol = HomeService()) {
+    init(
+        homeService: HomeServiceProtocol = HomeService()
+    ) {
         self.homeService = homeService
     }
+
+    // MARK: - Load
 
     func load() async {
         isLoading = true
         errorMessage = nil
         do {
             homeData = try await homeService.fetchHomeData()
+            selectedGameweek = homeData?.gameweek
             updatePolling()
+            startCountdown()
         } catch {
             errorMessage = AppError.from(error).userMessage
         }
         isLoading = false
     }
 
+    // MARK: - Computed State
+
+    /// The user's current pick paired with its fixture.
+    var currentPick: LivePickContext? {
+        guard let data = homeData else { return nil }
+        let leagueMap = Dictionary(
+            uniqueKeysWithValues: data.leagues.map {
+                ($0.id, $0.name)
+            }
+        )
+        return data.picks.values.compactMap { pick in
+            guard let fixture = data.fixtures[pick.fixtureId],
+                  let name = leagueMap[pick.leagueId]
+            else { return nil }
+            return LivePickContext(
+                pick: pick, fixture: fixture,
+                leagueName: name
+            )
+        }.first
+    }
+
+    var playersRemaining: String {
+        guard let data = homeData,
+              data.totalPlayerCount > 0
+        else { return "" }
+        return "\(data.activePlayerCount) of \(data.totalPlayerCount)"
+    }
+
+    var gameweekOptions: [Gameweek] {
+        homeData?.allGameweeks ?? []
+    }
+
     var livePickContexts: [LivePickContext] {
         guard let data = homeData else { return [] }
         let leagueMap = Dictionary(
-            uniqueKeysWithValues: data.leagues.map { ($0.id, $0.name) }
+            uniqueKeysWithValues: data.leagues.map {
+                ($0.id, $0.name)
+            }
         )
         return data.picks.values.compactMap { pick in
             guard let fixture = data.fixtures[pick.fixtureId],
                   fixture.status.isLive,
-                  let name = leagueMap[pick.leagueId] else {
-                return nil
-            }
+                  let name = leagueMap[pick.leagueId]
+            else { return nil }
             return LivePickContext(
-                pick: pick,
-                fixture: fixture,
+                pick: pick, fixture: fixture,
                 leagueName: name
             )
         }
     }
 
     var hasLiveFixtures: Bool {
-        homeData?.fixtures.values.contains { $0.status.isLive } ?? false
+        homeData?.fixtures.values.contains {
+            $0.status.isLive
+        } ?? false
     }
 
-    // MARK: - Polling
-
-    func startPolling() {
-        stopPolling()
-        pollingTask = Task { [weak self] in
-            while !Task.isCancelled {
-                try? await Task.sleep(nanoseconds: 60_000_000_000)
-                guard !Task.isCancelled, let self else { return }
-                guard self.hasLiveFixtures else { return }
-                await self.refreshFixtures()
-            }
+    /// Previous pick results for the current or selected GW.
+    var previousPicks: [LeagueResult] {
+        if selectedGameweek?.id == homeData?.gameweek?.id {
+            return homeData?.lastGwResults ?? []
         }
-    }
-
-    func stopPolling() {
-        pollingTask?.cancel()
-        pollingTask = nil
-    }
-
-    // MARK: - Private
-
-    private func updatePolling() {
-        if hasLiveFixtures {
-            startPolling()
-        } else {
-            stopPolling()
-        }
-    }
-
-    private func refreshFixtures() async {
-        guard let data = homeData, let gameweek = data.gameweek else {
-            return
-        }
-        do {
-            let fresh = try await homeService.fetchFixtures(
-                gameweekId: gameweek.id
-            )
-            let fixtureMap = Dictionary(
-                uniqueKeysWithValues: fresh.map { ($0.id, $0) }
-            )
-            homeData = HomeData(
-                leagues: data.leagues,
-                gameweek: data.gameweek,
-                picks: data.picks,
-                memberStatuses: data.memberStatuses,
-                fixtures: fixtureMap,
-                lastGwResults: data.lastGwResults,
-                allGameweeks: data.allGameweeks,
-                activePlayerCount: data.activePlayerCount,
-                totalPlayerCount: data.totalPlayerCount
-            )
-            updatePolling()
-        } catch {
-            Log.home.error(
-                "Fixture refresh failed: \(error.localizedDescription)"
-            )
-        }
+        return selectedGwPicks
     }
 }
