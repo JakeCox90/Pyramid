@@ -15,6 +15,11 @@ extension PickCarouselView {
                 stats: .placeholder
             )
             .frame(width: cardWidth)
+            .contentShape(Rectangle())
+            .gesture(
+                isStatsRevealed
+                    ? swipeDownGesture : nil
+            )
 
             // Card in front, slides up on drag
             cardWithGesture(
@@ -23,6 +28,7 @@ extension PickCarouselView {
             )
         }
         .frame(height: 500)
+        .clipped()
     }
 
     private func cardWithGesture(
@@ -63,34 +69,35 @@ extension PickCarouselView {
         )
     }
 
-    private var verticalDragGesture: some Gesture {
+    // Swipe up on card to reveal stats
+    var verticalDragGesture: some Gesture {
         DragGesture(minimumDistance: 20)
             .onChanged { value in
-                let translationY = value.translation.height
-                if isStatsRevealed {
-                    // When stats shown, only allow drag down
-                    if translationY > 0 {
-                        cardOffsetY = translationY
-                    }
-                } else {
-                    // When card shown, only allow drag up
-                    if translationY < 0 {
-                        cardOffsetY = translationY
-                    }
+                let dy = value.translation.height
+                if !isStatsRevealed && dy < 0 {
+                    cardOffsetY = dy
                 }
             }
             .onEnded { value in
-                let threshold: CGFloat = 100
-                if isStatsRevealed {
-                    // Drag down to dismiss stats
-                    if value.translation.height > threshold {
-                        isStatsRevealed = false
-                    }
-                } else {
-                    // Drag up to reveal stats
-                    if value.translation.height < -threshold {
-                        isStatsRevealed = true
-                    }
+                if value.translation.height < -100 {
+                    isStatsRevealed = true
+                }
+                cardOffsetY = 0
+            }
+    }
+
+    // Swipe down on stats panel to dismiss
+    var swipeDownGesture: some Gesture {
+        DragGesture(minimumDistance: 20)
+            .onChanged { value in
+                let dy = value.translation.height
+                if isStatsRevealed && dy > 0 {
+                    cardOffsetY = dy
+                }
+            }
+            .onEnded { value in
+                if value.translation.height > 80 {
+                    isStatsRevealed = false
                 }
                 cardOffsetY = 0
             }
