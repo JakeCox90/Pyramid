@@ -75,6 +75,12 @@ private extension ProfileView {
     var settingsSection: some View {
         VStack(spacing: Theme.Spacing.s20) {
             settingsRow(
+                title: "Leaderboard",
+                icon: "chart.bar.fill",
+                destination: LeaderboardView()
+            )
+
+            settingsRow(
                 title: "Notifications",
                 icon: Theme.Icon.Navigation.notifications,
                 destination: NotificationPreferencesView()
