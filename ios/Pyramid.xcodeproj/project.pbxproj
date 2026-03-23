@@ -80,6 +80,7 @@
 		970B81075CE49DA82362F6F5 /* PicksView+Banners.swift in Sources */ = {isa = PBXBuildFile; fileRef = D53530567182778A2FE44BD5 /* PicksView+Banners.swift */; };
 		976970E376FBEB55CCD2BB4C /* BrowseLeague.swift in Sources */ = {isa = PBXBuildFile; fileRef = 912FDAAEFFFBE2AAE048CC05 /* BrowseLeague.swift */; };
 		97C476250A341A74BE0CCF44 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBF8340D3551DE2055CE9810 /* AuthService.swift */; };
+		9976F0EC52E75390332DE185 /* GameweekStoryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0711BA325925B39C084F7A94 /* GameweekStoryService.swift */; };
 		99A7952EFF6D4882824B622D /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D777CF3A60C13FAA223F9058 /* NotificationService.swift */; };
 		9ADB9036DC96AEEFD2A2247F /* NotificationPreferencesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054083ED1D3E595360A2AB79 /* NotificationPreferencesViewModel.swift */; };
 		9B28E327E05DB10A75A8BE03 /* LeagueDetailView+Complete.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA78A7680CA200466833A894 /* LeagueDetailView+Complete.swift */; };
@@ -155,6 +156,7 @@
 /* Begin PBXFileReference section */
 		02AFA863A205D6EBCA08EA91 /* WalletView+Sheets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WalletView+Sheets.swift"; sourceTree = "<group>"; };
 		054083ED1D3E595360A2AB79 /* NotificationPreferencesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationPreferencesViewModel.swift; sourceTree = "<group>"; };
+		0711BA325925B39C084F7A94 /* GameweekStoryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameweekStoryService.swift; sourceTree = "<group>"; };
 		0A0FCC08CF3FA0B871AD1842 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		0B4AD36135713033ED1110B6 /* DSTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSTextField.swift; sourceTree = "<group>"; };
 		0EF5355DBEE8617419611EB2 /* ProfileStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileStats.swift; sourceTree = "<group>"; };
@@ -497,6 +499,7 @@
 			children = (
 				BBF8340D3551DE2055CE9810 /* AuthService.swift */,
 				C4D1CCAF5D25A85F75E467DC /* DevResetService.swift */,
+				0711BA325925B39C084F7A94 /* GameweekStoryService.swift */,
 				F4A917CC8D1E61EAB117893D /* HomeService.swift */,
 				A7087D5C0F7D5B30E7C38D5E /* HomeService+Results.swift */,
 				334B3F95F52FDB1F1BDD29CE /* LeagueService.swift */,
@@ -763,6 +766,7 @@
 				E280E02205887CCD8FE949C0 /* FixturePickRow.swift in Sources */,
 				01DD6DAA1AB77AEBEB9E9445 /* Gameweek.swift in Sources */,
 				D27B539F690C756BB0E55BF5 /* GameweekStory.swift in Sources */,
+				9976F0EC52E75390332DE185 /* GameweekStoryService.swift in Sources */,
 				2E15854077E5DD6DDE3174EE /* GoogleGLogo.swift in Sources */,
 				D12C5F5A9B89E14E8900B3C6 /* HomeData.swift in Sources */,
 				3BC2D63D9468ABAB568C53CB /* HomeService+Results.swift in Sources */,
