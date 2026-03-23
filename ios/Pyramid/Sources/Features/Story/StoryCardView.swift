@@ -9,7 +9,7 @@ struct StoryCardView: View {
             StoryTitleCard(leagueName: leagueName, gameweek: gameweek,
                           aliveCount: aliveCount, totalCount: totalCount)
         case let .headline(headline, body):
-            StoryHeadlineCard(headline: headline, body: body)
+            StoryHeadlineCard(headline: headline, narrativeBody: body)
         case let .upset(fixture, eliminationCount):
             StoryUpsetCard(fixture: fixture, eliminationCount: eliminationCount)
         case let .eliminated(players):

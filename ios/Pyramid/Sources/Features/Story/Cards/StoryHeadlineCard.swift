@@ -2,7 +2,7 @@ import SwiftUI
 
 struct StoryHeadlineCard: View {
     let headline: String
-    let body: String
+    let narrativeBody: String
 
     var body: some View {
         ZStack {
@@ -15,13 +15,13 @@ struct StoryHeadlineCard: View {
                     .multilineTextAlignment(.center)
                     .minimumScaleFactor(0.7)
 
-                Text(body)
+                Text(narrativeBody)
                     .font(Theme.Typography.body)
                     .foregroundStyle(Theme.Color.Content.Text.subtle)
                     .multilineTextAlignment(.center)
             }
             .padding(Theme.Spacing.s70)
         }
-        .accessibilityLabel("\(headline). \(body)")
+        .accessibilityLabel("\(headline). \(narrativeBody)")
     }
 }
