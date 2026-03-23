@@ -141,14 +141,26 @@ final class ProfileService: ProfileServiceProtocol {
                 )
             }
 
+        let survivalRate = calculateSurvivalRate(picks: picks)
+
         return ProfileStats(
             totalLeaguesJoined: totalLeaguesJoined,
             wins: wins,
             totalPicksMade: totalPicksMade,
             longestSurvivalStreak: longestStreak,
+            survivalRatePct: survivalRate,
             activeStreaks: activeStreaks,
             leagueHistory: leagueHistory
         )
+    }
+
+    private func calculateSurvivalRate(picks: [Pick]) -> Int {
+        let settled = picks.filter {
+            $0.result == .survived || $0.result == .eliminated
+        }
+        guard !settled.isEmpty else { return 0 }
+        let survived = settled.filter { $0.result == .survived }.count
+        return Int(round(Double(survived) / Double(settled.count) * 100))
     }
 
     private func calculateLongestStreak(picks: [Pick]) -> Int {

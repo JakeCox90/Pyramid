@@ -9,9 +9,14 @@ extension ProfileView {
             spacing: Theme.Spacing.s20
         ) {
             statBadge(
-                label: "Leagues",
-                value: "\(stats.totalLeaguesJoined)",
-                color: Theme.Color.Content.Text.default
+                label: "Survival Rate",
+                value: "\(stats.survivalRatePct)%",
+                color: Theme.Color.Status.Success.resting
+            )
+            statBadge(
+                label: "Best Streak",
+                value: "\(stats.longestSurvivalStreak)",
+                color: Theme.Color.Status.Success.resting
             )
             statBadge(
                 label: "Wins",
@@ -19,14 +24,19 @@ extension ProfileView {
                 color: Theme.Color.Status.Warning.resting
             )
             statBadge(
+                label: "Leagues",
+                value: "\(stats.totalLeaguesJoined)",
+                color: Theme.Color.Content.Text.default
+            )
+            statBadge(
                 label: "Picks",
                 value: "\(stats.totalPicksMade)",
                 color: Theme.Color.Content.Text.default
             )
             statBadge(
-                label: "Best Streak",
-                value: "\(stats.longestSurvivalStreak)",
-                color: Theme.Color.Status.Success.resting
+                label: "Current Streak",
+                value: "\(stats.activeStreaks.first?.currentStreak ?? 0)",
+                color: Theme.Color.Status.Warning.resting
             )
         }
         .padding(.horizontal, Theme.Spacing.s40)

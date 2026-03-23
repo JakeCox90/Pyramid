@@ -7,6 +7,7 @@ struct ProfileStats: Equatable {
     let wins: Int
     let totalPicksMade: Int
     let longestSurvivalStreak: Int
+    let survivalRatePct: Int
     let activeStreaks: [LeagueStreak]
     let leagueHistory: [CompletedLeague]
 
@@ -15,6 +16,7 @@ struct ProfileStats: Equatable {
         wins: 0,
         totalPicksMade: 0,
         longestSurvivalStreak: 0,
+        survivalRatePct: 0,
         activeStreaks: [],
         leagueHistory: []
     )
