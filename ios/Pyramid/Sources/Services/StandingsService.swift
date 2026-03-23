@@ -37,7 +37,7 @@ final class StandingsService: StandingsServiceProtocol {
                 .select("""
                     id, user_id, status, joined_at,
                     eliminated_at, eliminated_in_gameweek_id,
-                    profiles(username, display_name)
+                    profiles(username, display_name, avatar_url)
                 """)
                 .eq("league_id", value: leagueId)
                 .order("joined_at", ascending: true)

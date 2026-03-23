@@ -36,10 +36,12 @@ struct LeagueMember: Identifiable, Codable, Sendable, Equatable {
     struct MemberProfile: Codable, Sendable, Equatable {
         let username: String
         let displayName: String?
+        let avatarUrl: String?
 
         enum CodingKeys: String, CodingKey {
             case username
             case displayName = "display_name"
+            case avatarUrl = "avatar_url"
         }
 
         var displayLabel: String {

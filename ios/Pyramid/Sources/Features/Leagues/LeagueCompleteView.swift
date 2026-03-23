@@ -62,10 +62,7 @@ struct LeagueCompleteView: View {
             ForEach(winners) { winner in
                 Card {
                     HStack(spacing: Theme.Spacing.s30) {
-                        Image(systemName: Theme.Icon.League.trophyFill)
-                            .foregroundStyle(
-                                Theme.Color.Status.Warning.resting
-                            )
+                        winnerAvatar(winner)
 
                         Text(winner.profiles.displayLabel)
                             .font(Theme.Typography.subhead)
@@ -112,6 +109,45 @@ struct LeagueCompleteView: View {
                 }
             }
         }
+    }
+
+    @ViewBuilder
+    private func winnerAvatar(_ member: LeagueMember) -> some View {
+        let size: CGFloat = 36
+        ZStack(alignment: .bottomTrailing) {
+            if let urlString = member.profiles.avatarUrl,
+               let url = URL(string: urlString) {
+                AsyncImage(url: url) { phase in
+                    if case .success(let image) = phase {
+                        image.resizable().scaledToFill()
+                    } else {
+                        winnerAvatarFallback(member, size: size)
+                    }
+                }
+                .frame(width: size, height: size)
+                .clipShape(Circle())
+            } else {
+                winnerAvatarFallback(member, size: size)
+            }
+            Image(systemName: Theme.Icon.League.trophyFill)
+                .font(.system(size: 10))
+                .foregroundStyle(
+                    Theme.Color.Status.Warning.resting
+                )
+                .offset(x: 2, y: 2)
+        }
+    }
+
+    private func winnerAvatarFallback(
+        _ member: LeagueMember,
+        size: CGFloat
+    ) -> some View {
+        Text(member.profiles.displayLabel.prefix(1).uppercased())
+            .font(Theme.Typography.subhead)
+            .foregroundStyle(Theme.Color.Content.Text.subtle)
+            .frame(width: size, height: size)
+            .background(Theme.Color.Surface.Background.container)
+            .clipShape(Circle())
     }
 
     private func statRow(label: String, value: String) -> some View {
