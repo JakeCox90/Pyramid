@@ -44,6 +44,16 @@ struct LeagueMember: Identifiable, Codable, Sendable, Equatable {
             case avatarUrl = "avatar_url"
         }
 
+        init(
+            username: String,
+            displayName: String? = nil,
+            avatarUrl: String? = nil
+        ) {
+            self.username = username
+            self.displayName = displayName
+            self.avatarUrl = avatarUrl
+        }
+
         var displayLabel: String {
             displayName ?? username
         }
