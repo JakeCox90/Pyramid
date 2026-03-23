@@ -45,16 +45,19 @@ extension LeaguesView {
                     showBrowseLeagues = true
                 }
                 .themed(.primary)
+                .accessibilityIdentifier(AccessibilityID.Leagues.browseButton)
 
                 Button("Create a League") {
                     showCreateLeague = true
                 }
                 .themed(.secondary)
+                .accessibilityIdentifier(AccessibilityID.Leagues.createButton)
 
                 Button("Join with Code") {
                     showJoinLeague = true
                 }
                 .themed(.secondary)
+                .accessibilityIdentifier(AccessibilityID.Leagues.joinButton)
             }
             .padding(.horizontal, Theme.Spacing.s40)
 

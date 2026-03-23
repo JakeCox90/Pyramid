@@ -48,6 +48,7 @@ targets:
     scheme:
       testTargets:
         - PyramidTests
+        - PyramidUITests
       environmentVariables:
         SUPABASE_URL:
           value: ""   # set in scheme or xcconfig — never hardcode

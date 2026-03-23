@@ -55,6 +55,7 @@ struct CreateLeagueView: View {
                     errorMessage: viewModel.nameValidationMessage ?? viewModel.errorMessage
                 )
                 .autocorrectionDisabled()
+                .accessibilityIdentifier(AccessibilityID.CreateLeague.nameField)
 
                 Text("Give your league a unique name. You'll get a join code to share with friends.")
                     .font(Theme.Typography.overline)
@@ -66,6 +67,7 @@ struct CreateLeagueView: View {
             }
             .themed(.primary, isLoading: viewModel.isLoading)
             .disabled(viewModel.isLoading || !viewModel.isNameValid)
+            .accessibilityIdentifier(AccessibilityID.CreateLeague.submitButton)
 
             Spacer()
             Spacer()
