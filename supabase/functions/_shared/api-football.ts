@@ -91,6 +91,17 @@ export const VOID_STATUSES: FixtureStatus[] = ["PST", "CANC", "ABD"];
 // Statuses that mean the match is live
 export const LIVE_STATUSES: FixtureStatus[] = ["1H", "HT", "2H", "ET", "BT", "P", "SUSP", "INT"];
 
+// Simplified H2H meeting shape returned by the get-head-to-head edge function
+export interface H2HMeeting {
+  fixtureId: number;
+  date: string; // ISO 8601
+  venue: string | null;
+  homeTeam: { id: number; name: string; logo: string };
+  awayTeam: { id: number; name: string; logo: string };
+  score: { home: number | null; away: number | null };
+  status: FixtureStatus;
+}
+
 // ─── Client ───────────────────────────────────────────────────────────────────
 
 export class ApiFootballClient {
@@ -181,6 +192,22 @@ export class ApiFootballClient {
     });
     return data.response;
   }
+
+  /**
+   * Fetch head-to-head fixtures between two teams.
+   * Endpoint: /fixtures/headtohead?h2h={teamId1}-{teamId2}&last={n}
+   */
+  async getHeadToHead(
+    teamId1: number,
+    teamId2: number,
+    last = 5,
+  ): Promise<ApiFixture[]> {
+    const data = await this.get<ApiFixture>("/fixtures/headtohead", {
+      h2h: `${teamId1}-${teamId2}`,
+      last,
+    });
+    return data.response;
+  }
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -232,4 +259,30 @@ export function teamShortCode(teamName: string): string {
   };
 
   return overrides[teamName] ?? teamName.substring(0, 3).toUpperCase();
+}
+
+/**
+ * Map an ApiFixture to a simplified H2HMeeting shape.
+ */
+export function toH2HMeeting(fixture: ApiFixture): H2HMeeting {
+  return {
+    fixtureId: fixture.fixture.id,
+    date: fixture.fixture.date,
+    venue: fixture.fixture.venue.name,
+    homeTeam: {
+      id: fixture.teams.home.id,
+      name: fixture.teams.home.name,
+      logo: fixture.teams.home.logo,
+    },
+    awayTeam: {
+      id: fixture.teams.away.id,
+      name: fixture.teams.away.name,
+      logo: fixture.teams.away.logo,
+    },
+    score: {
+      home: fixture.goals.home,
+      away: fixture.goals.away,
+    },
+    status: fixture.fixture.status.short,
+  };
 }
