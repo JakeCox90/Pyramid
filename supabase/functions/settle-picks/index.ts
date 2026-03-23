@@ -255,6 +255,34 @@ async function detectAndDeclareWinner(
     return false;
   }
 
+  // ── Generate gameweek story (non-blocking, fire-and-forget) ──────────────
+  // Fires only when ALL GW fixtures are settled for this league
+  try {
+    const storyResponse = await fetch(
+      `${Deno.env.get("SUPABASE_URL")}/functions/v1/generate-gameweek-story`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")}`,
+        },
+        body: JSON.stringify({ leagueId, gameweek: gameweekId }),
+      },
+    );
+    log.info("Story generation triggered", {
+      leagueId,
+      gameweek: gameweekId,
+      status: storyResponse.status,
+    });
+  } catch (storyErr) {
+    // Non-blocking: log and continue, settlement is already complete
+    log.warn("Story generation call failed", {
+      leagueId,
+      gameweek: gameweekId,
+      error: storyErr instanceof Error ? storyErr.message : String(storyErr),
+    });
+  }
+
   // Guard 4: count active members.
   const { data: activeMembers, error: memberErr } = await db
     .from("league_members")
