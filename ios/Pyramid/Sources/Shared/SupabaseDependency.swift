@@ -49,7 +49,8 @@ final class SupabaseDependency: @unchecked Sendable {
             options: .init(
                 auth: .init(
                     storage: UserDefaultsAuthStorage(),
-                    flowType: .pkce
+                    flowType: .pkce,
+                    emitLocalSessionAsInitialSession: true
                 )
             )
         )

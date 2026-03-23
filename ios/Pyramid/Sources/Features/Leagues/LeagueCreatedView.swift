@@ -20,18 +20,18 @@ struct LeagueCreatedView: View {
 
             VStack(spacing: Theme.Spacing.s20) {
                 Text("League Created!")
-                    .font(Theme.Typography.title1)
+                    .font(Theme.Typography.h2)
                     .foregroundStyle(Theme.Color.Content.Text.default)
 
                 Text(response.name)
-                    .font(Theme.Typography.headline)
+                    .font(Theme.Typography.subhead)
                     .foregroundStyle(Theme.Color.Content.Text.subtle)
             }
 
-            DSCard {
+            Card {
                 VStack(spacing: Theme.Spacing.s30) {
                     Text("Join Code")
-                        .font(Theme.Typography.caption1)
+                        .font(Theme.Typography.overline)
                         .foregroundStyle(Theme.Color.Content.Text.disabled)
                         .frame(maxWidth: .infinity, alignment: .center)
 
@@ -42,7 +42,7 @@ struct LeagueCreatedView: View {
                         .frame(maxWidth: .infinity, alignment: .center)
 
                     Text("Share this code with friends so they can join")
-                        .font(Theme.Typography.caption1)
+                        .font(Theme.Typography.overline)
                         .foregroundStyle(Theme.Color.Content.Text.disabled)
                         .multilineTextAlignment(.center)
                 }
@@ -63,17 +63,17 @@ struct LeagueCreatedView: View {
                         systemImage: didCopy ? Theme.Icon.Action.copied : Theme.Icon.Action.copy
                     )
                 }
-                .dsStyle(.secondary, fullWidth: false)
+                .themed(.secondary, fullWidth: false)
 
                 ShareLink(item: shareText) {
                     Label("Share", systemImage: Theme.Icon.Action.share)
                 }
-                .buttonStyle(DSButtonStyle(variant: .secondary, size: .large, isFullWidth: false))
+                .buttonStyle(ButtonThemeStyle(variant: .secondary, isFullWidth: false))
             }
             .padding(.horizontal, Theme.Spacing.s40)
 
             Button("Done") { onDone() }
-                .dsStyle(.primary)
+                .themed(.primary)
                 .padding(.horizontal, Theme.Spacing.s40)
 
             Spacer()

@@ -5,9 +5,13 @@ import UIKit
 final class PicksViewModel: ObservableObject {
     @Published var gameweek: Gameweek?
     @Published var fixtures: [Fixture] = []
+    /// All fixtures (including started) for GW lock detection
+    private var allFixtures: [Fixture] = []
     @Published var currentPick: Pick?
     @Published var usedTeamIds: Set<Int> = []
     @Published var usedTeamNames: [String] = []
+    /// Maps team ID → gameweek round number it was used in
+    @Published var usedTeamRounds: [Int: Int] = [:]
     @Published var isLoading = false
     @Published var isSubmitting = false
     @Published var submittingTeamId: Int?
@@ -15,12 +19,27 @@ final class PicksViewModel: ObservableObject {
     @Published var successMessage: String?
     @Published var showCelebration = false
     @Published var celebratedTeamId: Int?
+    @Published var pickConfirmed = false
 
     let leagueId: String
 
     private let pickService: PickServiceProtocol
 
     var deadlineText: String? {
+        #if DEBUG
+        if DebugGameweekOverride.isActive {
+            switch DebugGameweekOverride.current {
+            case .none:
+                break
+            case .upcoming:
+                return "Deadline in 3d 8h"
+            case .inProgress:
+                return "Deadline passed — gameweek in progress"
+            case .finished:
+                return "Gameweek complete"
+            }
+        }
+        #endif
         guard let deadline = gameweek?.deadlineAt else { return nil }
         let now = Date()
         guard deadline > now else { return "Deadline passed" }
@@ -52,11 +71,27 @@ final class PicksViewModel: ObservableObject {
             async let fixturesFetch = pickService.fetchFixtures(for: gw.id)
             async let pickFetch = pickService.fetchMyPick(leagueId: leagueId, gameweekId: gw.id)
             async let usedTeamsFetch = pickService.fetchUsedTeams(leagueId: leagueId)
-            fixtures = try await fixturesFetch
+            allFixtures = try await fixturesFetch
+            #if DEBUG
+            if DebugGameweekOverride.isActive,
+               DebugGameweekOverride.current == .upcoming {
+                // Show all fixtures so pick buttons can be tested
+                fixtures = allFixtures
+            } else {
+                fixtures = allFixtures.filter {
+                    $0.status == .notStarted
+                }
+            }
+            #else
+            fixtures = allFixtures.filter {
+                $0.status == .notStarted
+            }
+            #endif
             currentPick = try await pickFetch
             let usedTeams = try await usedTeamsFetch
             usedTeamIds = Set(usedTeams.keys)
-            usedTeamNames = Array(usedTeams.values)
+            usedTeamNames = usedTeams.values.map(\.teamName)
+            usedTeamRounds = usedTeams.mapValues(\.roundNumber)
         } catch {
             errorMessage = AppError.from(error).userMessage
         }
@@ -71,24 +106,47 @@ final class PicksViewModel: ObservableObject {
         errorMessage = nil
         successMessage = nil
         do {
+            #if DEBUG
+            if DebugGameweekOverride.current == .upcoming {
+                // Simulate a successful pick locally — the
+                // backend would reject because the real deadline
+                // has passed, but we want to test the UI flow.
+                try await Task.sleep(nanoseconds: 300_000_000)
+                let fakePick = Pick(
+                    id: UUID().uuidString,
+                    leagueId: leagueId,
+                    userId: "debug",
+                    gameweekId: gameweek?.id ?? 0,
+                    fixtureId: fixtureId,
+                    teamId: teamId,
+                    teamName: teamName,
+                    isLocked: false,
+                    result: .pending,
+                    submittedAt: Date()
+                )
+                currentPick = fakePick
+                DebugGameweekOverride.setFakePick(
+                    leagueId: leagueId,
+                    teamId: teamId,
+                    teamName: teamName,
+                    fixtureId: fixtureId
+                )
+                isSubmitting = false
+                submittingTeamId = nil
+                pickConfirmed = true
+                return
+            }
+            #endif
             let response = try await pickService.submitPick(
                 leagueId: leagueId,
                 fixtureId: fixtureId,
                 teamId: teamId,
                 teamName: teamName
             )
-            successMessage = "Pick confirmed: \(response.teamName)"
-            celebratedTeamId = teamId
-            showCelebration = true
             if let gw = gameweek {
                 currentPick = try await pickService.fetchMyPick(leagueId: leagueId, gameweekId: gw.id)
             }
-            Task { [weak self] in
-                try? await Task.sleep(nanoseconds: 3_000_000_000)
-                self?.successMessage = nil
-                self?.showCelebration = false
-                self?.celebratedTeamId = nil
-            }
+            pickConfirmed = true
         } catch {
             errorMessage = AppError.from(error).userMessage
         }
@@ -110,7 +168,31 @@ final class PicksViewModel: ObservableObject {
         return usedTeamIds.contains(teamId)
     }
 
+    /// Rules §3.3: once the first fixture of the GW kicks off,
+    /// ALL picks are locked — no new picks or changes allowed.
+    var isGameweekLocked: Bool {
+        #if DEBUG
+        if DebugGameweekOverride.isActive {
+            return DebugGameweekOverride.isLocked
+        }
+        #endif
+        return allFixtures.contains {
+            $0.status.isLive || $0.status.isFinished
+        }
+    }
+
     func isFixtureLocked(_ fixture: Fixture) -> Bool {
-        fixture.hasKickedOff || (currentPick?.isLocked == true && currentPick?.fixtureId == fixture.id)
+        #if DEBUG
+        if DebugGameweekOverride.isActive {
+            return DebugGameweekOverride.isLocked
+        }
+        #endif
+        // If any GW fixture has kicked off, everything is locked
+        if isGameweekLocked { return true }
+        // Individual fixture check
+        return fixture.status.isLive
+            || fixture.status.isFinished
+            || (currentPick?.isLocked == true
+                && currentPick?.fixtureId == fixture.id)
     }
 }

@@ -67,7 +67,7 @@ struct JoinPaidLeagueView: View {
                     Button("Confirm \u{2014} Pay \u{a3}5") {
                         Task { await viewModel.joinLeague() }
                     }
-                    .dsStyle(
+                    .themed(
                         .primary,
                         isLoading: viewModel.isLoading
                     )
@@ -80,7 +80,7 @@ struct JoinPaidLeagueView: View {
                         Button("Top Up Wallet") {
                             dismiss()
                         }
-                        .dsStyle(.secondary)
+                        .themed(.secondary)
                     }
                 }
                 .padding(.bottom, Theme.Spacing.s70)
@@ -92,7 +92,7 @@ struct JoinPaidLeagueView: View {
     private var prizePotCard: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s30) {
             Text("Prize Pot")
-                .font(Theme.Typography.headline)
+                .font(Theme.Typography.subhead)
                 .foregroundStyle(Theme.Color.Content.Text.default)
 
             Divider().background(Theme.Color.Border.default)
@@ -115,11 +115,11 @@ struct JoinPaidLeagueView: View {
     private var walletBalanceRow: some View {
         HStack {
             Text("Your wallet")
-                .font(Theme.Typography.subheadline)
+                .font(Theme.Typography.body)
                 .foregroundStyle(Theme.Color.Content.Text.subtle)
             Spacer()
             Text(viewModel.walletBalanceFormatted)
-                .font(Theme.Typography.headline)
+                .font(Theme.Typography.subhead)
                 .foregroundStyle(
                     viewModel.hasInsufficientFunds
                         ? Theme.Color.Status.Error.resting : Theme.Color.Status.Success.resting
@@ -133,7 +133,7 @@ struct JoinPaidLeagueView: View {
     private var rulesCard: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s20) {
             Text("Rules")
-                .font(Theme.Typography.caption1)
+                .font(Theme.Typography.overline)
                 .foregroundStyle(Theme.Color.Content.Text.subtle)
 
             ruleItem(

@@ -21,7 +21,7 @@ struct TopUpSheet: View {
                         Image(systemName: Theme.Icon.Status.info)
                             .foregroundStyle(Theme.Color.Status.Warning.resting)
                         Text("Payment processing coming soon")
-                            .font(.caption)
+                            .font(Theme.Typography.caption)
                             .foregroundStyle(Theme.Color.Status.Warning.resting)
                     }
                     .padding(12)
@@ -32,34 +32,33 @@ struct TopUpSheet: View {
                     // Quick-pick amounts
                     VStack(alignment: .leading, spacing: 12) {
                         Text("Select an amount")
-                            .font(.subheadline.weight(.medium))
+                            .font(Theme.Typography.body)
                             .foregroundStyle(Theme.Color.Content.Text.subtle)
                             .padding(.horizontal, 16)
 
-                        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
-                            ForEach(quickAmounts, id: \.self) { pence in
-                                let label = String(format: "\u{a3}%.0f", Double(pence) / 100)
-                                Button {
+                        LazyVGrid(
+                            columns: [
+                                GridItem(.flexible()),
+                                GridItem(.flexible())
+                            ],
+                            spacing: 12
+                        ) {
+                            ForEach(
+                                quickAmounts, id: \.self
+                            ) { pence in
+                                let label = String(
+                                    format: "\u{a3}%.0f",
+                                    Double(pence) / 100
+                                )
+                                Button(label) {
                                     selectedAmountPence = pence
                                     customAmountText = ""
                                     isCustomFieldFocused = false
-                                } label: {
-                                    Text(label)
-                                        .font(.headline)
-                                        .foregroundStyle(
-                                            selectedAmountPence == pence
-                                                ? .white
-                                                : Theme.Color.Content.Text.default
-                                        )
-                                        .frame(maxWidth: .infinity)
-                                        .padding(.vertical, 16)
-                                        .background(
-                                            selectedAmountPence == pence
-                                                ? Theme.Color.Primary.resting
-                                                : Theme.Color.Surface.Background.container
-                                        )
-                                        .clipShape(RoundedRectangle(cornerRadius: 12))
                                 }
+                                .themed(
+                                    selectedAmountPence == pence
+                                        ? .primary : .secondary
+                                )
                             }
                         }
                         .padding(.horizontal, 16)
@@ -68,16 +67,16 @@ struct TopUpSheet: View {
                     // Custom amount
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Or enter a custom amount")
-                            .font(.subheadline.weight(.medium))
+                            .font(Theme.Typography.body)
                             .foregroundStyle(Theme.Color.Content.Text.subtle)
 
                         HStack {
                             Text("\u{a3}")
-                                .font(.headline)
+                                .font(Theme.Typography.subhead)
                                 .foregroundStyle(Theme.Color.Content.Text.subtle)
                             TextField("0.00", text: $customAmountText)
                                 .keyboardType(.decimalPad)
-                                .font(.headline)
+                                .font(Theme.Typography.subhead)
                                 .foregroundStyle(Theme.Color.Content.Text.default)
                                 .focused($isCustomFieldFocused)
                                 .onChange(of: customAmountText) { newValue in
@@ -91,23 +90,16 @@ struct TopUpSheet: View {
                         .clipShape(RoundedRectangle(cornerRadius: 12))
 
                         Text("Minimum top-up: \u{a3}5.00")
-                            .font(.caption)
+                            .font(Theme.Typography.caption)
                             .foregroundStyle(Theme.Color.Content.Text.disabled)
                     }
                     .padding(.horizontal, 16)
 
                     Spacer()
 
-                    Button {} label: {
-                        Text("Payment processing coming soon")
-                            .font(.headline)
-                            .foregroundStyle(Theme.Color.Content.Text.disabled)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 16)
-                            .background(Theme.Color.Surface.Background.container)
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
-                    }
-                    .disabled(true)
+                    Button("PAYMENT PROCESSING COMING SOON") {}
+                        .themed(.secondary)
+                        .disabled(true)
                     .padding(.horizontal, 16)
                     .padding(.bottom, 16)
                 }
@@ -165,10 +157,10 @@ struct WithdrawSheet: View {
                     // Withdrawable balance display
                     VStack(spacing: 4) {
                         Text("Available to withdraw")
-                            .font(.subheadline)
+                            .font(Theme.Typography.body)
                             .foregroundStyle(Theme.Color.Content.Text.subtle)
                         Text(withdrawableFormatted)
-                            .font(.system(size: 36, weight: .bold, design: .rounded))
+                            .font(Theme.Typography.h2)
                             .foregroundStyle(Theme.Color.Status.Success.resting)
                     }
                     .frame(maxWidth: .infinity)
@@ -180,16 +172,16 @@ struct WithdrawSheet: View {
                     // Amount input
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Amount to withdraw")
-                            .font(.subheadline.weight(.medium))
+                            .font(Theme.Typography.body)
                             .foregroundStyle(Theme.Color.Content.Text.subtle)
 
                         HStack {
                             Text("\u{a3}")
-                                .font(.headline)
+                                .font(Theme.Typography.subhead)
                                 .foregroundStyle(Theme.Color.Content.Text.subtle)
                             TextField("0.00", text: $amountText)
                                 .keyboardType(.decimalPad)
-                                .font(.headline)
+                                .font(Theme.Typography.subhead)
                                 .foregroundStyle(Theme.Color.Content.Text.default)
                         }
                         .padding(14)
@@ -198,11 +190,11 @@ struct WithdrawSheet: View {
 
                         if let error = validationError {
                             Text(error)
-                                .font(.caption)
+                                .font(Theme.Typography.caption)
                                 .foregroundStyle(Theme.Color.Status.Error.resting)
                         } else {
                             Text("Minimum withdrawal: \u{a3}20.00")
-                                .font(.caption)
+                                .font(Theme.Typography.caption)
                                 .foregroundStyle(Theme.Color.Content.Text.disabled)
                         }
                     }
@@ -210,7 +202,7 @@ struct WithdrawSheet: View {
 
                     if let error = localError {
                         Text(error)
-                            .font(.caption)
+                            .font(Theme.Typography.caption)
                             .foregroundStyle(Theme.Color.Status.Error.resting)
                             .multilineTextAlignment(.center)
                             .padding(.horizontal, 16)
@@ -218,34 +210,20 @@ struct WithdrawSheet: View {
 
                     Spacer()
 
-                    Button {
-                        guard let pence = amountPence else { return }
+                    Button("WITHDRAW") {
+                        guard let pence = amountPence
+                        else { return }
                         isSubmitting = true
                         localError = nil
                         Task {
                             await onWithdraw(pence)
                             isSubmitting = false
                         }
-                    } label: {
-                        Group {
-                            if isSubmitting {
-                                ProgressView()
-                                    .tint(.white)
-                            } else {
-                                Text("Withdraw")
-                                    .font(.headline)
-                                    .foregroundStyle(.white)
-                            }
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 16)
-                        .background(
-                            withdrawEnabled
-                                ? Theme.Color.Status.Error.resting
-                                : Theme.Color.Surface.Background.container
-                        )
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
+                    .themed(
+                        .destructive,
+                        isLoading: isSubmitting
+                    )
                     .disabled(!withdrawEnabled)
                     .padding(.horizontal, 16)
                     .padding(.bottom, 16)

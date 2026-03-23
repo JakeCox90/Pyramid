@@ -66,7 +66,7 @@ final class PicksViewModelTests: XCTestCase {
 
         await vm.submitPick(fixtureId: 1, teamId: 100, teamName: "Arsenal")
 
-        XCTAssertNotNil(vm.successMessage)
+        XCTAssertTrue(vm.pickConfirmed)
         XCTAssertNil(vm.errorMessage)
         XCTAssertFalse(vm.isSubmitting)
     }
@@ -257,10 +257,12 @@ final class MockPickService: PickServiceProtocol {
         return usedTeamIds
     }
 
-    func fetchUsedTeams(leagueId: String) async throws -> [Int: String] {
+    func fetchUsedTeams(leagueId: String) async throws -> [Int: UsedTeamInfo] {
         if shouldFail { throw URLError(.badServerResponse) }
         return Dictionary(
-            usedTeamIds.map { ($0, "Team \($0)") },
+            usedTeamIds.map {
+                ($0, UsedTeamInfo(teamName: "Team \($0)", roundNumber: 1))
+            },
             uniquingKeysWith: { first, _ in first }
         )
     }

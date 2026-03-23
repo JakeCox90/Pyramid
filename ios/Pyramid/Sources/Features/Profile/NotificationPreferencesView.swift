@@ -42,12 +42,11 @@ struct NotificationPreferencesView: View {
                 Image(systemName: Theme.Icon.Navigation.notificationsDisabled)
                     .foregroundStyle(Theme.Color.Status.Error.resting)
                 Text("Notifications are turned off")
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
+                    .font(Theme.Typography.subhead)
                     .foregroundStyle(Theme.Color.Content.Text.default)
             }
             Text("Enable notifications in Settings to receive pick reminders and result alerts.")
-                .font(.caption)
+                .font(Theme.Typography.caption)
                 .foregroundStyle(Theme.Color.Content.Text.subtle)
 
             Button {
@@ -56,8 +55,7 @@ struct NotificationPreferencesView: View {
                 }
             } label: {
                 Text("Enable in Settings")
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
+                    .font(Theme.Typography.subhead)
                     .foregroundStyle(Theme.Color.Primary.resting)
             }
         }
@@ -75,8 +73,7 @@ struct NotificationPreferencesView: View {
     private var preferencesSection: some View {
         VStack(alignment: .leading, spacing: 0) {
             Text("NOTIFY ME WHEN\u{2026}")
-                .font(.caption)
-                .fontWeight(.semibold)
+                .font(Theme.Typography.overline)
                 .foregroundStyle(Theme.Color.Content.Text.subtle)
                 .padding(.horizontal, 16)
                 .padding(.bottom, 8)
@@ -122,10 +119,10 @@ struct NotificationPreferencesView: View {
         HStack(spacing: 12) {
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
-                    .font(.body)
+                    .font(Theme.Typography.body)
                     .foregroundStyle(Theme.Color.Content.Text.default)
                 Text(subtitle)
-                    .font(.caption)
+                    .font(Theme.Typography.caption)
                     .foregroundStyle(Theme.Color.Content.Text.subtle)
             }
             Spacer()

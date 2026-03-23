@@ -5,7 +5,7 @@ import SwiftUI
 extension LeagueDetailView {
     @ViewBuilder var myPickCard: some View {
         if viewModel.isDeadlinePassed(), let pick = viewModel.myPick {
-            DSCard {
+            Card {
                 if let fixture = viewModel.myFixture {
                     if fixture.status.isLive {
                         livePickContent(pick: pick, fixture: fixture)
@@ -52,7 +52,7 @@ extension LeagueDetailView {
     private func liveTopRow(fixture: Fixture) -> some View {
         HStack(spacing: Theme.Spacing.s20) {
             Text("YOUR PICK")
-                .font(Theme.Typography.caption2)
+                .font(Theme.Typography.overline)
                 .foregroundStyle(Theme.Color.Content.Text.subtle)
                 .textCase(.uppercase)
 
@@ -61,7 +61,7 @@ extension LeagueDetailView {
             PulsingDot()
 
             Text(fixture.status.displayLabel)
-                .font(Theme.Typography.caption2)
+                .font(Theme.Typography.overline)
                 .foregroundStyle(Theme.Color.Status.Error.resting)
                 .monospacedDigit()
         }
@@ -77,14 +77,14 @@ extension LeagueDetailView {
         VStack(alignment: .leading, spacing: Theme.Spacing.s20) {
             HStack {
                 Text("YOUR PICK")
-                    .font(Theme.Typography.caption2)
+                    .font(Theme.Typography.overline)
                     .foregroundStyle(Theme.Color.Content.Text.subtle)
                     .textCase(.uppercase)
 
                 Spacer()
 
                 Text("FT")
-                    .font(Theme.Typography.caption2)
+                    .font(Theme.Typography.overline)
                     .foregroundStyle(Theme.Color.Content.Text.disabled)
                     .padding(.horizontal, Theme.Spacing.s10)
                     .padding(.vertical, 2)
@@ -109,16 +109,16 @@ extension LeagueDetailView {
     private func preKickoffPickContent(pick: MemberPick, fixture: Fixture) -> some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s10) {
             Text("YOUR PICK")
-                .font(Theme.Typography.caption2)
+                .font(Theme.Typography.overline)
                 .foregroundStyle(Theme.Color.Content.Text.subtle)
                 .textCase(.uppercase)
 
             Text(pick.teamName)
-                .font(Theme.Typography.headline)
+                .font(Theme.Typography.subhead)
                 .foregroundStyle(Theme.Color.Content.Text.default)
 
             Text("Kicks off at \(kickoffTimeString(fixture.kickoffAt))")
-                .font(Theme.Typography.caption1)
+                .font(Theme.Typography.overline)
                 .foregroundStyle(Theme.Color.Content.Text.disabled)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -130,12 +130,12 @@ extension LeagueDetailView {
     private func basicPickContent(pick: MemberPick) -> some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s10) {
             Text("YOUR PICK")
-                .font(Theme.Typography.caption2)
+                .font(Theme.Typography.overline)
                 .foregroundStyle(Theme.Color.Content.Text.subtle)
                 .textCase(.uppercase)
 
             Text(pick.teamName)
-                .font(Theme.Typography.headline)
+                .font(Theme.Typography.subhead)
                 .foregroundStyle(Theme.Color.Content.Text.default)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -152,20 +152,20 @@ extension LeagueDetailView {
     ) -> some View {
         HStack {
             Text(homeShort)
-                .font(Theme.Typography.subheadline)
+                .font(Theme.Typography.body)
                 .foregroundStyle(Theme.Color.Content.Text.subtle)
 
             Spacer()
 
             Text("\(homeScore)  \u{2013}  \(awayScore)")
-                .font(Theme.Typography.title2)
+                .font(Theme.Typography.h3)
                 .foregroundStyle(Theme.Color.Content.Text.default)
                 .monospacedDigit()
 
             Spacer()
 
             Text(awayShort)
-                .font(Theme.Typography.subheadline)
+                .font(Theme.Typography.body)
                 .foregroundStyle(Theme.Color.Content.Text.subtle)
         }
     }
@@ -182,7 +182,7 @@ extension LeagueDetailView {
                     )
                     .accessibilityHidden(true)
                 Text(surviving ? "Surviving" : "In Danger")
-                    .font(Theme.Typography.subheadline)
+                    .font(Theme.Typography.body)
                     .foregroundStyle(
                         surviving
                             ? Theme.Color.Status.Success.resting
@@ -196,7 +196,7 @@ extension LeagueDetailView {
                     .foregroundStyle(Theme.Color.Content.Text.disabled)
                     .accessibilityHidden(true)
                 Text("Pending")
-                    .font(Theme.Typography.subheadline)
+                    .font(Theme.Typography.body)
                     .foregroundStyle(Theme.Color.Content.Text.disabled)
             }
             .accessibilityLabel("Pending")
@@ -208,19 +208,19 @@ extension LeagueDetailView {
         switch result {
         case .survived:
             Label("Survived", systemImage: "checkmark.circle.fill")
-                .font(Theme.Typography.subheadline)
+                .font(Theme.Typography.body)
                 .foregroundStyle(Theme.Color.Status.Success.resting)
         case .eliminated:
             Label("Eliminated", systemImage: "xmark.circle.fill")
-                .font(Theme.Typography.subheadline)
+                .font(Theme.Typography.body)
                 .foregroundStyle(Theme.Color.Status.Error.resting)
         case .pending:
             Label("Pending Result", systemImage: "clock")
-                .font(Theme.Typography.subheadline)
+                .font(Theme.Typography.body)
                 .foregroundStyle(Theme.Color.Content.Text.disabled)
         case .void:
             Label("Void", systemImage: "minus.circle")
-                .font(Theme.Typography.subheadline)
+                .font(Theme.Typography.body)
                 .foregroundStyle(Theme.Color.Status.Warning.resting)
         }
     }

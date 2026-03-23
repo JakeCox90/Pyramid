@@ -18,7 +18,7 @@ struct PyramidApp: App {
 
 // MARK: - AppDelegate
 
-final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
+final class AppDelegate: NSObject, UIApplicationDelegate, @preconcurrency UNUserNotificationCenterDelegate {
     func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
@@ -46,10 +46,8 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
         didReceive response: UNNotificationResponse,
         withCompletionHandler completionHandler: @escaping () -> Void
     ) {
-        Task {
-            await NotificationService.shared.handleNotificationResponse(response)
-            completionHandler()
-        }
+        NotificationService.shared.handleNotificationResponse(response)
+        completionHandler()
     }
 
     func userNotificationCenter(

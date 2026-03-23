@@ -2,27 +2,54 @@ import SwiftUI
 
 struct HomeView: View {
     @StateObject var viewModel = HomeViewModel()
+    @State var showPicks = false
+    @State private var matchCardVisible = true
 
     var body: some View {
         NavigationStack {
             Group {
-                if viewModel.isLoading && viewModel.homeData == nil {
+                if viewModel.isLoading,
+                   viewModel.homeData == nil {
                     loadingView
                 } else if let error = viewModel.errorMessage,
                           viewModel.homeData == nil {
                     errorView(error)
-                } else if let data = viewModel.homeData {
-                    contentView(data)
                 } else {
-                    loadingView
+                    contentView
                 }
             }
-            .navigationTitle("Home")
-            .navigationBarTitleDisplayMode(.large)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbarColorScheme(.dark, for: .navigationBar)
             .background(
-                Theme.Color.Surface.Background.page.ignoresSafeArea()
+                Theme.Color.Surface.Background.page
+                    .ignoresSafeArea()
             )
             .task { await viewModel.load() }
+            .navigationDestination(
+                isPresented: $showPicks
+            ) {
+                if let leagueId = viewModel
+                    .selectedLeague?.id {
+                    PicksView(leagueId: leagueId)
+                }
+            }
+            .onChange(of: showPicks) { showing in
+                if showing {
+                    // Hide card so it can animate in on return
+                    matchCardVisible = false
+                } else {
+                    Task {
+                        await viewModel.load()
+                        // Animate the card into view
+                        withAnimation(
+                            .easeOut(duration: 0.45)
+                                .delay(0.1)
+                        ) {
+                            matchCardVisible = true
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -34,112 +61,98 @@ struct HomeView: View {
                 .tint(Theme.Color.Content.Text.subtle)
             Text("Loading...")
                 .font(Theme.Typography.body)
-                .foregroundStyle(Theme.Color.Content.Text.subtle)
+                .foregroundStyle(
+                    Theme.Color.Content.Text.subtle
+                )
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     // MARK: - Error
 
-    private func errorView(_ message: String) -> some View {
-        ErrorStateView(message: message) {
-            await viewModel.load()
-        }
+    private func errorView(
+        _ message: String
+    ) -> some View {
+        PlaceholderView(
+            icon: Theme.Icon.Status.error,
+            title: "Something went wrong",
+            message: message,
+            buttonTitle: "Try Again",
+            onAsyncAction: { await viewModel.load() }
+        )
     }
 
     // MARK: - Content
 
-    func contentView(_ data: HomeData) -> some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: Theme.Spacing.s40) {
-                picksNeededSection(data)
-                liveMatchSection()
-                lastGwResultsSection(data)
-                leaguesSection(data)
+    private var contentView: some View {
+        let leagues = viewModel.homeData?.leagues ?? []
+
+        return VStack(spacing: 0) {
+            // Fixed header — pinned above scroll
+            VStack(spacing: Theme.Spacing.s40) {
+                countdownSection
+                leagueSelector
             }
-            .padding(Theme.Spacing.s40)
-        }
-        .refreshable { await viewModel.load() }
-        .onDisappear { viewModel.stopPolling() }
-    }
+            .padding(.horizontal, Theme.Spacing.s40)
+            .padding(.bottom, Theme.Spacing.s40)
 
-    func picksNeededSection(_ data: HomeData) -> some View {
-        let leaguesNeedingPick = data.leagues.filter { league in
-            data.picks[league.id] == nil
-                && data.memberStatuses[league.id] == .active
-        }
-
-        return Group {
-            if !leaguesNeedingPick.isEmpty {
-                VStack(alignment: .leading, spacing: Theme.Spacing.s20) {
-                    Text("Picks Needed")
-                        .font(Theme.Typography.headline)
-                        .foregroundStyle(Theme.Color.Content.Text.default)
-
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: Theme.Spacing.s30) {
-                            ForEach(leaguesNeedingPick) { league in
-                                NavigationLink(
-                                    destination: LeagueDetailView(
-                                        league: league
-                                    )
-                                ) {
-                                    pickNeededCard(
-                                        league: league,
-                                        gameweek: data.gameweek
-                                    )
+            // Swipeable per-league content
+            if leagues.count > 1 {
+                TabView(
+                    selection: Binding(
+                        get: {
+                            viewModel.selectedLeague?.id ?? ""
+                        },
+                        set: { newId in
+                            if let league = leagues.first(
+                                where: { $0.id == newId }
+                            ) {
+                                withAnimation(.easeInOut(duration: 0.2)) {
+                                    viewModel.selectLeague(league)
                                 }
-                                .buttonStyle(.plain)
                             }
                         }
+                    )
+                ) {
+                    ForEach(leagues) { league in
+                        leaguePageContent(league)
+                            .tag(league.id)
                     }
                 }
+                .tabViewStyle(.page(indexDisplayMode: .never))
+            } else if let league = leagues.first {
+                leaguePageContent(league)
             }
+        }
+        .onDisappear {
+            viewModel.stopPolling()
+            viewModel.stopCountdown()
         }
     }
 
-    private func pickNeededCard(
-        league: League,
-        gameweek: Gameweek?
+    func leaguePageContent(
+        _ league: League
     ) -> some View {
-        VStack(alignment: .leading, spacing: Theme.Spacing.s20) {
-            Text(league.name)
-                .font(Theme.Typography.headline)
-                .foregroundStyle(Theme.Color.Content.Text.default)
-                .lineLimit(1)
+        ScrollView(showsIndicators: false) {
+            VStack(spacing: Theme.Spacing.s40) {
+                if let context = viewModel
+                    .currentPick(for: league) {
+                    matchCard(context)
+                        .opacity(matchCardVisible ? 1 : 0)
+                        .offset(
+                            y: matchCardVisible ? 0 : 20
+                        )
+                } else {
+                    matchCardEmpty()
+                }
 
-            if let gw = gameweek {
-                Text(gw.name)
-                    .font(Theme.Typography.caption1)
-                    .foregroundStyle(Theme.Color.Content.Text.subtle)
-            }
+                playersRemainingCard(for: league)
 
-            if let deadline = gameweek?.deadlineAt {
-                Text(deadline, style: .relative)
-                    .font(Theme.Typography.caption1)
-                    .foregroundStyle(
-                        Theme.Color.Status.Warning.resting
-                    )
+                previousPicksSection(for: league)
             }
-
-            HStack {
-                Text("Select a pick")
-                    .font(Theme.Typography.callout)
-                    .foregroundStyle(Theme.Color.Primary.text)
-                Image(systemName: "chevron.right")
-                    .font(Theme.Typography.caption1)
-                    .foregroundStyle(Theme.Color.Primary.text)
-            }
-            .padding(.horizontal, Theme.Spacing.s30)
-            .padding(.vertical, Theme.Spacing.s20)
-            .background(Theme.Color.Primary.resting)
-            .clipShape(
-                RoundedRectangle(cornerRadius: Theme.Radius.default)
-            )
+            .padding(.horizontal, Theme.Spacing.s40)
+            .padding(.bottom, Theme.Spacing.s80)
         }
-        .padding(Theme.Spacing.s40)
-        .frame(width: 200, alignment: .leading)
-        .background(Theme.Color.Surface.Background.container)
-        .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.r40))
+        .refreshable { await viewModel.load() }
     }
 }

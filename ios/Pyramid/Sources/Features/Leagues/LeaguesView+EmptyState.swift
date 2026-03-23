@@ -12,7 +12,7 @@ extension LeaguesView {
 
                 VStack(spacing: Theme.Spacing.s30) {
                     Text("No leagues yet")
-                        .font(Theme.Typography.title2)
+                        .font(Theme.Typography.h3)
                         .foregroundStyle(
                             Theme.Color.Content.Text.default
                         )
@@ -32,7 +32,7 @@ extension LeaguesView {
                         "Browse open leagues, create your own, "
                         + "or join one with a code."
                     )
-                    .font(Theme.Typography.subheadline)
+                    .font(Theme.Typography.body)
                     .foregroundStyle(
                         Theme.Color.Content.Text.disabled
                     )
@@ -44,17 +44,17 @@ extension LeaguesView {
                 Button("Browse Free Leagues") {
                     showBrowseLeagues = true
                 }
-                .dsStyle(.primary)
+                .themed(.primary)
 
                 Button("Create a League") {
                     showCreateLeague = true
                 }
-                .dsStyle(.secondary)
+                .themed(.secondary)
 
                 Button("Join with Code") {
                     showJoinLeague = true
                 }
-                .dsStyle(.secondary)
+                .themed(.secondary)
             }
             .padding(.horizontal, Theme.Spacing.s40)
 

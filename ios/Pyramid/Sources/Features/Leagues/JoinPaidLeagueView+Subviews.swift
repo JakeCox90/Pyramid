@@ -24,18 +24,18 @@ extension JoinPaidLeagueView {
 
             VStack(spacing: Theme.Spacing.s20) {
                 Text("You're in!")
-                    .font(Theme.Typography.title1)
+                    .font(Theme.Typography.h2)
                     .foregroundStyle(Theme.Color.Content.Text.default)
 
                 Text("You are \(result.pseudonym)")
-                    .font(Theme.Typography.subheadline)
+                    .font(Theme.Typography.body)
                     .foregroundStyle(Theme.Color.Content.Text.subtle)
             }
 
             playerCountCard(result: result)
 
             Text("Starts when 5 players join")
-                .font(Theme.Typography.caption1)
+                .font(Theme.Typography.overline)
                 .foregroundStyle(Theme.Color.Content.Text.subtle)
                 .multilineTextAlignment(.center)
 
@@ -45,7 +45,7 @@ extension JoinPaidLeagueView {
                 onJoined?(result)
                 dismiss()
             }
-            .dsStyle(.primary)
+            .themed(.primary)
             .padding(.bottom, Theme.Spacing.s70)
             .padding(.horizontal, Theme.Spacing.s40)
         }
@@ -62,7 +62,7 @@ extension JoinPaidLeagueView {
         return VStack(spacing: Theme.Spacing.s30) {
             HStack {
                 Text("\(current) / \(total) players joined")
-                    .font(Theme.Typography.headline)
+                    .font(Theme.Typography.subhead)
                     .foregroundStyle(Theme.Color.Content.Text.default)
                 Spacer()
             }
@@ -101,11 +101,11 @@ extension JoinPaidLeagueView {
 
             VStack(spacing: Theme.Spacing.s20) {
                 Text("Round started!")
-                    .font(Theme.Typography.title1)
+                    .font(Theme.Typography.h2)
                     .foregroundStyle(Theme.Color.Content.Text.default)
 
                 Text("You are \(result.pseudonym)")
-                    .font(Theme.Typography.subheadline)
+                    .font(Theme.Typography.body)
                     .foregroundStyle(Theme.Color.Content.Text.subtle)
             }
 
@@ -121,12 +121,12 @@ extension JoinPaidLeagueView {
                     onJoined?(result)
                     dismiss()
                 }
-                .dsStyle(.primary)
+                .themed(.primary)
 
                 Button("Done") {
                     dismiss()
                 }
-                .dsStyle(.ghost)
+                .themed(.ghost)
             }
             .padding(.bottom, Theme.Spacing.s70)
             .padding(.horizontal, Theme.Spacing.s40)
@@ -141,11 +141,11 @@ extension JoinPaidLeagueView {
     func infoRow(label: String, value: String) -> some View {
         HStack {
             Text(label)
-                .font(Theme.Typography.subheadline)
+                .font(Theme.Typography.body)
                 .foregroundStyle(Theme.Color.Content.Text.subtle)
             Spacer()
             Text(value)
-                .font(Theme.Typography.subheadline)
+                .font(Theme.Typography.body)
                 .foregroundStyle(Theme.Color.Content.Text.default)
         }
     }
@@ -153,11 +153,11 @@ extension JoinPaidLeagueView {
     func ruleItem(icon: String, text: String) -> some View {
         HStack(alignment: .top, spacing: Theme.Spacing.s20) {
             Image(systemName: icon)
-                .font(Theme.Typography.caption1)
+                .font(Theme.Typography.overline)
                 .foregroundStyle(Theme.Color.Primary.resting)
                 .frame(width: 16)
             Text(text)
-                .font(Theme.Typography.caption1)
+                .font(Theme.Typography.overline)
                 .foregroundStyle(Theme.Color.Content.Text.subtle)
         }
     }
@@ -167,7 +167,7 @@ extension JoinPaidLeagueView {
             Image(systemName: Theme.Icon.Status.errorFill)
                 .foregroundStyle(Theme.Color.Status.Error.resting)
             Text(message)
-                .font(Theme.Typography.caption1)
+                .font(Theme.Typography.overline)
                 .foregroundStyle(Theme.Color.Content.Text.default)
             Spacer()
         }
@@ -179,10 +179,10 @@ extension JoinPaidLeagueView {
     func infoChip(label: String, value: String) -> some View {
         VStack(spacing: Theme.Spacing.s10) {
             Text(label)
-                .font(Theme.Typography.caption1)
+                .font(Theme.Typography.overline)
                 .foregroundStyle(Theme.Color.Content.Text.subtle)
             Text(value)
-                .font(Theme.Typography.headline)
+                .font(Theme.Typography.subhead)
                 .foregroundStyle(Theme.Color.Content.Text.default)
         }
         .padding(.horizontal, Theme.Spacing.s40)

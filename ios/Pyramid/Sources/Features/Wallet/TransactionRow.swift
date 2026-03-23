@@ -10,22 +10,22 @@ struct TransactionRow: View {
                     .fill(iconBackgroundColor.opacity(0.15))
                     .frame(width: 36, height: 36)
                 Image(systemName: iconName)
-                    .font(.system(size: 16, weight: .medium))
+                    .font(Theme.Typography.subhead)
                     .foregroundStyle(iconBackgroundColor)
             }
             .accessibilityLabel(transactionTitle)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(transactionTitle)
-                    .font(.subheadline.weight(.medium))
+                    .font(Theme.Typography.body)
                     .foregroundStyle(Theme.Color.Content.Text.default)
                 if let notes = transaction.notes {
                     Text(notes)
-                        .font(.caption)
+                        .font(Theme.Typography.caption)
                         .foregroundStyle(Theme.Color.Content.Text.subtle)
                 } else {
                     Text(formattedDate)
-                        .font(.caption)
+                        .font(Theme.Typography.caption)
                         .foregroundStyle(Theme.Color.Content.Text.disabled)
                 }
             }
@@ -33,7 +33,7 @@ struct TransactionRow: View {
             Spacer()
 
             Text((transaction.isCredit ? "+" : "-") + transaction.amountFormatted)
-                .font(.subheadline.weight(.semibold))
+                .font(Theme.Typography.subhead)
                 .foregroundStyle(
                     transaction.isCredit
                         ? Theme.Color.Status.Success.resting

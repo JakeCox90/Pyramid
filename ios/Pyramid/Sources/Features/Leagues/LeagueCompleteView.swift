@@ -41,12 +41,12 @@ struct LeagueCompleteView: View {
                 .foregroundStyle(Theme.Color.Status.Warning.resting)
 
             Text(leagueName)
-                .font(Theme.Typography.title2)
+                .font(Theme.Typography.h3)
                 .foregroundStyle(Theme.Color.Content.Text.default)
                 .multilineTextAlignment(.center)
 
             Text("League Complete")
-                .font(Theme.Typography.subheadline)
+                .font(Theme.Typography.body)
                 .foregroundStyle(Theme.Color.Content.Text.disabled)
         }
         .frame(maxWidth: .infinity)
@@ -55,12 +55,12 @@ struct LeagueCompleteView: View {
     private var winnersSection: some View {
         VStack(spacing: Theme.Spacing.s20) {
             Text(winners.count == 1 ? "Winner" : "Joint Winners")
-                .font(Theme.Typography.caption1)
+                .font(Theme.Typography.overline)
                 .foregroundStyle(Theme.Color.Content.Text.disabled)
                 .frame(maxWidth: .infinity, alignment: .leading)
 
             ForEach(winners) { winner in
-                DSCard {
+                Card {
                     HStack(spacing: Theme.Spacing.s30) {
                         Image(systemName: Theme.Icon.League.trophyFill)
                             .foregroundStyle(
@@ -68,7 +68,7 @@ struct LeagueCompleteView: View {
                             )
 
                         Text(winner.profiles.displayLabel)
-                            .font(Theme.Typography.headline)
+                            .font(Theme.Typography.subhead)
                             .foregroundStyle(
                                 Theme.Color.Content.Text.default
                             )
@@ -76,7 +76,7 @@ struct LeagueCompleteView: View {
                         Spacer()
 
                         Text("Winner")
-                            .font(Theme.Typography.caption2)
+                            .font(Theme.Typography.overline)
                             .foregroundStyle(
                                 Theme.Color.Status.Warning.resting
                             )
@@ -89,11 +89,11 @@ struct LeagueCompleteView: View {
     private var statsSection: some View {
         VStack(spacing: Theme.Spacing.s20) {
             Text("Summary")
-                .font(Theme.Typography.caption1)
+                .font(Theme.Typography.overline)
                 .foregroundStyle(Theme.Color.Content.Text.disabled)
                 .frame(maxWidth: .infinity, alignment: .leading)
 
-            DSCard {
+            Card {
                 VStack(spacing: Theme.Spacing.s30) {
                     statRow(
                         label: "Total Players",
@@ -117,11 +117,11 @@ struct LeagueCompleteView: View {
     private func statRow(label: String, value: String) -> some View {
         HStack {
             Text(label)
-                .font(Theme.Typography.subheadline)
+                .font(Theme.Typography.body)
                 .foregroundStyle(Theme.Color.Content.Text.disabled)
             Spacer()
             Text(value)
-                .font(Theme.Typography.headline)
+                .font(Theme.Typography.subhead)
                 .foregroundStyle(Theme.Color.Content.Text.default)
         }
     }

@@ -25,7 +25,7 @@ struct OnboardingView: View {
             Spacer()
             if currentPage < OnboardingPage.allPages.count - 1 {
                 Button("Skip") { completeOnboarding() }
-                    .font(Theme.Typography.subheadline)
+                    .font(Theme.Typography.body)
                     .foregroundStyle(Theme.Color.Content.Text.disabled)
             }
         }
@@ -61,12 +61,12 @@ struct OnboardingView: View {
 
             VStack(spacing: Theme.Spacing.s20) {
                 Text(page.title)
-                    .font(Theme.Typography.title2)
+                    .font(Theme.Typography.h3)
                     .foregroundStyle(Theme.Color.Content.Text.default)
                     .multilineTextAlignment(.center)
 
                 Text(page.subtitle)
-                    .font(Theme.Typography.subheadline)
+                    .font(Theme.Typography.body)
                     .foregroundStyle(Theme.Color.Content.Text.disabled)
                     .multilineTextAlignment(.center)
                     .lineSpacing(4)
@@ -105,12 +105,12 @@ struct OnboardingView: View {
         VStack(spacing: Theme.Spacing.s30) {
             if currentPage == OnboardingPage.allPages.count - 1 {
                 Button("Get Started") { completeOnboarding() }
-                    .dsStyle(.primary)
+                    .themed(.primary)
             } else {
                 Button("Next") {
                     withAnimation(reduceMotion ? nil : .default) { currentPage += 1 }
                 }
-                .dsStyle(.primary)
+                .themed(.primary)
             }
         }
         .padding(.horizontal, Theme.Spacing.s40)

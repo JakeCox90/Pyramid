@@ -36,7 +36,7 @@ struct TeamBadge: View {
 
     private var fallbackBadge: some View {
         Text(teamName.prefix(3).uppercased())
-            .font(size > 24 ? Theme.Typography.caption1 : Theme.Typography.caption2)
+            .font(size > 24 ? Theme.Typography.overline : Theme.Typography.overline)
             .foregroundStyle(Theme.Color.Content.Text.subtle)
             .frame(width: size, height: size)
             .background(Theme.Color.Surface.Background.container)

@@ -27,11 +27,11 @@ struct AuthView: View {
     private var headerSection: some View {
         VStack(spacing: Theme.Spacing.s20) {
             Text("Pyramid")
-                .font(Theme.Typography.display)
+                .font(Theme.Typography.h1)
                 .foregroundStyle(Theme.Color.Content.Text.default)
 
             Text("Premier League Last Man Standing")
-                .font(Theme.Typography.subheadline)
+                .font(Theme.Typography.body)
                 .foregroundStyle(Theme.Color.Content.Text.disabled)
         }
     }
@@ -40,7 +40,7 @@ struct AuthView: View {
 
     private var formSection: some View {
         VStack(spacing: Theme.Spacing.s30) {
-            DSTextField(
+            InputField(
                 label: "Email",
                 text: $viewModel.email,
                 placeholder: "you@example.com"
@@ -49,7 +49,7 @@ struct AuthView: View {
             .keyboardType(.emailAddress)
             .autocorrectionDisabled()
 
-            DSTextField(
+            InputField(
                 label: "Password",
                 text: $viewModel.password,
                 placeholder: "Password",
@@ -61,14 +61,14 @@ struct AuthView: View {
             Button("Sign In") {
                 Task { await viewModel.signIn() }
             }
-            .dsStyle(.primary, isLoading: viewModel.isLoading)
+            .themed(.primary, isLoading: viewModel.isLoading)
             .disabled(viewModel.isLoading || viewModel.isSocialLoading)
             .padding(.top, Theme.Spacing.s20)
 
             Button("Create account") {
                 Task { await viewModel.signUp() }
             }
-            .dsStyle(.ghost, size: .medium)
+            .themed(.ghost)
             .disabled(viewModel.isLoading || viewModel.isSocialLoading)
 
             socialDivider
@@ -85,7 +85,7 @@ struct AuthView: View {
                 .frame(height: 1)
                 .foregroundStyle(Theme.Color.Content.Text.disabled.opacity(0.3))
             Text("or continue with")
-                .font(Theme.Typography.footnote)
+                .font(Theme.Typography.caption)
                 .foregroundStyle(Theme.Color.Content.Text.disabled)
                 .fixedSize()
             Rectangle()
@@ -116,7 +116,7 @@ struct AuthView: View {
                     .frame(width: 20, height: 20)
                     .foregroundStyle(Theme.Color.Content.Text.default)
                 Text("Sign in with Apple")
-                    .font(Theme.Typography.headline)
+                    .font(Theme.Typography.subhead)
                     .foregroundStyle(Theme.Color.Content.Text.default)
             }
             .frame(maxWidth: .infinity)
@@ -147,7 +147,7 @@ struct AuthView: View {
             HStack(spacing: Theme.Spacing.s20) {
                 googleLogo
                 Text("Sign in with Google")
-                    .font(Theme.Typography.headline)
+                    .font(Theme.Typography.subhead)
                     .foregroundStyle(Theme.Color.Content.Text.default)
             }
             .frame(maxWidth: .infinity)

@@ -124,7 +124,28 @@ Deno.serve(async (req) => {
     return errorResponse("Fixture not found", "FIXTURE_NOT_FOUND", 404, origin);
   }
 
-  // 3. Validate fixture hasn't started (kickoff_at must be in the future)
+  // 3a. Validate gameweek deadline (rules §3.3): no picks after the
+  //     first fixture of the GW has kicked off.
+  const gameweekIdForCheck = fixture.gameweek_id as number;
+  const { data: gwDeadline } = await db
+    .from("gameweeks")
+    .select("deadline_at")
+    .eq("id", gameweekIdForCheck)
+    .maybeSingle();
+
+  if (gwDeadline?.deadline_at) {
+    const deadlineAt = new Date(gwDeadline.deadline_at as string);
+    if (deadlineAt <= new Date()) {
+      return errorResponse(
+        "Gameweek is locked — the first match has kicked off",
+        "GAMEWEEK_LOCKED",
+        409,
+        origin
+      );
+    }
+  }
+
+  // 3b. Validate individual fixture hasn't started
   const kickoffAt = new Date(fixture.kickoff_at as string);
   if (kickoffAt <= new Date()) {
     return errorResponse(

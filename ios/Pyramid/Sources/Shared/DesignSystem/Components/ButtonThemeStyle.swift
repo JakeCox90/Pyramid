@@ -1,0 +1,101 @@
+import SwiftUI
+
+// MARK: - DS Button Variant
+
+enum ButtonVariant {
+    case primary, secondary, destructive, ghost
+}
+
+// MARK: - DS Button Style
+
+struct ButtonThemeStyle: ButtonStyle {
+    let variant: ButtonVariant
+    var isLoading: Bool = false
+    var isFullWidth: Bool = true
+
+    @Environment(\.isEnabled)
+    private var isEnabled
+
+    func makeBody(
+        configuration: Configuration
+    ) -> some View {
+        ZStack {
+            if isLoading {
+                ProgressView()
+                    .tint(foregroundColor)
+            } else {
+                configuration.label
+                    .font(Theme.Typography.label01)
+                    .foregroundStyle(foregroundColor)
+            }
+        }
+        .frame(maxWidth: isFullWidth ? .infinity : nil)
+        .frame(height: 44)
+        .padding(
+            .horizontal,
+            isFullWidth ? 0 : Theme.Spacing.s60
+        )
+        .background(
+            backgroundColor(
+                pressed: configuration.isPressed
+            )
+        )
+        .clipShape(Capsule())
+        .opacity(isEnabled ? 1 : 0.4)
+        .animation(
+            .easeInOut(duration: 0.1),
+            value: configuration.isPressed
+        )
+    }
+
+    private func backgroundColor(
+        pressed: Bool
+    ) -> Color {
+        switch variant {
+        case .primary:
+            return pressed
+                ? Color(hex: "E5B24E")
+                : Color(hex: "FFC758")
+        case .secondary:
+            return pressed
+                ? Color.white.opacity(0.15)
+                : Color.white.opacity(0.1)
+        case .destructive:
+            return pressed
+                ? Theme.Color.Status.Error.resting
+                    .opacity(0.85)
+                : Theme.Color.Status.Error.resting
+        case .ghost:
+            return pressed
+                ? Color.white.opacity(0.05)
+                : .clear
+        }
+    }
+
+    private var foregroundColor: Color {
+        switch variant {
+        case .primary:     return .black
+        case .secondary:   return .white
+        case .destructive: return .white
+        case .ghost:       return .white
+        }
+    }
+}
+
+// MARK: - Convenience modifier
+
+extension Button {
+    func themed(
+        _ variant: ButtonVariant = .primary,
+        isLoading: Bool = false,
+        fullWidth: Bool = true
+    ) -> some View {
+        self.buttonStyle(
+            ButtonThemeStyle(
+                variant: variant,
+                isLoading: isLoading,
+                isFullWidth: fullWidth
+            )
+        )
+    }
+}

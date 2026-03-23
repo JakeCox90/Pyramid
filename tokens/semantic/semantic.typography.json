@@ -3,216 +3,82 @@
     "primary": {
       "value": "Inter",
       "type": "fontFamily"
-    },
-    "secondary": {
-      "value": "Chivo Mono",
-      "type": "fontFamily"
     }
   },
-  "fontSize": {
-    "10": {
-      "value": 12,
-      "type": "dimension"
+  "textStyles": {
+    "display": {
+      "fontFamily": "Inter",
+      "fontWeight": "Bold",
+      "fontSize": 54,
+      "lineHeight": 65,
+      "textCase": "uppercase",
+      "_figmaSource": "Display"
     },
-    "20": {
-      "value": 14,
-      "type": "dimension"
+    "h1": {
+      "fontFamily": "Inter",
+      "fontWeight": "Bold",
+      "fontSize": 44,
+      "lineHeight": 53,
+      "_figmaSource": "H1"
     },
-    "30": {
-      "value": 16,
-      "type": "dimension"
+    "h2": {
+      "fontFamily": "Inter",
+      "fontWeight": "Bold",
+      "fontSize": 32,
+      "lineHeight": 39,
+      "_figmaSource": "H2"
     },
-    "40": {
-      "value": 18,
-      "type": "dimension"
+    "h3": {
+      "fontFamily": "Inter",
+      "fontWeight": "Bold",
+      "fontSize": 24,
+      "lineHeight": 29,
+      "_figmaSource": "H3"
     },
-    "50": {
-      "value": 20,
-      "type": "dimension"
+    "subhead": {
+      "fontFamily": "Inter",
+      "fontWeight": "Bold",
+      "fontSize": 16,
+      "lineHeight": 19,
+      "textCase": "uppercase",
+      "_figmaSource": "Subhead"
     },
-    "60": {
-      "value": 24,
-      "type": "dimension"
+    "overline": {
+      "fontFamily": "Inter",
+      "fontWeight": "Bold",
+      "fontSize": 12,
+      "lineHeight": 15,
+      "textCase": "uppercase",
+      "_figmaSource": "Overline"
     },
-    "70": {
-      "value": 28,
-      "type": "dimension"
+    "label01": {
+      "fontFamily": "Inter",
+      "fontWeight": "Bold",
+      "fontSize": 12,
+      "lineHeight": 15,
+      "textCase": "uppercase",
+      "_figmaSource": "Label01"
     },
-    "80": {
-      "value": 32,
-      "type": "dimension"
+    "label02": {
+      "fontFamily": "Inter",
+      "fontWeight": "Bold",
+      "fontSize": 12,
+      "lineHeight": 18,
+      "_figmaSource": "Label02"
     },
-    "90": {
-      "value": 40,
-      "type": "dimension"
+    "body": {
+      "fontFamily": "Inter",
+      "fontWeight": "Medium",
+      "fontSize": 14,
+      "lineHeight": 20,
+      "_figmaSource": "unnamed (style_894MGB) — body text"
     },
-    "100": {
-      "value": 48,
-      "type": "dimension"
-    },
-    "110": {
-      "value": 64,
-      "type": "dimension"
-    },
-    "120": {
-      "value": 80,
-      "type": "dimension"
-    },
-    "130": {
-      "value": 100,
-      "type": "dimension"
-    }
-  },
-  "fontWeight": {
-    "10": {
-      "value": "Thin",
-      "type": "fontWeight"
-    },
-    "20": {
-      "value": "Extra Light",
-      "type": "fontWeight"
-    },
-    "30": {
-      "value": "Light",
-      "type": "fontWeight"
-    },
-    "40": {
-      "value": "Regular",
-      "type": "fontWeight"
-    },
-    "50": {
-      "value": "Medium",
-      "type": "fontWeight"
-    },
-    "60": {
-      "value": "Semi Bold",
-      "type": "fontWeight"
-    },
-    "70": {
-      "value": "Bold",
-      "type": "fontWeight"
-    },
-    "80": {
-      "value": "Extra Bold",
-      "type": "fontWeight"
-    },
-    "90": {
-      "value": "Black",
-      "type": "fontWeight"
-    }
-  },
-  "lineHeight": {
-    "10": {
-      "value": 16,
-      "type": "dimension"
-    },
-    "20": {
-      "value": 20,
-      "type": "dimension"
-    },
-    "30": {
-      "value": 24,
-      "type": "dimension"
-    },
-    "40": {
-      "value": 28,
-      "type": "dimension"
-    },
-    "50": {
-      "value": 32,
-      "type": "dimension"
-    },
-    "60": {
-      "value": 36,
-      "type": "dimension"
-    },
-    "70": {
-      "value": 44,
-      "type": "dimension"
-    },
-    "80": {
-      "default": {
-        "value": 52,
-        "type": "dimension"
-      },
-      "small": {
-        "value": 44,
-        "type": "dimension"
-      },
-      "large": {
-        "value": 44,
-        "type": "dimension"
-      }
-    },
-    "90": {
-      "default": {
-        "value": 56,
-        "type": "dimension"
-      },
-      "small": {
-        "value": 52,
-        "type": "dimension"
-      },
-      "large": {
-        "value": 52,
-        "type": "dimension"
-      }
-    },
-    "100": {
-      "default": {
-        "value": 72,
-        "type": "dimension"
-      },
-      "small": {
-        "value": 56,
-        "type": "dimension"
-      },
-      "large": {
-        "value": 56,
-        "type": "dimension"
-      }
-    },
-    "110": {
-      "default": {
-        "value": 92,
-        "type": "dimension"
-      },
-      "small": {
-        "value": 72,
-        "type": "dimension"
-      },
-      "large": {
-        "value": 72,
-        "type": "dimension"
-      }
-    },
-    "120": {
-      "default": {
-        "value": 108,
-        "type": "dimension"
-      },
-      "small": {
-        "value": 92,
-        "type": "dimension"
-      },
-      "large": {
-        "value": 92,
-        "type": "dimension"
-      }
-    },
-    "130": {
-      "default": {
-        "value": 124,
-        "type": "dimension"
-      },
-      "small": {
-        "value": 108,
-        "type": "dimension"
-      },
-      "large": {
-        "value": 108,
-        "type": "dimension"
-      }
+    "caption": {
+      "fontFamily": "Inter",
+      "fontWeight": "Regular",
+      "fontSize": 12,
+      "lineHeight": 15,
+      "_figmaSource": "unnamed (style_7OF53O) — small caption text"
     }
   }
 }

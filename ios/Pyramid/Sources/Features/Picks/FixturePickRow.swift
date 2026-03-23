@@ -11,6 +11,7 @@ struct FixturePickRow: View {
     let fixture: Fixture
     let selectedTeamId: Int?
     let usedTeamIds: Set<Int>
+    let usedTeamRounds: [Int: Int]
     let isLocked: Bool
     let isSubmitting: Bool
     var submittingTeamId: Int?
@@ -107,7 +108,8 @@ extension FixturePickRow {
                 logoURL: fixture.homeTeamLogo,
                 size: 76
             )
-            .opacity(isUsed ? 0.2 : 1.0)
+            .saturation(isUsed ? 0 : 1)
+            .opacity(isUsed ? 0.4 : 1.0)
 
             teamNameLabel(
                 fixture.homeTeamName, isUsed: isUsed
@@ -127,7 +129,8 @@ extension FixturePickRow {
                 logoURL: fixture.awayTeamLogo,
                 size: 74
             )
-            .opacity(isUsed ? 0.2 : 1.0)
+            .saturation(isUsed ? 0 : 1)
+            .opacity(isUsed ? 0.4 : 1.0)
 
             teamNameLabel(
                 fixture.awayTeamName, isUsed: isUsed
@@ -141,9 +144,9 @@ extension FixturePickRow {
         _ name: String, isUsed: Bool
     ) -> some View {
         Text(name.uppercased())
-            .font(Font.custom("Inter-Bold", size: 12))
+            .font(Theme.Typography.overline)
             .foregroundStyle(Color.white)
-            .opacity(isUsed ? 0.2 : 0.4)
+            .opacity(isUsed ? 0.3 : 0.4)
             .lineLimit(1)
             .minimumScaleFactor(0.7)
     }
@@ -157,20 +160,12 @@ extension FixturePickRow {
                let home = fixture.homeScore,
                let away = fixture.awayScore {
                 Text("\(home) - \(away)")
-                    .font(
-                        Font.custom(
-                            "Inter-SemiBold", size: 20
-                        )
-                    )
+                    .font(Theme.Typography.h3)
                     .foregroundStyle(Color.white)
                     .monospacedDigit()
             } else {
                 Text("VS")
-                    .font(
-                        Font.custom(
-                            "Inter-Bold", size: 12
-                        )
-                    )
+                    .font(Theme.Typography.overline)
                     .foregroundStyle(Color.white)
             }
         }
@@ -187,9 +182,7 @@ extension FixturePickRow {
         HStack(spacing: 0) {
             dividerLine
             Text("PICK TEAM")
-                .font(
-                    Font.custom("Inter-Bold", size: 12)
-                )
+                .font(Theme.Typography.overline)
                 .foregroundStyle(
                     Color.white.opacity(0.4)
                 )

@@ -37,10 +37,10 @@ struct PickHistoryView: View {
                 .font(.system(size: 56))
                 .foregroundStyle(Theme.Color.Border.default)
             Text("No picks yet")
-                .font(Theme.Typography.title3)
+                .font(Theme.Typography.subhead)
                 .foregroundStyle(Theme.Color.Content.Text.default)
             Text("Your pick history will appear here after you make your first pick.")
-                .font(Theme.Typography.subheadline)
+                .font(Theme.Typography.body)
                 .foregroundStyle(Theme.Color.Content.Text.disabled)
                 .multilineTextAlignment(.center)
         }
@@ -56,7 +56,7 @@ struct PickHistoryView: View {
                 .font(.system(size: 48))
                 .foregroundStyle(Theme.Color.Border.default)
             Text(message)
-                .font(Theme.Typography.subheadline)
+                .font(Theme.Typography.body)
                 .foregroundStyle(Theme.Color.Content.Text.disabled)
                 .multilineTextAlignment(.center)
         }
@@ -85,17 +85,17 @@ struct PickHistoryRow: View {
     let pick: Pick
 
     var body: some View {
-        DSCard {
+        Card {
             HStack(spacing: Theme.Spacing.s30) {
                 resultIcon
 
                 VStack(alignment: .leading, spacing: Theme.Spacing.s10) {
                     Text("GW\(pick.gameweekId)")
-                        .font(Theme.Typography.caption1)
+                        .font(Theme.Typography.overline)
                         .foregroundStyle(Theme.Color.Content.Text.disabled)
 
                     Text(pick.teamName)
-                        .font(Theme.Typography.headline)
+                        .font(Theme.Typography.subhead)
                         .foregroundStyle(Theme.Color.Content.Text.default)
                 }
 
@@ -125,7 +125,7 @@ struct PickHistoryRow: View {
 
     @ViewBuilder private var resultBadge: some View {
         Text(pick.result.rawValue.capitalized)
-            .font(Theme.Typography.caption1.bold())
+            .font(Theme.Typography.overline.bold())
             .foregroundStyle(resultColor)
             .padding(.horizontal, Theme.Spacing.s20)
             .padding(.vertical, Theme.Spacing.s10)

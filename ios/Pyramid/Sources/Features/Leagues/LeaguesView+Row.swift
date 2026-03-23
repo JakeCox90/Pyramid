@@ -6,18 +6,18 @@ struct LeagueRowView: View {
     let league: League
 
     var body: some View {
-        DSCard {
+        Card {
             HStack {
                 VStack(alignment: .leading, spacing: Theme.Spacing.s10) {
                     Text(league.name)
-                        .font(Theme.Typography.headline)
+                        .font(Theme.Typography.subhead)
                         .foregroundStyle(
                             Theme.Color.Content.Text.default
                         )
 
                     HStack(spacing: Theme.Spacing.s20) {
                         Text(league.status.displayName)
-                            .font(Theme.Typography.caption1)
+                            .font(Theme.Typography.overline)
                             .foregroundStyle(
                                 Theme.Color.Content.Text.disabled
                             )
@@ -25,9 +25,9 @@ struct LeagueRowView: View {
                         if let count = league.memberCount {
                             HStack(spacing: Theme.Spacing.s10) {
                                 Image(systemName: Theme.Icon.League.members)
-                                    .font(Theme.Typography.caption2)
+                                    .font(Theme.Typography.overline)
                                 Text("\(count)")
-                                    .font(Theme.Typography.caption1)
+                                    .font(Theme.Typography.overline)
                             }
                             .foregroundStyle(
                                 Theme.Color.Content.Text.disabled
@@ -39,7 +39,7 @@ struct LeagueRowView: View {
                 Spacer()
 
                 Image(systemName: Theme.Icon.Navigation.disclosure)
-                    .font(.caption)
+                    .font(Theme.Typography.caption)
                     .foregroundStyle(Theme.Color.Border.default)
             }
         }

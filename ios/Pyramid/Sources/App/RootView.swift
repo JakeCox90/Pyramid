@@ -8,7 +8,7 @@ struct RootView: View {
             if appState.isLoading {
                 VStack(spacing: Theme.Spacing.s30) {
                     Text("Pyramid")
-                        .font(Theme.Typography.display)
+                        .font(Theme.Typography.h1)
                         .foregroundStyle(Theme.Color.Content.Text.default)
                     ProgressView()
                         .tint(Theme.Color.Primary.resting)
@@ -22,10 +22,10 @@ struct RootView: View {
                         .foregroundStyle(Theme.Color.Status.Error.resting)
                         .accessibilityHidden(true)
                     Text("Connection Error")
-                        .font(Theme.Typography.headline)
+                        .font(Theme.Typography.subhead)
                         .foregroundStyle(Theme.Color.Content.Text.default)
                     Text(error)
-                        .font(Theme.Typography.subheadline)
+                        .font(Theme.Typography.body)
                         .foregroundStyle(Theme.Color.Content.Text.subtle)
                         .multilineTextAlignment(.center)
                     Button("Try Again") {

@@ -63,11 +63,10 @@ struct WalletView: View {
         VStack(spacing: 12) {
             VStack(spacing: 4) {
                 Text("Available to Play")
-                    .font(.subheadline)
+                    .font(Theme.Typography.body)
                     .foregroundStyle(Theme.Color.Content.Text.subtle)
                 Text(viewModel.wallet?.availableToPlayFormatted ?? "–")
-                    .font(.system(.largeTitle, design: .rounded))
-                    .fontWeight(.bold)
+                    .font(Theme.Typography.h2)
                     .foregroundStyle(Theme.Color.Content.Text.default)
             }
             .accessibilityElement(children: .combine)
@@ -78,11 +77,11 @@ struct WalletView: View {
             HStack(spacing: 8) {
                 VStack(spacing: 2) {
                     Text("Withdrawable")
-                        .font(.caption)
+                        .font(Theme.Typography.caption)
                         .foregroundStyle(Theme.Color.Content.Text.disabled)
                     let withdrawable = viewModel.wallet?.withdrawablePence ?? 0
                     Text(viewModel.wallet?.withdrawableFormatted ?? "\u{2013}")
-                        .font(.subheadline.weight(.semibold))
+                        .font(Theme.Typography.subhead)
                         .foregroundStyle(
                             withdrawable > 0
                                 ? Theme.Color.Status.Success.resting
@@ -103,13 +102,13 @@ struct WalletView: View {
                 VStack(spacing: 2) {
                     HStack(spacing: 4) {
                         Text("Pending")
-                            .font(.caption)
+                            .font(Theme.Typography.caption)
                             .foregroundStyle(Theme.Color.Content.Text.disabled)
                         Button {
                             showPendingInfo = true
                         } label: {
                             Image(systemName: "info.circle")
-                                .font(.caption)
+                                .font(Theme.Typography.caption)
                                 .foregroundStyle(Theme.Color.Content.Text.disabled)
                         }
                         .popover(isPresented: $showPendingInfo) {
@@ -117,7 +116,7 @@ struct WalletView: View {
                         }
                     }
                     Text(viewModel.wallet?.pendingFormatted ?? "–")
-                        .font(.subheadline.weight(.semibold))
+                        .font(Theme.Typography.subhead)
                         .foregroundStyle(Theme.Color.Content.Text.subtle)
                 }
                 .frame(maxWidth: .infinity)
@@ -132,39 +131,22 @@ struct WalletView: View {
             .clipShape(RoundedRectangle(cornerRadius: 12))
 
             HStack(spacing: 12) {
-                Button {
+                Button("TOP UP") {
                     viewModel.showTopUpSheet = true
-                } label: {
-                    Text("Top Up")
-                        .font(.headline)
-                        .foregroundStyle(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 14)
-                        .background(Theme.Color.Primary.resting)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
+                .themed(.primary)
 
-                let withdrawable = viewModel.wallet?.withdrawablePence ?? 0
-                Button {
+                let withdrawable =
+                    viewModel.wallet?.withdrawablePence ?? 0
+                Button("WITHDRAW") {
                     viewModel.showWithdrawSheet = true
-                } label: {
-                    Text("Withdraw")
-                        .font(.headline)
-                        .foregroundStyle(
-                            withdrawable > 0
-                                ? Theme.Color.Content.Text.default
-                                : Theme.Color.Content.Text.disabled
-                        )
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 14)
-                        .background(Theme.Color.Surface.Background.container)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
+                .themed(.secondary)
                 .disabled(withdrawable == 0)
             }
 
             Text("Withdrawals processed within 3–5 business days")
-                .font(.caption)
+                .font(Theme.Typography.caption)
                 .foregroundStyle(Theme.Color.Content.Text.disabled)
                 .multilineTextAlignment(.center)
                 .frame(maxWidth: .infinity)
@@ -176,7 +158,7 @@ struct WalletView: View {
 
     @ViewBuilder private var pendingInfoPopoverContent: some View {
         let content = Text("Funds awaiting settlement from active leagues")
-            .font(.caption)
+            .font(Theme.Typography.caption)
             .foregroundStyle(Theme.Color.Content.Text.default)
             .padding(12)
         if #available(iOS 16.4, *) {

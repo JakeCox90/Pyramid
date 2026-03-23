@@ -1,5 +1,11 @@
 import Foundation
 
+/// Per-league player count.
+struct PlayerCount: Sendable, Equatable {
+    let active: Int
+    let total: Int
+}
+
 /// Aggregate data for the home screen, fetched in a single service call.
 struct HomeData: Sendable, Equatable {
     /// User's leagues with member counts.
@@ -14,6 +20,10 @@ struct HomeData: Sendable, Equatable {
     let fixtures: [Int: Fixture]
     /// User's settled results from the last finished gameweek.
     let lastGwResults: [LeagueResult]
+    /// All gameweeks for the season (dropdown selector).
+    let allGameweeks: [Gameweek]
+    /// Player counts per league: (active, total), keyed by league ID.
+    let playerCounts: [String: PlayerCount]
 }
 
 /// A user's pick paired with its fixture and league name for homepage display.
@@ -37,20 +47,26 @@ struct LivePickContext: Identifiable, Equatable {
     }
 }
 
-/// A single league result from the previous settled gameweek.
+/// A single league result from a settled gameweek.
 struct LeagueResult: Identifiable, Sendable, Equatable {
     let leagueId: String
     let leagueName: String
     let gameweekName: String
     let teamName: String
+    let teamId: Int
     let result: PickResult
+    let homeTeamId: Int
     let homeTeamName: String
     let homeTeamShort: String
     let homeTeamLogo: String?
+    let awayTeamId: Int
     let awayTeamName: String
     let awayTeamShort: String
     let awayTeamLogo: String?
     let homeScore: Int
     let awayScore: Int
     var id: String { leagueId }
+
+    /// Whether the picked team was the home team.
+    var pickedHome: Bool { teamId == homeTeamId }
 }

@@ -34,14 +34,18 @@ final class AppState: ObservableObject {
             loadError = "Check your internet connection and try again."
         } catch {
             Log.auth.error("Session load failed: \(error.localizedDescription)")
-            loadError = "Your session has expired. Please sign in again."
+            // A missing session means the user isn't signed in — not an error.
+            // Only show the error screen for genuine failures (network, etc.).
+            let isSessionMissing = error.localizedDescription.lowercased().contains("session missing")
+                || error.localizedDescription.lowercased().contains("session not found")
+            if !isSessionMissing {
+                loadError = "Your session has expired. Please sign in again."
+            }
             session = nil
         }
         isLoading = false
 
-        if loadError == nil {
-            listenForAuthChanges()
-        }
+        listenForAuthChanges()
     }
 
     func retryLoadSession() async {
@@ -91,9 +95,9 @@ final class AppState: ObservableObject {
 
     private struct TimeoutError: Error {}
 
-    private func withTimeout<T>(
+    private func withTimeout<T: Sendable>(
         seconds: TimeInterval,
-        operation: @escaping () async throws -> T
+        operation: @Sendable @escaping () async throws -> T
     ) async throws -> T {
         try await withThrowingTaskGroup(of: T.self) { group in
             group.addTask { try await operation() }

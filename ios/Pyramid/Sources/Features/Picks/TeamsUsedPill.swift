@@ -36,13 +36,6 @@ struct TeamsUsedPill: View {
                     size: 24
                 )
                 .clipShape(Circle())
-                .overlay(
-                    Circle()
-                        .stroke(
-                            Color(hex: "241E31"),
-                            lineWidth: 2
-                        )
-                )
             }
         }
     }
@@ -52,7 +45,7 @@ struct TeamsUsedPill: View {
         Text(
             "\(count) team\(count == 1 ? "" : "s") used"
         )
-        .font(Font.custom("Inter-Bold", size: 12))
+        .font(Theme.Typography.label02)
         .foregroundStyle(Color.white)
     }
 }

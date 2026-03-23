@@ -23,12 +23,17 @@ enum PickServiceError: LocalizedError, Equatable {
 
 // MARK: - Protocol
 
+struct UsedTeamInfo: Sendable {
+    let teamName: String
+    let roundNumber: Int
+}
+
 protocol PickServiceProtocol: Sendable {
     func fetchCurrentGameweek() async throws -> Gameweek
     func fetchFixtures(for gameweekId: Int) async throws -> [Fixture]
     func fetchMyPick(leagueId: String, gameweekId: Int) async throws -> Pick?
     func fetchUsedTeamIds(leagueId: String) async throws -> Set<Int>
-    func fetchUsedTeams(leagueId: String) async throws -> [Int: String]
+    func fetchUsedTeams(leagueId: String) async throws -> [Int: UsedTeamInfo]
     func submitPick(leagueId: String, fixtureId: Int, teamId: Int, teamName: String) async throws -> SubmitPickResponse
     func fetchMyPickHistory(leagueId: String) async throws -> [Pick]
 }
@@ -102,24 +107,31 @@ final class PickService: PickServiceProtocol {
         }
     }
 
-    func fetchUsedTeams(leagueId: String) async throws -> [Int: String] {
+    func fetchUsedTeams(leagueId: String) async throws -> [Int: UsedTeamInfo] {
         struct UsedTeamRow: Decodable {
             let teamId: Int
             let teamName: String
+            let roundNumber: Int
             enum CodingKeys: String, CodingKey {
                 case teamId = "team_id"
                 case teamName = "team_name"
+                case roundNumber = "round_number"
             }
         }
         do {
             let rows: [UsedTeamRow] = try await client
                 .from("used_teams")
-                .select("team_id, team_name")
+                .select("team_id, team_name, round_number")
                 .eq("league_id", value: leagueId)
                 .execute()
                 .value
             return Dictionary(
-                rows.map { ($0.teamId, $0.teamName) },
+                rows.map {
+                    ($0.teamId, UsedTeamInfo(
+                        teamName: $0.teamName,
+                        roundNumber: $0.roundNumber
+                    ))
+                },
                 uniquingKeysWith: { first, _ in first }
             )
         } catch {
