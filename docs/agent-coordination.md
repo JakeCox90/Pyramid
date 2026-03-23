@@ -16,6 +16,7 @@
 | PYR-142 | feature/PYR-131-pick-carousel | iOS | In Progress | HomeView+MatchCard | 2026-03-22 |
 | PYR-143 | feature/PYR-131-pick-carousel | iOS | In Progress | HomeView+PlayersRemaining, HomeView+PreviousPicks | 2026-03-22 |
 | PYR-144 | feature/PYR-131-pick-carousel | iOS | In Progress | HomeView | 2026-03-22 |
+| PYR-96 | feature/PYR-96-player-avatars | iOS | In Progress | LeagueMember, StandingsService, LeagueDetailView+Row, LeagueCompleteView | 2026-03-23 |
 
 > **Note:** PYR-131/133/139/140/141-144 are all on the same branch. This is a grouped delivery — tightly coupled pick carousel + homepage redesign work. All commits unmerged as of 2026-03-23.
 

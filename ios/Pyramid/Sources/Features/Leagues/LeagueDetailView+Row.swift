@@ -12,10 +12,12 @@ struct MemberRow: View {
     @Environment(\.accessibilityReduceMotion)
     private var reduceMotion
 
+    private let avatarSize: CGFloat = 36
+
     var body: some View {
         Card {
             HStack(spacing: Theme.Spacing.s30) {
-                statusIcon
+                avatarWithStatus
 
                 VStack(alignment: .leading, spacing: Theme.Spacing.s10) {
                     Text(member.profiles.displayLabel)
@@ -37,20 +39,72 @@ struct MemberRow: View {
         .accessibilityElement(children: .combine)
     }
 
-    @ViewBuilder private var statusIcon: some View {
+    private var avatarWithStatus: some View {
+        ZStack(alignment: .bottomTrailing) {
+            avatarImage
+            statusBadge
+                .offset(x: 2, y: 2)
+        }
+        .accessibilityLabel(statusAccessibilityLabel)
+    }
+
+    @ViewBuilder private var avatarImage: some View {
+        if let urlString = member.profiles.avatarUrl,
+           let url = URL(string: urlString) {
+            AsyncImage(url: url) { phase in
+                switch phase {
+                case .success(let image):
+                    image
+                        .resizable()
+                        .scaledToFill()
+                case .failure, .empty:
+                    avatarFallback
+                @unknown default:
+                    avatarFallback
+                }
+            }
+            .frame(width: avatarSize, height: avatarSize)
+            .clipShape(Circle())
+        } else {
+            avatarFallback
+        }
+    }
+
+    private var avatarFallback: some View {
+        Text(member.profiles.displayLabel.prefix(1).uppercased())
+            .font(Theme.Typography.subhead)
+            .foregroundStyle(Theme.Color.Content.Text.subtle)
+            .frame(width: avatarSize, height: avatarSize)
+            .background(Theme.Color.Surface.Background.container)
+            .clipShape(Circle())
+    }
+
+    @ViewBuilder private var statusBadge: some View {
+        Circle()
+            .fill(statusColor)
+            .frame(width: 12, height: 12)
+            .overlay(
+                Circle()
+                    .stroke(
+                        Theme.Color.Surface.Background.container,
+                        lineWidth: 2
+                    )
+            )
+    }
+
+    private var statusColor: Color {
         switch member.status {
-        case .winner:
-            Image(systemName: Theme.Icon.League.trophyFill)
-                .foregroundStyle(Theme.Color.Status.Warning.resting)
-                .accessibilityLabel("Winner")
-        case .active:
-            Image(systemName: Theme.Icon.Status.success)
-                .foregroundStyle(Theme.Color.Status.Success.resting)
-                .accessibilityLabel("Active")
-        case .eliminated:
-            Image(systemName: Theme.Icon.Status.failure)
-                .foregroundStyle(Theme.Color.Status.Error.resting)
-                .accessibilityLabel("Eliminated")
+        case .winner: Theme.Color.Status.Warning.resting
+        case .active: Theme.Color.Status.Success.resting
+        case .eliminated: Theme.Color.Status.Error.resting
+        }
+    }
+
+    private var statusAccessibilityLabel: String {
+        switch member.status {
+        case .winner: "Winner"
+        case .active: "Active"
+        case .eliminated: "Eliminated"
         }
     }
 
