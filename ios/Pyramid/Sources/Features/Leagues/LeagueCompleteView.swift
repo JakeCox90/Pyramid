@@ -60,7 +60,7 @@ struct LeagueCompleteView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
 
             ForEach(winners) { winner in
-                DSCard {
+                Card {
                     HStack(spacing: Theme.Spacing.s30) {
                         Image(systemName: Theme.Icon.League.trophyFill)
                             .foregroundStyle(
@@ -93,7 +93,7 @@ struct LeagueCompleteView: View {
                 .foregroundStyle(Theme.Color.Content.Text.disabled)
                 .frame(maxWidth: .infinity, alignment: .leading)
 
-            DSCard {
+            Card {
                 VStack(spacing: Theme.Spacing.s30) {
                     statRow(
                         label: "Total Players",

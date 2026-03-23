@@ -8,14 +8,14 @@ struct ProfileView: View {
     @State private var isResettingGame = false
     @State private var isResettingFull = false
     @State private var resetMessage: String?
+    @State private var gameweekPhase =
+        DebugGameweekOverride.current
     #endif
 
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: Theme.Spacing.s30) {
-                    profileHeader
-
                     if viewModel.isLoadingStats {
                         ProgressView()
                             .padding(.top, Theme.Spacing.s60)
@@ -60,25 +60,11 @@ struct ProfileView: View {
                 Theme.Color.Surface.Background.page.ignoresSafeArea()
             )
             .navigationTitle("Profile")
+            .navigationBarTitleDisplayMode(.large)
+            .toolbarColorScheme(.dark, for: .navigationBar)
             .task {
                 await viewModel.loadStats()
             }
-        }
-    }
-}
-
-// MARK: - Header
-
-private extension ProfileView {
-    var profileHeader: some View {
-        VStack(spacing: Theme.Spacing.s20) {
-            Image(systemName: Theme.Icon.Navigation.profile)
-                .font(.system(size: 48))
-                .foregroundStyle(Theme.Color.Content.Text.subtle)
-                .accessibilityHidden(true)
-            Text("Profile")
-                .font(Theme.Typography.h3)
-                .foregroundStyle(Theme.Color.Content.Text.default)
         }
     }
 }
@@ -87,20 +73,52 @@ private extension ProfileView {
 
 private extension ProfileView {
     var settingsSection: some View {
-        NavigationLink(destination: NotificationPreferencesView()) {
-            Label(
-                "Notifications",
-                systemImage: Theme.Icon.Navigation.notifications
+        VStack(spacing: Theme.Spacing.s20) {
+            settingsRow(
+                title: "Notifications",
+                icon: Theme.Icon.Navigation.notifications,
+                destination: NotificationPreferencesView()
             )
+
+            #if DEBUG
+            settingsRow(
+                title: "Design System",
+                icon: "paintpalette",
+                destination: DesignSystemBrowserView()
+            )
+            #endif
+        }
+        .padding(.horizontal, Theme.Spacing.s40)
+    }
+
+    func settingsRow<D: View>(
+        title: String,
+        icon: String,
+        destination: D
+    ) -> some View {
+        NavigationLink(destination: destination) {
+            HStack {
+                Label(title, systemImage: icon)
+                Spacer()
+                Image(
+                    systemName: Theme.Icon.Navigation.disclosure
+                )
+                .foregroundStyle(
+                    Theme.Color.Content.Text.subtle
+                )
+            }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(Theme.Spacing.s40)
-            .background(Theme.Color.Surface.Background.container)
+            .background(
+                Theme.Color.Surface.Background.container
+            )
             .clipShape(
-                RoundedRectangle(cornerRadius: Theme.Radius.default)
+                RoundedRectangle(
+                    cornerRadius: Theme.Radius.default
+                )
             )
         }
         .buttonStyle(.plain)
-        .padding(.horizontal, Theme.Spacing.s40)
     }
 }
 
@@ -116,7 +134,7 @@ private extension ProfileView {
                 }
             }
         }
-        .dsStyle(.destructive, isLoading: viewModel.isSigningOut)
+        .themed(.destructive, isLoading: viewModel.isSigningOut)
         .disabled(viewModel.isSigningOut)
         .padding(.horizontal, Theme.Spacing.s40)
         .padding(.bottom, Theme.Spacing.s60)
@@ -134,6 +152,8 @@ private extension ProfileView {
                 .font(Theme.Typography.caption)
                 .foregroundStyle(Theme.Color.Content.Text.subtle)
                 .frame(maxWidth: .infinity, alignment: .leading)
+
+            gameweekPhaseControl
 
             resetButton(
                 title: "Reset Game Data",
@@ -157,6 +177,49 @@ private extension ProfileView {
             }
         }
         .padding(.horizontal, Theme.Spacing.s40)
+    }
+
+    var gameweekPhaseControl: some View {
+        VStack(alignment: .leading, spacing: Theme.Spacing.s10) {
+            Text("Gameweek Status")
+                .font(Theme.Typography.body)
+                .foregroundStyle(
+                    Theme.Color.Content.Text.default
+                )
+            Picker(
+                "Gameweek Phase",
+                selection: $gameweekPhase
+            ) {
+                ForEach(
+                    DebugGameweekOverride.Phase.allCases,
+                    id: \.self
+                ) { phase in
+                    Text(phase.rawValue).tag(phase)
+                }
+            }
+            .pickerStyle(.segmented)
+            .onChange(of: gameweekPhase) { phase in
+                DebugGameweekOverride.current = phase
+            }
+            Text(
+                gameweekPhase == .none
+                    ? "Using real API data"
+                    : "Overriding gameweek state"
+            )
+            .font(Theme.Typography.caption)
+            .foregroundStyle(
+                Theme.Color.Content.Text.subtle
+            )
+        }
+        .padding(Theme.Spacing.s30)
+        .background(
+            Theme.Color.Surface.Background.container
+        )
+        .clipShape(
+            RoundedRectangle(
+                cornerRadius: Theme.Radius.default
+            )
+        )
     }
 
     func resetButton(

@@ -76,6 +76,7 @@ extension FixturePickRow {
     struct ButtonState {
         let isPicked: Bool
         let isUsed: Bool
+        let usedLabel: String
         let isThisSubmitting: Bool
         let isDisabled: Bool
         let fill: Color
@@ -121,9 +122,17 @@ extension FixturePickRow {
         let confetti = showCelebration
             && celebratedTeamId == teamId
 
+        let usedLabel: String
+        if let round = usedTeamRounds[teamId] {
+            usedLabel = "USED GW\(round)"
+        } else {
+            usedLabel = "USED"
+        }
+
         return ButtonState(
             isPicked: isPicked,
             isUsed: isUsed,
+            usedLabel: usedLabel,
             isThisSubmitting: isThisSub,
             isDisabled: disabled,
             fill: fill,
@@ -145,10 +154,10 @@ extension FixturePickRow {
             ProgressView()
                 .tint(Color.black)
         } else if state.isUsed {
-            Text("USED")
+            Text(state.usedLabel)
                 .font(Theme.Typography.overline)
                 .foregroundStyle(Color.white)
-                .opacity(0.2)
+                .opacity(0.3)
                 .tracking(0.8)
         } else {
             Text(

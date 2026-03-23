@@ -2,7 +2,7 @@ import SwiftUI
 
 // MARK: - DS Text Field
 
-struct DSTextField: View {
+struct InputField: View {
     let label: String
     @Binding var text: String
     var placeholder: String = ""

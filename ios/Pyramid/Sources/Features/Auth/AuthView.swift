@@ -40,7 +40,7 @@ struct AuthView: View {
 
     private var formSection: some View {
         VStack(spacing: Theme.Spacing.s30) {
-            DSTextField(
+            InputField(
                 label: "Email",
                 text: $viewModel.email,
                 placeholder: "you@example.com"
@@ -49,7 +49,7 @@ struct AuthView: View {
             .keyboardType(.emailAddress)
             .autocorrectionDisabled()
 
-            DSTextField(
+            InputField(
                 label: "Password",
                 text: $viewModel.password,
                 placeholder: "Password",
@@ -61,14 +61,14 @@ struct AuthView: View {
             Button("Sign In") {
                 Task { await viewModel.signIn() }
             }
-            .dsStyle(.primary, isLoading: viewModel.isLoading)
+            .themed(.primary, isLoading: viewModel.isLoading)
             .disabled(viewModel.isLoading || viewModel.isSocialLoading)
             .padding(.top, Theme.Spacing.s20)
 
             Button("Create account") {
                 Task { await viewModel.signUp() }
             }
-            .dsStyle(.ghost)
+            .themed(.ghost)
             .disabled(viewModel.isLoading || viewModel.isSocialLoading)
 
             socialDivider

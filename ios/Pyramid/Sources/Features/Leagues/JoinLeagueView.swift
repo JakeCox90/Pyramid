@@ -44,7 +44,7 @@ struct JoinLeagueView: View {
             Spacer()
 
             VStack(alignment: .leading, spacing: Theme.Spacing.s30) {
-                DSTextField(
+                InputField(
                     label: "Join Code",
                     text: $viewModel.code,
                     placeholder: "e.g. ABC123",
@@ -65,7 +65,7 @@ struct JoinLeagueView: View {
             Button("Find League") {
                 Task { await viewModel.lookupCode() }
             }
-            .dsStyle(.primary, isLoading: viewModel.isLoading)
+            .themed(.primary, isLoading: viewModel.isLoading)
             .disabled(viewModel.isLoading || !viewModel.isCodeValid)
 
             Spacer()
@@ -85,7 +85,7 @@ struct JoinLeagueView: View {
                     .font(.system(size: 48))
                     .foregroundStyle(Theme.Color.Primary.resting)
 
-                DSCard {
+                Card {
                     VStack(alignment: .leading, spacing: Theme.Spacing.s30) {
                         Text(preview.name)
                             .font(Theme.Typography.subhead)
@@ -113,13 +113,13 @@ struct JoinLeagueView: View {
                 Button("Join League") {
                     Task { await viewModel.confirmJoin() }
                 }
-                .dsStyle(.primary, isLoading: viewModel.isLoading)
+                .themed(.primary, isLoading: viewModel.isLoading)
                 .disabled(viewModel.isLoading)
 
                 Button("Back") {
                     viewModel.resetToEnterCode()
                 }
-                .dsStyle(.ghost)
+                .themed(.ghost)
                 .disabled(viewModel.isLoading)
             }
             .padding(.horizontal, Theme.Spacing.s40)
@@ -152,7 +152,7 @@ struct JoinLeagueView: View {
                 onLeagueJoined?(response)
                 dismiss()
             }
-            .dsStyle(.primary)
+            .themed(.primary)
             .padding(.horizontal, Theme.Spacing.s40)
 
             Spacer()

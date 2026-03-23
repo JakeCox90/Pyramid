@@ -38,16 +38,20 @@ struct ResultsView: View {
     // MARK: - Subviews
 
     private func errorView(message: String) -> some View {
-        ErrorStateView(message: message) {
-            await viewModel.load()
-        }
+        PlaceholderView(
+            icon: Theme.Icon.Status.error,
+            title: "Something went wrong",
+            message: message,
+            buttonTitle: "Try Again",
+            onAsyncAction: { await viewModel.load() }
+        )
     }
 
     private var emptyView: some View {
-        EmptyStateView(
+        PlaceholderView(
             icon: Theme.Icon.Pick.gameweek,
             title: "No results yet",
-            subtitle: "Results will appear here once gameweeks are settled."
+            message: "Results will appear here once gameweeks are settled."
         )
     }
 
@@ -199,7 +203,10 @@ private struct RoundPickRowView: View {
 
             Spacer()
 
-            PickStatusBadge(status: pick.result.pickStatus)
+            Badge(
+                label: pick.result.pickStatus.label,
+                intent: pick.result.pickStatus.badgeIntent
+            )
         }
         .padding(.horizontal, Theme.Spacing.s40)
         .padding(.vertical, Theme.Spacing.s30)

@@ -5,7 +5,7 @@ import SwiftUI
 extension LeagueDetailView {
     @ViewBuilder var myPickCard: some View {
         if viewModel.isDeadlinePassed(), let pick = viewModel.myPick {
-            DSCard {
+            Card {
                 if let fixture = viewModel.myFixture {
                     if fixture.status.isLive {
                         livePickContent(pick: pick, fixture: fixture)

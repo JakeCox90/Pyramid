@@ -117,8 +117,8 @@ final class HomeService: HomeServiceProtocol {
         )
         let season = gameweek?.season ?? lastGw?.season ?? 2025
         let allGws = try await fetchAllGameweeks(season: season)
-        let counts = await fetchPlayerCountsSafe(
-            leagueId: leagues.first?.id
+        let playerCounts = await fetchAllPlayerCounts(
+            leagues: leagues
         )
 
         return HomeData(
@@ -127,8 +127,7 @@ final class HomeService: HomeServiceProtocol {
             fixtures: fixtures,
             lastGwResults: lastGwResults,
             allGameweeks: allGws,
-            activePlayerCount: counts.active,
-            totalPlayerCount: counts.total
+            playerCounts: playerCounts
         )
     }
 
@@ -166,20 +165,40 @@ final class HomeService: HomeServiceProtocol {
         )
     }
 
-    /// Safe wrapper that returns zeroes on failure.
-    private func fetchPlayerCountsSafe(
-        leagueId: String?
-    ) async -> (active: Int, total: Int) {
-        guard let leagueId else { return (0, 0) }
-        do {
-            return try await fetchPlayerCounts(
-                leagueId: leagueId
-            )
-        } catch {
-            Log.home.error(
-                "Failed to fetch player counts: \(error)"
-            )
-            return (0, 0)
+    /// Fetches player counts for all leagues concurrently.
+    private func fetchAllPlayerCounts(
+        leagues: [League]
+    ) async -> [String: PlayerCount] {
+        await withTaskGroup(
+            of: (String, PlayerCount).self
+        ) { group in
+            for league in leagues {
+                group.addTask {
+                    do {
+                        let counts = try await self
+                            .fetchPlayerCounts(
+                                leagueId: league.id
+                            )
+                        return (
+                            league.id,
+                            PlayerCount(
+                                active: counts.active,
+                                total: counts.total
+                            )
+                        )
+                    } catch {
+                        return (
+                            league.id,
+                            PlayerCount(active: 0, total: 0)
+                        )
+                    }
+                }
+            }
+            var result: [String: PlayerCount] = [:]
+            for await (id, count) in group {
+                result[id] = count
+            }
+            return result
         }
     }
 

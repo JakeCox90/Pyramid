@@ -90,16 +90,15 @@ extension AppleSignInCoordinator: ASAuthorizationControllerDelegate {
 extension AppleSignInCoordinator: ASAuthorizationControllerPresentationContextProviding {
     nonisolated func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
         // ASAuthorizationControllerPresentationContextProviding requires nonisolated,
-        // but UIApplication access must be on MainActor. We dispatch synchronously
-        // since this delegate method is always called on the main thread at runtime.
-        var window: UIWindow?
-        if Thread.isMainThread {
-            window = UIApplication.shared.connectedScenes
+        // but UIApplication access must be on MainActor. This delegate method is
+        // always called on the main thread at runtime.
+        MainActor.assumeIsolated {
+            let window = UIApplication.shared.connectedScenes
                 .compactMap { $0 as? UIWindowScene }
                 .flatMap { $0.windows }
                 .first { $0.isKeyWindow }
+            return window ?? UIWindow()
         }
-        return window ?? UIWindow()
     }
 }
 

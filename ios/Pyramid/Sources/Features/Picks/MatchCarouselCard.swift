@@ -16,13 +16,14 @@ struct MatchCarouselCard: View {
     let isSubmitting: Bool
     var submittingTeamId: Int?
     let onPick: (Int, String) -> Void
+    var onStats: (() -> Void)?
 
     var body: some View {
         ZStack {
             cardBackground
             cardOverlay
         }
-        .frame(height: 500)
+        .frame(height: 420)
         .clipShape(RoundedRectangle(cornerRadius: 24))
         .overlay(
             RoundedRectangle(cornerRadius: 24)
@@ -70,12 +71,22 @@ struct MatchCarouselCard: View {
         VStack(spacing: 0) {
             matchupSection
                 .frame(height: 280)
-            Spacer(minLength: 0)
+            bottomDivider
             fixtureDetails
             pickButtons
                 .padding(.horizontal, 12)
                 .padding(.bottom, 17)
         }
+    }
+
+    /// Dynamic vertical divider that fills the space
+    /// between the matchup section and fixture details
+    private var bottomDivider: some View {
+        Rectangle()
+            .fill(Color.white.opacity(0.2))
+            .frame(width: 1)
+            .frame(maxHeight: .infinity)
+            .padding(.bottom, 8)
     }
 
     /// Top section: badges, divider, VS, team names
@@ -90,63 +101,85 @@ struct MatchCarouselCard: View {
                 width: w, midX: midX
             )
 
-            // Vertical divider
+            // Top divider: y:0 → y:217 (above VS circle)
             Rectangle()
                 .fill(Color.white.opacity(0.2))
                 .frame(width: 1, height: 217)
                 .position(x: midX, y: 108.5)
 
-            // Badges
+            // Bottom divider: from VS circle bottom (y:257)
+            // to bottom of matchup section (y:280)
+            let vsBottom: CGFloat = 257
+            let segmentH = geo.size.height - vsBottom
+            Rectangle()
+                .fill(Color.white.opacity(0.2))
+                .frame(width: 1, height: segmentH)
+                .position(
+                    x: midX,
+                    y: vsBottom + segmentH / 2
+                )
+
+            // Figma: home badge 76×93 at x:38 y:94
             TeamBadge(
                 teamName: fixture.homeTeamName,
                 logoURL: fixture.homeTeamLogo,
                 size: 76
             )
-            .opacity(homeIsUsed ? 0.2 : 1.0)
-            .position(x: quarterX, y: 100)
+            .saturation(homeIsUsed ? 0 : 1)
+            .opacity(homeIsUsed ? 0.4 : 1.0)
+            .position(x: quarterX, y: 120)
 
+            // Figma: away badge 74×74 at x:241 y:93
             TeamBadge(
                 teamName: fixture.awayTeamName,
                 logoURL: fixture.awayTeamLogo,
                 size: 74
             )
-            .opacity(awayIsUsed ? 0.2 : 1.0)
+            .saturation(awayIsUsed ? 0 : 1)
+            .opacity(awayIsUsed ? 0.4 : 1.0)
             .position(
-                x: w - quarterX, y: 100
+                x: w - quarterX, y: 120
             )
 
-            // VS circle
+            // Figma: VS circle 40×40 at x:156 y:217
             vsCircleView
-                .position(x: midX, y: 200)
+                .position(x: midX, y: 237)
 
-            // Team names
+            // Team names aligned with VS circle center
             Text(fixture.homeTeamShort)
                 .font(Theme.Typography.h3)
                 .foregroundStyle(Color.white)
-                .opacity(homeIsUsed ? 0.2 : 1.0)
+                .opacity(homeIsUsed ? 0.4 : 1.0)
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
                 .frame(width: w / 2 - 30)
-                .position(x: quarterX, y: 250)
+                .position(x: quarterX, y: 237)
 
             Text(fixture.awayTeamShort)
                 .font(Theme.Typography.h3)
                 .foregroundStyle(Color.white)
-                .opacity(awayIsUsed ? 0.2 : 1.0)
+                .opacity(awayIsUsed ? 0.4 : 1.0)
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
                 .frame(width: w / 2 - 30)
                 .position(
-                    x: w - quarterX, y: 250
+                    x: w - quarterX, y: 237
                 )
         }
     }
 
+    /// Figma: Two half-tint rects, 150×152 each,
+    /// positioned behind each badge. Home: x=1 y=51,
+    /// Away: x=201 y=51 (at 352w). Radii: 8/200.
     private func halfTintLayer(
         width w: CGFloat,
         midX: CGFloat
     ) -> some View {
-        ZStack {
+        let tintW = (w - 52) / 2
+        let tintH: CGFloat = 152
+        let tintY: CGFloat = 51 + tintH / 2
+
+        return ZStack {
             UnevenRoundedRectangle(
                 topLeadingRadius: 8,
                 bottomLeadingRadius: 8,
@@ -154,14 +187,8 @@ struct MatchCarouselCard: View {
                 topTrailingRadius: 200
             )
             .fill(Color(hex: "241E31"))
-            .frame(
-                width: midX - 10,
-                height: 152
-            )
-            .position(
-                x: (midX - 10) / 2,
-                y: 100
-            )
+            .frame(width: tintW, height: tintH)
+            .position(x: 1 + tintW / 2, y: tintY)
 
             UnevenRoundedRectangle(
                 topLeadingRadius: 200,
@@ -170,13 +197,9 @@ struct MatchCarouselCard: View {
                 topTrailingRadius: 8
             )
             .fill(Color(hex: "241E31"))
-            .frame(
-                width: midX - 10,
-                height: 152
-            )
+            .frame(width: tintW, height: tintH)
             .position(
-                x: w - (midX - 10) / 2,
-                y: 100
+                x: w - 1 - tintW / 2, y: tintY
             )
         }
     }
@@ -224,7 +247,6 @@ struct MatchCarouselCard: View {
                     .minute(.twoDigits)
             )
             .font(Theme.Typography.label01)
-            .textCase(.uppercase)
             .foregroundStyle(
                 Color.white.opacity(0.4)
             )

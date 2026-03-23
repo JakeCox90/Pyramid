@@ -35,7 +35,7 @@ extension LeagueDetailView {
     }
 
     func statBadge(label: String, value: String, color: Color) -> some View {
-        DSCard {
+        Card {
             VStack(spacing: Theme.Spacing.s10) {
                 Text(value)
                     .font(Theme.Typography.h3)

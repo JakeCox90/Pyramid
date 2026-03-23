@@ -29,7 +29,7 @@ struct PaidMemberRow: View {
     let deadlinePassed: Bool
 
     var body: some View {
-        DSCard {
+        Card {
             HStack(spacing: Theme.Spacing.s30) {
                 positionBadge
                 memberInfo

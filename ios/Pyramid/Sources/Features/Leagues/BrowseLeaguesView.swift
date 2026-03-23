@@ -129,7 +129,7 @@ private struct BrowseLeagueCardView: View {
     let onJoin: () -> Void
 
     var body: some View {
-        DSCard {
+        Card {
             HStack {
                 VStack(alignment: .leading, spacing: Theme.Spacing.s10) {
                     Text(league.name)
@@ -163,7 +163,7 @@ private struct BrowseLeagueCardView: View {
                     ProgressView()
                 } else {
                     Button("Join") { onJoin() }
-                        .dsStyle(.primary, fullWidth: false)
+                        .themed(.primary, fullWidth: false)
                 }
             }
         }

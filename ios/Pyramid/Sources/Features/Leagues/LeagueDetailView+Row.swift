@@ -13,7 +13,7 @@ struct MemberRow: View {
     private var reduceMotion
 
     var body: some View {
-        DSCard {
+        Card {
             HStack(spacing: Theme.Spacing.s30) {
                 statusIcon
 

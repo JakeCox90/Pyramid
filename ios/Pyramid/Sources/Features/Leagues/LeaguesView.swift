@@ -21,6 +21,8 @@ struct LeaguesView: View {
                 }
             }
             .navigationTitle("Leagues")
+            .navigationBarTitleDisplayMode(.large)
+            .toolbarColorScheme(.dark, for: .navigationBar)
             .toolbar {
                 if !viewModel.leagues.isEmpty {
                     ToolbarItem(placement: .primaryAction) {
@@ -100,9 +102,13 @@ struct LeaguesView: View {
     }
 
     private func errorStateView(message: String) -> some View {
-        ErrorStateView(message: message) {
-            await viewModel.fetchLeagues()
-        }
+        PlaceholderView(
+            icon: Theme.Icon.Status.error,
+            title: "Something went wrong",
+            message: message,
+            buttonTitle: "Try Again",
+            onAsyncAction: { await viewModel.fetchLeagues() }
+        )
     }
 
     private var leaguesList: some View {

@@ -67,7 +67,7 @@ struct JoinPaidLeagueView: View {
                     Button("Confirm \u{2014} Pay \u{a3}5") {
                         Task { await viewModel.joinLeague() }
                     }
-                    .dsStyle(
+                    .themed(
                         .primary,
                         isLoading: viewModel.isLoading
                     )
@@ -80,7 +80,7 @@ struct JoinPaidLeagueView: View {
                         Button("Top Up Wallet") {
                             dismiss()
                         }
-                        .dsStyle(.secondary)
+                        .themed(.secondary)
                     }
                 }
                 .padding(.bottom, Theme.Spacing.s70)

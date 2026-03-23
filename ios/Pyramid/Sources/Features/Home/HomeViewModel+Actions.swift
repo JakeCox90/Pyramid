@@ -20,11 +20,29 @@ extension HomeViewModel {
     }
 
     private func updateCountdown() {
-        guard let deadline = homeData?.gameweek?.deadlineAt
+        let deadline: Date
+        #if DEBUG
+        if DebugGameweekOverride.current == .upcoming {
+            deadline = DebugGameweekOverride.fakeDeadline
+        } else if DebugGameweekOverride.isActive {
+            countdown = .zero
+            return
+        } else {
+            guard let real = homeData?.gameweek?.deadlineAt
+            else {
+                countdown = .zero
+                return
+            }
+            deadline = real
+        }
+        #else
+        guard let real = homeData?.gameweek?.deadlineAt
         else {
             countdown = .zero
             return
         }
+        deadline = real
+        #endif
         let remaining = deadline.timeIntervalSinceNow
         guard remaining > 0 else {
             // Countdown just expired — refresh data to get
@@ -146,8 +164,7 @@ extension HomeViewModel {
                 fixtures: map,
                 lastGwResults: data.lastGwResults,
                 allGameweeks: data.allGameweeks,
-                activePlayerCount: data.activePlayerCount,
-                totalPlayerCount: data.totalPlayerCount
+                playerCounts: data.playerCounts
             )
             updatePolling()
         } catch {

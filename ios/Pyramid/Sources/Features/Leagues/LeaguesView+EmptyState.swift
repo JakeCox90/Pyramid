@@ -44,17 +44,17 @@ extension LeaguesView {
                 Button("Browse Free Leagues") {
                     showBrowseLeagues = true
                 }
-                .dsStyle(.primary)
+                .themed(.primary)
 
                 Button("Create a League") {
                     showCreateLeague = true
                 }
-                .dsStyle(.secondary)
+                .themed(.secondary)
 
                 Button("Join with Code") {
                     showJoinLeague = true
                 }
-                .dsStyle(.secondary)
+                .themed(.secondary)
             }
             .padding(.horizontal, Theme.Spacing.s40)
 

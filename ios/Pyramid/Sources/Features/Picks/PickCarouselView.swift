@@ -1,7 +1,7 @@
 import SwiftUI
 
 // Figma: Pick Carousel (node 32:4449)
-// Horizontal paged carousel with swipe-up H2H reveal
+// Horizontal paged carousel with flip-to-stats reveal
 // layout_HJCJZA: padding 0px 24px, gap 16px
 // style_BJKFP1: "Pick a team" Inter Bold 44
 // style_0BASS4: "GAMEWEEK 20" Inter Bold 12 uppercase
@@ -9,27 +9,85 @@ import SwiftUI
 struct PickCarouselView: View {
     @ObservedObject var viewModel: PicksViewModel
     @State var currentIndex: Int = 0
-    @State var cardOffsetY: CGFloat = 0
     @State var isStatsRevealed = false
     @State var dragOffsetX: CGFloat = 0
-    /// Tracks initial drag direction to lock gesture axis
-    @State var dragAxis: DragAxis = .undecided
 
-    enum DragAxis {
-        case undecided, horizontal, vertical
-    }
-
-    private let cardSpacing: CGFloat = 0
+    private let cardSpacing: CGFloat = 16
     private let peekScale: CGFloat = 0.9
     /// Horizontal inset on each side for adjacent card peek
     private let peekInset: CGFloat = 24
 
     var body: some View {
-        VStack(spacing: 16) {
-            carouselHeader
-                .padding(.horizontal, 24)
-            carouselArea
-            paginationDots
+        ScrollView {
+            VStack(spacing: 16) {
+                carouselHeader
+                    .padding(.horizontal, 24)
+                teamsLeftPill
+                    .padding(.horizontal, 24)
+                    .padding(.bottom, -12)
+                carouselArea
+                paginationDots
+                carouselBanners
+                    .padding(.horizontal, 24)
+            }
+            .padding(.vertical, Theme.Spacing.s40)
+        }
+        .scrollDisabled(true)
+    }
+}
+
+// MARK: - Banners
+
+extension PickCarouselView {
+    @ViewBuilder
+    var carouselBanners: some View {
+        if let success = viewModel.successMessage {
+            HStack {
+                Image(systemName: Theme.Icon.Status.success)
+                    .foregroundStyle(
+                        Theme.Color.Status.Success.resting
+                    )
+                Text(success)
+                    .font(Theme.Typography.body)
+                    .foregroundStyle(
+                        Theme.Color.Content.Text.default
+                    )
+                Spacer()
+            }
+            .padding(Theme.Spacing.s30)
+            .background(Theme.Color.Status.Success.subtle)
+            .clipShape(
+                RoundedRectangle(
+                    cornerRadius: Theme.Radius.r30
+                )
+            )
+            .transition(
+                .move(edge: .top)
+                    .combined(with: .opacity)
+            )
+        }
+        if let error = viewModel.errorMessage {
+            HStack {
+                Image(
+                    systemName: Theme.Icon.Status.errorFill
+                )
+                .foregroundStyle(
+                    Theme.Color.Status.Error.resting
+                )
+                Text(error)
+                    .font(Theme.Typography.body)
+                    .foregroundStyle(
+                        Theme.Color.Content.Text.default
+                    )
+                Spacer()
+            }
+            .padding(Theme.Spacing.s30)
+            .background(Theme.Color.Status.Error.subtle)
+            .clipShape(
+                RoundedRectangle(
+                    cornerRadius: Theme.Radius.r30
+                )
+            )
         }
     }
 }
@@ -37,8 +95,9 @@ struct PickCarouselView: View {
 // MARK: - Pagination Dots
 
 extension PickCarouselView {
+    /// Figma: layout_AXZRY4 — padding 24px 0px, gap 10px
     var paginationDots: some View {
-        HStack(spacing: 6) {
+        HStack(spacing: 10) {
             ForEach(
                 0..<viewModel.fixtures.count,
                 id: \.self
@@ -49,26 +108,23 @@ extension PickCarouselView {
                             ? Color.white
                             : Color.white.opacity(0.3)
                     )
-                    .frame(
-                        width: index == currentIndex
-                            ? 8 : 6,
-                        height: index == currentIndex
-                            ? 8 : 6
-                    )
+                    .frame(width: 8, height: 8)
                     .animation(
                         .easeInOut(duration: 0.2),
                         value: currentIndex
                     )
             }
         }
+        .padding(.top, 0)
+        .padding(.bottom, 24)
     }
 }
 
 // MARK: - Header
 
 extension PickCarouselView {
-    // Figma: Overline (Inter Bold 12 UPPER, white 40%)
-    //        H1 (Inter Bold 44, white)
+    /// Figma: layout_SLC3BU — padding 24px 24px 0px,
+    /// gap 1px. Overline, H1, Label02 subtitle.
     private var carouselHeader: some View {
         VStack(alignment: .leading, spacing: 1) {
             if let gameweek = viewModel.gameweek {
@@ -86,13 +142,14 @@ extension PickCarouselView {
                 .font(Theme.Typography.h1)
                 .foregroundStyle(Color.white)
 
-            if !viewModel.usedTeamIds.isEmpty {
-                TeamsUsedPill(
-                    teamNames: viewModel.usedTeamNames,
-                    count: viewModel.usedTeamIds.count
-                )
-                .padding(.top, 4)
-            }
+            Text(
+                "Select a winning team from this week's fixtures"
+            )
+            .font(Theme.Typography.label02)
+            .foregroundStyle(
+                Color.white.opacity(0.4)
+            )
+
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
@@ -158,7 +215,7 @@ extension PickCarouselView {
             }
             .offset(x: offset + midX - cw / 2)
             .contentShape(Rectangle())
-            .gesture(unifiedDrag(cardWidth: cw))
+            .simultaneousGesture(unifiedDrag(cardWidth: cw))
             .animation(
                 .spring(
                     response: 0.4,
@@ -170,113 +227,8 @@ extension PickCarouselView {
                 .interactiveSpring(),
                 value: dragOffsetX
             )
-            .animation(
-                .spring(
-                    response: 0.4,
-                    dampingFraction: 0.8
-                ),
-                value: isStatsRevealed
-            )
-            .animation(
-                .spring(
-                    response: 0.4,
-                    dampingFraction: 0.8
-                ),
-                value: cardOffsetY
-            )
         }
-        .frame(height: 520)
+        .frame(height: 440)
     }
 
-    /// Single drag gesture handling both horizontal
-    /// (swipe between cards) and vertical (stats reveal)
-    private func unifiedDrag(
-        cardWidth cw: CGFloat
-    ) -> some Gesture {
-        DragGesture(minimumDistance: 12)
-            .onChanged { value in
-                let dx = value.translation.width
-                let dy = value.translation.height
-                // Lock axis on first significant movement
-                if dragAxis == .undecided {
-                    if abs(dx) > 8 || abs(dy) > 8 {
-                        dragAxis = abs(dx) >= abs(dy)
-                            ? .horizontal : .vertical
-                    }
-                }
-                switch dragAxis {
-                case .horizontal:
-                    handleHorizontalDrag(dx: dx)
-                case .vertical:
-                    handleVerticalDrag(dy: dy)
-                case .undecided:
-                    break
-                }
-            }
-            .onEnded { value in
-                let dx = value.translation.width
-                let dy = value.translation.height
-                let vel = value.predictedEndTranslation
-                switch dragAxis {
-                case .horizontal:
-                    endHorizontalDrag(
-                        dx: dx,
-                        velocityX: vel.width,
-                        cardWidth: cw
-                    )
-                case .vertical:
-                    endVerticalDrag(dy: dy)
-                case .undecided:
-                    break
-                }
-                dragAxis = .undecided
-            }
-    }
-
-    private func handleHorizontalDrag(dx: CGFloat) {
-        let count = viewModel.fixtures.count
-        let atStart = currentIndex == 0 && dx > 0
-        let atEnd =
-            currentIndex == count - 1 && dx < 0
-        dragOffsetX = (atStart || atEnd)
-            ? dx * 0.3 : dx
-    }
-
-    private func endHorizontalDrag(
-        dx: CGFloat,
-        velocityX: CGFloat,
-        cardWidth cw: CGFloat
-    ) {
-        let threshold = cw * 0.25
-        let count = viewModel.fixtures.count
-        var newIndex = currentIndex
-        if dx < -threshold || velocityX < -cw {
-            newIndex = min(currentIndex + 1, count - 1)
-        } else if dx > threshold || velocityX > cw {
-            newIndex = max(currentIndex - 1, 0)
-        }
-        dragOffsetX = 0
-        if newIndex != currentIndex {
-            currentIndex = newIndex
-            isStatsRevealed = false
-            cardOffsetY = 0
-        }
-    }
-
-    private func handleVerticalDrag(dy: CGFloat) {
-        if isStatsRevealed && dy > 0 {
-            cardOffsetY = dy
-        } else if !isStatsRevealed && dy < 0 {
-            cardOffsetY = dy
-        }
-    }
-
-    private func endVerticalDrag(dy: CGFloat) {
-        if isStatsRevealed && dy > 80 {
-            isStatsRevealed = false
-        } else if !isStatsRevealed && dy < -100 {
-            isStatsRevealed = true
-        }
-        cardOffsetY = 0
-    }
 }

@@ -5,7 +5,7 @@ import SwiftUI
 extension LeagueDetailView {
     var winnerBanner: some View {
         Button { showCompleteView = true } label: {
-            DSCard {
+            Card {
                 HStack(spacing: Theme.Spacing.s30) {
                     Image(systemName: Theme.Icon.League.trophyFill)
                         .font(.system(size: 32))

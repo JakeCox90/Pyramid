@@ -3,6 +3,7 @@ import SwiftUI
 struct HomeView: View {
     @StateObject var viewModel = HomeViewModel()
     @State var showPicks = false
+    @State private var matchCardVisible = true
 
     var body: some View {
         NavigationStack {
@@ -18,8 +19,7 @@ struct HomeView: View {
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar { gameweekToolbar }
-            .toolbarBackground(.hidden, for: .navigationBar)
+            .toolbarColorScheme(.dark, for: .navigationBar)
             .background(
                 Theme.Color.Surface.Background.page
                     .ignoresSafeArea()
@@ -29,13 +29,25 @@ struct HomeView: View {
                 isPresented: $showPicks
             ) {
                 if let leagueId = viewModel
-                    .currentPick?.pick.leagueId {
+                    .selectedLeague?.id {
                     PicksView(leagueId: leagueId)
                 }
             }
             .onChange(of: showPicks) { showing in
-                if !showing {
-                    Task { await viewModel.load() }
+                if showing {
+                    // Hide card so it can animate in on return
+                    matchCardVisible = false
+                } else {
+                    Task {
+                        await viewModel.load()
+                        // Animate the card into view
+                        withAnimation(
+                            .easeOut(duration: 0.45)
+                                .delay(0.1)
+                        ) {
+                            matchCardVisible = true
+                        }
+                    }
                 }
             }
         }
@@ -73,27 +85,74 @@ struct HomeView: View {
     // MARK: - Content
 
     private var contentView: some View {
-        ScrollView {
-            VStack(spacing: Theme.Spacing.s40) {
-                countdownHeader
+        let leagues = viewModel.homeData?.leagues ?? []
 
-                if let context = viewModel.currentPick {
+        return VStack(spacing: 0) {
+            // Fixed header — pinned above scroll
+            VStack(spacing: Theme.Spacing.s40) {
+                countdownSection
+                leagueSelector
+            }
+            .padding(.horizontal, Theme.Spacing.s40)
+            .padding(.bottom, Theme.Spacing.s40)
+
+            // Swipeable per-league content
+            if leagues.count > 1 {
+                TabView(
+                    selection: Binding(
+                        get: {
+                            viewModel.selectedLeague?.id ?? ""
+                        },
+                        set: { newId in
+                            if let league = leagues.first(
+                                where: { $0.id == newId }
+                            ) {
+                                withAnimation(.easeInOut(duration: 0.2)) {
+                                    viewModel.selectLeague(league)
+                                }
+                            }
+                        }
+                    )
+                ) {
+                    ForEach(leagues) { league in
+                        leaguePageContent(league)
+                            .tag(league.id)
+                    }
+                }
+                .tabViewStyle(.page(indexDisplayMode: .never))
+            } else if let league = leagues.first {
+                leaguePageContent(league)
+            }
+        }
+        .onDisappear {
+            viewModel.stopPolling()
+            viewModel.stopCountdown()
+        }
+    }
+
+    func leaguePageContent(
+        _ league: League
+    ) -> some View {
+        ScrollView(showsIndicators: false) {
+            VStack(spacing: Theme.Spacing.s40) {
+                if let context = viewModel
+                    .currentPick(for: league) {
                     matchCard(context)
+                        .opacity(matchCardVisible ? 1 : 0)
+                        .offset(
+                            y: matchCardVisible ? 0 : 20
+                        )
                 } else {
                     matchCardEmpty()
                 }
 
-                playersRemainingCard()
+                playersRemainingCard(for: league)
 
-                previousPicksSection()
+                previousPicksSection(for: league)
             }
             .padding(.horizontal, Theme.Spacing.s40)
             .padding(.bottom, Theme.Spacing.s80)
         }
         .refreshable { await viewModel.load() }
-        .onDisappear {
-            viewModel.stopPolling()
-            viewModel.stopCountdown()
-        }
     }
 }

@@ -37,7 +37,7 @@ extension ProfileView {
         value: String,
         color: Color
     ) -> some View {
-        DSCard {
+        Card {
             VStack(spacing: Theme.Spacing.s10) {
                 Text(value)
                     .font(Theme.Typography.h3)
@@ -77,7 +77,7 @@ extension ProfileView {
     }
 
     private func streakRow(streak: LeagueStreak) -> some View {
-        DSCard {
+        Card {
             HStack {
                 Text(streak.leagueName)
                     .font(Theme.Typography.body)
@@ -131,7 +131,7 @@ extension ProfileView {
     private func leagueHistoryRow(
         league: CompletedLeague
     ) -> some View {
-        DSCard {
+        Card {
             HStack {
                 VStack(alignment: .leading, spacing: Theme.Spacing.s10) {
                     Text(league.leagueName)

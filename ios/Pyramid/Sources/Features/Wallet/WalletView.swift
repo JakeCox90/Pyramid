@@ -134,14 +134,14 @@ struct WalletView: View {
                 Button("TOP UP") {
                     viewModel.showTopUpSheet = true
                 }
-                .dsStyle(.primary)
+                .themed(.primary)
 
                 let withdrawable =
                     viewModel.wallet?.withdrawablePence ?? 0
                 Button("WITHDRAW") {
                     viewModel.showWithdrawSheet = true
                 }
-                .dsStyle(.secondary)
+                .themed(.secondary)
                 .disabled(withdrawable == 0)
             }
 

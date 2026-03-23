@@ -36,13 +36,6 @@ struct TeamsUsedPill: View {
                     size: 24
                 )
                 .clipShape(Circle())
-                .overlay(
-                    Circle()
-                        .stroke(
-                            Color(hex: "241E31"),
-                            lineWidth: 2
-                        )
-                )
             }
         }
     }

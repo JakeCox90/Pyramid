@@ -6,7 +6,7 @@ struct LeagueRowView: View {
     let league: League
 
     var body: some View {
-        DSCard {
+        Card {
             HStack {
                 VStack(alignment: .leading, spacing: Theme.Spacing.s10) {
                     Text(league.name)

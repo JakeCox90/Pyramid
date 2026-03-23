@@ -45,7 +45,7 @@ extension JoinPaidLeagueView {
                 onJoined?(result)
                 dismiss()
             }
-            .dsStyle(.primary)
+            .themed(.primary)
             .padding(.bottom, Theme.Spacing.s70)
             .padding(.horizontal, Theme.Spacing.s40)
         }
@@ -121,12 +121,12 @@ extension JoinPaidLeagueView {
                     onJoined?(result)
                     dismiss()
                 }
-                .dsStyle(.primary)
+                .themed(.primary)
 
                 Button("Done") {
                     dismiss()
                 }
-                .dsStyle(.ghost)
+                .themed(.ghost)
             }
             .padding(.bottom, Theme.Spacing.s70)
             .padding(.horizontal, Theme.Spacing.s40)

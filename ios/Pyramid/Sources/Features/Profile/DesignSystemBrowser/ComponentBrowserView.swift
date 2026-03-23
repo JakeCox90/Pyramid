@@ -1,21 +1,62 @@
 #if DEBUG
 import SwiftUI
 
+enum ComponentTab: String, CaseIterable {
+    case core = "Core"
+    case match = "Match"
+    case game = "Game"
+}
+
 struct ComponentBrowserView: View {
-    @State private var sampleText = ""
+    @State private var selectedTab: ComponentTab = .core
+    @State var sampleText = ""
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: Theme.Spacing.s60) {
-                buttonsSection
-                iconButtonsSection
-                inputFieldsSection
-                cardsSection
-                badgesSection
-                placeholderSection
-                pulsingDotSection
+        VStack(spacing: 0) {
+            Picker("Group", selection: $selectedTab) {
+                ForEach(
+                    ComponentTab.allCases,
+                    id: \.self
+                ) { tab in
+                    Text(tab.rawValue).tag(tab)
+                }
             }
-            .padding(Theme.Spacing.s40)
+            .pickerStyle(.segmented)
+            .padding(.horizontal, Theme.Spacing.s40)
+            .padding(.vertical, Theme.Spacing.s20)
+
+            ScrollView {
+                VStack(
+                    alignment: .leading,
+                    spacing: Theme.Spacing.s60
+                ) {
+                    switch selectedTab {
+                    case .core:
+                        coreContent
+                    case .match:
+                        matchContent
+                    case .game:
+                        gameContent
+                    }
+                }
+                .padding(Theme.Spacing.s40)
+            }
+        }
+    }
+}
+
+// MARK: - Core Tab
+
+extension ComponentBrowserView {
+    var coreContent: some View {
+        Group {
+            buttonsSection
+            iconButtonsSection
+            inputFieldsSection
+            cardSection
+            badgesSection
+            placeholderSection
+            pulsingDotSection
         }
     }
 }
@@ -82,7 +123,9 @@ private extension ComponentBrowserView {
                 Text("ghost")
             }
             .font(Theme.Typography.caption)
-            .foregroundStyle(Theme.Color.Content.Text.subtle)
+            .foregroundStyle(
+                Theme.Color.Content.Text.subtle
+            )
         }
     }
 }
@@ -115,12 +158,12 @@ private extension ComponentBrowserView {
     }
 }
 
-// MARK: - Cards
+// MARK: - Card
 
 private extension ComponentBrowserView {
-    var cardsSection: some View {
+    var cardSection: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s30) {
-            ComponentHeader(title: "Card / LeagueCard")
+            ComponentHeader(title: "Card")
 
             Card {
                 VStack(
@@ -139,19 +182,6 @@ private extension ComponentBrowserView {
                         )
                 }
             }
-
-            LeagueCard(
-                leagueName: "Sunday League",
-                memberCount: 12,
-                gameweek: 28,
-                pickStatus: .survived
-            )
-            LeagueCard(
-                leagueName: "Office Crew",
-                memberCount: 8,
-                gameweek: 28,
-                pickStatus: .eliminated
-            )
         }
     }
 }
@@ -161,12 +191,46 @@ private extension ComponentBrowserView {
 private extension ComponentBrowserView {
     var badgesSection: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s30) {
-            ComponentHeader(title: "PickStatusBadge")
+            ComponentHeader(title: "Badge")
+
+            ComponentCaption(text: "Intents")
             HStack(spacing: Theme.Spacing.s20) {
-                PickStatusBadge(status: .survived)
-                PickStatusBadge(status: .eliminated)
-                PickStatusBadge(status: .pending)
-                PickStatusBadge(status: .void)
+                Badge(
+                    label: "Success",
+                    intent: .success
+                )
+                Badge(label: "Error", intent: .error)
+                Badge(
+                    label: "Neutral",
+                    intent: .neutral
+                )
+                Badge(
+                    label: "Warning",
+                    intent: .warning
+                )
+            }
+
+            ComponentCaption(
+                text: "Pick status (domain mapping)"
+            )
+            HStack(spacing: Theme.Spacing.s20) {
+                Badge(
+                    label: PickStatus.survived.label,
+                    intent: PickStatus.survived.badgeIntent
+                )
+                Badge(
+                    label: PickStatus.eliminated.label,
+                    intent: PickStatus.eliminated
+                        .badgeIntent
+                )
+                Badge(
+                    label: PickStatus.pending.label,
+                    intent: PickStatus.pending.badgeIntent
+                )
+                Badge(
+                    label: PickStatus.void.label,
+                    intent: PickStatus.void.badgeIntent
+                )
             }
         }
     }
@@ -257,7 +321,9 @@ struct ComponentHeader: View {
     var body: some View {
         Text(title)
             .font(Theme.Typography.h3)
-            .foregroundStyle(Theme.Color.Content.Text.default)
+            .foregroundStyle(
+                Theme.Color.Content.Text.default
+            )
     }
 }
 
@@ -267,7 +333,9 @@ struct ComponentCaption: View {
     var body: some View {
         Text(text)
             .font(Theme.Typography.caption)
-            .foregroundStyle(Theme.Color.Content.Text.subtle)
+            .foregroundStyle(
+                Theme.Color.Content.Text.subtle
+            )
     }
 }
 

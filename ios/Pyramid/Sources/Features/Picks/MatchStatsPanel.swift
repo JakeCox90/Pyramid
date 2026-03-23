@@ -147,7 +147,7 @@ extension MatchStatsPanel {
         VStack(spacing: 8) {
             // Win/loss dots: 20×20 circles
             HStack(spacing: 4) {
-                ForEach(results) { result in
+                ForEach(Array(results.enumerated()), id: \.offset) { _, result in
                     Circle()
                         .fill(result.color)
                         .frame(width: 20, height: 20)

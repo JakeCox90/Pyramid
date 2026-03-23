@@ -2,14 +2,14 @@ import SwiftUI
 
 // MARK: - DS Button Variant
 
-enum DSButtonVariant {
+enum ButtonVariant {
     case primary, secondary, destructive, ghost
 }
 
 // MARK: - DS Button Style
 
-struct DSButtonStyle: ButtonStyle {
-    let variant: DSButtonVariant
+struct ButtonThemeStyle: ButtonStyle {
+    let variant: ButtonVariant
     var isLoading: Bool = false
     var isFullWidth: Bool = true
 
@@ -85,13 +85,13 @@ struct DSButtonStyle: ButtonStyle {
 // MARK: - Convenience modifier
 
 extension Button {
-    func dsStyle(
-        _ variant: DSButtonVariant = .primary,
+    func themed(
+        _ variant: ButtonVariant = .primary,
         isLoading: Bool = false,
         fullWidth: Bool = true
     ) -> some View {
         self.buttonStyle(
-            DSButtonStyle(
+            ButtonThemeStyle(
                 variant: variant,
                 isLoading: isLoading,
                 isFullWidth: fullWidth

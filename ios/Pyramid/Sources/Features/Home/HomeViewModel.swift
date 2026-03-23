@@ -38,6 +38,7 @@ final class HomeViewModel: ObservableObject {
     @Published var countdown = CountdownComponents.zero
     @Published var selectedGameweek: Gameweek?
     @Published var selectedGwPicks: [LeagueResult] = []
+    @Published var selectedLeague: League?
 
     let homeService: HomeServiceProtocol
     var pollingTask: Task<Void, Never>?
@@ -57,6 +58,13 @@ final class HomeViewModel: ObservableObject {
         do {
             homeData = try await homeService.fetchHomeData()
             selectedGameweek = homeData?.gameweek
+            // Preserve league selection if still valid, else default to first
+            if let current = selectedLeague,
+               homeData?.leagues.contains(where: { $0.id == current.id }) == true {
+                // keep current selection
+            } else {
+                selectedLeague = homeData?.leagues.first
+            }
             updatePolling()
             startCountdown()
         } catch {
@@ -65,32 +73,69 @@ final class HomeViewModel: ObservableObject {
         isLoading = false
     }
 
+    func selectLeague(_ league: League) {
+        selectedLeague = league
+    }
+
     // MARK: - Computed State
 
-    /// The user's current pick paired with its fixture.
+    /// The user's current pick for the selected league.
     var currentPick: LivePickContext? {
+        guard let league = selectedLeague
+        else { return nil }
+        return currentPick(for: league)
+    }
+
+    func currentPick(
+        for league: League
+    ) -> LivePickContext? {
         guard let data = homeData else { return nil }
-        let leagueMap = Dictionary(
-            uniqueKeysWithValues: data.leagues.map {
-                ($0.id, $0.name)
-            }
-        )
-        return data.picks.values.compactMap { pick in
-            guard let fixture = data.fixtures[pick.fixtureId],
-                  let name = leagueMap[pick.leagueId]
-            else { return nil }
+
+        #if DEBUG
+        if let fake = DebugGameweekOverride.fakePick(
+               for: league.id
+           ),
+           let fixture = data.fixtures[fake.fixtureId] {
+            let pick = Pick(
+                id: "debug-fake",
+                leagueId: fake.leagueId,
+                userId: "debug",
+                gameweekId: data.gameweek?.id ?? 0,
+                fixtureId: fake.fixtureId,
+                teamId: fake.teamId,
+                teamName: fake.teamName,
+                isLocked: false,
+                result: .pending,
+                submittedAt: Date()
+            )
             return LivePickContext(
                 pick: pick, fixture: fixture,
-                leagueName: name
+                leagueName: league.name
             )
-        }.first
+        }
+        #endif
+
+        guard let pick = data.picks[league.id],
+              let fixture = data.fixtures[pick.fixtureId]
+        else { return nil }
+        return LivePickContext(
+            pick: pick, fixture: fixture,
+            leagueName: league.name
+        )
     }
 
     var playersRemaining: String {
-        guard let data = homeData,
-              data.totalPlayerCount > 0
+        guard let league = selectedLeague
         else { return "" }
-        return "\(data.activePlayerCount) of \(data.totalPlayerCount)"
+        return playersRemaining(for: league)
+    }
+
+    func playersRemaining(for league: League) -> String {
+        guard let data = homeData,
+              let counts = data.playerCounts[league.id],
+              counts.total > 0
+        else { return "" }
+        return "\(counts.active) of \(counts.total)"
     }
 
     var gameweekOptions: [Gameweek] {
@@ -98,22 +143,16 @@ final class HomeViewModel: ObservableObject {
     }
 
     var livePickContexts: [LivePickContext] {
-        guard let data = homeData else { return [] }
-        let leagueMap = Dictionary(
-            uniqueKeysWithValues: data.leagues.map {
-                ($0.id, $0.name)
-            }
-        )
-        return data.picks.values.compactMap { pick in
-            guard let fixture = data.fixtures[pick.fixtureId],
-                  fixture.status.isLive,
-                  let name = leagueMap[pick.leagueId]
-            else { return nil }
-            return LivePickContext(
-                pick: pick, fixture: fixture,
-                leagueName: name
-            )
-        }
+        guard let data = homeData,
+              let league = selectedLeague,
+              let pick = data.picks[league.id],
+              let fixture = data.fixtures[pick.fixtureId],
+              fixture.status.isLive
+        else { return [] }
+        return [LivePickContext(
+            pick: pick, fixture: fixture,
+            leagueName: league.name
+        )]
     }
 
     var hasLiveFixtures: Bool {
@@ -127,6 +166,11 @@ final class HomeViewModel: ObservableObject {
     /// We check both deadline_at AND actual fixture statuses as a
     /// belt-and-braces approach.
     var isGameweekLocked: Bool {
+        #if DEBUG
+        if DebugGameweekOverride.isActive {
+            return DebugGameweekOverride.isLocked
+        }
+        #endif
         // If any fixture is live or finished, the GW has started
         if let fixtures = homeData?.fixtures.values,
            fixtures.contains(where: {
@@ -149,6 +193,16 @@ final class HomeViewModel: ObservableObject {
     }
 
     var gameweekPhase: GameweekPhase {
+        #if DEBUG
+        if DebugGameweekOverride.isActive {
+            switch DebugGameweekOverride.current {
+            case .none: break
+            case .upcoming: return .upcoming
+            case .inProgress: return .inProgress
+            case .finished: return .finished
+            }
+        }
+        #endif
         guard let fixtures = homeData?.fixtures.values,
               !fixtures.isEmpty
         else { return .unknown }
@@ -165,11 +219,23 @@ final class HomeViewModel: ObservableObject {
         return .upcoming
     }
 
-    /// Previous pick results for the current or selected GW.
+    /// Previous pick results for the current or selected GW,
+    /// filtered to the selected league.
     var previousPicks: [LeagueResult] {
+        guard let league = selectedLeague
+        else { return [] }
+        return previousPicks(for: league)
+    }
+
+    func previousPicks(
+        for league: League
+    ) -> [LeagueResult] {
+        let all: [LeagueResult]
         if selectedGameweek?.id == homeData?.gameweek?.id {
-            return homeData?.lastGwResults ?? []
+            all = homeData?.lastGwResults ?? []
+        } else {
+            all = selectedGwPicks
         }
-        return selectedGwPicks
+        return all.filter { $0.leagueId == league.id }
     }
 }

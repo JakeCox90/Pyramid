@@ -85,7 +85,7 @@ struct PickHistoryRow: View {
     let pick: Pick
 
     var body: some View {
-        DSCard {
+        Card {
             HStack(spacing: Theme.Spacing.s30) {
                 resultIcon
 

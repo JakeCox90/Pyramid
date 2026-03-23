@@ -41,13 +41,16 @@ struct PicksView: View {
                     PickCarouselView(
                         viewModel: viewModel
                     )
+                    .transition(.opacity)
                 } else {
                     fixturesList
+                        .transition(.opacity)
                 }
             }
         }
         .navigationBarBackButtonHidden(true)
         .navigationBarTitleDisplayMode(.inline)
+        .toolbarColorScheme(.dark, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button {
@@ -207,6 +210,7 @@ extension PicksView {
                             selectedTeamId: viewModel
                                 .currentPick?.teamId,
                             usedTeamIds: viewModel.usedTeamIds,
+                            usedTeamRounds: viewModel.usedTeamRounds,
                             isLocked: viewModel
                                 .isFixtureLocked(fixture),
                             isSubmitting: viewModel

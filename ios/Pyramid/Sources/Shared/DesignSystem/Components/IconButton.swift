@@ -2,14 +2,14 @@ import SwiftUI
 
 // MARK: - DS Icon Button
 
-struct DSIconButton: View {
+struct IconButton: View {
     let icon: String
-    let variant: DSButtonVariant
+    let variant: ButtonVariant
     let action: () -> Void
 
     init(
         icon: String,
-        variant: DSButtonVariant = .primary,
+        variant: ButtonVariant = .primary,
         action: @escaping () -> Void
     ) {
         self.icon = icon

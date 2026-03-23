@@ -55,7 +55,7 @@ struct TopUpSheet: View {
                                     customAmountText = ""
                                     isCustomFieldFocused = false
                                 }
-                                .dsStyle(
+                                .themed(
                                     selectedAmountPence == pence
                                         ? .primary : .secondary
                                 )
@@ -98,7 +98,7 @@ struct TopUpSheet: View {
                     Spacer()
 
                     Button("PAYMENT PROCESSING COMING SOON") {}
-                        .dsStyle(.secondary)
+                        .themed(.secondary)
                         .disabled(true)
                     .padding(.horizontal, 16)
                     .padding(.bottom, 16)
@@ -220,7 +220,7 @@ struct WithdrawSheet: View {
                             isSubmitting = false
                         }
                     }
-                    .dsStyle(
+                    .themed(
                         .destructive,
                         isLoading: isSubmitting
                     )

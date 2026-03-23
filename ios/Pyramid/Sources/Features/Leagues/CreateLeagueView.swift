@@ -48,7 +48,7 @@ struct CreateLeagueView: View {
             Spacer()
 
             VStack(alignment: .leading, spacing: Theme.Spacing.s30) {
-                DSTextField(
+                InputField(
                     label: "League Name",
                     text: $viewModel.leagueName,
                     placeholder: "e.g. Sunday League Heroes",
@@ -64,7 +64,7 @@ struct CreateLeagueView: View {
             Button("Create League") {
                 Task { await viewModel.submit() }
             }
-            .dsStyle(.primary, isLoading: viewModel.isLoading)
+            .themed(.primary, isLoading: viewModel.isLoading)
             .disabled(viewModel.isLoading || !viewModel.isNameValid)
 
             Spacer()

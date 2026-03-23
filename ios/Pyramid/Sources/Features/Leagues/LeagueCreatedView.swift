@@ -28,7 +28,7 @@ struct LeagueCreatedView: View {
                     .foregroundStyle(Theme.Color.Content.Text.subtle)
             }
 
-            DSCard {
+            Card {
                 VStack(spacing: Theme.Spacing.s30) {
                     Text("Join Code")
                         .font(Theme.Typography.overline)
@@ -63,17 +63,17 @@ struct LeagueCreatedView: View {
                         systemImage: didCopy ? Theme.Icon.Action.copied : Theme.Icon.Action.copy
                     )
                 }
-                .dsStyle(.secondary, fullWidth: false)
+                .themed(.secondary, fullWidth: false)
 
                 ShareLink(item: shareText) {
                     Label("Share", systemImage: Theme.Icon.Action.share)
                 }
-                .buttonStyle(DSButtonStyle(variant: .secondary, isFullWidth: false))
+                .buttonStyle(ButtonThemeStyle(variant: .secondary, isFullWidth: false))
             }
             .padding(.horizontal, Theme.Spacing.s40)
 
             Button("Done") { onDone() }
-                .dsStyle(.primary)
+                .themed(.primary)
                 .padding(.horizontal, Theme.Spacing.s40)
 
             Spacer()

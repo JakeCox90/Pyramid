@@ -105,12 +105,12 @@ struct OnboardingView: View {
         VStack(spacing: Theme.Spacing.s30) {
             if currentPage == OnboardingPage.allPages.count - 1 {
                 Button("Get Started") { completeOnboarding() }
-                    .dsStyle(.primary)
+                    .themed(.primary)
             } else {
                 Button("Next") {
                     withAnimation(reduceMotion ? nil : .default) { currentPage += 1 }
                 }
-                .dsStyle(.primary)
+                .themed(.primary)
             }
         }
         .padding(.horizontal, Theme.Spacing.s40)

@@ -16,12 +16,42 @@ extension MatchCarouselCard {
                 teamName: fixture.homeTeamName,
                 label: "PICK HOME"
             )
+            statsIconButton
             pickButton(
                 teamId: fixture.awayTeamId,
                 teamName: fixture.awayTeamName,
                 label: "PICK AWAY"
             )
         }
+    }
+
+    /// Figma: IconButton (46:4119) — 44×44 circle,
+    /// fill_J2XC2U gradient over #FFC758,
+    /// Bar Chart Icon 1 (46:4117) 24×24, white
+    private var statsIconButton: some View {
+        Button {
+            onStats?()
+        } label: {
+            Image("bar-chart")
+                .renderingMode(.template)
+                .resizable()
+                .frame(width: 20, height: 20)
+                .foregroundStyle(Color.black)
+                .frame(width: 44, height: 44)
+                .background(
+                    ZStack {
+                        Color(hex: "FFC758")
+                        LinearGradient(
+                            colors: [.black, .white],
+                            startPoint: .bottomLeading,
+                            endPoint: .topTrailing
+                        )
+                        .blendMode(.softLight)
+                    }
+                )
+                .clipShape(Circle())
+        }
+        .buttonStyle(.plain)
     }
 
     @ViewBuilder

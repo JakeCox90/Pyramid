@@ -1,5 +1,11 @@
 import Foundation
 
+/// Per-league player count.
+struct PlayerCount: Sendable, Equatable {
+    let active: Int
+    let total: Int
+}
+
 /// Aggregate data for the home screen, fetched in a single service call.
 struct HomeData: Sendable, Equatable {
     /// User's leagues with member counts.
@@ -16,10 +22,8 @@ struct HomeData: Sendable, Equatable {
     let lastGwResults: [LeagueResult]
     /// All gameweeks for the season (dropdown selector).
     let allGameweeks: [Gameweek]
-    /// Active player count in the user's primary league.
-    let activePlayerCount: Int
-    /// Total player count in the user's primary league.
-    let totalPlayerCount: Int
+    /// Player counts per league: (active, total), keyed by league ID.
+    let playerCounts: [String: PlayerCount]
 }
 
 /// A user's pick paired with its fixture and league name for homepage display.
