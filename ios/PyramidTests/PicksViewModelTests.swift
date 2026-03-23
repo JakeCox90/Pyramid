@@ -66,7 +66,7 @@ final class PicksViewModelTests: XCTestCase {
 
         await vm.submitPick(fixtureId: 1, teamId: 100, teamName: "Arsenal")
 
-        XCTAssertNotNil(vm.successMessage)
+        XCTAssertTrue(vm.pickConfirmed)
         XCTAssertNil(vm.errorMessage)
         XCTAssertFalse(vm.isSubmitting)
     }
