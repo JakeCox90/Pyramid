@@ -3,8 +3,7 @@ import SwiftUI
 // MARK: - League Selector Strip
 
 extension HomeView {
-    @ViewBuilder
-    var leagueSelector: some View {
+    @ViewBuilder var leagueSelector: some View {
         let leagues = viewModel.homeData?.leagues ?? []
         if leagues.count > 1 {
             ScrollView(.horizontal, showsIndicators: false) {

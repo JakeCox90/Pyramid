@@ -293,8 +293,6 @@ private extension ProfileView {
 }
 #endif
 
-// MARK: - Preview
-
 #Preview {
     ProfileView()
         .environmentObject(AppState())

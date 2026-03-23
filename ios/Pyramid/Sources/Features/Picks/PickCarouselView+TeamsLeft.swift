@@ -9,8 +9,7 @@ extension PickCarouselView {
     /// layout_29NVIT: row, center, gap 4px, padding 8px 12px
     /// fill_H7SDCM: gradient 225deg + rgba(255,255,255,0.1)
     /// stroke_PT8QII: rgba(255,255,255,0.1) 1px
-    @ViewBuilder
-    var teamsLeftPill: some View {
+    @ViewBuilder var teamsLeftPill: some View {
         let allTeams = extractUniqueTeams()
         let teamsLeft = allTeams.count
             - viewModel.usedTeamIds.count
@@ -52,7 +51,7 @@ extension PickCarouselView {
                     .init(
                         color: Color(hex: "2D253D"),
                         location: 0.72
-                    ),
+                    )
                 ],
                 startPoint: .topTrailing,
                 endPoint: .bottomLeading
@@ -91,9 +90,7 @@ extension PickCarouselView {
     }
 
     /// Extract unique teams from fixtures for the badge rail
-    func extractUniqueTeams()
-        -> [(id: Int, name: String)]
-    {
+    func extractUniqueTeams() -> [(id: Int, name: String)] {
         var seen = Set<Int>()
         var teams: [(id: Int, name: String)] = []
         for fixture in viewModel.fixtures {

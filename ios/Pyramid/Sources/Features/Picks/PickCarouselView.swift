@@ -39,8 +39,7 @@ struct PickCarouselView: View {
 // MARK: - Banners
 
 extension PickCarouselView {
-    @ViewBuilder
-    var carouselBanners: some View {
+    @ViewBuilder var carouselBanners: some View {
         if let success = viewModel.successMessage {
             HStack {
                 Image(systemName: Theme.Icon.Status.success)

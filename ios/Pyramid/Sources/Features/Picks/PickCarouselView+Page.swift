@@ -89,7 +89,7 @@ extension PickCarouselView {
             LinearGradient(
                 colors: [
                     Color.white,
-                    Color.white.opacity(0),
+                    Color.white.opacity(0)
                 ],
                 startPoint: .top,
                 endPoint: .bottom

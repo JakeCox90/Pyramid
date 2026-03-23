@@ -124,116 +124,9 @@ private extension MatchCard {
     }
 }
 
-// MARK: - Result Layout (Live / Finished)
-
-private extension MatchCard {
-    var resultContent: some View {
-        VStack(spacing: 0) {
-            badge
-            Spacer().frame(height: 12)
-            yourPickLabel
-            Spacer().frame(height: 4)
-            pickedTeamTitle
-            Spacer().frame(height: 4)
-            scoreDisplay
-            Spacer().frame(height: 4)
-            opponentTitle
-            Spacer().frame(height: 12)
-            switch phase {
-            case .live:
-                livePill
-            case .finished:
-                finishedPill
-            case .preMatch:
-                EmptyView()
-            }
-            Spacer()
-            if phase == .live {
-                resultBottomSection
-            }
-        }
-    }
-
-    var scoreDisplay: some View {
-        Text(scoreText)
-            .font(Theme.Typography.display)
-            .foregroundStyle(.white)
-            .monospacedDigit()
-    }
-
-    /// Green capsule pill: #51B56A bg, 200px radius
-    var livePill: some View {
-        HStack(spacing: 8) {
-            Circle()
-                .fill(Color.white)
-                .frame(width: 8, height: 8)
-                .overlay(
-                    Circle()
-                        .stroke(
-                            Color.white.opacity(0.1),
-                            lineWidth: 2
-                        )
-                )
-            Text("LIVE")
-                .font(Theme.Typography.overline)
-                .foregroundStyle(.white)
-        }
-        .padding(.vertical, 4)
-        .padding(.leading, 12)
-        .padding(.trailing, 8)
-        .background(Color(hex: "51B56A"))
-        .clipShape(Capsule())
-    }
-
-    /// Pill shown when the match is finished.
-    /// Shows survived/eliminated when the result is known,
-    /// otherwise a neutral FT pill.
-    @ViewBuilder
-    var finishedPill: some View {
-        if let survived {
-            HStack(spacing: 6) {
-                Image(
-                    systemName: survived
-                        ? "checkmark.circle.fill"
-                        : "xmark.circle.fill"
-                )
-                .font(.system(size: 14))
-                Text(survived ? "SURVIVED" : "ELIMINATED")
-                    .font(Theme.Typography.overline)
-            }
-            .foregroundStyle(.white)
-            .padding(.vertical, 6)
-            .padding(.horizontal, 14)
-            .background(
-                survived
-                    ? Color(hex: "51B56A")
-                    : Color(hex: "FF453A")
-            )
-            .clipShape(Capsule())
-        } else {
-            Text("FT")
-                .font(Theme.Typography.overline)
-                .foregroundStyle(Color.white.opacity(0.6))
-                .padding(.vertical, 4)
-                .padding(.horizontal, 12)
-                .background(Color.white.opacity(0.1))
-                .clipShape(Capsule())
-        }
-    }
-
-    var resultBottomSection: some View {
-        VStack(spacing: 0) {
-            lockedPill
-                .padding(.top, 12)
-                .padding(.bottom, 24)
-                .padding(.horizontal, 24)
-        }
-    }
-}
-
 // MARK: - Shared Subviews
 
-private extension MatchCard {
+extension MatchCard {
     var background: some View {
         LinearGradient(
             stops: [
@@ -329,8 +222,7 @@ private extension MatchCard {
         .clipShape(Capsule())
     }
 
-    @ViewBuilder
-    var bottomSection: some View {
+    @ViewBuilder var bottomSection: some View {
         if isLocked {
             lockedPill
                 .padding(.horizontal, 24)
@@ -348,107 +240,9 @@ private extension MatchCard {
     }
 }
 
-// MARK: - Empty State (Figma 32:4432)
-
-extension MatchCard {
-    static func empty(
-        isLocked: Bool,
-        onMakePick: (() -> Void)? = nil
-    ) -> some View {
-        VStack(spacing: 0) {
-            Spacer()
-
-            // Figma: Frame 22 — centered at y≈104, 225px wide
-            VStack(spacing: 8) {
-                // Figma: Shield Icon 24dp — 66×66, #FFF 20%
-                Image("shield-question")
-                    .renderingMode(.template)
-                    .resizable()
-                    .frame(width: 66, height: 66)
-                    .foregroundStyle(
-                        Color.white.opacity(0.2)
-                    )
-
-                // Figma: H3, #FFF 30%
-                Text("No selection yet")
-                    .font(Theme.Typography.h3)
-                    .foregroundStyle(
-                        Color.white.opacity(0.3)
-                    )
-
-                // Figma: Label02, #FFF 30%, 225px wide
-                Text(
-                    "Select a team before the gameweek begins or get eliminated"
-                )
-                .font(Theme.Typography.label02)
-                .foregroundStyle(
-                    Color.white.opacity(0.3)
-                )
-                .multilineTextAlignment(.center)
-                .frame(width: 225)
-            }
-
-            Spacer()
-
-            // Figma: Vector 2 — 1px divider at y=354
-            Rectangle()
-                .fill(Color.white.opacity(0.2))
-                .frame(height: 1)
-
-            // Figma: Frame 13 — 24px padding, 20px gap
-            if isLocked {
-                HStack(spacing: 12) {
-                    Image(systemName: "lock.fill")
-                        .font(.system(size: 16))
-                    Text("LOCKED")
-                        .font(Theme.Typography.label01)
-                }
-                .foregroundStyle(
-                    Color.white.opacity(0.4)
-                )
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 12)
-                .padding(.horizontal, 24)
-                .background(Color.white.opacity(0.1))
-                .overlay(
-                    Capsule()
-                        .stroke(
-                            Color.white.opacity(0.1),
-                            lineWidth: 1
-                        )
-                )
-                .clipShape(Capsule())
-                .padding(.horizontal, 24)
-                .padding(.vertical, 24)
-            } else if let onMakePick {
-                // Figma: Button Variant=Primary — #FFC758, 294×44
-                Button(
-                    "MAKE YOUR PICK",
-                    action: onMakePick
-                )
-                .themed(.primary)
-                .padding(.horizontal, 24)
-                .padding(.vertical, 24)
-            }
-        }
-        .frame(maxWidth: .infinity)
-        .frame(height: 446)
-        .clipShape(
-            RoundedRectangle(cornerRadius: 24)
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: 24)
-                .stroke(
-                    Color.white.opacity(0.2),
-                    lineWidth: 1
-                )
-        )
-    }
-}
-
 // MARK: - Helpers
 
-private extension MatchCard {
+extension MatchCard {
     var scoreText: String {
         "\(homeScore ?? 0) - \(awayScore ?? 0)"
     }

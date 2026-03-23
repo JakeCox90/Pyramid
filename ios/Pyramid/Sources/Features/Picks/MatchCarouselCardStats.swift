@@ -50,7 +50,7 @@ struct MatchCarouselCardStats: View {
                     .init(
                         color: Color(hex: "2D253D"),
                         location: 0.72
-                    ),
+                    )
                 ],
                 startPoint: .topTrailing,
                 endPoint: .bottomLeading
