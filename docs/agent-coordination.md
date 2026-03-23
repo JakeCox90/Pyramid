@@ -7,6 +7,7 @@
 
 | Ticket | Branch | Agent | Status | Key Files | Started |
 |--------|--------|-------|--------|-----------|---------|
+| PYR-42 | feature/PYR-42-sso-fix | iOS | In Progress | config.toml, .env.example, AuthService, Supabase dashboard | 2026-03-23 |
 | PYR-131 | feature/PYR-131-pick-carousel | iOS | In Progress | PickCarouselView, MatchCarouselCard, PicksView, PicksViewModel | 2026-03-21 |
 | PYR-133 | feature/PYR-131-pick-carousel | iOS | In Progress | MatchCarouselCard, MatchCarouselCardStats | 2026-03-21 |
 | PYR-139 | feature/PYR-131-pick-carousel | iOS | In Progress | HomeData, HomeService | 2026-03-22 |

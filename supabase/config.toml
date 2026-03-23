@@ -29,7 +29,8 @@ file_size_limit = "50MiB"
 
 [auth]
 enabled = true
-site_url = "pyramid://localhost"
+site_url = "com.pyramid.app://login-callback"
+additional_redirect_urls = ["com.pyramid.app://login-callback", "com.pyramid.app://"]
 jwt_expiry = 3600
 enable_refresh_token_rotation = true
 refresh_token_reuse_interval = 10
@@ -38,6 +39,20 @@ refresh_token_reuse_interval = 10
 enable_signup = true
 double_confirm_changes = true
 enable_confirmations = true
+
+# External OAuth providers for local dev (supabase start).
+# To enable locally: set enabled = true and provide credentials from
+# Apple Developer Console / Google Cloud Console.
+# For hosted dev/prod, configure providers in the Supabase dashboard.
+[auth.external.apple]
+enabled = false
+client_id = ""
+secret = ""
+
+[auth.external.google]
+enabled = false
+client_id = ""
+secret = ""
 
 # Edge Functions — disable gateway JWT verification.
 # Our functions validate auth internally via getUser(), which supports ES256 JWTs.
