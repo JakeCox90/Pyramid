@@ -590,6 +590,22 @@ Deno.serve(async (req) => {
       log,
     );
     if (winnerDeclared) summary.winnersDetected++;
+
+    // ── Refresh user stats (fire-and-forget) ────────────────────────────────
+    // Collect unique user IDs from settled picks and refresh their stats.
+    // Stats refresh is non-critical — failure must NOT block settlement.
+    const settledUserIds = [...new Set(picks.map((p) => p.user_id))];
+    for (const userId of settledUserIds) {
+      db.rpc("refresh_user_stats", { target_user_id: userId }).then(
+        ({ error: statsErr }: { error: unknown }) => {
+          if (statsErr) {
+            log.error("refresh_user_stats failed (non-fatal)", statsErr, { userId, leagueId });
+          }
+        },
+      ).catch((err: unknown) => {
+        log.error("refresh_user_stats threw (non-fatal)", err, { userId, leagueId });
+      });
+    }
   }
 
   // ── 5. Mark fixture settled ───────────────────────────────────────────────
