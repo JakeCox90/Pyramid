@@ -298,8 +298,3 @@ private extension ProfileView {
     }
 }
 #endif
-
-#Preview {
-    ProfileView()
-        .environmentObject(AppState())
-}
