@@ -8,6 +8,7 @@
 | Ticket | Branch | Agent | Status | Key Files | Started |
 |--------|--------|-------|--------|-----------|---------|
 | PYR-42 | feature/PYR-42-sso-fix | iOS | In Progress | config.toml, .env.example, AuthService, Supabase dashboard | 2026-03-23 |
+| PYR-106 | feature/PYR-106-global-leaderboard | iOS+Backend | In Progress | supabase/migrations/, LeaderboardView, LeaderboardViewModel, LeaderboardService | 2026-03-23 |
 | PYR-131 | feature/PYR-131-pick-carousel | iOS | In Progress | PickCarouselView, MatchCarouselCard, PicksView, PicksViewModel | 2026-03-21 |
 | PYR-133 | feature/PYR-131-pick-carousel | iOS | In Progress | MatchCarouselCard, MatchCarouselCardStats | 2026-03-21 |
 | PYR-139 | feature/PYR-131-pick-carousel | iOS | In Progress | HomeData, HomeService | 2026-03-22 |
@@ -17,6 +18,7 @@
 | PYR-143 | feature/PYR-131-pick-carousel | iOS | In Progress | HomeView+PlayersRemaining, HomeView+PreviousPicks | 2026-03-22 |
 | PYR-144 | feature/PYR-131-pick-carousel | iOS | In Progress | HomeView | 2026-03-22 |
 | PYR-96 | feature/PYR-96-player-avatars | iOS | In Progress | LeagueMember, StandingsService, LeagueDetailView+Row, LeagueCompleteView | 2026-03-23 |
+| PYR-105 | feature/PYR-105-personal-stats | iOS | In Progress | ProfileStats, ProfileService, ProfileView+Stats | 2026-03-23 |
 
 > **Note:** PYR-131/133/139/140/141-144 are all on the same branch. This is a grouped delivery — tightly coupled pick carousel + homepage redesign work. All commits unmerged as of 2026-03-23.
 

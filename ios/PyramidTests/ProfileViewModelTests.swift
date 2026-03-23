@@ -40,6 +40,7 @@ final class ProfileViewModelTests: XCTestCase {
             wins: 1,
             totalPicksMade: 15,
             longestSurvivalStreak: 5,
+            survivalRatePct: 80,
             activeStreaks: [
                 LeagueStreak(
                     id: "league-1",
