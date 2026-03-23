@@ -22,6 +22,7 @@
 
 | Ticket | Branch | PR | Merged |
 |--------|--------|----|--------|
+| PYR-104 | feature/PYR-104-user-stats | In Review | 2026-03-23 |
 | PYR-122 | feature/PYR-122-picks-redesign | #82 | 2026-03-21 |
 | PYR-91 | feature/PYR-91-live-match-day-card | #65 | 2026-03-19 |
 | PYR-92 | feature/PYR-92-last-gw-results | #66 | 2026-03-20 |
