@@ -86,7 +86,7 @@ struct MemberRow: View {
             .overlay(
                 Circle()
                     .stroke(
-                        Theme.Color.Surface.Background.primary,
+                        Theme.Color.Surface.Background.container,
                         lineWidth: 2
                     )
             )
