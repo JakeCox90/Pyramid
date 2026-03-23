@@ -8,6 +8,7 @@ struct LeagueDetailView: View {
     @State var showCompleteView = false
     @State var showShareSheet = false
     @State var showEditLeague = false
+    @State private var showStory = false
 
     init(league: League) {
         _viewModel = StateObject(wrappedValue: LeagueDetailViewModel(league: league))
@@ -101,6 +102,15 @@ struct LeagueDetailView: View {
                 Task { await viewModel.load() }
             }
         }
+        .fullScreenCover(isPresented: $showStory) {
+            if let gameweek = viewModel.currentGameweek {
+                GameweekStoryView(
+                    leagueId: viewModel.league.id,
+                    gameweek: gameweek.id,
+                    leagueName: viewModel.league.name
+                )
+            }
+        }
         .background(Theme.Color.Surface.Background.page.ignoresSafeArea())
         .task {
             await viewModel.load()
@@ -146,6 +156,26 @@ struct LeagueDetailView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
+    private var gwRecapButton: some View {
+        Button {
+            showStory = true
+        } label: {
+            HStack(spacing: Theme.Spacing.s20) {
+                Image(systemName: "play.circle.fill")
+                Text("GW Recap")
+                    .font(Theme.Typography.subheadline)
+            }
+            .foregroundStyle(Theme.color(light: "FFC758", dark: "FFC758"))
+            .padding(.horizontal, Theme.Spacing.s40)
+            .padding(.vertical, Theme.Spacing.s20)
+            .background(Theme.color(light: "FFC758", dark: "FFC758").opacity(0.1))
+            .clipShape(Capsule())
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, Theme.Spacing.s40)
+        .accessibilityLabel("View gameweek recap")
+    }
+
     private var standingsContent: some View {
         ScrollView {
             VStack(spacing: Theme.Spacing.s40) {
@@ -153,6 +183,9 @@ struct LeagueDetailView: View {
                     winnerBanner
                 }
                 statsHeader
+                if viewModel.currentGameweek != nil {
+                    gwRecapButton
+                }
                 myPickCard
                 if viewModel.members.isEmpty {
                     emptyMembersView
