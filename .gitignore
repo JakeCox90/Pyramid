@@ -35,3 +35,4 @@ DerivedData/
 # ─── Node (for local Supabase tooling) ───────────────────────────────────────
 node_modules/
 .superpowers/
+.worktrees/
