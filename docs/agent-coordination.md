@@ -21,7 +21,7 @@
 | PYR-105 | feature/PYR-105-personal-stats | iOS | In Progress | ProfileStats, ProfileService, ProfileView+Stats | 2026-03-23 |
 | PYR-63 | feature/PYR-63-ui-test-scaffold | iOS | In Progress | PyramidUITests/*, AccessibilityIdentifiers.swift, project.yml, ios-ci.yml | 2026-03-23 |
 | PYR-147 | feature/PYR-147-fix-pick-list-live-scores | iOS | In Progress | FixturePickRow, usage-guide.md | 2026-03-24 |
-| PYR-93 | feature/PYR-93-activity-feed | iOS | In Progress | ActivityEvent, ActivityFeedService, LeagueDetailView+Activity, LeagueDetailViewModel | 2026-03-23 |
+| PYR-93 | feature/PYR-93-activity-feed | iOS | In Review | ActivityEvent, ActivityFeedService, LeagueDetailView+Activity, LeagueDetailViewModel | 2026-03-23 |
 
 > **Note:** PYR-131/133/139/140/141-144 are all on the same branch. This is a grouped delivery — tightly coupled pick carousel + homepage redesign work. All commits unmerged as of 2026-03-23.
 
