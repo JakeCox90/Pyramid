@@ -4,13 +4,14 @@ struct GameweekStoryView: View {
     @StateObject private var viewModel: GameweekStoryViewModel
     @Environment(\.dismiss) private var dismiss
 
-    init(leagueId: String, gameweek: Int, leagueName: String) {
+    init(leagueId: String, gameweek: Int, leagueName: String, currentUserId: String?) {
         _viewModel = StateObject(wrappedValue: GameweekStoryViewModel(
             leagueId: leagueId,
             gameweek: gameweek,
             leagueName: leagueName,
             storyService: GameweekStoryService(),
-            standingsService: StandingsService()
+            standingsService: StandingsService(),
+            currentUserId: currentUserId
         ))
     }
 

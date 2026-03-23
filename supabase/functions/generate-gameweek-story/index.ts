@@ -38,6 +38,18 @@ Deno.serve(async (req) => {
   const db = getServiceClient();
 
   try {
+    // 0. Early idempotency check — avoid LLM cost on duplicate calls
+    const { data: existing } = await db
+      .from("gameweek_stories")
+      .select("id")
+      .eq("idempotency_key", idempotencyKey)
+      .limit(1);
+
+    if (existing && existing.length > 0) {
+      log.info("Story already exists (early idempotency check)", { idempotencyKey });
+      return json({ status: "already_exists" }, 200);
+    }
+
     // 1. Build story context from settled data
     log.info("Building story context", { leagueId, gameweek });
     const ctx = await buildStoryContext(db, leagueId, gameweek);
@@ -70,8 +82,12 @@ Deno.serve(async (req) => {
           const llmData = await llmResponse.json();
           const rawText = llmData.content?.[0]?.text ?? "";
           const parsed = parseStoryOutput(rawText);
-          headline = parsed.headline;
-          storyBody = parsed.body;
+          if (parsed) {
+            headline = parsed.headline;
+            storyBody = parsed.body;
+          } else {
+            log.warn("LLM returned incomplete JSON — missing headline or body");
+          }
           log.info("Editorial generated", { headline });
         } else {
           log.warn("LLM API returned non-OK", { status: llmResponse.status });

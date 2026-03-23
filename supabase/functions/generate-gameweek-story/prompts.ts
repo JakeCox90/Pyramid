@@ -39,9 +39,10 @@ Tone: witty, opinionated football banter. Like a group chat narrator who's watch
 Respond with valid JSON only: {"headline": "...", "body": "..."}`;
 }
 
-export function parseStoryOutput(raw: string): StoryOutput {
+export function parseStoryOutput(raw: string): StoryOutput | null {
   const cleaned = raw.replace(/```json?\n?/g, "").replace(/```/g, "").trim();
   const parsed = JSON.parse(cleaned);
+  if (!parsed.headline || !parsed.body) return null;
   return {
     headline: String(parsed.headline).slice(0, 100),
     body: String(parsed.body).slice(0, 500),

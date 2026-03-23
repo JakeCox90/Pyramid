@@ -107,7 +107,8 @@ struct LeagueDetailView: View {
                 GameweekStoryView(
                     leagueId: viewModel.league.id,
                     gameweek: gameweek.id,
-                    leagueName: viewModel.league.name
+                    leagueName: viewModel.league.name,
+                    currentUserId: viewModel.currentUserId
                 )
             }
         }

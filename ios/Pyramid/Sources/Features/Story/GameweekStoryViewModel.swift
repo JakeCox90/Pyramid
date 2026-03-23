@@ -173,7 +173,7 @@ final class GameweekStoryViewModel: ObservableObject {
         result.append(.yourPick(pick: YourPickResult(
             teamName: userPick?.teamName,
             teamId: userPick?.teamId,
-            result: userPick?.teamName,
+            result: userPick?.result.rawValue,
             status: userStatus
         )))
 
