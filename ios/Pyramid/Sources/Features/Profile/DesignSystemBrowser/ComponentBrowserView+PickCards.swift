@@ -25,7 +25,7 @@ extension ComponentBrowserView {
     }
 }
 
-// MARK: - Pick Carousel Card
+// MARK: - Pick Card Large (Carousel)
 
 extension ComponentBrowserView {
     var pickCarouselCardSection: some View {
@@ -34,7 +34,7 @@ extension ComponentBrowserView {
             spacing: Theme.Spacing.s30
         ) {
             ComponentHeader(
-                title: "MatchCarouselCard"
+                title: "Pick Card Large"
             )
 
             ComponentCaption(
@@ -92,7 +92,7 @@ extension ComponentBrowserView {
     }
 }
 
-// MARK: - Pick List Card (FixturePickRow)
+// MARK: - Pick Card Small (List)
 
 extension ComponentBrowserView {
     var pickListCardSection: some View {
@@ -101,7 +101,7 @@ extension ComponentBrowserView {
             spacing: Theme.Spacing.s30
         ) {
             ComponentHeader(
-                title: "FixturePickRow"
+                title: "Pick Card Small"
             )
 
             ComponentCaption(

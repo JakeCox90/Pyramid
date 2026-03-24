@@ -208,12 +208,12 @@ Match cards display fixture information across different contexts. All variants 
 | **Live** | `MatchCard` (`.live`) | `DesignSystem/Components/MatchCard.swift` | 446pt | Home — green gradient, live score, LIVE pill, locked |
 | **Result** | `MatchCard` (`.finished`) | `DesignSystem/Components/MatchCard+Result.swift` | 446pt | Home — final score, survived/eliminated badge |
 | **Empty** | `MatchCard+Empty` | `DesignSystem/Components/MatchCard+Empty.swift` | 446pt | Home — no pick made yet |
-| **Pick Carousel** | `MatchCarouselCard` | `Features/Picks/MatchCarouselCard.swift` | 420pt | Pick screen carousel — two-team matchup, VS circle, PICK HOME/AWAY buttons, stats flip |
-| **Pick List** | `FixturePickRow` | `Features/Picks/FixturePickRow.swift` | 212pt | Pick screen list — compact two-team matchup, VS label, HOME/AWAY buttons |
+| **Pick Card Large** | `MatchCarouselCard` | `Features/Picks/MatchCarouselCard.swift` | 420pt | Pick screen carousel — two-team matchup, VS circle, PICK HOME/AWAY buttons, stats flip |
+| **Pick Card Small** | `FixturePickRow` | `Features/Picks/FixturePickRow.swift` | 212pt | Pick screen list — compact two-team matchup, VS label, HOME/AWAY buttons |
 
 **Key rules:**
 - Pick variants (Carousel + List) always show "VS" — never live scores. These are selection cards, not result cards.
-- Pick buttons respect `isLocked` (greyed out + disabled when gameweek has started).
+- Pick variants show a locked pill (lock icon + "LOCKED") when `isLocked`, replacing the pick buttons entirely.
 - Used teams show desaturated badges at 0.4 opacity with "USED GWn" button text.
 - The Fixture/Live/Result variants are for displaying a user's existing pick on the Home screen.
 
