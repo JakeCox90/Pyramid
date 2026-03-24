@@ -9,20 +9,45 @@ import SwiftUI
 // style_MY14W0: Inter Bold 12, uppercase, center
 
 extension MatchCarouselCard {
-    var pickButtons: some View {
-        HStack(spacing: 12) {
-            pickButton(
-                teamId: fixture.homeTeamId,
-                teamName: fixture.homeTeamName,
-                label: "PICK HOME"
-            )
-            statsIconButton
-            pickButton(
-                teamId: fixture.awayTeamId,
-                teamName: fixture.awayTeamName,
-                label: "PICK AWAY"
-            )
+    @ViewBuilder var pickButtons: some View {
+        if isLocked {
+            lockedPill
+        } else {
+            HStack(spacing: 12) {
+                pickButton(
+                    teamId: fixture.homeTeamId,
+                    teamName: fixture.homeTeamName,
+                    label: "PICK HOME"
+                )
+                statsIconButton
+                pickButton(
+                    teamId: fixture.awayTeamId,
+                    teamName: fixture.awayTeamName,
+                    label: "PICK AWAY"
+                )
+            }
         }
+    }
+
+    private var lockedPill: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "lock.fill")
+                .font(.system(size: 16))
+            Text("LOCKED")
+                .font(Theme.Typography.label01)
+        }
+        .foregroundStyle(Color.white.opacity(0.4))
+        .frame(maxWidth: .infinity)
+        .frame(height: 44)
+        .background(Color.white.opacity(0.1))
+        .overlay(
+            Capsule()
+                .stroke(
+                    Color.white.opacity(0.1),
+                    lineWidth: 1
+                )
+        )
+        .clipShape(Capsule())
     }
 
     /// Figma: IconButton (46:4119) — 44×44 circle,

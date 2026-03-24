@@ -7,27 +7,52 @@ import SwiftUI
 // Figma fill_RNW9LA: rgba(255,255,255,0.1), border-radius 200px
 
 extension FixturePickRow {
-    var pickButtons: some View {
-        HStack(spacing: 12) {
-            pickButton(
-                teamId: fixture.homeTeamId,
-                teamName: fixture.homeTeamName,
-                label: "Home"
-            )
-            .accessibilityIdentifier(
-                "\(AccessibilityID.Picks.homePickButton).\(fixture.id)"
-            )
-            pickButton(
-                teamId: fixture.awayTeamId,
-                teamName: fixture.awayTeamName,
-                label: "Away"
-            )
-            .accessibilityIdentifier(
-                "\(AccessibilityID.Picks.awayPickButton).\(fixture.id)"
-            )
+    @ViewBuilder var pickButtons: some View {
+        if isLocked {
+            lockedPill
+                .padding(.horizontal, 12)
+        } else {
+            HStack(spacing: 12) {
+                pickButton(
+                    teamId: fixture.homeTeamId,
+                    teamName: fixture.homeTeamName,
+                    label: "Home"
+                )
+                .accessibilityIdentifier(
+                    "\(AccessibilityID.Picks.homePickButton).\(fixture.id)"
+                )
+                pickButton(
+                    teamId: fixture.awayTeamId,
+                    teamName: fixture.awayTeamName,
+                    label: "Away"
+                )
+                .accessibilityIdentifier(
+                    "\(AccessibilityID.Picks.awayPickButton).\(fixture.id)"
+                )
+            }
+            .padding(.horizontal, 12)
         }
-        .padding(.horizontal, 12)
-        .padding(.bottom, 12)
+    }
+
+    private var lockedPill: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "lock.fill")
+                .font(.system(size: 16))
+            Text("LOCKED")
+                .font(Theme.Typography.label01)
+        }
+        .foregroundStyle(Color.white.opacity(0.4))
+        .frame(maxWidth: .infinity)
+        .frame(height: 44)
+        .background(Color.white.opacity(0.1))
+        .overlay(
+            Capsule()
+                .stroke(
+                    Color.white.opacity(0.1),
+                    lineWidth: 1
+                )
+        )
+        .clipShape(Capsule())
     }
 
     @ViewBuilder
