@@ -24,9 +24,9 @@ struct Card<Content: View>: View {
     }
 }
 
-// MARK: - Badge
+// MARK: - Flag
 
-enum BadgeIntent {
+enum FlagIntent {
     case success, error, neutral, warning
 
     var foreground: Color {
@@ -48,9 +48,9 @@ enum BadgeIntent {
     }
 }
 
-struct Badge: View {
+struct Flag: View {
     let label: String
-    let intent: BadgeIntent
+    let intent: FlagIntent
 
     var body: some View {
         Text(label)
@@ -78,7 +78,7 @@ enum PickStatus {
         }
     }
 
-    var badgeIntent: BadgeIntent {
+    var flagIntent: FlagIntent {
         switch self {
         case .survived:   return .success
         case .eliminated: return .error

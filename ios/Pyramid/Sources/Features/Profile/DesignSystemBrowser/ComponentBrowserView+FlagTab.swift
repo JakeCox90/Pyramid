@@ -6,36 +6,36 @@ import SwiftUI
 extension ComponentBrowserView {
     var flagContent: some View {
         Group {
-            badgesSection
+            flagsSection
         }
     }
 }
 
-// MARK: - Badges (Flag)
+// MARK: - Flags
 
 private extension ComponentBrowserView {
-    var badgesSection: some View {
+    var flagsSection: some View {
         VStack(
             alignment: .leading,
             spacing: Theme.Spacing.s30
         ) {
-            ComponentHeader(title: "Badge")
+            ComponentHeader(title: "Flag")
 
             ComponentCaption(text: "Intents")
             HStack(spacing: Theme.Spacing.s20) {
-                Badge(
+                Flag(
                     label: "Success",
                     intent: .success
                 )
-                Badge(
+                Flag(
                     label: "Error",
                     intent: .error
                 )
-                Badge(
+                Flag(
                     label: "Neutral",
                     intent: .neutral
                 )
-                Badge(
+                Flag(
                     label: "Warning",
                     intent: .warning
                 )
@@ -45,24 +45,24 @@ private extension ComponentBrowserView {
                 text: "Pick status (domain mapping)"
             )
             HStack(spacing: Theme.Spacing.s20) {
-                Badge(
+                Flag(
                     label: PickStatus.survived.label,
                     intent: PickStatus.survived
-                        .badgeIntent
+                        .flagIntent
                 )
-                Badge(
+                Flag(
                     label: PickStatus.eliminated.label,
                     intent: PickStatus.eliminated
-                        .badgeIntent
+                        .flagIntent
                 )
-                Badge(
+                Flag(
                     label: PickStatus.pending.label,
                     intent: PickStatus.pending
-                        .badgeIntent
+                        .flagIntent
                 )
-                Badge(
+                Flag(
                     label: PickStatus.void.label,
-                    intent: PickStatus.void.badgeIntent
+                    intent: PickStatus.void.flagIntent
                 )
             }
         }
