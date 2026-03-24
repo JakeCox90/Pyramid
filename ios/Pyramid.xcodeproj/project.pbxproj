@@ -53,6 +53,7 @@
 		319A129B56079D021616A322 /* LeaguesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C85AC94E06CB38EE15F06FBD /* LeaguesViewModel.swift */; };
 		31D01E27ECBFA7C142750EF8 /* EditLeagueViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4738067FD72ED3E7526A83E3 /* EditLeagueViewModel.swift */; };
 		394B36BDFC9E6193A2B80389 /* LeagueDetailView+Stats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4275A214EFB0ACFC61834626 /* LeagueDetailView+Stats.swift */; };
+		3A3EF1A549758736A9808B30 /* AchievementsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DE828CB8EDC993D9F7D163C /* AchievementsViewModel.swift */; };
 		3BC2D63D9468ABAB568C53CB /* HomeService+Results.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7087D5C0F7D5B30E7C38D5E /* HomeService+Results.swift */; };
 		3BE1BD4F84F101E92DE277C2 /* MatchCarouselCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C05C376219D2C470918CCE3B /* MatchCarouselCard.swift */; };
 		3D493E78B785A7D3FD97BF35 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C1BE5AB66D75DBBC1C9404F7 /* Assets.xcassets */; };
@@ -331,6 +332,7 @@
 		9B2439FBEE2B6C2E0BDCAD79 /* LeagueDetailView+Paid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LeagueDetailView+Paid.swift"; sourceTree = "<group>"; };
 		9BA353608E6A7787180E7AF5 /* LeaderboardRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaderboardRowView.swift; sourceTree = "<group>"; };
 		9C02605ACA52F43AD5DEC848 /* HomeService+Gameweeks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeService+Gameweeks.swift"; sourceTree = "<group>"; };
+		9DE828CB8EDC993D9F7D163C /* AchievementsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AchievementsViewModel.swift; sourceTree = "<group>"; };
 		9EB990011128CCADE74C90CE /* ProfileView+DevReset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProfileView+DevReset.swift"; sourceTree = "<group>"; };
 		A20EEF6DF0971C84B2752983 /* Icons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Icons.swift; sourceTree = "<group>"; };
 		A7087D5C0F7D5B30E7C38D5E /* HomeService+Results.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeService+Results.swift"; sourceTree = "<group>"; };
@@ -830,6 +832,7 @@
 			isa = PBXGroup;
 			children = (
 				D1526F2324FE62EC205A4386 /* AchievementCatalog.swift */,
+				9DE828CB8EDC993D9F7D163C /* AchievementsViewModel.swift */,
 			);
 			path = Achievements;
 			sourceTree = "<group>";
@@ -959,6 +962,7 @@
 				F7EA473375D632A88B23B035 /* Achievement.swift in Sources */,
 				478B810C56986DE56E039678 /* AchievementCatalog.swift in Sources */,
 				0F4CF701942E3FBC249C7951 /* AchievementService.swift in Sources */,
+				3A3EF1A549758736A9808B30 /* AchievementsViewModel.swift in Sources */,
 				F0D321EF5475432E66A4B7D9 /* ActivityEvent.swift in Sources */,
 				BD2A6B29D4F18DB2ABEA1E82 /* ActivityFeedService.swift in Sources */,
 				09BA31524053D46EBF2F0A12 /* AppError.swift in Sources */,
