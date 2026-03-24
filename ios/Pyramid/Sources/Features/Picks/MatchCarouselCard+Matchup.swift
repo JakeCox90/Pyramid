@@ -33,7 +33,8 @@ extension MatchCarouselCard {
                     y: vsBottom + segmentH / 2
                 )
 
-            // Figma: home badge 76×93 at x:38 y:94
+            // Badges vertically centred within the
+            // half-tint semicircles (tintY = 51 + 152/2 = 127)
             TeamBadge(
                 teamName: fixture.homeTeamName,
                 logoURL: fixture.homeTeamLogo,
@@ -41,9 +42,8 @@ extension MatchCarouselCard {
             )
             .saturation(homeIsUsed ? 0 : 1)
             .opacity(homeIsUsed ? 0.4 : 1.0)
-            .position(x: quarterX, y: 120)
+            .position(x: quarterX, y: 127)
 
-            // Figma: away badge 74×74 at x:241 y:93
             TeamBadge(
                 teamName: fixture.awayTeamName,
                 logoURL: fixture.awayTeamLogo,
@@ -52,7 +52,7 @@ extension MatchCarouselCard {
             .saturation(awayIsUsed ? 0 : 1)
             .opacity(awayIsUsed ? 0.4 : 1.0)
             .position(
-                x: w - quarterX, y: 120
+                x: w - quarterX, y: 127
             )
 
             // Figma: VS circle 40×40 at x:156 y:217
@@ -82,9 +82,9 @@ extension MatchCarouselCard {
         }
     }
 
-    /// Figma: Two half-tint rects, 150×152 each,
-    /// positioned behind each badge. Home: x=1 y=51,
-    /// Away: x=201 y=51 (at 352w). Radii: 8/200.
+    /// Two half-tint rects behind each badge.
+    /// Outer edges (touching card edge) have 0 radius
+    /// so they sit flush; inner edges use 200 radius.
     func halfTintLayer(
         width w: CGFloat,
         midX: CGFloat
@@ -95,25 +95,25 @@ extension MatchCarouselCard {
 
         return ZStack {
             UnevenRoundedRectangle(
-                topLeadingRadius: 8,
-                bottomLeadingRadius: 8,
+                topLeadingRadius: 0,
+                bottomLeadingRadius: 0,
                 bottomTrailingRadius: 200,
                 topTrailingRadius: 200
             )
             .fill(Color(hex: "241E31"))
             .frame(width: tintW, height: tintH)
-            .position(x: 1 + tintW / 2, y: tintY)
+            .position(x: tintW / 2, y: tintY)
 
             UnevenRoundedRectangle(
                 topLeadingRadius: 200,
                 bottomLeadingRadius: 200,
-                bottomTrailingRadius: 8,
-                topTrailingRadius: 8
+                bottomTrailingRadius: 0,
+                topTrailingRadius: 0
             )
             .fill(Color(hex: "241E31"))
             .frame(width: tintW, height: tintH)
             .position(
-                x: w - 1 - tintW / 2, y: tintY
+                x: w - tintW / 2, y: tintY
             )
         }
     }
