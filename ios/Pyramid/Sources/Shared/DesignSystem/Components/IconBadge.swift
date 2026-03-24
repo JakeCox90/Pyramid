@@ -5,14 +5,14 @@ struct IconBadgeConfiguration {
     let label: String
     let isActive: Bool
     let tier: Int?
-    let style: BadgeIntent
+    let style: FlagVariant
 
     init(
         icon: String,
         label: String,
         isActive: Bool = true,
         tier: Int? = nil,
-        style: BadgeIntent = .success
+        style: FlagVariant = .success
     ) {
         self.icon = icon
         self.label = label

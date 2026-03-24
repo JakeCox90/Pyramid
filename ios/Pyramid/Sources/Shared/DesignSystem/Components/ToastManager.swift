@@ -5,14 +5,14 @@ struct ToastConfiguration: Identifiable, Equatable {
     let icon: String
     let title: String
     let subtitle: String?
-    let style: BadgeIntent
+    let style: FlagVariant
     let duration: TimeInterval
 
     init(
         icon: String,
         title: String,
         subtitle: String? = nil,
-        style: BadgeIntent = .success,
+        style: FlagVariant = .success,
         duration: TimeInterval = 3.0
     ) {
         self.icon = icon
@@ -44,7 +44,7 @@ final class ToastManager: ObservableObject {
         icon: String,
         title: String,
         subtitle: String? = nil,
-        style: BadgeIntent = .success
+        style: FlagVariant = .success
     ) {
         show(ToastConfiguration(
             icon: icon,
