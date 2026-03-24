@@ -9,7 +9,7 @@ struct StoryWildcardCard: View {
 
             VStack(spacing: Theme.Spacing.s60) {
                 Text("Wildcard Pick")
-                    .font(Theme.Typography.caption1)
+                    .font(Theme.Typography.caption)
                     .foregroundStyle(Theme.color(light: "FFC758", dark: "FFC758"))
 
                 Image(systemName: "sparkles")
@@ -18,17 +18,17 @@ struct StoryWildcardCard: View {
 
                 VStack(spacing: Theme.Spacing.s20) {
                     Text(player.displayName)
-                        .font(Theme.Typography.title2)
+                        .font(Theme.Typography.h3)
                         .foregroundStyle(Theme.Color.Content.Text.default)
                         .multilineTextAlignment(.center)
 
                     Text(player.teamName)
-                        .font(Theme.Typography.headline)
+                        .font(Theme.Typography.subhead)
                         .foregroundStyle(Theme.Color.Content.Text.subtle)
                 }
 
                 Text(player.survived ? "Survived" : "Eliminated")
-                    .font(Theme.Typography.subheadline)
+                    .font(Theme.Typography.body)
                     .foregroundStyle(
                         player.survived
                             ? Theme.Color.Status.Success.resting

@@ -10,7 +10,7 @@ struct StoryHeadlineCard: View {
 
             VStack(spacing: Theme.Spacing.s50) {
                 Text(headline)
-                    .font(Theme.Typography.title1)
+                    .font(Theme.Typography.h2)
                     .foregroundStyle(Theme.Color.Content.Text.default)
                     .multilineTextAlignment(.center)
                     .minimumScaleFactor(0.7)

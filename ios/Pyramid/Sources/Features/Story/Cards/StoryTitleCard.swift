@@ -12,17 +12,17 @@ struct StoryTitleCard: View {
 
             VStack(spacing: Theme.Spacing.s60) {
                 Text("Gameweek \(gameweek)")
-                    .font(Theme.Typography.caption1)
+                    .font(Theme.Typography.caption)
                     .foregroundStyle(Theme.color(light: "FFC758", dark: "FFC758"))
 
                 Text(leagueName)
-                    .font(Theme.Typography.title1)
+                    .font(Theme.Typography.h2)
                     .foregroundStyle(Theme.Color.Content.Text.default)
                     .multilineTextAlignment(.center)
 
                 HStack(spacing: Theme.Spacing.s20) {
                     Text("\(aliveCount)")
-                        .font(Theme.Typography.title2)
+                        .font(Theme.Typography.h3)
                         .foregroundStyle(Theme.Color.Status.Success.resting)
                     Text("of \(totalCount) remaining")
                         .font(Theme.Typography.body)

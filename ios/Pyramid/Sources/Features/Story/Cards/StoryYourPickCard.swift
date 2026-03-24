@@ -38,7 +38,7 @@ struct StoryYourPickCard: View {
 
             VStack(spacing: Theme.Spacing.s60) {
                 Text("Your Pick")
-                    .font(Theme.Typography.caption1)
+                    .font(Theme.Typography.caption)
                     .foregroundStyle(Theme.color(light: "FFC758", dark: "FFC758"))
 
                 Image(systemName: statusIcon)
@@ -48,16 +48,16 @@ struct StoryYourPickCard: View {
                 VStack(spacing: Theme.Spacing.s20) {
                     if let teamName = pick.teamName {
                         Text(teamName)
-                            .font(Theme.Typography.title2)
+                            .font(Theme.Typography.h3)
                             .foregroundStyle(Theme.Color.Content.Text.default)
                     } else {
                         Text("No pick")
-                            .font(Theme.Typography.title2)
+                            .font(Theme.Typography.h3)
                             .foregroundStyle(Theme.Color.Content.Text.subtle)
                     }
 
                     Text(statusLabel)
-                        .font(Theme.Typography.subheadline)
+                        .font(Theme.Typography.body)
                         .foregroundStyle(statusColor)
                         .padding(.horizontal, Theme.Spacing.s50)
                         .padding(.vertical, Theme.Spacing.s20)

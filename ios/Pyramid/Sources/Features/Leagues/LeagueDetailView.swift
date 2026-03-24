@@ -164,7 +164,7 @@ struct LeagueDetailView: View {
             HStack(spacing: Theme.Spacing.s20) {
                 Image(systemName: "play.circle.fill")
                 Text("GW Recap")
-                    .font(Theme.Typography.subheadline)
+                    .font(Theme.Typography.body)
             }
             .foregroundStyle(Theme.color(light: "FFC758", dark: "FFC758"))
             .padding(.horizontal, Theme.Spacing.s40)

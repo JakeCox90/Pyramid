@@ -23,12 +23,12 @@ struct GameweekOverviewView: View {
                     Button("Replay Story") {
                         dismiss()
                     }
-                    .font(Theme.Typography.subheadline)
+                    .font(Theme.Typography.body)
                     .foregroundStyle(Theme.color(light: "FFC758", dark: "FFC758"))
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Done") { dismiss() }
-                        .font(Theme.Typography.subheadline)
+                        .font(Theme.Typography.body)
                         .foregroundStyle(Theme.Color.Primary.resting)
                 }
             }
@@ -38,10 +38,10 @@ struct GameweekOverviewView: View {
     private var headerSection: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s20) {
             Text("Gameweek \(viewModel.gameweek)")
-                .font(Theme.Typography.caption1)
+                .font(Theme.Typography.caption)
                 .foregroundStyle(Theme.Color.Content.Text.subtle)
             Text(viewModel.leagueName)
-                .font(Theme.Typography.title2)
+                .font(Theme.Typography.h3)
                 .foregroundStyle(Theme.Color.Content.Text.default)
         }
     }
@@ -66,10 +66,10 @@ struct GameweekOverviewView: View {
     private func statBox(label: String, count: Int, color: Color) -> some View {
         VStack(spacing: Theme.Spacing.s10) {
             Text("\(count)")
-                .font(Theme.Typography.title2)
+                .font(Theme.Typography.h3)
                 .foregroundStyle(color)
             Text(label)
-                .font(Theme.Typography.caption1)
+                .font(Theme.Typography.caption)
                 .foregroundStyle(Theme.Color.Content.Text.subtle)
         }
         .frame(maxWidth: .infinity)
@@ -81,7 +81,7 @@ struct GameweekOverviewView: View {
     private var picksSection: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s30) {
             Text("All Picks")
-                .font(Theme.Typography.headline)
+                .font(Theme.Typography.subhead)
                 .foregroundStyle(Theme.Color.Content.Text.default)
 
             ForEach(viewModel.cards, id: \.id) { card in
@@ -111,13 +111,13 @@ struct GameweekOverviewView: View {
                     .foregroundStyle(Theme.Color.Content.Text.default)
                 if !team.isEmpty {
                     Text(team)
-                        .font(Theme.Typography.caption1)
+                        .font(Theme.Typography.caption)
                         .foregroundStyle(Theme.Color.Content.Text.subtle)
                 }
             }
             Spacer()
             Text(result)
-                .font(Theme.Typography.caption1)
+                .font(Theme.Typography.caption)
                 .foregroundStyle(survived ? Theme.Color.Status.Success.resting : Theme.Color.Status.Error.resting)
         }
         .padding(Theme.Spacing.s30)

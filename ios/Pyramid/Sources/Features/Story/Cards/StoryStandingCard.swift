@@ -11,7 +11,7 @@ struct StoryStandingCard: View {
 
             VStack(spacing: Theme.Spacing.s50) {
                 Text("Still Standing")
-                    .font(Theme.Typography.caption1)
+                    .font(Theme.Typography.caption)
                     .foregroundStyle(Theme.color(light: "FFC758", dark: "FFC758"))
 
                 if userStatus == .winner {
@@ -20,12 +20,12 @@ struct StoryStandingCard: View {
                             .font(.system(size: 48))
                             .foregroundStyle(Theme.color(light: "FFC758", dark: "FFC758"))
                         Text("You Won!")
-                            .font(Theme.Typography.title1)
+                            .font(Theme.Typography.h2)
                             .foregroundStyle(Theme.Color.Content.Text.default)
                     }
                 } else {
                     Text("\(players.count) of \(totalCount) remain")
-                        .font(Theme.Typography.title2)
+                        .font(Theme.Typography.h3)
                         .foregroundStyle(Theme.Color.Content.Text.default)
                 }
 
@@ -36,8 +36,8 @@ struct StoryStandingCard: View {
                                 Text(player.displayName)
                                     .font(
                                         player.isCurrentUser
-                                            ? Theme.Typography.headline
-                                            : Theme.Typography.subheadline
+                                            ? Theme.Typography.subhead
+                                            : Theme.Typography.body
                                     )
                                     .foregroundStyle(
                                         player.isCurrentUser
@@ -47,7 +47,7 @@ struct StoryStandingCard: View {
 
                                 if player.isCurrentUser {
                                     Text("You")
-                                        .font(Theme.Typography.caption2)
+                                        .font(Theme.Typography.overline)
                                         .foregroundStyle(Theme.Color.Content.Text.contrast)
                                         .padding(.horizontal, Theme.Spacing.s20)
                                         .padding(.vertical, 2)

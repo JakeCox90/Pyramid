@@ -9,7 +9,7 @@ struct StoryMassElimCard: View {
 
             VStack(spacing: Theme.Spacing.s60) {
                 Text("Mass Elimination")
-                    .font(Theme.Typography.caption1)
+                    .font(Theme.Typography.caption)
                     .foregroundStyle(Theme.color(light: "FFC758", dark: "FFC758"))
 
                 Image(systemName: "bolt.fill")
@@ -17,7 +17,7 @@ struct StoryMassElimCard: View {
                     .foregroundStyle(Theme.color(light: "FFC758", dark: "FFC758"))
 
                 Text("Everyone Out")
-                    .font(Theme.Typography.title1)
+                    .font(Theme.Typography.h2)
                     .foregroundStyle(Theme.Color.Content.Text.default)
 
                 Text("\(playerCount) player\(playerCount == 1 ? "" : "s") eliminated in one go")

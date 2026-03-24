@@ -18,23 +18,23 @@ struct StoryUpsetCard: View {
 
             VStack(spacing: Theme.Spacing.s60) {
                 Text("Biggest Upset")
-                    .font(Theme.Typography.caption1)
+                    .font(Theme.Typography.caption)
                     .foregroundStyle(Theme.color(light: "FFC758", dark: "FFC758"))
 
                 VStack(spacing: Theme.Spacing.s30) {
                     HStack(spacing: Theme.Spacing.s40) {
                         Text(fixture.homeTeamName)
-                            .font(Theme.Typography.headline)
+                            .font(Theme.Typography.subhead)
                             .foregroundStyle(Theme.Color.Content.Text.default)
                             .multilineTextAlignment(.trailing)
                             .frame(maxWidth: .infinity, alignment: .trailing)
 
                         Text("\(homeScore) - \(awayScore)")
-                            .font(Theme.Typography.title2)
+                            .font(Theme.Typography.h3)
                             .foregroundStyle(Theme.color(light: "FFC758", dark: "FFC758"))
 
                         Text(fixture.awayTeamName)
-                            .font(Theme.Typography.headline)
+                            .font(Theme.Typography.subhead)
                             .foregroundStyle(Theme.Color.Content.Text.default)
                             .multilineTextAlignment(.leading)
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -42,7 +42,7 @@ struct StoryUpsetCard: View {
                 }
 
                 Text("\(eliminationCount) player\(eliminationCount == 1 ? "" : "s") eliminated")
-                    .font(Theme.Typography.subheadline)
+                    .font(Theme.Typography.body)
                     .foregroundStyle(Theme.Color.Status.Error.resting)
             }
             .padding(Theme.Spacing.s70)

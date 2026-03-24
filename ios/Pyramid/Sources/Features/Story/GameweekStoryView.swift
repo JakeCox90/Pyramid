@@ -59,7 +59,7 @@ struct GameweekStoryView: View {
                         viewModel.showOverview = true
                     } label: {
                         Text("View Full Recap")
-                            .font(Theme.Typography.subheadline)
+                            .font(Theme.Typography.body)
                             .foregroundStyle(Theme.Color.Primary.text)
                             .padding(.horizontal, 32)
                             .padding(.vertical, 12)

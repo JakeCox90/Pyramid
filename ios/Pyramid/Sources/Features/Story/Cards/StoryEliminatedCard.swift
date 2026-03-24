@@ -9,11 +9,11 @@ struct StoryEliminatedCard: View {
 
             VStack(spacing: Theme.Spacing.s50) {
                 Text("Eliminated")
-                    .font(Theme.Typography.caption1)
+                    .font(Theme.Typography.caption)
                     .foregroundStyle(Theme.color(light: "FFC758", dark: "FFC758"))
 
                 Text("\(players.count) out this week")
-                    .font(Theme.Typography.title2)
+                    .font(Theme.Typography.h3)
                     .foregroundStyle(Theme.Color.Status.Error.resting)
 
                 ScrollView {
@@ -22,16 +22,16 @@ struct StoryEliminatedCard: View {
                             HStack {
                                 VStack(alignment: .leading, spacing: Theme.Spacing.s10) {
                                     Text(player.displayName)
-                                        .font(Theme.Typography.subheadline)
+                                        .font(Theme.Typography.body)
                                         .foregroundStyle(Theme.Color.Content.Text.default)
 
                                     if player.isAutoEliminated {
                                         Text("Missed deadline")
-                                            .font(Theme.Typography.caption1)
+                                            .font(Theme.Typography.caption)
                                             .foregroundStyle(Theme.Color.Status.Warning.resting)
                                     } else {
                                         Text(player.teamName)
-                                            .font(Theme.Typography.caption1)
+                                            .font(Theme.Typography.caption)
                                             .foregroundStyle(Theme.Color.Content.Text.subtle)
                                     }
                                 }
