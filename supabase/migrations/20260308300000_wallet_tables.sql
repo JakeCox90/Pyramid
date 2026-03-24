@@ -4,17 +4,21 @@
 
 -- ─── Enum ─────────────────────────────────────────────────────────────────────
 
-create type public.wallet_transaction_type as enum (
-  'top_up',
-  'stake',
-  'stake_refund',
-  'winnings',
-  'withdrawal'
-);
+do $$
+begin
+  if not exists (
+    select 1 from pg_type where typname = 'wallet_transaction_type'
+  ) then
+    create type public.wallet_transaction_type as enum (
+      'top_up', 'stake', 'stake_refund', 'winnings', 'withdrawal'
+    );
+  end if;
+end
+$$;
 
 -- ─── wallet_transactions ──────────────────────────────────────────────────────
 
-create table public.wallet_transactions (
+create table if not exists public.wallet_transactions (
   id                        uuid primary key default gen_random_uuid(),
   user_id                   uuid not null references public.profiles(id) on delete cascade,
   type                      public.wallet_transaction_type not null,
@@ -35,17 +39,29 @@ comment on table public.wallet_transactions is
   'Direction is implied by type: top_up/stake_refund/winnings credit the user; '
   'stake/withdrawal debit the user.';
 
-create index wallet_transactions_user_idx  on public.wallet_transactions(user_id);
-create index wallet_transactions_type_idx  on public.wallet_transactions(type);
-create index wallet_transactions_dispute_idx on public.wallet_transactions(dispute_window_expires_at)
+create index if not exists wallet_transactions_user_idx  on public.wallet_transactions(user_id);
+create index if not exists wallet_transactions_type_idx  on public.wallet_transactions(type);
+create index if not exists wallet_transactions_dispute_idx on public.wallet_transactions(dispute_window_expires_at)
   where dispute_window_expires_at is not null;
 
 alter table public.wallet_transactions enable row level security;
 
 -- Users can read their own transactions only.
-create policy "Users can view their own wallet transactions"
-  on public.wallet_transactions for select
-  using (auth.uid() = user_id);
+do $$
+begin
+  if not exists (
+    select 1 from pg_policies
+    where tablename = 'wallet_transactions'
+      and policyname = 'Users can view their own wallet transactions'
+  ) then
+    execute $policy$
+      create policy "Users can view their own wallet transactions"
+        on public.wallet_transactions for select
+        using (auth.uid() = user_id)
+    $policy$;
+  end if;
+end
+$$;
 
 -- Only service-role Edge Functions write transactions (no client inserts).
 
@@ -56,7 +72,7 @@ create policy "Users can view their own wallet transactions"
 -- withdrawable: winnings whose dispute_window_expires_at <= now, plus top_up funds minus stakes.
 --   Specifically: top_up + stake_refund credits + winnings past dispute window, minus stake + withdrawal debits.
 
-create view public.user_wallet_balances as
+create or replace view public.user_wallet_balances as
   select
     user_id,
     -- Available to play: all credits minus all debits
