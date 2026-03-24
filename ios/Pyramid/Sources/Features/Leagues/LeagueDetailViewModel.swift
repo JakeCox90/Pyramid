@@ -8,11 +8,14 @@ final class LeagueDetailViewModel: ObservableObject {
     @Published var fixtures: [Int: Fixture] = [:]  // keyed by fixture ID
     @Published var isLoading = false
     @Published var errorMessage: String?
+    @Published var activityEvents: [ActivityEvent] = []
+    @Published var showAllActivity = false
 
     let league: League
 
     private let standingsService: StandingsServiceProtocol
     private let pickService: PickServiceProtocol
+    private let activityFeedService: ActivityFeedServiceProtocol
     private var pollingTask: Task<Void, Never>?
 
     var sortedMembers: [LeagueMember] {
@@ -80,11 +83,13 @@ final class LeagueDetailViewModel: ObservableObject {
     init(
         league: League,
         standingsService: StandingsServiceProtocol = StandingsService(),
-        pickService: PickServiceProtocol = PickService()
+        pickService: PickServiceProtocol = PickService(),
+        activityFeedService: ActivityFeedServiceProtocol = ActivityFeedService()
     ) {
         self.league = league
         self.standingsService = standingsService
         self.pickService = pickService
+        self.activityFeedService = activityFeedService
     }
 
     func load() async {
@@ -107,10 +112,22 @@ final class LeagueDetailViewModel: ObservableObject {
             if isDeadlinePassed() {
                 try await refreshFixtures()
             }
+            await loadActivityFeed()
         } catch {
             errorMessage = AppError.from(error).userMessage
         }
         isLoading = false
+    }
+
+    func loadActivityFeed() async {
+        do {
+            activityEvents = try await activityFeedService
+                .fetchActivityEvents(leagueId: league.id)
+        } catch {
+            Log.picks.warning(
+                "Activity feed load failed: \(error.localizedDescription)"
+            )
+        }
     }
 
     func pick(for member: LeagueMember) -> MemberPick? {

@@ -159,6 +159,7 @@ struct LeagueDetailView: View {
                 } else {
                     membersList
                 }
+                activitySection
             }
             .padding(.vertical, Theme.Spacing.s40)
         }
