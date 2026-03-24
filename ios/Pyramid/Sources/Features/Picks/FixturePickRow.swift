@@ -70,7 +70,7 @@ struct FixturePickRow: View {
     private var cardContent: some View {
         VStack(spacing: 0) {
             matchupArea
-            pickTeamDivider
+            Spacer()
             pickButtons
         }
     }
@@ -159,32 +159,5 @@ extension FixturePickRow {
         Text("VS")
             .font(Theme.Typography.overline)
             .foregroundStyle(Color.white)
-    }
-}
-
-// MARK: - Pick Team Divider
-
-extension FixturePickRow {
-    // layout_KGNZ8S: x:6, y:127, width:340, height:15
-    // Divider lines: stroke_53XB8X = rgba(255,255,255,0.2), 1px
-    // Text: style_U4AW74 = Inter Bold 12, uppercase
-    var pickTeamDivider: some View {
-        HStack(spacing: 0) {
-            dividerLine
-            Text("PICK TEAM")
-                .font(Theme.Typography.overline)
-                .foregroundStyle(
-                    Color.white.opacity(0.4)
-                )
-                .padding(.horizontal, 12)
-            dividerLine
-        }
-        .padding(.horizontal, 6)
-    }
-
-    var dividerLine: some View {
-        Rectangle()
-            .fill(Color.white.opacity(0.2))
-            .frame(height: 1)
     }
 }
