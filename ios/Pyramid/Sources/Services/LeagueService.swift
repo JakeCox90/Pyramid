@@ -214,7 +214,7 @@ final class LeagueService: LeagueServiceProtocol {
             if let description {
                 body["description"] = description
             }
-            let _: [String: String] = try await client
+            try await client
                 .functions
                 .invoke(
                     "update-league",
