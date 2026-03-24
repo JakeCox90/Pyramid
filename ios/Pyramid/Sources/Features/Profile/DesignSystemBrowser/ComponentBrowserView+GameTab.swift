@@ -22,29 +22,63 @@ extension ComponentBrowserView {
         ) {
             ComponentHeader(title: "LeagueCardView")
 
+            ComponentCaption(text: "Pending")
             LeagueCardView(
                 league: League(
                     id: "1",
                     name: "Sunday League",
                     joinCode: "ABC123",
                     type: .free,
-                    status: .active,
+                    status: .pending,
                     season: 2025,
                     createdAt: Date(),
                     emoji: "⚽",
-                    description: "The lads"
+                    description: "Waiting for the boys"
                 )
             )
+
+            ComponentCaption(text: "Active")
             LeagueCardView(
                 league: League(
                     id: "2",
                     name: "Office Crew",
                     joinCode: "XYZ789",
                     type: .free,
+                    status: .active,
+                    season: 2025,
+                    createdAt: Date(),
+                    emoji: "🔥",
+                    description: "The lads"
+                )
+            )
+
+            ComponentCaption(text: "Completed")
+            LeagueCardView(
+                league: League(
+                    id: "3",
+                    name: "Champions League",
+                    joinCode: "WIN999",
+                    type: .free,
                     status: .completed,
                     season: 2025,
                     createdAt: Date(),
                     emoji: "🏆"
+                )
+            )
+
+            ComponentCaption(
+                text: "No description"
+            )
+            LeagueCardView(
+                league: League(
+                    id: "4",
+                    name: "Quick Game",
+                    joinCode: "QCK111",
+                    type: .free,
+                    status: .active,
+                    season: 2025,
+                    createdAt: Date(),
+                    emoji: "⚡"
                 )
             )
         }

@@ -10,6 +10,8 @@ enum ComponentTab: String, CaseIterable {
 struct ComponentBrowserView: View {
     @State private var selectedTab: ComponentTab = .core
     @State var sampleText = ""
+    @State var sampleEmoji = "⚽"
+    @State var samplePalette = "primary"
 
     var body: some View {
         VStack(spacing: 0) {
@@ -53,6 +55,8 @@ extension ComponentBrowserView {
             buttonsSection
             iconButtonsSection
             inputFieldsSection
+            emojiPickerSection
+            palettePickerSection
             cardSection
             badgesSection
             placeholderSection
@@ -154,6 +158,34 @@ private extension ComponentBrowserView {
                 placeholder: "Password",
                 isSecure: true
             )
+        }
+    }
+}
+
+// MARK: - Emoji Picker
+
+private extension ComponentBrowserView {
+    var emojiPickerSection: some View {
+        VStack(
+            alignment: .leading,
+            spacing: Theme.Spacing.s30
+        ) {
+            ComponentHeader(title: "EmojiPicker")
+            EmojiPicker(selected: $sampleEmoji)
+        }
+    }
+}
+
+// MARK: - Palette Picker
+
+private extension ComponentBrowserView {
+    var palettePickerSection: some View {
+        VStack(
+            alignment: .leading,
+            spacing: Theme.Spacing.s30
+        ) {
+            ComponentHeader(title: "PalettePicker")
+            PalettePicker(selected: $samplePalette)
         }
     }
 }
