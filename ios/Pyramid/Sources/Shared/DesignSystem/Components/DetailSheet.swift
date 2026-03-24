@@ -2,7 +2,7 @@ import SwiftUI
 
 struct DetailSheetConfiguration {
     let icon: String
-    let iconStyle: BadgeIntent
+    let iconStyle: FlagVariant
     let title: String
     let subtitle: String?
     let metadata: [(label: String, value: String)]
@@ -10,7 +10,7 @@ struct DetailSheetConfiguration {
 
     init(
         icon: String,
-        iconStyle: BadgeIntent = .success,
+        iconStyle: FlagVariant = .success,
         title: String,
         subtitle: String? = nil,
         metadata: [(label: String, value: String)] = [],

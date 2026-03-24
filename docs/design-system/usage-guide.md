@@ -141,27 +141,48 @@ Image(systemName: Theme.Icon.Status.success)
 
 Pre-built components live in `DesignSystem/Components/`. Use these instead of building from scratch.
 
-### DSButton
+### Button (.themed)
+
+All action buttons MUST use the `.themed()` modifier. No call-site style overrides are permitted — background, foreground, font, shape, frame, opacity, and clip shape are all owned by the component.
 
 ```swift
 Button("Join League") { /* action */ }
-    .dsStyle(.primary, size: .large)
+    .themed(.primary)
 ```
 
-Variants: `.primary`, `.secondary`, `.destructive`, `.ghost`
-Sizes: `.large` (50pt), `.medium` (40pt), `.small` (32pt)
+Variants: `.primary` (yellow), `.secondary` (white 10%), `.destructive` (red), `.ghost` (clear)
 
 ```swift
 // Full-width loading button
 Button("Submitting...") { }
-    .dsStyle(.primary, size: .large, isLoading: true)
+    .themed(.primary, isLoading: true)
 
 // Inline secondary button
 Button("Cancel") { dismiss() }
-    .dsStyle(.secondary, size: .medium, fullWidth: false)
+    .themed(.secondary, fullWidth: false)
+
+// Disabled with lock icon
+Button {} label: {
+    Label("LOCKED", systemImage: Theme.Icon.Pick.locked)
+}
+.themed(.secondary)
+.disabled(true)
 ```
 
-### DSCard
+**Permitted at call site:** `.disabled()`, `.accessibilityLabel()`, `.accessibilityHint()`, label content (text/icons passed to Button's label closure).
+
+**Forbidden at call site:** `.background()`, `.clipShape()`, `.foregroundStyle()`, `.font()`, `.opacity()`, `.frame(height:)`, `.tracking()`, custom gradients, or any visual modifier that overrides the component's styling.
+
+### IconButton
+
+For icon-only action buttons (stats, share, etc.). Encapsulates 44×44 frame, capsule shape, and variant colours.
+
+```swift
+IconButton(icon: "chart.bar", action: { showStats() })
+IconButton(icon: "square.and.arrow.up", variant: .secondary, action: { share() })
+```
+
+### Card
 
 ```swift
 DSCard {
@@ -178,13 +199,22 @@ DSCard {
 
 Provides `Surface.Background.container` + `Radius.r40` + `Shadow.md` + `Spacing.s40` padding automatically.
 
-### PickStatusBadge
+### Flag
 
 ```swift
-PickStatusBadge(status: .survived)
-PickStatusBadge(status: .eliminated)
-PickStatusBadge(status: .pending)
-PickStatusBadge(status: .void)
+Flag(label: "Survived", variant: .success)
+Flag(label: "Eliminated", variant: .error)
+Flag(label: "Pending", variant: .neutral)
+Flag(label: "Void", variant: .warning)
+```
+
+Pick status has a convenience mapping via `PickStatus.flagVariant`:
+
+```swift
+Flag(
+    label: PickStatus.survived.label,
+    variant: PickStatus.survived.flagVariant
+)
 ```
 
 ### LeagueCard
@@ -290,6 +320,8 @@ struct DeadlineBanner: View {
 1. **Never use raw hex values** — always `Theme.Color.*`
 2. **Never use `Font.system(...)`** — always `Theme.Typography.*`
 3. **Never use magic numbers for spacing** — always `Theme.Spacing.*`
-4. **Use DS components** (`DSCard`, `DSButton`, etc.) before building custom ones
+4. **Use DS components** (`Card`, `.themed()`, `IconButton`, etc.) before building custom ones
 5. **Use `Theme.Icon.*`** for SF Symbol names — never hardcode strings
 6. **Accessibility** — minimum 44pt touch targets, 4.5:1 contrast ratio for text
+7. **No call-site overrides on atomic components** — buttons, icon buttons, cards, and inputs define their own visual styling. Call sites pass content and state (label, disabled, loading), never style (background, font, foreground, shape, opacity, frame). This is a core design system principle.
+8. **All new components must be added to the design system browser** on the Profile page. Extend existing components where possible. Flag new component proposals to the human.

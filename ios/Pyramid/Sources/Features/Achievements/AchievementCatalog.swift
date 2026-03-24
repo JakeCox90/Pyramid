@@ -7,7 +7,7 @@ struct BadgeDefinition {
     let icon: String
     let track: String?
     let tier: Int?
-    let style: BadgeIntent
+    let style: FlagVariant
 }
 
 enum AchievementCatalog {

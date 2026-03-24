@@ -47,24 +47,24 @@ extension LeagueCardView {
     @ViewBuilder private var statusBadge: some View {
         switch league.status {
         case .pending:
-            Badge(
+            Flag(
                 label: "Waiting",
-                intent: .warning
+                variant: .warning
             )
         case .active:
-            Badge(
+            Flag(
                 label: "Active",
-                intent: .success
+                variant: .success
             )
         case .completed:
-            Badge(
+            Flag(
                 label: "Finished",
-                intent: .neutral
+                variant: .neutral
             )
         case .cancelled:
-            Badge(
+            Flag(
                 label: "Cancelled",
-                intent: .error
+                variant: .error
             )
         }
     }
