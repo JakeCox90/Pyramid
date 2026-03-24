@@ -47,7 +47,8 @@ struct EmojiPicker: View {
                 )
                 .background(
                     emoji == selected
-                        ? Theme.Color.Primary.subtle
+                        ? Theme.Color.Primary.resting
+                            .opacity(0.15)
                         : Theme.Color.Surface.Background
                             .container
                 )
