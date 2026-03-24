@@ -7,7 +7,7 @@
 
 -- ─── Table ────────────────────────────────────────────────────────────────────
 
-CREATE TABLE public.user_stats (
+CREATE TABLE IF NOT EXISTS public.user_stats (
   user_id                  uuid PRIMARY KEY REFERENCES public.profiles(id) ON DELETE CASCADE,
   total_leagues_joined     integer NOT NULL DEFAULT 0,
   wins                     integer NOT NULL DEFAULT 0,
@@ -32,26 +32,32 @@ COMMENT ON COLUMN public.user_stats.survival_rate_pct IS
 
 -- ─── Indexes ─────────────────────────────────────────────────────────────────
 
-CREATE INDEX user_stats_updated_at_idx ON public.user_stats(updated_at);
+CREATE INDEX IF NOT EXISTS user_stats_updated_at_idx ON public.user_stats(updated_at);
 
 -- ─── RLS ─────────────────────────────────────────────────────────────────────
 
 ALTER TABLE public.user_stats ENABLE ROW LEVEL SECURITY;
 
 -- Users can read their own stats row.
-CREATE POLICY "Users can view own stats"
-  ON public.user_stats FOR SELECT
-  USING (user_id = auth.uid());
-
--- Service role bypasses RLS by default in Supabase (using service key).
--- Explicit INSERT/UPDATE policies for service role to be safe.
-CREATE POLICY "Service role can insert stats"
-  ON public.user_stats FOR INSERT
-  WITH CHECK (true);
-
-CREATE POLICY "Service role can update stats"
-  ON public.user_stats FOR UPDATE
-  USING (true);
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies WHERE tablename = 'user_stats' AND policyname = 'Users can view own stats'
+  ) THEN
+    CREATE POLICY "Users can view own stats" ON public.user_stats FOR SELECT USING (user_id = auth.uid());
+  END IF;
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies WHERE tablename = 'user_stats' AND policyname = 'Service role can insert stats'
+  ) THEN
+    CREATE POLICY "Service role can insert stats" ON public.user_stats FOR INSERT WITH CHECK (true);
+  END IF;
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies WHERE tablename = 'user_stats' AND policyname = 'Service role can update stats'
+  ) THEN
+    CREATE POLICY "Service role can update stats" ON public.user_stats FOR UPDATE USING (true);
+  END IF;
+END
+$$;
 
 -- ─── refresh_user_stats(target_user_id) ──────────────────────────────────────
 --

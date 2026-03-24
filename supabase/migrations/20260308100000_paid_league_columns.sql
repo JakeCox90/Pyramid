@@ -11,17 +11,25 @@
 -- active (≥ 5 players, round in progress) → complete (winner declared).
 -- We add a separate column so paid and free lifecycle states don't conflict.
 
-create type public.paid_league_status as enum ('waiting', 'active', 'complete');
+do $$
+begin
+  if not exists (
+    select 1 from pg_type where typname = 'paid_league_status'
+  ) then
+    create type public.paid_league_status as enum ('waiting', 'active', 'complete');
+  end if;
+end
+$$;
 
 -- ─── leagues additions ────────────────────────────────────────────────────────
 
 alter table public.leagues
-  add column stake_pence           integer,                                -- null for free leagues; 5000 = £5 for paid
-  add column paid_status           public.paid_league_status,              -- null for free leagues
-  add column prize_pot_pence       integer,                                -- gross pot before platform fee; set by Edge Function when round starts
-  add column platform_fee_pence    integer,                                -- 8% of gross; set when round starts
-  add column round_started_at      timestamptz,                            -- when min players reached and round began
-  add column round_ended_at        timestamptz;                            -- when winner declared
+  add column if not exists stake_pence           integer,
+  add column if not exists paid_status           public.paid_league_status,
+  add column if not exists prize_pot_pence       integer,
+  add column if not exists platform_fee_pence    integer,
+  add column if not exists round_started_at      timestamptz,
+  add column if not exists round_ended_at        timestamptz;
 
 comment on column public.leagues.paid_status is
   'Lifecycle state for paid matchmaking leagues: waiting (< 5 players), active (round in progress), complete (winner declared). Null for free leagues.';
@@ -33,9 +41,9 @@ comment on column public.leagues.round_started_at is
 -- ─── league_members additions ─────────────────────────────────────────────────
 
 alter table public.league_members
-  add column pseudonym          text,     -- stable per user per paid league; null for free leagues
-  add column finishing_position integer,  -- 1, 2, or 3; set at round end by distribute-prizes
-  add column prize_pence        integer;  -- amount won; set at round end by distribute-prizes
+  add column if not exists pseudonym          text,
+  add column if not exists finishing_position integer,
+  add column if not exists prize_pence        integer;
 
 comment on column public.league_members.pseudonym is
   'Stable pseudonym for this member in this paid league (e.g. "Player 7"). Revealed real identity when round_ended_at is set.';
@@ -44,11 +52,11 @@ comment on column public.league_members.finishing_position is
 
 -- ─── Indexes ──────────────────────────────────────────────────────────────────
 
-create index leagues_paid_status_idx on public.leagues(paid_status)
+create index if not exists leagues_paid_status_idx on public.leagues(paid_status)
   where paid_status is not null;
-create index leagues_stake_pence_idx on public.leagues(stake_pence)
+create index if not exists leagues_stake_pence_idx on public.leagues(stake_pence)
   where stake_pence is not null;
-create index league_members_pseudonym_idx on public.league_members(pseudonym)
+create index if not exists league_members_pseudonym_idx on public.league_members(pseudonym)
   where pseudonym is not null;
 
 -- ─── RLS: pseudonymity in active paid leagues ──────────────────────────────────
