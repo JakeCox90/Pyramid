@@ -45,14 +45,3 @@ struct LeagueRowView: View {
         }
     }
 }
-
-extension League.LeagueStatus {
-    var displayName: String {
-        switch self {
-        case .pending:   return "Waiting for players"
-        case .active:    return "In progress"
-        case .completed: return "Finished"
-        case .cancelled: return "Cancelled"
-        }
-    }
-}
