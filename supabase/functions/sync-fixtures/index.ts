@@ -13,6 +13,43 @@ import { ApiFootballClient, CURRENT_SEASON, parseRoundNumber, teamShortCode } fr
 import { getServiceClient } from "../_shared/supabase.ts";
 import { createLogger } from "../_shared/logger.ts";
 
+function extractWinProbabilities(fixture: any): {
+  home_win_prob: number | null;
+  draw_prob: number | null;
+  away_win_prob: number | null;
+} {
+  try {
+    const rawOdds = fixture?.odds;
+    if (!rawOdds || !Array.isArray(rawOdds) || rawOdds.length === 0) {
+      return { home_win_prob: null, draw_prob: null, away_win_prob: null };
+    }
+    const matchWinner = rawOdds
+      .flatMap((bookmaker: any) => bookmaker.bets || [])
+      .find((bet: any) => bet.id === 1 || bet.name === "Match Winner");
+
+    if (!matchWinner?.values) {
+      return { home_win_prob: null, draw_prob: null, away_win_prob: null };
+    }
+
+    const homeOdds = parseFloat(matchWinner.values.find((v: any) => v.value === "Home")?.odd || "0");
+    const drawOdds = parseFloat(matchWinner.values.find((v: any) => v.value === "Draw")?.odd || "0");
+    const awayOdds = parseFloat(matchWinner.values.find((v: any) => v.value === "Away")?.odd || "0");
+
+    if (homeOdds <= 0 || drawOdds <= 0 || awayOdds <= 0) {
+      return { home_win_prob: null, draw_prob: null, away_win_prob: null };
+    }
+
+    const rawSum = (1 / homeOdds + 1 / drawOdds + 1 / awayOdds) * 100;
+    return {
+      home_win_prob: Math.round(((1 / homeOdds) * 10000) / rawSum * 100) / 100,
+      draw_prob: Math.round(((1 / drawOdds) * 10000) / rawSum * 100) / 100,
+      away_win_prob: Math.round(((1 / awayOdds) * 10000) / rawSum * 100) / 100,
+    };
+  } catch {
+    return { home_win_prob: null, draw_prob: null, away_win_prob: null };
+  }
+}
+
 Deno.serve(async (req) => {
   // Only allow POST
   if (req.method !== "POST") {
@@ -109,23 +146,29 @@ Deno.serve(async (req) => {
       const gameweekId = gwData.id;
 
       // Upsert fixtures for this round
-      const fixtureRows = roundFixtures.map((f) => ({
-        id: f.fixture.id,
-        gameweek_id: gameweekId,
-        home_team_id: f.teams.home.id,
-        home_team_name: f.teams.home.name,
-        home_team_short: teamShortCode(f.teams.home.name),
-        home_team_logo: f.teams.home.logo,
-        away_team_id: f.teams.away.id,
-        away_team_name: f.teams.away.name,
-        away_team_short: teamShortCode(f.teams.away.name),
-        away_team_logo: f.teams.away.logo,
-        kickoff_at: f.fixture.date,
-        status: f.fixture.status.short,
-        home_score: f.goals.home,
-        away_score: f.goals.away,
-        raw_api_response: f,
-      }));
+      const fixtureRows = roundFixtures.map((f) => {
+        const odds = extractWinProbabilities(f);
+        return {
+          id: f.fixture.id,
+          gameweek_id: gameweekId,
+          home_team_id: f.teams.home.id,
+          home_team_name: f.teams.home.name,
+          home_team_short: teamShortCode(f.teams.home.name),
+          home_team_logo: f.teams.home.logo,
+          away_team_id: f.teams.away.id,
+          away_team_name: f.teams.away.name,
+          away_team_short: teamShortCode(f.teams.away.name),
+          away_team_logo: f.teams.away.logo,
+          kickoff_at: f.fixture.date,
+          status: f.fixture.status.short,
+          home_score: f.goals.home,
+          away_score: f.goals.away,
+          home_win_prob: odds.home_win_prob,
+          draw_prob: odds.draw_prob,
+          away_win_prob: odds.away_win_prob,
+          raw_api_response: f,
+        };
+      });
 
       const { error: fixError, count } = await db
         .from("fixtures")
