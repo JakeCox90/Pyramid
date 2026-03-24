@@ -31,6 +31,7 @@
 		153E1D127F6B282499C5CAD8 /* AuthTestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E48DA145BAB7033D468AD5A /* AuthTestHelper.swift */; };
 		155C54060AD809FA40F6602B /* LeaguesView+EmptyState.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB8658DE59E52977533B5D63 /* LeaguesView+EmptyState.swift */; };
 		18E72417EAA25C39CDB7DA80 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 9BBCF177D8E7D14FC85A2F79 /* Supabase */; };
+		1A22817EE9784BAC33BABC2E /* IconBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64888A6E09D24E72060972CA /* IconBadge.swift */; };
 		1B87C309279AE8B7E158DD1F /* ResultCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B2962550AEF80961C81B8CD /* ResultCard.swift */; };
 		1BB2C3BD0EE9C5B2133AB206 /* FixtureMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDFA8AC5EC2791C6F4611AFD /* FixtureMetadata.swift */; };
 		207E8C9BF76282B3C6BF33F0 /* Inter-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6E8FE1A7D9508B6D441BD6EF /* Inter-Bold.ttf */; };
@@ -282,6 +283,7 @@
 		6120B5DBCD2797CD31BEA66C /* HomeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeData.swift; sourceTree = "<group>"; };
 		615CD21080A04466667FE8E9 /* TransactionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionRow.swift; sourceTree = "<group>"; };
 		62DD3CEBABDBB6CF41146B92 /* JoinLeagueViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinLeagueViewModelTests.swift; sourceTree = "<group>"; };
+		64888A6E09D24E72060972CA /* IconBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconBadge.swift; sourceTree = "<group>"; };
 		6A737D337CC0D9C3DD7714DB /* FixturePickRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixturePickRow.swift; sourceTree = "<group>"; };
 		6D3457407F3E84445AF74F93 /* Inter-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Medium.ttf"; sourceTree = "<group>"; };
 		6E8FE1A7D9508B6D441BD6EF /* Inter-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Bold.ttf"; sourceTree = "<group>"; };
@@ -545,6 +547,7 @@
 			children = (
 				106D0EA8392BD138FD89F9BD /* ButtonThemeStyle.swift */,
 				F171722833AF76A9D8B91258 /* Card.swift */,
+				64888A6E09D24E72060972CA /* IconBadge.swift */,
 				BACEED84610CD379A47F12CE /* IconButton.swift */,
 				96AFDFCCB30C96D19C892870 /* InputField.swift */,
 				38C5D5263080B95902727241 /* MatchCard.swift */,
@@ -981,6 +984,7 @@
 				09C7D71D93EEFEBA179955E1 /* HomeView.swift in Sources */,
 				95A1198CA6A44F7D28FE10A7 /* HomeViewModel+Actions.swift in Sources */,
 				0EE5AAF2D746D1A12E5C7D57 /* HomeViewModel.swift in Sources */,
+				1A22817EE9784BAC33BABC2E /* IconBadge.swift in Sources */,
 				75252D8DD2892D50DCE90B73 /* IconButton.swift in Sources */,
 				0C2DC6ACB464002B41FEA8BC /* Icons.swift in Sources */,
 				2F1B102D43E9BAA59F460CE3 /* InputField.swift in Sources */,
