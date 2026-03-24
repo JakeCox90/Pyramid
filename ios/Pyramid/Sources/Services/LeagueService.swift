@@ -10,6 +10,7 @@ enum LeagueServiceError: LocalizedError, Equatable {
     case createFailed(String)
     case joinFailed(String)
     case fetchFailed(String)
+    case updateFailed(String)
 
     var errorDescription: String? {
         switch self {
@@ -22,6 +23,8 @@ enum LeagueServiceError: LocalizedError, Equatable {
         case .joinFailed(let message):
             return message
         case .fetchFailed(let message):
+            return message
+        case .updateFailed(let message):
             return message
         }
     }
@@ -47,12 +50,18 @@ private struct LeagueWithCountRow: Decodable {
     let status: League.LeagueStatus
     let season: Int
     let createdAt: Date
+    let createdBy: String?
+    let colorPalette: String?
+    let emoji: String?
+    let description: String?
     let leagueMembers: [AggregateCount]
 
     enum CodingKeys: String, CodingKey {
-        case id, name, type, status, season
+        case id, name, type, status, season, emoji, description
         case joinCode = "join_code"
         case createdAt = "created_at"
+        case createdBy = "created_by"
+        case colorPalette = "color_palette"
         case leagueMembers = "league_members"
     }
 
@@ -64,7 +73,11 @@ private struct LeagueWithCountRow: Decodable {
             type: type,
             status: status,
             season: season,
-            createdAt: createdAt
+            createdAt: createdAt,
+            createdBy: createdBy,
+            colorPalette: colorPalette ?? "primary",
+            emoji: emoji ?? "⚽",
+            description: description
         )
         league.memberCount = leagueMembers.first?.count ?? 0
         return league
@@ -88,6 +101,13 @@ protocol LeagueServiceProtocol: Sendable {
     func joinLeague(code: String) async throws -> JoinLeagueResponse
     func fetchMyLeagues() async throws -> [League]
     func fetchOpenLeagues() async throws -> [BrowseLeague]
+    func updateLeague(
+        leagueId: String,
+        name: String,
+        description: String?,
+        colorPalette: String,
+        emoji: String
+    ) async throws
 }
 
 // MARK: - Implementation
@@ -154,7 +174,8 @@ final class LeagueService: LeagueServiceProtocol {
                 .select(
                     """
                     leagues(id, name, join_code, type, status, season, \
-                    created_at, league_members(count))
+                    created_at, created_by, color_palette, emoji, \
+                    description, league_members(count))
                     """
                 )
                 .eq("user_id", value: userId)
@@ -172,6 +193,39 @@ final class LeagueService: LeagueServiceProtocol {
             }
         } catch {
             throw LeagueServiceError.fetchFailed(error.localizedDescription)
+        }
+    }
+
+    func updateLeague(
+        leagueId: String,
+        name: String,
+        description: String?,
+        colorPalette: String,
+        emoji: String
+    ) async throws {
+        do {
+            Log.leagues.info("Updating league: \(leagueId)")
+            var body: [String: String] = [
+                "league_id": leagueId,
+                "name": name,
+                "color_palette": colorPalette,
+                "emoji": emoji,
+            ]
+            if let description {
+                body["description"] = description
+            }
+            let _: [String: String] = try await client
+                .functions
+                .invoke(
+                    "update-league",
+                    options: FunctionInvokeOptions(body: body)
+                )
+            Log.leagues.info("League updated: \(leagueId)")
+        } catch {
+            Log.leagues.error("League update failed: \(error)")
+            throw LeagueServiceError.updateFailed(
+                error.localizedDescription
+            )
         }
     }
 
