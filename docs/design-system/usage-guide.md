@@ -198,6 +198,25 @@ LeagueCard(
 )
 ```
 
+### MatchCard (Component Family)
+
+Match cards display fixture information across different contexts. All variants share the same purple gradient background (`225deg, #5E4E81 0% → #2D253D 72%`), 24px border radius, and `1px rgba(255,255,255,0.1)` stroke.
+
+| Variant | Struct | Location | Size | Context |
+|---------|--------|----------|------|---------|
+| **Fixture** (pre-match) | `MatchCard` (`.preMatch`) | `DesignSystem/Components/MatchCard.swift` | 446pt | Home — shows picked team, opponent, venue, kickoff, change-pick CTA |
+| **Live** | `MatchCard` (`.live`) | `DesignSystem/Components/MatchCard.swift` | 446pt | Home — green gradient, live score, LIVE pill, locked |
+| **Result** | `MatchCard` (`.finished`) | `DesignSystem/Components/MatchCard+Result.swift` | 446pt | Home — final score, survived/eliminated badge |
+| **Empty** | `MatchCard+Empty` | `DesignSystem/Components/MatchCard+Empty.swift` | 446pt | Home — no pick made yet |
+| **Pick Card Large** | `MatchCarouselCard` | `Features/Picks/MatchCarouselCard.swift` | 420pt | Pick screen carousel — two-team matchup, VS circle, PICK HOME/AWAY buttons, stats flip |
+| **Pick Card Small** | `FixturePickRow` | `Features/Picks/FixturePickRow.swift` | 212pt | Pick screen list — compact two-team matchup, VS label, HOME/AWAY buttons |
+
+**Key rules:**
+- Pick variants (Carousel + List) always show "VS" — never live scores. These are selection cards, not result cards.
+- Pick variants show a locked pill (lock icon + "LOCKED") when `isLocked`, replacing the pick buttons entirely.
+- Used teams show desaturated badges at 0.4 opacity with "USED GWn" button text.
+- The Fixture/Live/Result variants are for displaying a user's existing pick on the Home screen.
+
 ### DSTextField
 
 ```swift

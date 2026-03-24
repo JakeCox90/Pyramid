@@ -10,6 +10,8 @@ extension ComponentBrowserView {
             teamsUsedPillSection
             confettiSection
             matchCardSection
+            pickCarouselCardSection
+            pickListCardSection
             statsCardSection
             resultCardSection
         }
