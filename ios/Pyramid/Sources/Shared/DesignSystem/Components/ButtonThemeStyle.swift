@@ -26,7 +26,11 @@ struct ButtonThemeStyle: ButtonStyle {
             } else {
                 configuration.label
                     .font(Theme.Typography.label01)
-                    .foregroundStyle(foregroundColor)
+                    .foregroundStyle(
+                        foregroundColor.opacity(
+                            isEnabled ? 1 : 0.4
+                        )
+                    )
             }
         }
         .frame(maxWidth: isFullWidth ? .infinity : nil)
@@ -41,7 +45,6 @@ struct ButtonThemeStyle: ButtonStyle {
             )
         )
         .clipShape(Capsule())
-        .opacity(isEnabled ? 1 : 0.4)
         .animation(
             .easeInOut(duration: 0.1),
             value: configuration.isPressed

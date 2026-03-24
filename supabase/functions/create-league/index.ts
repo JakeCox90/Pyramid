@@ -3,20 +3,30 @@
 //
 // POST /create-league
 // Headers: Authorization: Bearer <user-jwt>
-// Body: { name: string }
+// Body: { name: string, color_palette?: string, emoji?: string, description?: string }
 // Response 201: { league_id: string, join_code: string, name: string }
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders, getServiceClient } from "../_shared/supabase.ts";
 import { createLogger } from "../_shared/logger.ts";
+import { validateLeagueContent } from "../_shared/profanity.ts";
 
 const CURRENT_SEASON = 2025;
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 const JOIN_CODE_LENGTH = 6;
 const MAX_CODE_RETRIES = 5;
 
+const VALID_PALETTES = ["primary"];
+const VALID_EMOJIS = [
+  "⚽", "🏆", "⚡", "🔥", "💀", "👑", "🎯", "🦁",
+  "⭐", "💎", "🛡️", "🎪", "🍺", "🤝", "🏴", "🎲",
+];
+
 interface CreateLeagueBody {
   name: string;
+  color_palette?: string;
+  emoji?: string;
+  description?: string;
 }
 
 interface CreateLeagueResponse {
@@ -104,6 +114,28 @@ Deno.serve(async (req) => {
     );
   }
 
+  // Validate optional identity fields
+  const colorPalette = body.color_palette ?? "primary";
+  if (!VALID_PALETTES.includes(colorPalette)) {
+    return errorResponse("Invalid color palette", "INVALID_PALETTE", 400, origin);
+  }
+
+  const emoji = body.emoji ?? "⚽";
+  if (!VALID_EMOJIS.includes(emoji)) {
+    return errorResponse("Invalid emoji", "INVALID_EMOJI", 400, origin);
+  }
+
+  const description = body.description?.trim() ?? null;
+  if (description && description.length > 80) {
+    return errorResponse("Description must be 80 characters or fewer", "INVALID_DESCRIPTION", 400, origin);
+  }
+
+  // Content moderation
+  const modResult = validateLeagueContent(name, description ?? undefined);
+  if (!modResult.valid) {
+    return errorResponse(modResult.reason!, "PROFANITY", 400, origin);
+  }
+
   const db = getServiceClient();
 
   // Resolve start gameweek (GW1 of current season)
@@ -146,6 +178,9 @@ Deno.serve(async (req) => {
         created_by: user.id,
         season: CURRENT_SEASON,
         start_gameweek_id: startGameweekId,
+        color_palette: colorPalette,
+        emoji,
+        description,
       })
       .select("id")
       .single();

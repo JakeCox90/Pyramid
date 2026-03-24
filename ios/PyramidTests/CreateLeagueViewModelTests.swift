@@ -153,4 +153,14 @@ final class MockLeagueService: LeagueServiceProtocol {
         if shouldFail { throw URLError(.badServerResponse) }
         return []
     }
+
+    func updateLeague(
+        leagueId: String,
+        name: String,
+        description: String?,
+        colorPalette: String,
+        emoji: String
+    ) async throws {
+        if shouldFail { throw URLError(.badServerResponse) }
+    }
 }

@@ -7,6 +7,7 @@ struct LeagueDetailView: View {
     @State var showPickHistory = false
     @State var showCompleteView = false
     @State var showShareSheet = false
+    @State var showEditLeague = false
 
     init(league: League) {
         _viewModel = StateObject(wrappedValue: LeagueDetailViewModel(league: league))
@@ -28,6 +29,18 @@ struct LeagueDetailView: View {
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 HStack(spacing: Theme.Spacing.s20) {
+                    if isAdmin {
+                        Button {
+                            showEditLeague = true
+                        } label: {
+                            Image(
+                                systemName: "gearshape"
+                            )
+                        }
+                        .accessibilityLabel(
+                            "Edit league settings"
+                        )
+                    }
                     Button {
                         showPickHistory = true
                     } label: {
@@ -48,7 +61,10 @@ struct LeagueDetailView: View {
                     .accessibilityLabel("View results")
                     if viewModel.league.status == .active {
                         Button("My Pick") { showPicks = true }
-                            .buttonStyle(.borderedProminent)
+                            .themed(
+                                .primary,
+                                fullWidth: false
+                            )
                             .accessibilityLabel("Make your pick")
                     }
                 }
@@ -78,6 +94,13 @@ struct LeagueDetailView: View {
                 items: [shareMessage]
             )
         }
+        .sheet(isPresented: $showEditLeague) {
+            EditLeagueView(
+                league: viewModel.league
+            ) {
+                Task { await viewModel.load() }
+            }
+        }
         .background(Theme.Color.Surface.Background.page.ignoresSafeArea())
         .task {
             await viewModel.load()
@@ -92,6 +115,13 @@ struct LeagueDetailView: View {
                 viewModel.startPolling()
             }
         }
+    }
+
+    private var isAdmin: Bool {
+        guard let userId = viewModel.currentUserId,
+              let createdBy = viewModel.league.createdBy
+        else { return false }
+        return userId == createdBy
     }
 
     private var shareMessage: String {

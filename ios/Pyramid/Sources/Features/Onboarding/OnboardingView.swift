@@ -25,8 +25,7 @@ struct OnboardingView: View {
             Spacer()
             if currentPage < OnboardingPage.allPages.count - 1 {
                 Button("Skip") { completeOnboarding() }
-                    .font(Theme.Typography.body)
-                    .foregroundStyle(Theme.Color.Content.Text.disabled)
+                    .themed(.ghost, fullWidth: false)
             }
         }
         .padding(.horizontal, Theme.Spacing.s40)

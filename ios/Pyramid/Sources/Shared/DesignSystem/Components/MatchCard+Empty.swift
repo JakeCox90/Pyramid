@@ -77,27 +77,14 @@ extension MatchCard {
         onMakePick: (() -> Void)?
     ) -> some View {
         if isLocked {
-            HStack(spacing: 12) {
-                Image(systemName: "lock.fill")
-                    .font(.system(size: 16))
-                Text("LOCKED")
-                    .font(Theme.Typography.label01)
+            Button {} label: {
+                Label(
+                    "LOCKED",
+                    systemImage: Theme.Icon.Pick.locked
+                )
             }
-            .foregroundStyle(
-                Color.white.opacity(0.4)
-            )
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 12)
-            .padding(.horizontal, 24)
-            .background(Color.white.opacity(0.1))
-            .overlay(
-                Capsule()
-                    .stroke(
-                        Color.white.opacity(0.1),
-                        lineWidth: 1
-                    )
-            )
-            .clipShape(Capsule())
+            .themed(.secondary)
+            .disabled(true)
             .padding(.horizontal, 24)
             .padding(.vertical, 24)
         } else if let onMakePick {

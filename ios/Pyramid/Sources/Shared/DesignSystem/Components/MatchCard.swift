@@ -199,27 +199,16 @@ extension MatchCard {
             .frame(height: 1)
     }
 
-    /// Locked pill: bg + border rgba(255,255,255,0.1)
+    /// Locked pill: themed disabled button with lock icon
     var lockedPill: some View {
-        HStack(spacing: 12) {
-            Image(systemName: "lock.fill")
-                .font(.system(size: 16))
-            Text("LOCKED")
-                .font(Theme.Typography.label01)
+        Button {} label: {
+            Label(
+                "LOCKED",
+                systemImage: Theme.Icon.Pick.locked
+            )
         }
-        .foregroundStyle(Color.white.opacity(0.4))
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 12)
-        .padding(.horizontal, 24)
-        .background(Color.white.opacity(0.1))
-        .overlay(
-            Capsule()
-                .stroke(
-                    Color.white.opacity(0.1),
-                    lineWidth: 1
-                )
-        )
-        .clipShape(Capsule())
+        .themed(.secondary)
+        .disabled(true)
     }
 
     @ViewBuilder var bottomSection: some View {
