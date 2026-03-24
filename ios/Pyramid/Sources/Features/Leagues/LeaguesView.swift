@@ -118,7 +118,7 @@ struct LeaguesView: View {
                     NavigationLink(
                         destination: LeagueDetailView(league: league)
                     ) {
-                        LeagueRowView(league: league)
+                        LeagueCardView(league: league)
                     }
                     .buttonStyle(.plain)
                     .padding(.horizontal, Theme.Spacing.s40)
