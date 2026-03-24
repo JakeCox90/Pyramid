@@ -31,8 +31,7 @@ struct RootView: View {
                     Button("Try Again") {
                         Task { await appState.retryLoadSession() }
                     }
-                    .buttonStyle(.borderedProminent)
-                    .tint(Theme.Color.Primary.resting)
+                    .themed(.primary)
                 }
                 .padding(Theme.Spacing.s40)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)

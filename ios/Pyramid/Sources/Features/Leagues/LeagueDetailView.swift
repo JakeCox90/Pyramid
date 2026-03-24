@@ -61,7 +61,10 @@ struct LeagueDetailView: View {
                     .accessibilityLabel("View results")
                     if viewModel.league.status == .active {
                         Button("My Pick") { showPicks = true }
-                            .buttonStyle(.borderedProminent)
+                            .themed(
+                                .primary,
+                                fullWidth: false
+                            )
                             .accessibilityLabel("Make your pick")
                     }
                 }
