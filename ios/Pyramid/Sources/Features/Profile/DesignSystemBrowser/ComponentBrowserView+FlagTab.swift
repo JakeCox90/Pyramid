@@ -22,23 +22,23 @@ private extension ComponentBrowserView {
         ) {
             ComponentHeader(title: "Flag")
 
-            ComponentCaption(text: "Intents")
+            ComponentCaption(text: "Variants")
             HStack(spacing: Theme.Spacing.s20) {
                 Flag(
                     label: "Success",
-                    intent: .success
+                    variant: .success
                 )
                 Flag(
                     label: "Error",
-                    intent: .error
+                    variant: .error
                 )
                 Flag(
                     label: "Neutral",
-                    intent: .neutral
+                    variant: .neutral
                 )
                 Flag(
                     label: "Warning",
-                    intent: .warning
+                    variant: .warning
                 )
             }
 
@@ -48,22 +48,22 @@ private extension ComponentBrowserView {
             HStack(spacing: Theme.Spacing.s20) {
                 Flag(
                     label: PickStatus.survived.label,
-                    intent: PickStatus.survived
-                        .flagIntent
+                    variant: PickStatus.survived
+                        .flagVariant
                 )
                 Flag(
                     label: PickStatus.eliminated.label,
-                    intent: PickStatus.eliminated
-                        .flagIntent
+                    variant: PickStatus.eliminated
+                        .flagVariant
                 )
                 Flag(
                     label: PickStatus.pending.label,
-                    intent: PickStatus.pending
-                        .flagIntent
+                    variant: PickStatus.pending
+                        .flagVariant
                 )
                 Flag(
                     label: PickStatus.void.label,
-                    intent: PickStatus.void.flagIntent
+                    variant: PickStatus.void.flagVariant
                 )
             }
         }

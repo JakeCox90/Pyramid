@@ -49,22 +49,22 @@ extension LeagueCardView {
         case .pending:
             Flag(
                 label: "Waiting",
-                intent: .warning
+                variant: .warning
             )
         case .active:
             Flag(
                 label: "Active",
-                intent: .success
+                variant: .success
             )
         case .completed:
             Flag(
                 label: "Finished",
-                intent: .neutral
+                variant: .neutral
             )
         case .cancelled:
             Flag(
                 label: "Cancelled",
-                intent: .error
+                variant: .error
             )
         }
     }

@@ -202,18 +202,18 @@ Provides `Surface.Background.container` + `Radius.r40` + `Shadow.md` + `Spacing.
 ### Flag
 
 ```swift
-Flag(label: "Survived", intent: .success)
-Flag(label: "Eliminated", intent: .error)
-Flag(label: "Pending", intent: .neutral)
-Flag(label: "Void", intent: .warning)
+Flag(label: "Survived", variant: .success)
+Flag(label: "Eliminated", variant: .error)
+Flag(label: "Pending", variant: .neutral)
+Flag(label: "Void", variant: .warning)
 ```
 
-Pick status has a convenience mapping via `PickStatus.flagIntent`:
+Pick status has a convenience mapping via `PickStatus.flagVariant`:
 
 ```swift
 Flag(
     label: PickStatus.survived.label,
-    intent: PickStatus.survived.flagIntent
+    variant: PickStatus.survived.flagVariant
 )
 ```
 

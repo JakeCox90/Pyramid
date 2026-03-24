@@ -205,7 +205,7 @@ private struct RoundPickRowView: View {
 
             Flag(
                 label: pick.result.pickStatus.label,
-                intent: pick.result.pickStatus.flagIntent
+                variant: pick.result.pickStatus.flagVariant
             )
         }
         .padding(.horizontal, Theme.Spacing.s40)
