@@ -102,6 +102,32 @@ export interface H2HMeeting {
   status: FixtureStatus;
 }
 
+// ─── Odds types ─────────────────────────────────────────────────────────────
+
+export interface ApiOddsResponse {
+  league: { id: number; name: string; country: string; season: number };
+  fixture: { id: number; timezone: string; date: string; timestamp: number };
+  update: string;
+  bookmakers: ApiBookmaker[];
+}
+
+export interface ApiBookmaker {
+  id: number;
+  name: string;
+  bets: ApiBet[];
+}
+
+export interface ApiBet {
+  id: number;
+  name: string;
+  values: ApiBetValue[];
+}
+
+export interface ApiBetValue {
+  value: string;
+  odd: string;
+}
+
 // ─── Client ───────────────────────────────────────────────────────────────────
 
 export class ApiFootballClient {
@@ -207,6 +233,19 @@ export class ApiFootballClient {
       last,
     });
     return data.response;
+  }
+
+  /**
+   * Fetch pre-match odds for a single fixture.
+   * Uses the /odds endpoint with bet ID 1 (Match Winner / 1X2).
+   * Returns the first bookmaker's odds, or null if unavailable.
+   */
+  async getOdds(fixtureId: number): Promise<ApiOddsResponse | null> {
+    const data = await this.get<ApiOddsResponse>("/odds", {
+      fixture: fixtureId,
+      bet: 1, // Match Winner (1X2)
+    });
+    return data.response[0] ?? null;
   }
 }
 
