@@ -25,9 +25,8 @@ CREATE POLICY "Users can view own achievements"
     ON public.user_achievements FOR SELECT
     USING (auth.uid() = user_id);
 
-CREATE POLICY "Service role can insert achievements"
-    ON public.user_achievements FOR INSERT
-    WITH CHECK (true);
+-- No INSERT/UPDATE/DELETE policies — all writes via SECURITY DEFINER function
+-- (check_and_insert_achievements), which bypasses RLS. No client-side writes allowed.
 
 -- ─── Odds columns on fixtures ───────────────────────────────────────────────
 
@@ -101,7 +100,7 @@ BEGIN
         SELECT 1 FROM settlement_log
         WHERE league_id = target_league_id
           AND gameweek_id = target_gameweek_id
-          AND details->>'mass_elimination' = 'true'
+          AND is_mass_elimination = true
     ) INTO v_is_mass_elimination;
 
     -- ─── SURVIVAL STREAK (tiers 1/2/3) ─────────────────────────────────
@@ -115,7 +114,7 @@ BEGIN
             JOIN fixtures f ON f.id = p.fixture_id
             LEFT JOIN settlement_log sl ON sl.league_id = p.league_id
                 AND sl.gameweek_id = f.gameweek_id
-                AND sl.details->>'mass_elimination' = 'true'
+                AND sl.is_mass_elimination = true
             WHERE p.user_id = target_user_id
               AND p.league_id = target_league_id
               AND p.result IN ('survived', 'eliminated')
@@ -286,7 +285,7 @@ BEGIN
             JOIN fixtures f ON f.id = p.fixture_id
             LEFT JOIN settlement_log sl ON sl.league_id = p.league_id
                 AND sl.gameweek_id = f.gameweek_id
-                AND sl.details->>'mass_elimination' = 'true'
+                AND sl.is_mass_elimination = true
             WHERE p.user_id = target_user_id
               AND p.league_id = target_league_id
               AND p.result IN ('survived', 'eliminated')

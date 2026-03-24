@@ -5,23 +5,21 @@ struct AchievementsView: View {
     @State private var selectedBadge: AchievementsViewModel.DisplayBadge?
 
     var body: some View {
-        NavigationStack {
-            content
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(
-                    Theme.Color.Surface.Background.page
-                        .ignoresSafeArea()
-                )
-                .navigationTitle("Achievements")
-                .navigationBarTitleDisplayMode(.large)
-                .toolbarColorScheme(.dark, for: .navigationBar)
-                .task { await viewModel.loadAchievements() }
-                .sheet(item: $selectedBadge) { badge in
-                    badgeDetail(badge)
-                        .presentationDetents([.medium])
-                        .presentationDragIndicator(.visible)
-                }
-        }
+        content
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(
+                Theme.Color.Surface.Background.page
+                    .ignoresSafeArea()
+            )
+            .navigationTitle("Achievements")
+            .navigationBarTitleDisplayMode(.large)
+            .toolbarColorScheme(.dark, for: .navigationBar)
+            .task { await viewModel.loadAchievements() }
+            .sheet(item: $selectedBadge) { badge in
+                badgeDetail(badge)
+                    .presentationDetents([.medium])
+                    .presentationDragIndicator(.visible)
+            }
     }
 
     @ViewBuilder

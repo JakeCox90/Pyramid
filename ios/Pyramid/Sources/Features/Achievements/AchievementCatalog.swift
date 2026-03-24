@@ -39,15 +39,15 @@ enum AchievementCatalog {
 
     static let veteran1 = BadgeDefinition(
         id: "veteran_1", name: "Seasoned",
-        description: "Survive 25 total picks",
+        description: "Survive 25 total gameweeks",
         icon: "star.fill", track: "veteran", tier: 1, style: .success)
     static let veteran2 = BadgeDefinition(
         id: "veteran_2", name: "Veteran",
-        description: "Survive 50 total picks",
+        description: "Survive 50 total gameweeks",
         icon: "star.fill", track: "veteran", tier: 2, style: .success)
     static let veteran3 = BadgeDefinition(
         id: "veteran_3", name: "Centurion",
-        description: "Survive 100 total picks",
+        description: "Survive 100 total gameweeks",
         icon: "star.fill", track: "veteran", tier: 3, style: .success)
 
     static let longshot1 = BadgeDefinition(
