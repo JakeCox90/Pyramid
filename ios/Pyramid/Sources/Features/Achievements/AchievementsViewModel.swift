@@ -41,7 +41,21 @@ final class AchievementsViewModel: ObservableObject {
                 )
             }
         } catch {
-            errorMessage = error.localizedDescription
+            let message = error.localizedDescription
+            if message.contains("schema cache") ||
+                message.contains("relation") ||
+                message.contains("does not exist") {
+                // Table not yet available — show empty
+                displayBadges =
+                    AchievementCatalog.allBadges.map {
+                        DisplayBadge(
+                            definition: $0,
+                            unlocked: nil
+                        )
+                    }
+            } else {
+                errorMessage = message
+            }
         }
         isLoading = false
     }
