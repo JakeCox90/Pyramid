@@ -2,6 +2,10 @@ import SwiftUI
 
 struct RootView: View {
     @EnvironmentObject private var appState: AppState
+    @EnvironmentObject private var toastManager: ToastManager
+    @Environment(\.scenePhase)
+    private var scenePhase
+    @StateObject private var achievementsVM = AchievementsViewModel()
 
     var body: some View {
         Group {
@@ -47,6 +51,33 @@ struct RootView: View {
         .preferredColorScheme(.dark)
         .task {
             await appState.loadSession()
+        }
+        .overlay(alignment: .top) {
+            if let toast = toastManager.current {
+                Toast(
+                    config: toast,
+                    onDismiss: { toastManager.dismiss() }
+                )
+                .transition(
+                    .move(edge: .top)
+                        .combined(with: .opacity)
+                )
+                .padding(.top, Theme.Spacing.s60)
+                .zIndex(999)
+            }
+        }
+        .animation(
+            .spring(duration: 0.3),
+            value: toastManager.current
+        )
+        .onChange(of: scenePhase) { phase in
+            if phase == .active {
+                Task {
+                    await achievementsVM.checkForNewBadges(
+                        toastManager: toastManager
+                    )
+                }
+            }
         }
     }
 }

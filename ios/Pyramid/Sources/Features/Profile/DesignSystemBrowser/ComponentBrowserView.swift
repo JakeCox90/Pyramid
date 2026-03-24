@@ -61,6 +61,9 @@ extension ComponentBrowserView {
             badgesSection
             placeholderSection
             pulsingDotSection
+            toastSection
+            iconBadgeSection
+            detailSheetSection
         }
     }
 }

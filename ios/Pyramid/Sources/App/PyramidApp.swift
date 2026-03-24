@@ -4,11 +4,13 @@ import UserNotifications
 struct PyramidApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject private var appState = AppState()
+    @StateObject private var toastManager = ToastManager()
 
     var body: some Scene {
         WindowGroup {
             RootView()
                 .environmentObject(appState)
+                .environmentObject(toastManager)
                 .onOpenURL { url in
                     SupabaseDependency.shared.client.auth.handle(url)
                 }

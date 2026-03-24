@@ -103,6 +103,9 @@ verify_jwt = false
 [functions.sync-fixtures]
 verify_jwt = false
 
+[functions.sync-odds]
+verify_jwt = false
+
 # Project references (not secret — safe to commit)
 # Dev:  qvmzmeizluqcdkcjsqyd  → https://qvmzmeizluqcdkcjsqyd.supabase.co
 # Prod: cracvbokmvryhhclzxxw  → https://cracvbokmvryhhclzxxw.supabase.co

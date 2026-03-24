@@ -453,6 +453,22 @@ async function declareJointWinners(
   return true;
 }
 
+// ─── Match events fetch ───────────────────────────────────────────────────────
+
+async function fetchMatchEvents(fixtureId: number, apiKey: string): Promise<any[] | null> {
+  try {
+    const resp = await fetch(
+      `https://v3.football.api-sports.io/fixtures/events?fixture=${fixtureId}`,
+      { headers: { "x-rapidapi-key": apiKey, "x-rapidapi-host": "v3.football.api-sports.io" } },
+    );
+    if (!resp.ok) return null;
+    const data = await resp.json();
+    return data?.response ?? null;
+  } catch {
+    return null;
+  }
+}
+
 // ─── Main handler ─────────────────────────────────────────────────────────────
 
 Deno.serve(async (req) => {
@@ -605,6 +621,41 @@ Deno.serve(async (req) => {
       ).catch((err: unknown) => {
         log.error("refresh_user_stats threw (non-fatal)", err, { userId, leagueId });
       });
+    }
+
+    // ── Achievement evaluation (fire-and-forget, non-critical) ──
+    const apiKey = Deno.env.get("API_FOOTBALL_KEY") ?? "";
+    const matchEvents = apiKey
+      ? await fetchMatchEvents(fixture.id, apiKey).catch(() => null)
+      : null;
+
+    const matchEventsJson = matchEvents
+      ? JSON.stringify(
+          matchEvents
+            .filter((e: any) => e.type === "Goal")
+            .map((e: any) => ({
+              minute: e.time?.elapsed ?? 0,
+              team_id: e.team?.id ?? 0,
+              type: "Goal",
+            })),
+        )
+      : null;
+
+    for (const userId of settledUserIds) {
+      db.rpc("check_and_insert_achievements", {
+        target_user_id: userId,
+        target_league_id: leagueId,
+        target_gameweek_id: gameweekId,
+        match_events_json: matchEventsJson,
+      })
+        .then(({ error: achErr }: { error: unknown }) => {
+          if (achErr) {
+            log.error("check_and_insert_achievements failed (non-fatal)", achErr, { userId, leagueId });
+          }
+        })
+        .catch((err: unknown) => {
+          log.error("check_and_insert_achievements threw (non-fatal)", err, { userId, leagueId });
+        });
     }
   }
 

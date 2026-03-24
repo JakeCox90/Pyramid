@@ -109,6 +109,8 @@ Deno.serve(async (req) => {
       const gameweekId = gwData.id;
 
       // Upsert fixtures for this round
+      // Note: odds (home_win_prob, draw_prob, away_win_prob) are synced
+      // separately by the sync-odds Edge Function via the /odds endpoint.
       const fixtureRows = roundFixtures.map((f) => ({
         id: f.fixture.id,
         gameweek_id: gameweekId,
