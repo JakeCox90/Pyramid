@@ -81,6 +81,9 @@ verify_jwt = false
 [functions.update-league]
 verify_jwt = false
 
+[functions.validate-league-content]
+verify_jwt = false
+
 [functions.register-device-token]
 verify_jwt = false
 
