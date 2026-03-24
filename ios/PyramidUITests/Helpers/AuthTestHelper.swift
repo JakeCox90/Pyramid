@@ -55,12 +55,15 @@ enum AuthTestHelper {
         // hard-fail — scaffold tests are expected to run without
         // a live backend.
         if !signedIn {
-            XCTContext.runActivity(named: "Auth Warning") { _ in
+            _ = XCTContext.runActivity(
+                named: "Auth Warning"
+            ) { _ in
                 XCTIssue(
                     type: .unmatchedExpectedFailure,
                     compactDescription:
                         "Sign-in did not complete. "
-                        + "Tests requiring auth may be skipped."
+                        + "Tests requiring auth may be "
+                        + "skipped."
                 )
             }
         }

@@ -58,10 +58,11 @@ extension XCUIApplication {
 // MARK: - XCUIElement Helpers
 
 extension XCUIElement {
-    /// Wait for the element to exist within the given timeout.
+    /// Wait for the element to exist within the given timeout,
+    /// with a convenient default of 10 seconds.
     /// Returns `true` if found, `false` if timed out.
     @discardableResult
-    func waitForExistence(
+    func waitForElement(
         timeout: TimeInterval = 10
     ) -> Bool {
         waitForExistence(timeout: timeout)

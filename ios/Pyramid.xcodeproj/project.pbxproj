@@ -1151,6 +1151,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.pyramid.uitests;
 				SDKROOT = iphoneos;
+				SWIFT_STRICT_CONCURRENCY = minimal;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = Pyramid;
 			};
@@ -1313,6 +1314,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.pyramid.uitests;
 				SDKROOT = iphoneos;
+				SWIFT_STRICT_CONCURRENCY = minimal;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = Pyramid;
 			};

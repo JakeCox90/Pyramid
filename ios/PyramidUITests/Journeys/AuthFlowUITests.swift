@@ -30,12 +30,13 @@ final class AuthFlowUITests: XCTestCase {
 
     // MARK: - Auth Screen Elements
 
-    func testAuthScreenShowsAllElements() {
+    func testAuthScreenShowsAllElements() throws {
         // If already signed in, skip — we cannot test the
         // auth screen when there is an active session.
         guard AuthTestHelper.isOnAuthScreen(app: app) else {
-            XCTSkip("Already authenticated — cannot test auth screen")
-            return
+            throw XCTSkip(
+                "Already authenticated — cannot test auth screen"
+            )
         }
 
         // Title
@@ -44,11 +45,12 @@ final class AuthFlowUITests: XCTestCase {
             "App title should be visible"
         )
         XCTAssertTrue(
-            app.staticTexts["Premier League Last Man Standing"].exists,
+            app.staticTexts["Premier League Last Man Standing"]
+                .exists,
             "Subtitle should be visible"
         )
 
-        // Email field (InputField uses placeholder as TextField identifier)
+        // Email field
         let emailField = app.textFields["you@example.com"]
         XCTAssertTrue(
             emailField.waitForExistence(timeout: 5),
@@ -63,7 +65,10 @@ final class AuthFlowUITests: XCTestCase {
         )
 
         // Buttons
-        XCTAssertTrue(app.buttons["Sign In"].exists, "Sign In button")
+        XCTAssertTrue(
+            app.buttons["Sign In"].exists,
+            "Sign In button"
+        )
         XCTAssertTrue(
             app.buttons["Create account"].exists,
             "Create account button"
@@ -80,10 +85,9 @@ final class AuthFlowUITests: XCTestCase {
         )
     }
 
-    func testSignInWithEmptyFieldsShowsError() {
+    func testSignInWithEmptyFieldsShowsError() throws {
         guard AuthTestHelper.isOnAuthScreen(app: app) else {
-            XCTSkip("Already authenticated")
-            return
+            throw XCTSkip("Already authenticated")
         }
 
         // Clear any pre-filled fields (DEBUG builds pre-fill)
@@ -92,9 +96,12 @@ final class AuthFlowUITests: XCTestCase {
             emailField.tap()
             // Select all and delete
             emailField.press(forDuration: 1.0)
-            if app.menuItems["Select All"].waitForExistence(timeout: 2) {
+            if app.menuItems["Select All"]
+                .waitForExistence(timeout: 2) {
                 app.menuItems["Select All"].tap()
-                emailField.typeText(XCUIKeyboardKey.delete.rawValue)
+                emailField.typeText(
+                    XCUIKeyboardKey.delete.rawValue
+                )
             }
         }
 
@@ -102,9 +109,12 @@ final class AuthFlowUITests: XCTestCase {
         if passwordField.waitForExistence(timeout: 5) {
             passwordField.tap()
             passwordField.press(forDuration: 1.0)
-            if app.menuItems["Select All"].waitForExistence(timeout: 2) {
+            if app.menuItems["Select All"]
+                .waitForExistence(timeout: 2) {
                 app.menuItems["Select All"].tap()
-                passwordField.typeText(XCUIKeyboardKey.delete.rawValue)
+                passwordField.typeText(
+                    XCUIKeyboardKey.delete.rawValue
+                )
             }
         }
 
@@ -112,17 +122,18 @@ final class AuthFlowUITests: XCTestCase {
         app.buttons["Sign In"].tap()
 
         // Should show validation error
-        let errorText = app.staticTexts["Email and password are required."]
+        let errorText = app.staticTexts[
+            "Email and password are required."
+        ]
         XCTAssertTrue(
             errorText.waitForExistence(timeout: 5),
             "Validation error should appear for empty fields"
         )
     }
 
-    func testSignInWithValidCredentials() {
+    func testSignInWithValidCredentials() throws {
         guard AuthTestHelper.isOnAuthScreen(app: app) else {
-            XCTSkip("Already authenticated")
-            return
+            throw XCTSkip("Already authenticated")
         }
 
         // This test requires a live backend. Mark as expected
@@ -145,10 +156,9 @@ final class AuthFlowUITests: XCTestCase {
         )
     }
 
-    func testSignUpButtonExists() {
+    func testSignUpButtonExists() throws {
         guard AuthTestHelper.isOnAuthScreen(app: app) else {
-            XCTSkip("Already authenticated")
-            return
+            throw XCTSkip("Already authenticated")
         }
 
         let createAccountButton = app.buttons["Create account"]

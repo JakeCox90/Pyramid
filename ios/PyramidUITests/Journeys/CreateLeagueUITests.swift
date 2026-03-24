@@ -29,10 +29,11 @@ final class CreateLeagueUITests: XCTestCase {
 
     // MARK: - Navigation to Create League
 
-    func testNavigateToCreateLeagueFromEmptyState() {
+    func testNavigateToCreateLeagueFromEmptyState() throws {
         guard AuthTestHelper.isAuthenticated(app: app) else {
-            XCTSkip("Not authenticated — cannot test leagues")
-            return
+            throw XCTSkip(
+                "Not authenticated — cannot test leagues"
+            )
         }
 
         // Navigate to Leagues tab
@@ -41,7 +42,8 @@ final class CreateLeagueUITests: XCTestCase {
 
         // From empty state, tap "Create a League"
         let createButton = app.buttons["Create a League"]
-        guard createButton.waitForExistence(timeout: 10) else {
+        guard createButton.waitForExistence(timeout: 10)
+        else {
             // If leagues exist, the empty state is not shown.
             // Try the toolbar menu instead.
             tryCreateFromToolbarMenu()
@@ -52,10 +54,11 @@ final class CreateLeagueUITests: XCTestCase {
         verifyCreateLeagueSheet()
     }
 
-    func testNavigateToCreateLeagueFromToolbarMenu() {
+    func testNavigateToCreateLeagueFromToolbarMenu() throws {
         guard AuthTestHelper.isAuthenticated(app: app) else {
-            XCTSkip("Not authenticated — cannot test leagues")
-            return
+            throw XCTSkip(
+                "Not authenticated — cannot test leagues"
+            )
         }
 
         // Navigate to Leagues tab
@@ -76,10 +79,11 @@ final class CreateLeagueUITests: XCTestCase {
 
     // MARK: - Create League Form
 
-    func testCreateLeagueFormElements() {
+    func testCreateLeagueFormElements() throws {
         guard AuthTestHelper.isAuthenticated(app: app) else {
-            XCTSkip("Not authenticated — cannot test leagues")
-            return
+            throw XCTSkip(
+                "Not authenticated — cannot test leagues"
+            )
         }
 
         navigateToCreateLeagueSheet()
@@ -104,7 +108,8 @@ final class CreateLeagueUITests: XCTestCase {
         XCTAssertTrue(
             app.staticTexts[
                 "Give your league a unique name. "
-                + "You'll get a join code to share with friends."
+                + "You'll get a join code to share "
+                + "with friends."
             ].exists,
             "Helper text should be visible"
         )
@@ -124,10 +129,11 @@ final class CreateLeagueUITests: XCTestCase {
         )
     }
 
-    func testCreateLeagueSubmitFlow() {
+    func testCreateLeagueSubmitFlow() throws {
         guard AuthTestHelper.isAuthenticated(app: app) else {
-            XCTSkip("Not authenticated — cannot test leagues")
-            return
+            throw XCTSkip(
+                "Not authenticated — cannot test leagues"
+            )
         }
 
         navigateToCreateLeagueSheet()
@@ -141,7 +147,9 @@ final class CreateLeagueUITests: XCTestCase {
             return
         }
         nameField.tap()
-        nameField.typeText("UI Test League \(Int.random(in: 1000...9999))")
+        nameField.typeText(
+            "UI Test League \(Int.random(in: 1000...9999))"
+        )
 
         // Submit — this requires a backend call
         XCTExpectFailure(
@@ -158,16 +166,18 @@ final class CreateLeagueUITests: XCTestCase {
         }
     }
 
-    func testCancelCreateLeague() {
+    func testCancelCreateLeague() throws {
         guard AuthTestHelper.isAuthenticated(app: app) else {
-            XCTSkip("Not authenticated — cannot test leagues")
-            return
+            throw XCTSkip(
+                "Not authenticated — cannot test leagues"
+            )
         }
 
         navigateToCreateLeagueSheet()
 
         let cancelButton = app.buttons["Cancel"]
-        guard cancelButton.waitForExistence(timeout: 5) else {
+        guard cancelButton.waitForExistence(timeout: 5)
+        else {
             XCTFail("Cancel button not found")
             return
         }
@@ -203,9 +213,9 @@ final class CreateLeagueUITests: XCTestCase {
         if addButton.waitForExistence(timeout: 5) {
             addButton.tap()
 
-            let createMenuItem = app.buttons["Create League"]
-            if createMenuItem.waitForExistence(timeout: 3) {
-                createMenuItem.tap()
+            let createItem = app.buttons["Create League"]
+            if createItem.waitForExistence(timeout: 3) {
+                createItem.tap()
             }
         }
     }

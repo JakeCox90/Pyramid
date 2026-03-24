@@ -30,10 +30,11 @@ final class SubmitPickUITests: XCTestCase {
 
     // MARK: - Navigate to Picks
 
-    func testNavigateToLeaguesTab() {
+    func testNavigateToLeaguesTab() throws {
         guard AuthTestHelper.isAuthenticated(app: app) else {
-            XCTSkip("Not authenticated — cannot test picks")
-            return
+            throw XCTSkip(
+                "Not authenticated — cannot test picks"
+            )
         }
 
         let leaguesTab = app.tabBars.buttons["Leagues"]
@@ -47,10 +48,11 @@ final class SubmitPickUITests: XCTestCase {
         )
     }
 
-    func testSelectLeagueAndViewDetail() {
+    func testSelectLeagueAndViewDetail() throws {
         guard AuthTestHelper.isAuthenticated(app: app) else {
-            XCTSkip("Not authenticated — cannot test picks")
-            return
+            throw XCTSkip(
+                "Not authenticated — cannot test picks"
+            )
         }
 
         app.tabBars.buttons["Leagues"].tapWhenReady()
@@ -60,30 +62,28 @@ final class SubmitPickUITests: XCTestCase {
         // state buttons appear.
         let hasLeagues = waitForLeaguesList()
         guard hasLeagues else {
-            XCTSkip(
+            throw XCTSkip(
                 "No leagues found — cannot test pick flow. "
                 + "Create a league first."
             )
-            return
         }
 
         // Tap the first league
         let firstLeague = app.cells.firstMatch
-        guard firstLeague.waitForExistence(timeout: 5) else {
+        guard firstLeague.waitForExistence(timeout: 5)
+        else {
             // Try buttons/links as fallback (SwiftUI renders
             // NavigationLink differently)
             let firstLink = app.buttons.element(boundBy: 0)
             guard firstLink.exists else {
-                XCTSkip("No tappable league row found")
-                return
+                throw XCTSkip("No tappable league row found")
             }
             firstLink.tap()
             return
         }
         firstLeague.tap()
 
-        // Verify league detail loaded — look for any content
-        // that indicates we navigated deeper
+        // Verify league detail loaded
         let backButton = app.navigationBars.buttons.firstMatch
         XCTAssertTrue(
             backButton.waitForExistence(timeout: 10),
@@ -91,16 +91,16 @@ final class SubmitPickUITests: XCTestCase {
         )
     }
 
-    func testPicksScreenShowsFixturesOrEmptyState() {
+    func testPicksScreenShowsFixturesOrEmptyState() throws {
         guard AuthTestHelper.isAuthenticated(app: app) else {
-            XCTSkip("Not authenticated — cannot test picks")
-            return
+            throw XCTSkip(
+                "Not authenticated — cannot test picks"
+            )
         }
 
         let navigatedToPicks = navigateToPicksScreen()
         guard navigatedToPicks else {
-            XCTSkip("Could not navigate to picks screen")
-            return
+            throw XCTSkip("Could not navigate to picks screen")
         }
 
         // The picks screen should show either:
@@ -108,11 +108,11 @@ final class SubmitPickUITests: XCTestCase {
         // 2. Empty state ("No fixtures this week")
         // 3. Loading state (ProgressView)
         // 4. Error state
-
         let fixtureExists = app.staticTexts["PICK TEAM"]
             .waitForExistence(timeout: 10)
-        let emptyState = app.staticTexts["No fixtures this week"]
-            .exists
+        let emptyState = app.staticTexts[
+            "No fixtures this week"
+        ].exists
 
         // At least one state should be visible
         XCTAssertTrue(
@@ -123,62 +123,62 @@ final class SubmitPickUITests: XCTestCase {
         )
     }
 
-    func testPickButtonInteraction() {
+    func testPickButtonInteraction() throws {
         guard AuthTestHelper.isAuthenticated(app: app) else {
-            XCTSkip("Not authenticated — cannot test picks")
-            return
+            throw XCTSkip(
+                "Not authenticated — cannot test picks"
+            )
         }
 
         let navigatedToPicks = navigateToPicksScreen()
         guard navigatedToPicks else {
-            XCTSkip("Could not navigate to picks screen")
-            return
+            throw XCTSkip("Could not navigate to picks screen")
         }
 
         // Wait for fixtures to load
         let pickTeamDivider = app.staticTexts["PICK TEAM"]
-        guard pickTeamDivider.waitForExistence(timeout: 10) else {
-            XCTSkip(
-                "No fixtures available — cannot test pick buttons"
+        guard pickTeamDivider.waitForExistence(timeout: 10)
+        else {
+            throw XCTSkip(
+                "No fixtures available — "
+                + "cannot test pick buttons"
             )
-            return
         }
 
         // Find a HOME pick button.
-        // Buttons show "HOME" or "AWAY" text (uppercased).
         let homeButton = app.buttons.matching(
-            NSPredicate(format: "label CONTAINS[c] 'Home'")
+            NSPredicate(
+                format: "label CONTAINS[c] 'Home'"
+            )
         ).firstMatch
 
         guard homeButton.waitForExistence(timeout: 5) else {
-            XCTSkip("No pick buttons found")
-            return
+            throw XCTSkip("No pick buttons found")
         }
 
-        // Tapping requires an open deadline — mark as expected
-        // failure since we likely cannot submit without a live GW
+        // Tapping requires an open deadline
         XCTExpectFailure(
-            "Pick submission requires an open gameweek deadline"
+            "Pick submission requires an open gameweek "
+            + "deadline"
         )
 
         homeButton.tap()
 
-        // If pick succeeded, the button text changes to "PICKED"
-        // and the view should dismiss
+        // If pick succeeded, the button text changes
         let pickedLabel = app.staticTexts["PICKED"]
         _ = pickedLabel.waitForExistence(timeout: 5)
     }
 
-    func testPicksViewModeToggle() {
+    func testPicksViewModeToggle() throws {
         guard AuthTestHelper.isAuthenticated(app: app) else {
-            XCTSkip("Not authenticated — cannot test picks")
-            return
+            throw XCTSkip(
+                "Not authenticated — cannot test picks"
+            )
         }
 
         let navigatedToPicks = navigateToPicksScreen()
         guard navigatedToPicks else {
-            XCTSkip("Could not navigate to picks screen")
-            return
+            throw XCTSkip("Could not navigate to picks screen")
         }
 
         // Wait for content to load
@@ -186,15 +186,13 @@ final class SubmitPickUITests: XCTestCase {
             .waitForExistence(timeout: 10)
 
         // The view mode toggle button is in the toolbar
-        // (list/carousel toggle). It uses SF Symbol names.
         let toggleButton = app.navigationBars.buttons.element(
             boundBy: app.navigationBars.buttons.count - 1
         )
 
         if toggleButton.waitForExistence(timeout: 5) {
             toggleButton.tap()
-            // View should switch between carousel and list
-            // We just verify no crash occurs
+            // Verify no crash occurs
         }
     }
 
@@ -215,7 +213,8 @@ final class SubmitPickUITests: XCTestCase {
             // SwiftUI may render NavigationLink as a button
             let scrollView = app.scrollViews.firstMatch
             if scrollView.waitForExistence(timeout: 5) {
-                let firstTappable = scrollView.buttons.firstMatch
+                let firstTappable =
+                    scrollView.buttons.firstMatch
                 if firstTappable.exists {
                     firstTappable.tap()
                 } else {
@@ -226,8 +225,7 @@ final class SubmitPickUITests: XCTestCase {
             }
         }
 
-        // Look for a "Make Pick" or "Pick" button in league detail
-        // The exact label depends on the league state
+        // Look for a "Make Pick" or "Pick" button
         let pickButton = app.buttons.matching(
             NSPredicate(
                 format: "label CONTAINS[c] 'pick'"
@@ -239,20 +237,20 @@ final class SubmitPickUITests: XCTestCase {
             return true
         }
 
-        // If no explicit pick button, the league detail may
-        // navigate directly to picks via a NavigationLink
+        // The league detail may navigate directly to picks
         return app.staticTexts["PICK TEAM"]
             .waitForExistence(timeout: 5)
             || app.staticTexts["No fixtures this week"]
                 .waitForExistence(timeout: 5)
     }
 
-    /// Wait for the leagues list to populate. Returns `false`
-    /// if no leagues exist (empty state).
+    /// Wait for the leagues list to populate. Returns
+    /// `false` if no leagues exist (empty state).
     private func waitForLeaguesList() -> Bool {
         // Wait for either leagues or empty state
         let leaguesNav = app.navigationBars["Leagues"]
-        guard leaguesNav.waitForExistence(timeout: 10) else {
+        guard leaguesNav.waitForExistence(timeout: 10)
+        else {
             return false
         }
 
@@ -261,7 +259,7 @@ final class SubmitPickUITests: XCTestCase {
             .waitForExistence(timeout: 5)
         if hasCells { return true }
 
-        // Check for scrollview with buttons (SwiftUI rendering)
+        // Check for scrollview with buttons
         let hasButtons = app.scrollViews.firstMatch.buttons
             .firstMatch.waitForExistence(timeout: 3)
         if hasButtons { return true }
