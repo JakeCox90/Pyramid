@@ -64,7 +64,15 @@ final class GameweekStoryViewModel: ObservableObject {
                 upsetFixture: upsetFixture, wildcardPick: wildcardPick
             )
         } catch {
-            errorMessage = error.localizedDescription
+            let msg = error.localizedDescription
+            if msg.contains("schema cache") ||
+                msg.contains("relation") ||
+                msg.contains("does not exist") {
+                // Table not yet available — show empty
+                cards = []
+            } else {
+                errorMessage = msg
+            }
         }
         isLoading = false
     }
