@@ -6,9 +6,63 @@ import SwiftUI
 extension ComponentBrowserView {
     var elementContent: some View {
         Group {
+            avatarSection
             pulsingDotSection
             teamBadgeSection
             teamsUsedPillSection
+        }
+    }
+}
+
+// MARK: - Avatar
+
+extension ComponentBrowserView {
+    var avatarSection: some View {
+        VStack(
+            alignment: .leading,
+            spacing: Theme.Spacing.s30
+        ) {
+            ComponentHeader(title: "Avatar")
+
+            ComponentCaption(text: "Player avatars")
+            HStack(spacing: Theme.Spacing.s30) {
+                VStack(spacing: Theme.Spacing.s10) {
+                    Avatar(
+                        name: "Jake Cox",
+                        size: .large
+                    )
+                    Text("large")
+                        .font(Theme.Typography.caption)
+                        .foregroundStyle(
+                            Theme.Color.Content.Text
+                                .subtle
+                        )
+                }
+                VStack(spacing: Theme.Spacing.s10) {
+                    Avatar(
+                        name: "John Smith",
+                        size: .medium
+                    )
+                    Text("medium")
+                        .font(Theme.Typography.caption)
+                        .foregroundStyle(
+                            Theme.Color.Content.Text
+                                .subtle
+                        )
+                }
+                VStack(spacing: Theme.Spacing.s10) {
+                    Avatar(
+                        name: "AB",
+                        size: .small
+                    )
+                    Text("small")
+                        .font(Theme.Typography.caption)
+                        .foregroundStyle(
+                            Theme.Color.Content.Text
+                                .subtle
+                        )
+                }
+            }
         }
     }
 }

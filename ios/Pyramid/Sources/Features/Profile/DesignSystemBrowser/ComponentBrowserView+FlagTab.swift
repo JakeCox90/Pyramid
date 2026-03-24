@@ -7,6 +7,7 @@ extension ComponentBrowserView {
     var flagContent: some View {
         Group {
             flagsSection
+            liveFlagSection
         }
     }
 }
@@ -65,6 +66,39 @@ private extension ComponentBrowserView {
                     intent: PickStatus.void.flagIntent
                 )
             }
+        }
+    }
+}
+
+// MARK: - LiveFlag
+
+private extension ComponentBrowserView {
+    var liveFlagSection: some View {
+        VStack(
+            alignment: .leading,
+            spacing: Theme.Spacing.s30
+        ) {
+            ComponentHeader(title: "LiveFlag")
+
+            HStack(spacing: Theme.Spacing.s20) {
+                LiveFlag()
+                Text("Match in progress")
+                    .font(Theme.Typography.body)
+                    .foregroundStyle(
+                        Theme.Color.Content.Text
+                            .default
+                    )
+            }
+            .padding(Theme.Spacing.s30)
+            .background(
+                Theme.Color.Surface.Background
+                    .container
+            )
+            .clipShape(
+                RoundedRectangle(
+                    cornerRadius: Theme.Radius.r20
+                )
+            )
         }
     }
 }
