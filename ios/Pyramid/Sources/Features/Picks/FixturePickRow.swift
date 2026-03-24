@@ -153,22 +153,12 @@ extension FixturePickRow {
 
     // layout_38AZYE: 17×15 at x:167.21, y:65
     // style_U4AW74: Inter Bold 12, uppercase
+    // Always show "VS" — this is a pick card, not a results card.
+    // Matches MatchCarouselCard+Matchup.vsText behaviour.
     var vsLabel: some View {
-        Group {
-            if fixture.status.isLive
-                || fixture.status.isFinished,
-               let home = fixture.homeScore,
-               let away = fixture.awayScore {
-                Text("\(home) - \(away)")
-                    .font(Theme.Typography.h3)
-                    .foregroundStyle(Color.white)
-                    .monospacedDigit()
-            } else {
-                Text("VS")
-                    .font(Theme.Typography.overline)
-                    .foregroundStyle(Color.white)
-            }
-        }
+        Text("VS")
+            .font(Theme.Typography.overline)
+            .foregroundStyle(Color.white)
     }
 }
 
