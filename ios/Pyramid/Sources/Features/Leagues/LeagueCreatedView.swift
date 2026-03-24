@@ -40,6 +40,7 @@ struct LeagueCreatedView: View {
                         .foregroundStyle(Theme.Color.Primary.resting)
                         .tracking(8)
                         .frame(maxWidth: .infinity, alignment: .center)
+                        .accessibilityIdentifier(AccessibilityID.LeagueCreated.joinCode)
 
                     Text("Share this code with friends so they can join")
                         .font(Theme.Typography.overline)
@@ -64,6 +65,7 @@ struct LeagueCreatedView: View {
                     )
                 }
                 .themed(.secondary, fullWidth: false)
+                .accessibilityIdentifier(AccessibilityID.LeagueCreated.copyButton)
 
                 ShareLink(item: shareText) {
                     Label("Share", systemImage: Theme.Icon.Action.share)
@@ -75,6 +77,7 @@ struct LeagueCreatedView: View {
             Button("Done") { onDone() }
                 .themed(.primary)
                 .padding(.horizontal, Theme.Spacing.s40)
+                .accessibilityIdentifier(AccessibilityID.LeagueCreated.doneButton)
 
             Spacer()
         }

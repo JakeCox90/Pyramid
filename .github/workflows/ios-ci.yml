@@ -48,7 +48,7 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             | xcpretty
 
-      - name: Test
+      - name: Unit Test
         working-directory: ios
         run: |
           set -o pipefail
@@ -57,6 +57,23 @@ jobs:
             -scheme Pyramid \
             -destination "platform=iOS Simulator,name=iPhone 16,OS=18.2" \
             -xcconfig Config/Debug.xcconfig \
+            -only-testing:PyramidTests \
+            CODE_SIGNING_ALLOWED=NO \
+            | xcpretty
+
+      - name: UI Test
+        working-directory: ios
+        env:
+          UI_TEST_EMAIL: ${{ secrets.UI_TEST_EMAIL }}
+          UI_TEST_PASSWORD: ${{ secrets.UI_TEST_PASSWORD }}
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project Pyramid.xcodeproj \
+            -scheme Pyramid \
+            -destination "platform=iOS Simulator,name=iPhone 16,OS=18.2" \
+            -xcconfig Config/Debug.xcconfig \
+            -only-testing:PyramidUITests \
             CODE_SIGNING_ALLOWED=NO \
             | xcpretty
 

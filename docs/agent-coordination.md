@@ -19,6 +19,7 @@
 | PYR-144 | feature/PYR-131-pick-carousel | iOS | In Progress | HomeView | 2026-03-22 |
 | PYR-96 | feature/PYR-96-player-avatars | iOS | In Progress | LeagueMember, StandingsService, LeagueDetailView+Row, LeagueCompleteView | 2026-03-23 |
 | PYR-105 | feature/PYR-105-personal-stats | iOS | In Progress | ProfileStats, ProfileService, ProfileView+Stats | 2026-03-23 |
+| PYR-63 | feature/PYR-63-ui-test-scaffold | iOS | In Progress | PyramidUITests/*, AccessibilityIdentifiers.swift, project.yml, ios-ci.yml | 2026-03-23 |
 
 > **Note:** PYR-131/133/139/140/141-144 are all on the same branch. This is a grouped delivery — tightly coupled pick carousel + homepage redesign work. All commits unmerged as of 2026-03-23.
 

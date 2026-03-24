@@ -48,6 +48,7 @@ targets:
     scheme:
       testTargets:
         - PyramidTests
+        - PyramidUITests
       environmentVariables:
         SUPABASE_URL:
           value: ""   # set in scheme or xcconfig — never hardcode
@@ -79,3 +80,4 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.pyramid.uitests
         GENERATE_INFOPLIST_FILE: YES
+        SWIFT_STRICT_CONCURRENCY: minimal

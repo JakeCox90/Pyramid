@@ -50,13 +50,24 @@
                ReferencedContainer = "container:Pyramid.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "8D5FE8017604D56B24BCF779"
+               BuildableName = "PyramidUITests.xctest"
+               BlueprintName = "PyramidUITests"
+               ReferencedContainer = "container:Pyramid.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <CommandLineArguments>
       </CommandLineArguments>
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "SUPABASE_ANON_KEY"
-            value = "[&quot;isEnabled&quot;: true, &quot;value&quot;: &quot;&quot;]"
+            value = "[&quot;value&quot;: &quot;&quot;, &quot;isEnabled&quot;: true]"
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
@@ -91,7 +102,7 @@
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "SUPABASE_ANON_KEY"
-            value = "[&quot;isEnabled&quot;: true, &quot;value&quot;: &quot;&quot;]"
+            value = "[&quot;value&quot;: &quot;&quot;, &quot;isEnabled&quot;: true]"
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
@@ -122,7 +133,7 @@
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "SUPABASE_ANON_KEY"
-            value = "[&quot;isEnabled&quot;: true, &quot;value&quot;: &quot;&quot;]"
+            value = "[&quot;value&quot;: &quot;&quot;, &quot;isEnabled&quot;: true]"
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable

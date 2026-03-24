@@ -48,6 +48,7 @@ struct AuthView: View {
             .textContentType(.emailAddress)
             .keyboardType(.emailAddress)
             .autocorrectionDisabled()
+            .accessibilityIdentifier(AccessibilityID.Auth.emailField)
 
             InputField(
                 label: "Password",
@@ -57,6 +58,7 @@ struct AuthView: View {
                 isSecure: true
             )
             .textContentType(.password)
+            .accessibilityIdentifier(AccessibilityID.Auth.passwordField)
 
             Button("Sign In") {
                 Task { await viewModel.signIn() }
@@ -64,12 +66,14 @@ struct AuthView: View {
             .themed(.primary, isLoading: viewModel.isLoading)
             .disabled(viewModel.isLoading || viewModel.isSocialLoading)
             .padding(.top, Theme.Spacing.s20)
+            .accessibilityIdentifier(AccessibilityID.Auth.signInButton)
 
             Button("Create account") {
                 Task { await viewModel.signUp() }
             }
             .themed(.ghost)
             .disabled(viewModel.isLoading || viewModel.isSocialLoading)
+            .accessibilityIdentifier(AccessibilityID.Auth.createAccountButton)
 
             socialDivider
 
@@ -130,6 +134,7 @@ struct AuthView: View {
         )
         .disabled(viewModel.isLoading || viewModel.isSocialLoading)
         .accessibilityLabel("Sign in with Apple")
+        .accessibilityIdentifier(AccessibilityID.Auth.appleSignInButton)
         .overlay {
             if viewModel.isSocialLoading {
                 ProgressView()
@@ -161,6 +166,7 @@ struct AuthView: View {
         )
         .disabled(viewModel.isLoading || viewModel.isSocialLoading)
         .accessibilityLabel("Sign in with Google")
+        .accessibilityIdentifier(AccessibilityID.Auth.googleSignInButton)
         .overlay {
             if viewModel.isSocialLoading {
                 ProgressView()

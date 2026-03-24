@@ -14,10 +14,16 @@ extension FixturePickRow {
                 teamName: fixture.homeTeamName,
                 label: "Home"
             )
+            .accessibilityIdentifier(
+                "\(AccessibilityID.Picks.homePickButton).\(fixture.id)"
+            )
             pickButton(
                 teamId: fixture.awayTeamId,
                 teamName: fixture.awayTeamName,
                 label: "Away"
+            )
+            .accessibilityIdentifier(
+                "\(AccessibilityID.Picks.awayPickButton).\(fixture.id)"
             )
         }
         .padding(.horizontal, 12)
