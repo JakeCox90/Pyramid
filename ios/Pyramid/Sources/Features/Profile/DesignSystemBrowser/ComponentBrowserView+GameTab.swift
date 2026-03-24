@@ -20,19 +20,32 @@ extension ComponentBrowserView {
             alignment: .leading,
             spacing: Theme.Spacing.s30
         ) {
-            ComponentHeader(title: "LeagueCard")
+            ComponentHeader(title: "LeagueCardView")
 
-            LeagueCard(
-                leagueName: "Sunday League",
-                memberCount: 12,
-                gameweek: 28,
-                pickStatus: .survived
+            LeagueCardView(
+                league: League(
+                    id: "1",
+                    name: "Sunday League",
+                    joinCode: "ABC123",
+                    type: .free,
+                    status: .active,
+                    season: 2025,
+                    createdAt: Date(),
+                    emoji: "⚽",
+                    description: "The lads"
+                )
             )
-            LeagueCard(
-                leagueName: "Office Crew",
-                memberCount: 8,
-                gameweek: 28,
-                pickStatus: .eliminated
+            LeagueCardView(
+                league: League(
+                    id: "2",
+                    name: "Office Crew",
+                    joinCode: "XYZ789",
+                    type: .free,
+                    status: .completed,
+                    season: 2025,
+                    createdAt: Date(),
+                    emoji: "🏆"
+                )
             )
         }
     }
