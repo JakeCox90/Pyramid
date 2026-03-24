@@ -81,6 +81,12 @@ private extension ProfileView {
             )
 
             settingsRow(
+                title: "Achievements",
+                icon: "trophy.circle.fill",
+                destination: AchievementsView()
+            )
+
+            settingsRow(
                 title: "Notifications",
                 icon: Theme.Icon.Navigation.notifications,
                 destination: NotificationPreferencesView()
