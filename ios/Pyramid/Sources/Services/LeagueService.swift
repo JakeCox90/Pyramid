@@ -209,7 +209,7 @@ final class LeagueService: LeagueServiceProtocol {
                 "league_id": leagueId,
                 "name": name,
                 "color_palette": colorPalette,
-                "emoji": emoji,
+                "emoji": emoji
             ]
             if let description {
                 body["description"] = description

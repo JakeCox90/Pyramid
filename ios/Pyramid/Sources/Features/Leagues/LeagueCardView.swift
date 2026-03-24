@@ -44,8 +44,7 @@ extension LeagueCardView {
         .background(palette.gradient)
     }
 
-    @ViewBuilder
-    private var statusBadge: some View {
+    @ViewBuilder private var statusBadge: some View {
         switch league.status {
         case .pending:
             Badge(
