@@ -70,7 +70,7 @@ struct FixturePickRow: View {
     private var cardContent: some View {
         VStack(spacing: 0) {
             matchupArea
-            Spacer()
+            Spacer().frame(height: Theme.Spacing.s60)
             pickButtons
         }
     }
