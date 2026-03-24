@@ -149,6 +149,7 @@
 		C4C08D2A05451C87CFDE6C71 /* HomeService+Gameweeks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C02605ACA52F43AD5DEC848 /* HomeService+Gameweeks.swift */; };
 		C4C77589870C31F6AA3D520E /* AuthFlowUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F120904B70A75677CD6194A /* AuthFlowUITests.swift */; };
 		C4D198A5D7680A6177525DE9 /* StandingsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC52855C3048BF9B6B8F30F /* StandingsService.swift */; };
+		C6E95E64F1761C972C3C762F /* ComponentBrowserView+Achievements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 398EFD8B8019EFCB4A810A6F /* ComponentBrowserView+Achievements.swift */; };
 		C8B1FA478D97686E6F1F642D /* TokenBrowserView+Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6DC3F96D99890C6C48BDC31 /* TokenBrowserView+Colors.swift */; };
 		C982F902B95FEA0B5AADDDC8 /* AuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC95918095D0EA3F4C29A0AA /* AuthView.swift */; };
 		C9E260D01C9AA32B5AD05A5B /* NotificationPreferencesService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51FAB807FAD71BC12433A4C /* NotificationPreferencesService.swift */; };
@@ -263,6 +264,7 @@
 		334B3F95F52FDB1F1BDD29CE /* LeagueService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeagueService.swift; sourceTree = "<group>"; };
 		351A08CFE9CD12D6B11A184B /* NotificationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationServiceTests.swift; sourceTree = "<group>"; };
 		38C5D5263080B95902727241 /* MatchCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchCard.swift; sourceTree = "<group>"; };
+		398EFD8B8019EFCB4A810A6F /* ComponentBrowserView+Achievements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ComponentBrowserView+Achievements.swift"; sourceTree = "<group>"; };
 		39A1D7AC4BDC5818E3CB3AD2 /* HomeService+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeService+Helpers.swift"; sourceTree = "<group>"; };
 		3A99F7D102F98CA327955FA1 /* DetailSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailSheet.swift; sourceTree = "<group>"; };
 		42379DA3E6430A94B9D0CCDB /* PyramidUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = PyramidUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -597,6 +599,7 @@
 			isa = PBXGroup;
 			children = (
 				725658391AB845FD5DDBC45A /* ComponentBrowserView.swift */,
+				398EFD8B8019EFCB4A810A6F /* ComponentBrowserView+Achievements.swift */,
 				D6192088625C7B7B39DB1947 /* ComponentBrowserView+Features.swift */,
 				09E6C1664BE86A66B9F3C25F /* ComponentBrowserView+GameTab.swift */,
 				0A9C427DC28F8FB6FDB3FCBC /* ComponentBrowserView+Helpers.swift */,
@@ -981,6 +984,7 @@
 				0241AFE8F00C6A47044E2FE0 /* ButtonThemeStyle.swift in Sources */,
 				D78E5FB178E192F65965528E /* Card.swift in Sources */,
 				B90E3D25AC9B855EC6852C6D /* ColorHex.swift in Sources */,
+				C6E95E64F1761C972C3C762F /* ComponentBrowserView+Achievements.swift in Sources */,
 				777A5F7BA0D860DD3CE5C190 /* ComponentBrowserView+Features.swift in Sources */,
 				BBC7F77EA5AE26D5C5FA3F67 /* ComponentBrowserView+GameTab.swift in Sources */,
 				6FE075FAB71B67D862464972 /* ComponentBrowserView+Helpers.swift in Sources */,

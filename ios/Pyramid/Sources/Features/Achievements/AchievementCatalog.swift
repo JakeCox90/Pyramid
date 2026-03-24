@@ -102,14 +102,14 @@ enum AchievementCatalog {
         veteran1, veteran2, veteran3,
         longshot1, longshot2, longshot3,
         againstTheOdds, landslide, lastOneStanding,
-        giantKiller, nervesOfSteel, phoenix, fullHouse, icarus,
+        giantKiller, nervesOfSteel, phoenix, fullHouse, icarus
     ]
 
     static let tracks: [(name: String, key: String)] = [
         ("Survival Streak", "survival_streak"),
         ("Champion", "champion"),
         ("Veteran", "veteran"),
-        ("Longshot", "longshot"),
+        ("Longshot", "longshot")
     ]
 
     static func badge(for id: String) -> BadgeDefinition? {

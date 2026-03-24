@@ -22,8 +22,7 @@ struct AchievementsView: View {
             }
     }
 
-    @ViewBuilder
-    private var content: some View {
+    @ViewBuilder private var content: some View {
         if viewModel.isLoading {
             ProgressView()
                 .frame(
@@ -79,7 +78,7 @@ struct AchievementsView: View {
                     GridItem(
                         .adaptive(minimum: 80),
                         spacing: Theme.Spacing.s20
-                    ),
+                    )
                 ],
                 spacing: Theme.Spacing.s20
             ) {
@@ -122,7 +121,7 @@ struct AchievementsView: View {
                     GridItem(
                         .adaptive(minimum: 80),
                         spacing: Theme.Spacing.s20
-                    ),
+                    )
                 ],
                 spacing: Theme.Spacing.s20
             ) {

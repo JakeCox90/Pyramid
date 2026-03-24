@@ -3,7 +3,8 @@ import SwiftUI
 struct RootView: View {
     @EnvironmentObject private var appState: AppState
     @EnvironmentObject private var toastManager: ToastManager
-    @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.scenePhase)
+    private var scenePhase
     @StateObject private var achievementsVM = AchievementsViewModel()
 
     var body: some View {
