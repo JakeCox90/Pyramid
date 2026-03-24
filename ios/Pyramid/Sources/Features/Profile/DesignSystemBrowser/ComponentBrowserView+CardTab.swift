@@ -1,18 +1,58 @@
 #if DEBUG
 import SwiftUI
 
-// MARK: - Game Tab
+// MARK: - Card Tab
 
 extension ComponentBrowserView {
-    var gameContent: some View {
+    var cardContent: some View {
         Group {
+            cardSection
+            matchCardSection
+            statsCardSection
+            resultCardSection
+            pickCarouselCardSection
+            pickListCardSection
             leagueCardSection
             playersRemainingSection
         }
     }
 }
 
-// MARK: - League Card (Game tab)
+// MARK: - Card
+
+extension ComponentBrowserView {
+    var cardSection: some View {
+        VStack(
+            alignment: .leading,
+            spacing: Theme.Spacing.s30
+        ) {
+            ComponentHeader(title: "Card")
+
+            Card {
+                VStack(
+                    alignment: .leading,
+                    spacing: Theme.Spacing.s20
+                ) {
+                    Text("Card")
+                        .font(Theme.Typography.subhead)
+                        .foregroundStyle(
+                            Theme.Color.Content.Text
+                                .default
+                        )
+                    Text(
+                        "Generic container with padding, background, radius, and shadow."
+                    )
+                    .font(Theme.Typography.body)
+                    .foregroundStyle(
+                        Theme.Color.Content.Text.subtle
+                    )
+                }
+            }
+        }
+    }
+}
+
+// MARK: - LeagueCardView
 
 extension ComponentBrowserView {
     var leagueCardSection: some View {
@@ -66,9 +106,7 @@ extension ComponentBrowserView {
                 )
             )
 
-            ComponentCaption(
-                text: "No description"
-            )
+            ComponentCaption(text: "No description")
             LeagueCardView(
                 league: League(
                     id: "4",
@@ -85,7 +123,7 @@ extension ComponentBrowserView {
     }
 }
 
-// MARK: - PlayersRemainingCard (Game tab)
+// MARK: - PlayersRemainingCard
 
 extension ComponentBrowserView {
     var playersRemainingSection: some View {
@@ -97,9 +135,7 @@ extension ComponentBrowserView {
                 title: "PlayersRemainingCard"
             )
 
-            PlayersRemainingCard(
-                remaining: "8/12"
-            )
+            PlayersRemainingCard(remaining: "8/12")
 
             ComponentCaption(
                 text: "With action button"
@@ -107,87 +143,6 @@ extension ComponentBrowserView {
             PlayersRemainingCard(
                 remaining: "5/10",
                 onSeeResults: {}
-            )
-        }
-    }
-}
-
-// MARK: - ResultCard
-
-extension ComponentBrowserView {
-    var resultCardSection: some View {
-        VStack(
-            alignment: .leading,
-            spacing: Theme.Spacing.s30
-        ) {
-            ComponentHeader(title: "ResultCard")
-
-            ComponentCaption(text: "Survived")
-            ResultCard(
-                homeTeamName: "Liverpool",
-                homeTeamShort: "LIV",
-                homeTeamLogo: nil,
-                awayTeamName: "Everton",
-                awayTeamShort: "EVE",
-                awayTeamLogo: nil,
-                homeScore: 2,
-                awayScore: 1,
-                pickedHome: true,
-                result: .survived
-            )
-
-            ComponentCaption(text: "Eliminated")
-            ResultCard(
-                homeTeamName: "Arsenal",
-                homeTeamShort: "ARS",
-                homeTeamLogo: nil,
-                awayTeamName: "Chelsea",
-                awayTeamShort: "CHE",
-                awayTeamLogo: nil,
-                homeScore: 0,
-                awayScore: 2,
-                pickedHome: true,
-                result: .eliminated
-            )
-        }
-    }
-}
-
-// MARK: - Stats Card (Carousel Back)
-
-extension ComponentBrowserView {
-    var statsCardSection: some View {
-        VStack(
-            alignment: .leading,
-            spacing: Theme.Spacing.s30
-        ) {
-            ComponentHeader(
-                title: "MatchCarouselCardStats"
-            )
-
-            ComponentCaption(
-                text: "Stats (card back)"
-            )
-            MatchCarouselCardStats(
-                fixture: Fixture(
-                    id: 1,
-                    gameweekId: 20,
-                    homeTeamId: 42,
-                    homeTeamName: "Arsenal",
-                    homeTeamShort: "ARS",
-                    homeTeamLogo: nil,
-                    awayTeamId: 66,
-                    awayTeamName: "Aston Villa",
-                    awayTeamShort: "A. Villa",
-                    awayTeamLogo: nil,
-                    kickoffAt: Date()
-                        .addingTimeInterval(86400),
-                    status: .notStarted,
-                    homeScore: nil,
-                    awayScore: nil
-                ),
-                stats: .placeholder,
-                onBack: {}
             )
         }
     }
