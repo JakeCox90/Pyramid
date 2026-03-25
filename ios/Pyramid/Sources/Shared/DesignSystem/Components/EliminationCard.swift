@@ -184,7 +184,8 @@ private extension EliminationCard {
                     location: 0.0
                 ),
                 .init(
-                    color: Color(hex: "2D2525"),
+                    color: Theme.Color.Surface
+                        .Background.page,
                     location: 0.72
                 )
             ],
