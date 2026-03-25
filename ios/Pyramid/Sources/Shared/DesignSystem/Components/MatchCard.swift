@@ -64,7 +64,6 @@ struct MatchCard: View {
     let homeTeamName: String
     var venue: String?
     var kickoff: Date?
-    var broadcast: String?
     var homeScore: Int?
     var awayScore: Int?
     var phase: Phase = .preMatch
@@ -149,13 +148,6 @@ private extension MatchCard {
                 .foregroundStyle(
                     Color.white.opacity(0.5)
                 )
-            }
-            if let broadcast {
-                Text(broadcast)
-                    .font(Theme.Typography.caption)
-                    .foregroundStyle(
-                        Color.white.opacity(0.3)
-                    )
             }
         }
     }
