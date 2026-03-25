@@ -44,17 +44,7 @@ struct MatchCard: View {
 
         /// Half-tint overlay
         var halfTint: Color {
-            Theme.Color.Surface.Background.card
-        }
-
-        /// Positive pill background (live dot, survived)
-        var pillPositive: Color {
-            Theme.Color.Match.Pill.positive
-        }
-
-        /// Negative pill background (eliminated)
-        var pillNegative: Color {
-            Theme.Color.Match.Pill.negative
+            Theme.Color.Surface.Background.page
         }
     }
 
@@ -137,7 +127,7 @@ private extension MatchCard {
                 Text(venue)
                     .font(Theme.Typography.label01)
                     .foregroundStyle(
-                        Theme.Color.Content.Text.muted
+                        Theme.Color.Content.Text.subtle
                     )
             }
             if let kickoff {
@@ -146,7 +136,7 @@ private extension MatchCard {
                 )
                 .font(Theme.Typography.label01)
                 .foregroundStyle(
-                    Theme.Color.Content.Text.muted
+                    Theme.Color.Content.Text.subtle
                 )
             }
         }
@@ -204,7 +194,7 @@ extension MatchCard {
         Text("YOUR PICK")
             .font(Theme.Typography.overline)
             .foregroundStyle(
-                Theme.Color.Content.Text.disabled
+                Theme.Color.Content.Text.subtle
             )
     }
 

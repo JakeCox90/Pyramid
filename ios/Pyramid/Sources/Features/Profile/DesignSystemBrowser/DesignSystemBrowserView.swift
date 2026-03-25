@@ -25,6 +25,7 @@ struct DesignSystemBrowserView: View {
         )
         .navigationTitle("Design System")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar(.hidden, for: .tabBar)
     }
 }
 

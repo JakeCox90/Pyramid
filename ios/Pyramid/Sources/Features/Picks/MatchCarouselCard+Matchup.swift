@@ -100,7 +100,7 @@ extension MatchCarouselCard {
                 bottomTrailingRadius: 200,
                 topTrailingRadius: 200
             )
-            .fill(Theme.Color.Surface.Background.card)
+            .fill(Theme.Color.Surface.Background.page)
             .frame(width: tintW, height: tintH)
             .position(x: tintW / 2, y: tintY)
 
@@ -110,7 +110,7 @@ extension MatchCarouselCard {
                 bottomTrailingRadius: 0,
                 topTrailingRadius: 0
             )
-            .fill(Theme.Color.Surface.Background.card)
+            .fill(Theme.Color.Surface.Background.page)
             .frame(width: tintW, height: tintH)
             .position(
                 x: w - tintW / 2, y: tintY
@@ -147,7 +147,7 @@ extension MatchCarouselCard {
                 Text(venue)
                     .font(Theme.Typography.label01)
                     .foregroundStyle(
-                        Theme.Color.Content.Text.muted
+                        Theme.Color.Content.Text.subtle
                     )
             }
             Text(
@@ -163,7 +163,7 @@ extension MatchCarouselCard {
             )
             .font(Theme.Typography.label01)
             .foregroundStyle(
-                Theme.Color.Content.Text.disabled
+                Theme.Color.Content.Text.subtle
             )
         }
         .padding(.bottom, 12)

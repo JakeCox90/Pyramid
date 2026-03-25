@@ -61,7 +61,7 @@ private extension EliminationCard {
 
             Text(leagueName)
                 .font(Theme.Typography.h3)
-                .foregroundStyle(.white)
+                .foregroundStyle(Theme.Color.Content.Text.default)
                 .lineLimit(1)
                 .padding(
                     .horizontal, Theme.Spacing.s40
@@ -80,7 +80,7 @@ private extension EliminationCard {
                 )
                 Text(homeTeamShort)
                     .font(Theme.Typography.body)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Theme.Color.Content.Text.default)
                 Spacer()
             }
             .frame(maxWidth: .infinity)
@@ -90,16 +90,16 @@ private extension EliminationCard {
                 pickIndicator(isHome: true)
                 Text("\(homeScore)")
                     .font(Theme.Typography.h2)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Theme.Color.Content.Text.default)
                     .monospacedDigit()
                 Text("\u{2013}")
                     .font(Theme.Typography.h3)
                     .foregroundStyle(
-                        .white.opacity(0.4)
+                        Theme.Color.Content.Text.disabled
                     )
                 Text("\(awayScore)")
                     .font(Theme.Typography.h2)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Theme.Color.Content.Text.default)
                     .monospacedDigit()
                 pickIndicator(isHome: false)
             }
@@ -109,7 +109,7 @@ private extension EliminationCard {
                 Spacer()
                 Text(awayTeamShort)
                     .font(Theme.Typography.body)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Theme.Color.Content.Text.default)
                 TeamBadge(
                     teamName: awayTeamName,
                     logoURL: awayTeamLogo,
@@ -137,13 +137,13 @@ private extension EliminationCard {
             Text("Your pick: \(pickedTeamName)")
                 .font(Theme.Typography.label01)
                 .foregroundStyle(
-                    .white.opacity(0.6)
+                    Theme.Color.Content.Text.subtle
                 )
 
             Text(gameweekName)
                 .font(Theme.Typography.caption)
                 .foregroundStyle(
-                    .white.opacity(0.3)
+                    Theme.Color.Content.Text.tertiary
                 )
         }
     }
@@ -155,7 +155,7 @@ private extension EliminationCard {
             Text("ELIMINATED")
                 .font(Theme.Typography.label01)
         }
-        .foregroundStyle(.white)
+        .foregroundStyle(Theme.Color.Content.Text.default)
         .padding(
             .horizontal, Theme.Spacing.s40
         )
@@ -173,14 +173,14 @@ private extension EliminationCard {
 
 private extension EliminationCard {
     var eliminationRed: Color {
-        Color(hex: "FF453A")
+        Theme.Color.Match.Pill.negative
     }
 
     var backgroundGradient: some View {
         LinearGradient(
             stops: [
                 .init(
-                    color: Color(hex: "813E3E"),
+                    color: Theme.Color.Elimination.accent,
                     location: 0.0
                 ),
                 .init(

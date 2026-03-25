@@ -64,7 +64,7 @@ extension HomeView {
                     .foregroundStyle(
                         isSelected
                             ? Theme.Color.Match.Pill.negative
-                            : Theme.Color.Content.Text.muted
+                            : Theme.Color.Content.Text.subtle
                     )
             }
             Text(league.name)
@@ -72,14 +72,14 @@ extension HomeView {
                 .foregroundStyle(
                     isSelected
                         ? Theme.Color.Content.Text.default
-                        : Theme.Color.Content.Text.muted
+                        : Theme.Color.Content.Text.subtle
                 )
         }
         .padding(.horizontal, Theme.Spacing.s40)
         .padding(.vertical, Theme.Spacing.s20)
         .background(
             isSelected
-                ? Theme.Color.Border.light
+                ? Theme.Color.Border.default
                 : Color.clear
         )
         .clipShape(Capsule())
@@ -88,7 +88,7 @@ extension HomeView {
                 .stroke(
                     isSelected
                         ? Color.clear
-                        : Theme.Color.Border.light,
+                        : Theme.Color.Border.default,
                     lineWidth: 1
                 )
         )

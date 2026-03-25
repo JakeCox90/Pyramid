@@ -13,7 +13,7 @@ struct StoryTitleCard: View {
             VStack(spacing: Theme.Spacing.s60) {
                 Text("Gameweek \(gameweek)")
                     .font(Theme.Typography.caption)
-                    .foregroundStyle(Theme.color(light: "FFC758", dark: "FFC758"))
+                    .foregroundStyle(Theme.Color.Primary.resting)
 
                 Text(leagueName)
                     .font(Theme.Typography.h2)

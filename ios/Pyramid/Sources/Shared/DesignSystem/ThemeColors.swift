@@ -54,7 +54,7 @@ extension Theme {
                 static let `default` = adaptive("1D1D1B", "FFFFFF")
                 static let subtle = adaptiveUI(
                     light: Theme.hexToUIColor("878787"),
-                    dark: rgba(255, 255, 255, 0.7)
+                    dark: rgba(255, 255, 255, 0.6)
                 )
                 static let contrast = adaptive("FFFFFF", "20273B")
                 static let disabled = adaptiveUI(

@@ -45,33 +45,73 @@ struct TokenBrowserView: View {
     }
 
     private var categoryPicker: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: Theme.Spacing.s10) {
-                ForEach(Category.allCases, id: \.self) { cat in
-                    Button {
-                        selectedCategory = cat
-                    } label: {
-                        Text(cat.rawValue)
-                            .font(Theme.Typography.label01)
-                            .foregroundStyle(
-                                selectedCategory == cat
-                                    ? Theme.Color.Content.Text.default
-                                    : Theme.Color.Content.Text.subtle
-                            )
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 6)
-                            .background(
-                                selectedCategory == cat
-                                    ? Theme.Color.Surface.Background
-                                        .container
-                                    : Color.clear
-                            )
-                            .clipShape(Capsule())
+        ScrollViewReader { proxy in
+            ScrollView(
+                .horizontal,
+                showsIndicators: false
+            ) {
+                HStack(spacing: Theme.Spacing.s20) {
+                    ForEach(
+                        Category.allCases,
+                        id: \.self
+                    ) { cat in
+                        Button {
+                            withAnimation(
+                                .easeInOut(duration: 0.2)
+                            ) {
+                                selectedCategory = cat
+                            }
+                        } label: {
+                            Text(cat.rawValue)
+                                .font(
+                                    Theme.Typography
+                                        .label01
+                                )
+                                .foregroundStyle(
+                                    selectedCategory == cat
+                                        ? Theme.Color
+                                            .Content
+                                            .Text
+                                            .default
+                                        : Theme.Color
+                                            .Content
+                                            .Text.subtle
+                                )
+                                .padding(
+                                    .horizontal,
+                                    Theme.Spacing.s30
+                                )
+                                .padding(
+                                    .vertical,
+                                    Theme.Spacing.s20
+                                )
+                                .background(
+                                    selectedCategory == cat
+                                        ? Theme.Color
+                                            .Surface
+                                            .Background
+                                            .highlight
+                                        : Color.clear
+                                )
+                                .clipShape(Capsule())
+                        }
+                        .id(cat)
                     }
                 }
+                .padding(
+                    .horizontal, Theme.Spacing.s40
+                )
+                .padding(
+                    .vertical, Theme.Spacing.s20
+                )
             }
-            .padding(.horizontal, Theme.Spacing.s40)
-            .padding(.vertical, Theme.Spacing.s20)
+            .onChange(of: selectedCategory) { newCat in
+                withAnimation {
+                    proxy.scrollTo(
+                        newCat, anchor: .center
+                    )
+                }
+            }
         }
     }
 }

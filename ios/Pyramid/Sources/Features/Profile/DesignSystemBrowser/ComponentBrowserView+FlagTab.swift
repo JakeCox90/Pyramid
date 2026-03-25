@@ -1,104 +1,93 @@
 #if DEBUG
 import SwiftUI
 
-// MARK: - Flag Tab
+struct FlagDemo: View {
+    @State private var variant: FlagVariant = .success
+    @State private var label = "Survived"
 
-extension ComponentBrowserView {
-    var flagContent: some View {
-        Group {
-            flagsSection
-            liveFlagSection
-        }
-    }
-}
+    var body: some View {
+        DemoPage {
+            VStack(spacing: Theme.Spacing.s30) {
+                Flag(label: label, variant: variant)
 
-// MARK: - Flags
-
-private extension ComponentBrowserView {
-    var flagsSection: some View {
-        VStack(
-            alignment: .leading,
-            spacing: Theme.Spacing.s30
-        ) {
-            ComponentHeader(title: "Flag")
-
-            ComponentCaption(text: "Variants")
-            HStack(spacing: Theme.Spacing.s20) {
-                Flag(
-                    label: "Success",
-                    variant: .success
+                ComponentCaption(
+                    text: "Match status flags"
                 )
-                Flag(
-                    label: "Error",
-                    variant: .error
-                )
-                Flag(
-                    label: "Neutral",
-                    variant: .neutral
-                )
-                Flag(
-                    label: "Warning",
-                    variant: .warning
-                )
-            }
-
-            ComponentCaption(
-                text: "Pick status (domain mapping)"
-            )
-            HStack(spacing: Theme.Spacing.s20) {
-                Flag(
-                    label: PickStatus.survived.label,
-                    variant: PickStatus.survived
-                        .flagVariant
-                )
-                Flag(
-                    label: PickStatus.eliminated.label,
-                    variant: PickStatus.eliminated
-                        .flagVariant
-                )
-                Flag(
-                    label: PickStatus.pending.label,
-                    variant: PickStatus.pending
-                        .flagVariant
-                )
-                Flag(
-                    label: PickStatus.void.label,
-                    variant: PickStatus.void.flagVariant
-                )
-            }
-        }
-    }
-}
-
-// MARK: - LiveFlag
-
-private extension ComponentBrowserView {
-    var liveFlagSection: some View {
-        VStack(
-            alignment: .leading,
-            spacing: Theme.Spacing.s30
-        ) {
-            ComponentHeader(title: "LiveFlag")
-
-            HStack(spacing: Theme.Spacing.s20) {
-                LiveFlag()
-                Text("Match in progress")
-                    .font(Theme.Typography.body)
-                    .foregroundStyle(
-                        Theme.Color.Content.Text
-                            .default
+                HStack(spacing: Theme.Spacing.s20) {
+                    Flag(
+                        label: "LIVE",
+                        variant: .live
                     )
-            }
-            .padding(Theme.Spacing.s30)
-            .background(
-                Theme.Color.Surface.Background
-                    .container
-            )
-            .clipShape(
-                RoundedRectangle(
-                    cornerRadius: Theme.Radius.r20
+                    Flag(
+                        label: "FT",
+                        variant: .fullTime
+                    )
+                    Flag(
+                        label: "SURVIVED",
+                        variant: .survived
+                    )
+                    Flag(
+                        label: "ELIMINATED",
+                        variant: .eliminated
+                    )
+                }
+
+                ComponentCaption(
+                    text: "Pick status mapping"
                 )
-            )
+                HStack(spacing: Theme.Spacing.s20) {
+                    Flag(
+                        label: PickStatus.survived
+                            .label,
+                        variant: PickStatus.survived
+                            .flagVariant
+                    )
+                    Flag(
+                        label: PickStatus.eliminated
+                            .label,
+                        variant: PickStatus.eliminated
+                            .flagVariant
+                    )
+                    Flag(
+                        label: PickStatus.pending
+                            .label,
+                        variant: PickStatus.pending
+                            .flagVariant
+                    )
+                    Flag(
+                        label: PickStatus.void.label,
+                        variant: PickStatus.void
+                            .flagVariant
+                    )
+                }
+            }
+        } config: {
+            ConfigRow(label: "Variant") {
+                Picker("", selection: $variant) {
+                    Text("success")
+                        .tag(FlagVariant.success)
+                    Text("error")
+                        .tag(FlagVariant.error)
+                    Text("neutral")
+                        .tag(FlagVariant.neutral)
+                    Text("warning")
+                        .tag(FlagVariant.warning)
+                    Text("live")
+                        .tag(FlagVariant.live)
+                    Text("fullTime")
+                        .tag(FlagVariant.fullTime)
+                    Text("survived")
+                        .tag(FlagVariant.survived)
+                    Text("eliminated")
+                        .tag(FlagVariant.eliminated)
+                }
+            }
+            ConfigDivider()
+            ConfigRow(label: "Label") {
+                TextField("Label", text: $label)
+                    .multilineTextAlignment(.trailing)
+                    .font(Theme.Typography.body)
+            }
         }
     }
 }

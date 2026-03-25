@@ -27,7 +27,7 @@ struct MatchCarouselCardStats: View {
         .overlay(
             RoundedRectangle(cornerRadius: 24)
                 .stroke(
-                    Theme.Color.Border.subtle,
+                    Theme.Color.Border.light,
                     lineWidth: 1
                 )
         )
@@ -40,7 +40,7 @@ struct MatchCarouselCardStats: View {
     // fill_YB7865: gradient 225deg over #241E31
     private var cardBackground: some View {
         ZStack {
-            Theme.Color.Surface.Background.card
+            Theme.Color.Surface.Background.page
             LinearGradient(
                 stops: [
                     .init(
@@ -82,7 +82,7 @@ extension MatchCarouselCardStats {
                 bottomTrailingRadius: 200,
                 topTrailingRadius: 200
             )
-            .fill(Theme.Color.Surface.Background.card)
+            .fill(Theme.Color.Surface.Background.page)
             .frame(width: tintW, height: tintH)
             .position(x: tintW / 2, y: tintH / 2)
 
@@ -92,7 +92,7 @@ extension MatchCarouselCardStats {
                 bottomTrailingRadius: 8,
                 topTrailingRadius: 8
             )
-            .fill(Theme.Color.Surface.Background.card)
+            .fill(Theme.Color.Surface.Background.page)
             .frame(width: tintW, height: tintH)
             .position(
                 x: w - tintW / 2, y: tintH / 2

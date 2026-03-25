@@ -109,8 +109,8 @@ struct MatchStatsPanel: View {
     private var topGradient: some View {
         LinearGradient(
             colors: [
-                Theme.Color.Surface.Background.card,
-                Theme.Color.Surface.Background.card.opacity(0)
+                Theme.Color.Surface.Background.page,
+                Theme.Color.Surface.Background.page.opacity(0)
             ],
             startPoint: .top,
             endPoint: .bottom

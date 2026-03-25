@@ -52,26 +52,9 @@ extension Theme.Color {
     }
 }
 
-// MARK: - Extended Surface Tokens
-
-extension Theme.Color.Surface.Background {
-    /// Dark card tint — half-tint overlay on match cards
-    static let card = Theme.color(light: "241E31", dark: "241E31")
-}
-
 // MARK: - Extended Content.Text Tokens
 
 extension Theme.Color.Content.Text {
-    /// White 60% — secondary labels, metadata
-    static let secondary = Theme.color(
-        light: Theme.rgbaUIColor(32, 39, 59, 0.6),
-        dark: Theme.rgbaUIColor(255, 255, 255, 0.6)
-    )
-    /// White 50% — venue text, muted metadata
-    static let muted = Theme.color(
-        light: Theme.rgbaUIColor(32, 39, 59, 0.5),
-        dark: Theme.rgbaUIColor(255, 255, 255, 0.5)
-    )
     /// White 30% — faint labels, tertiary info
     static let tertiary = Theme.color(
         light: Theme.rgbaUIColor(32, 39, 59, 0.3),
@@ -82,19 +65,9 @@ extension Theme.Color.Content.Text {
 // MARK: - Extended Border Tokens
 
 extension Theme.Color.Border {
-    /// White 15% — light borders
+    /// White 10% — light borders and dividers
     static let light = Theme.color(
-        light: Theme.rgbaUIColor(32, 39, 59, 0.15),
-        dark: Theme.rgbaUIColor(255, 255, 255, 0.15)
-    )
-    /// White 10% — subtle borders, dividers
-    static let subtle = Theme.color(
         light: Theme.rgbaUIColor(32, 39, 59, 0.1),
         dark: Theme.rgbaUIColor(255, 255, 255, 0.1)
-    )
-    /// White 5% — barely visible separators
-    static let faint = Theme.color(
-        light: Theme.rgbaUIColor(32, 39, 59, 0.05),
-        dark: Theme.rgbaUIColor(255, 255, 255, 0.05)
     )
 }

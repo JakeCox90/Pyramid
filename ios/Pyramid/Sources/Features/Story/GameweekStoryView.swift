@@ -92,8 +92,8 @@ struct GameweekStoryView: View {
             ForEach(0..<viewModel.totalCards, id: \.self) { index in
                 Capsule()
                     .fill(index <= viewModel.currentIndex
-                        ? Theme.color(light: "FFC758", dark: "FFC758")
-                        : Color.white.opacity(0.15))
+                        ? Theme.Color.Primary.resting
+                        : Theme.Color.Border.default)
                     .frame(height: 3)
                     .animation(.easeInOut(duration: 0.3), value: viewModel.currentIndex)
             }

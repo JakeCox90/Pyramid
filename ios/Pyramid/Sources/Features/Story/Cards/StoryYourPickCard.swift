@@ -39,7 +39,7 @@ struct StoryYourPickCard: View {
             VStack(spacing: Theme.Spacing.s60) {
                 Text("Your Pick")
                     .font(Theme.Typography.caption)
-                    .foregroundStyle(Theme.color(light: "FFC758", dark: "FFC758"))
+                    .foregroundStyle(Theme.Color.Primary.resting)
 
                 Image(systemName: statusIcon)
                     .font(.system(size: 56))

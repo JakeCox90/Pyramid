@@ -110,7 +110,7 @@ extension PicksView {
                     .font(Theme.Typography.overline)
                     .textCase(.uppercase)
                     .foregroundStyle(
-                        Theme.Color.Content.Text.secondary
+                        Theme.Color.Content.Text.subtle
                     )
             }
 
@@ -166,7 +166,7 @@ extension PicksView {
             Text(message)
                 .font(Theme.Typography.body)
                 .foregroundStyle(
-                    Theme.Color.Content.Text.secondary
+                    Theme.Color.Content.Text.subtle
                 )
                 .multilineTextAlignment(.center)
         }
@@ -189,7 +189,7 @@ extension PicksView {
             )
             .font(Theme.Typography.body)
             .foregroundStyle(
-                Theme.Color.Content.Text.secondary
+                Theme.Color.Content.Text.subtle
             )
             .multilineTextAlignment(.center)
         }

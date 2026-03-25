@@ -28,7 +28,7 @@ struct MatchCarouselCard: View {
         .overlay(
             RoundedRectangle(cornerRadius: 24)
                 .stroke(
-                    Theme.Color.Border.subtle,
+                    Theme.Color.Border.light,
                     lineWidth: 1
                 )
         )
@@ -41,7 +41,7 @@ struct MatchCarouselCard: View {
     // fill_255PQ5: gradient 225deg, stops 0% → 72%
     private var cardBackground: some View {
         ZStack {
-            Theme.Color.Surface.Background.card
+            Theme.Color.Surface.Background.page
             LinearGradient(
                 stops: [
                     .init(

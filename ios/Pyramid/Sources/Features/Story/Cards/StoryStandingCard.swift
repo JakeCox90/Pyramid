@@ -12,13 +12,13 @@ struct StoryStandingCard: View {
             VStack(spacing: Theme.Spacing.s50) {
                 Text("Still Standing")
                     .font(Theme.Typography.caption)
-                    .foregroundStyle(Theme.color(light: "FFC758", dark: "FFC758"))
+                    .foregroundStyle(Theme.Color.Primary.resting)
 
                 if userStatus == .winner {
                     VStack(spacing: Theme.Spacing.s30) {
                         Image(systemName: "trophy.fill")
                             .font(.system(size: 48))
-                            .foregroundStyle(Theme.color(light: "FFC758", dark: "FFC758"))
+                            .foregroundStyle(Theme.Color.Primary.resting)
                         Text("You Won!")
                             .font(Theme.Typography.h2)
                             .foregroundStyle(Theme.Color.Content.Text.default)
@@ -41,7 +41,7 @@ struct StoryStandingCard: View {
                                     )
                                     .foregroundStyle(
                                         player.isCurrentUser
-                                            ? Theme.color(light: "FFC758", dark: "FFC758")
+                                            ? Theme.Color.Primary.resting
                                             : Theme.Color.Content.Text.default
                                     )
 
@@ -51,7 +51,7 @@ struct StoryStandingCard: View {
                                         .foregroundStyle(Theme.Color.Content.Text.contrast)
                                         .padding(.horizontal, Theme.Spacing.s20)
                                         .padding(.vertical, 2)
-                                        .background(Theme.color(light: "FFC758", dark: "FFC758"))
+                                        .background(Theme.Color.Primary.resting)
                                         .clipShape(Capsule())
                                 }
 
@@ -65,8 +65,8 @@ struct StoryStandingCard: View {
                             .padding(.vertical, Theme.Spacing.s20)
                             .background(
                                 player.isCurrentUser
-                                    ? Theme.color(light: "FFC758", dark: "FFC758").opacity(0.1)
-                                    : Color.white.opacity(0.05)
+                                    ? Theme.Color.Primary.resting.opacity(0.1)
+                                    : Theme.Color.Border.light
                             )
                             .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.r20))
                         }

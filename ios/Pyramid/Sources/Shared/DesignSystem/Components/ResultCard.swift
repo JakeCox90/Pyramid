@@ -27,7 +27,7 @@ struct ResultCard: View {
         .overlay(
             RoundedRectangle(cornerRadius: 24)
                 .strokeBorder(
-                    Theme.Color.Border.subtle,
+                    Theme.Color.Border.light,
                     lineWidth: 1
                 )
         )

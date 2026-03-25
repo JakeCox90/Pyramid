@@ -19,7 +19,7 @@ struct StoryUpsetCard: View {
             VStack(spacing: Theme.Spacing.s60) {
                 Text("Biggest Upset")
                     .font(Theme.Typography.caption)
-                    .foregroundStyle(Theme.color(light: "FFC758", dark: "FFC758"))
+                    .foregroundStyle(Theme.Color.Primary.resting)
 
                 VStack(spacing: Theme.Spacing.s30) {
                     HStack(spacing: Theme.Spacing.s40) {
@@ -31,7 +31,7 @@ struct StoryUpsetCard: View {
 
                         Text("\(homeScore) - \(awayScore)")
                             .font(Theme.Typography.h3)
-                            .foregroundStyle(Theme.color(light: "FFC758", dark: "FFC758"))
+                            .foregroundStyle(Theme.Color.Primary.resting)
 
                         Text(fixture.awayTeamName)
                             .font(Theme.Typography.subhead)

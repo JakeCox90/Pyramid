@@ -30,11 +30,6 @@ extension TokenBrowserView {
                 ("contrast", Theme.Color.Content.Text.contrast),
                 ("disabled", Theme.Color.Content.Text.disabled),
                 (
-                    "secondary",
-                    Theme.Color.Content.Text.secondary
-                ),
-                ("muted", Theme.Color.Content.Text.muted),
-                (
                     "tertiary",
                     Theme.Color.Content.Text.tertiary
                 )
@@ -85,10 +80,6 @@ extension TokenBrowserView {
                         Theme.Color.Surface.Background
                             .transparent
                     ),
-                    (
-                        "card",
-                        Theme.Color.Surface.Background.card
-                    )
                 ]
             )
 
@@ -117,9 +108,7 @@ extension TokenBrowserView {
             ColorGroup(title: "Border", swatches: [
                 ("default", Theme.Color.Border.default),
                 ("heavy", Theme.Color.Border.heavy),
-                ("light", Theme.Color.Border.light),
-                ("subtle", Theme.Color.Border.subtle),
-                ("faint", Theme.Color.Border.faint)
+                ("light", Theme.Color.Border.light)
             ])
 
             SectionHeader(title: "Status Tokens")

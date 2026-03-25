@@ -32,7 +32,7 @@ extension PickCarouselView {
             .overlay(
                 Capsule()
                     .stroke(
-                        Theme.Color.Border.subtle,
+                        Theme.Color.Border.light,
                         lineWidth: 1
                     )
             )

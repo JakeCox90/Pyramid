@@ -42,7 +42,7 @@ struct StoryEliminatedCard: View {
                             }
                             .padding(.horizontal, Theme.Spacing.s40)
                             .padding(.vertical, Theme.Spacing.s30)
-                            .background(Theme.Color.Border.faint)
+                            .background(Theme.Color.Border.light)
                             .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.r20))
                         }
                     }

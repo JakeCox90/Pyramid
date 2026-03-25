@@ -89,7 +89,7 @@ private struct RoundSection: View {
             roundHeader
             if isExpanded {
                 Divider()
-                    .background(Theme.Color.Border.default)
+                    .background(Theme.Color.Border.light)
                 expandedContent
             }
         }
@@ -161,7 +161,7 @@ private struct RoundSection: View {
                 )
                 if pick.id != round.picks.last?.id {
                     Divider()
-                        .background(Theme.Color.Border.default)
+                        .background(Theme.Color.Border.light)
                         .padding(.leading, Theme.Spacing.s40)
                 }
             }

@@ -32,7 +32,7 @@ extension LeagueCardView {
             Text(league.name)
                 .font(Theme.Typography.subhead)
                 .fontWeight(.semibold)
-                .foregroundStyle(.white)
+                .foregroundStyle(Theme.Color.Content.Text.default)
                 .lineLimit(1)
 
             Spacer()

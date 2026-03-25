@@ -89,7 +89,7 @@ struct OnboardingView: View {
                     .fill(
                         index == currentPage
                             ? Theme.Color.Content.Text.default
-                            : Theme.Color.Border.default
+                            : Theme.Color.Border.light
                     )
                     .frame(width: 8, height: 8)
                     .accessibilityHidden(true)

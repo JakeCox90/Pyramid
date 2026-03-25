@@ -17,7 +17,7 @@ extension HomeView {
             gameweekStatusView(
                 title: "Complete",
                 icon: "checkmark.circle.fill",
-                color: Theme.Color.Content.Text.muted
+                color: Theme.Color.Content.Text.subtle
             )
         case .unknown:
             EmptyView()
@@ -29,7 +29,7 @@ extension HomeView {
             Text("GAMEWEEK BEGINS")
                 .font(Theme.Typography.overline)
                 .foregroundStyle(
-                    Theme.Color.Content.Text.disabled
+                    Theme.Color.Content.Text.subtle
                 )
 
             HStack(
@@ -43,7 +43,7 @@ extension HomeView {
                 Text(countdownSecondary)
                     .font(Theme.Typography.body)
                     .foregroundStyle(
-                        Theme.Color.Content.Text.disabled
+                        Theme.Color.Content.Text.subtle
                     )
             }
         }
@@ -59,7 +59,7 @@ extension HomeView {
             Text("GAMEWEEK")
                 .font(Theme.Typography.overline)
                 .foregroundStyle(
-                    Theme.Color.Content.Text.disabled
+                    Theme.Color.Content.Text.subtle
                 )
 
             HStack(spacing: 10) {

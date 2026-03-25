@@ -10,11 +10,11 @@ struct StoryWildcardCard: View {
             VStack(spacing: Theme.Spacing.s60) {
                 Text("Wildcard Pick")
                     .font(Theme.Typography.caption)
-                    .foregroundStyle(Theme.color(light: "FFC758", dark: "FFC758"))
+                    .foregroundStyle(Theme.Color.Primary.resting)
 
                 Image(systemName: "sparkles")
                     .font(.system(size: 44))
-                    .foregroundStyle(Theme.color(light: "FFC758", dark: "FFC758"))
+                    .foregroundStyle(Theme.Color.Primary.resting)
 
                 VStack(spacing: Theme.Spacing.s20) {
                     Text(player.displayName)

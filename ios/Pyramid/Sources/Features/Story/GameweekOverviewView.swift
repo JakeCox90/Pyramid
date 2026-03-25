@@ -25,7 +25,7 @@ struct GameweekOverviewView: View {
                         dismiss()
                     }
                     .font(Theme.Typography.body)
-                    .foregroundStyle(Theme.color(light: "FFC758", dark: "FFC758"))
+                    .foregroundStyle(Theme.Color.Primary.resting)
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Done") { dismiss() }

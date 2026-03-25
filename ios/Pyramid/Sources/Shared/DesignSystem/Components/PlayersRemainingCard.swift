@@ -16,7 +16,7 @@ struct PlayersRemainingCard: View {
             .padding(.vertical, Theme.Spacing.s40)
 
             Divider()
-                .background(Color.white.opacity(0.1))
+                .background(Theme.Color.Border.light)
 
             if let onSeeResults {
                 Button(action: onSeeResults) {
@@ -45,7 +45,7 @@ struct PlayersRemainingCard: View {
                     )
             }
         }
-        .background(Color(hex: "2C243D"))
+        .background(Theme.Color.Surface.Background.container)
         .clipShape(
             RoundedRectangle(
                 cornerRadius: Theme.Radius.r50

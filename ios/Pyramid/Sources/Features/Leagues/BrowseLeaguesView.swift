@@ -81,7 +81,7 @@ struct BrowseLeaguesView: View {
 
             Image(systemName: Theme.Icon.League.trophy)
                 .font(.system(size: 56))
-                .foregroundStyle(Theme.Color.Border.default)
+                .foregroundStyle(Theme.Color.Border.light)
 
             VStack(spacing: Theme.Spacing.s20) {
                 Text("No open leagues")
