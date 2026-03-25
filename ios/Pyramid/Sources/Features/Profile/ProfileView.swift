@@ -11,6 +11,8 @@ struct ProfileView: View {
     @State var gameweekPhase =
         DebugGameweekOverride.current
     @State var showGameweekStory = false
+    @State var paidFeaturesOn =
+        FeatureFlags.paidFeaturesEnabled
     #endif
 
     var body: some View {
@@ -117,14 +119,6 @@ private extension ProfileView {
                     destination: WalletView()
                 )
             }
-
-            #if DEBUG
-            settingsRow(
-                title: "Design System",
-                icon: "paintpalette",
-                destination: DesignSystemBrowserView()
-            )
-            #endif
         }
         .padding(.horizontal, Theme.Spacing.s40)
     }
@@ -179,94 +173,3 @@ private extension ProfileView {
         .accessibilityLabel("Sign Out")
     }
 }
-
-// MARK: - Developer Tools
-
-#if DEBUG
-private extension ProfileView {
-    var devToolsSection: some View {
-        VStack(spacing: Theme.Spacing.s20) {
-            Text("Developer Tools")
-                .font(Theme.Typography.caption)
-                .foregroundStyle(Theme.Color.Content.Text.subtle)
-                .frame(maxWidth: .infinity, alignment: .leading)
-
-            gameweekPhaseControl
-
-            devToolButton(
-                title: "Gameweek Recap",
-                subtitle: "Preview end-of-gameweek story",
-                icon: "book.pages"
-            ) {
-                showGameweekStory = true
-            }
-
-            resetButton(
-                title: "Reset Game Data",
-                subtitle: "Re-seeds leagues, picks & fixtures",
-                isLoading: isResettingGame,
-                action: { await performReset(mode: "game") }
-            )
-
-            resetButton(
-                title: "Reset Everything",
-                subtitle: "Game data + restart onboarding",
-                isLoading: isResettingFull,
-                action: { await performReset(mode: "full") }
-            )
-
-            if let resetMessage {
-                Text(resetMessage)
-                    .font(Theme.Typography.caption)
-                    .foregroundStyle(Theme.Color.Content.Text.subtle)
-                    .transition(.opacity)
-            }
-        }
-        .padding(.horizontal, Theme.Spacing.s40)
-    }
-
-    var gameweekPhaseControl: some View {
-        VStack(alignment: .leading, spacing: Theme.Spacing.s10) {
-            Text("Gameweek Status")
-                .font(Theme.Typography.body)
-                .foregroundStyle(
-                    Theme.Color.Content.Text.default
-                )
-            Picker(
-                "Gameweek Phase",
-                selection: $gameweekPhase
-            ) {
-                ForEach(
-                    DebugGameweekOverride.Phase.allCases,
-                    id: \.self
-                ) { phase in
-                    Text(phase.rawValue).tag(phase)
-                }
-            }
-            .pickerStyle(.segmented)
-            .onChange(of: gameweekPhase) { phase in
-                DebugGameweekOverride.current = phase
-            }
-            Text(
-                gameweekPhase == .none
-                    ? "Using real API data"
-                    : "Overriding gameweek state"
-            )
-            .font(Theme.Typography.caption)
-            .foregroundStyle(
-                Theme.Color.Content.Text.subtle
-            )
-        }
-        .padding(Theme.Spacing.s30)
-        .background(
-            Theme.Color.Surface.Background.container
-        )
-        .clipShape(
-            RoundedRectangle(
-                cornerRadius: Theme.Radius.default
-            )
-        )
-    }
-
-}
-#endif
