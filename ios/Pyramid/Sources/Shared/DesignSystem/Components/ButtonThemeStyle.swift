@@ -57,8 +57,8 @@ struct ButtonThemeStyle: ButtonStyle {
         switch variant {
         case .primary:
             return pressed
-                ? Color(hex: "E5B24E")
-                : Color(hex: "FFC758")
+                ? Theme.Color.Primary.pressed
+                : Theme.Color.Primary.resting
         case .secondary:
             return pressed
                 ? Color.white.opacity(0.15)
@@ -77,7 +77,7 @@ struct ButtonThemeStyle: ButtonStyle {
 
     private var foregroundColor: Color {
         switch variant {
-        case .primary:     return .black
+        case .primary:     return Theme.Color.Primary.text
         case .secondary:   return .white
         case .destructive: return .white
         case .ghost:       return .white
