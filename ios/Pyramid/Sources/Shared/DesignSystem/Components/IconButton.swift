@@ -32,7 +32,7 @@ struct IconButton: View {
     private var backgroundColor: Color {
         switch variant {
         case .primary:
-            return Color(hex: "FFC758")
+            return Theme.Color.Primary.resting
         case .secondary:
             return Color.white.opacity(0.2)
         case .destructive:
@@ -44,7 +44,7 @@ struct IconButton: View {
 
     private var iconColor: Color {
         switch variant {
-        case .primary:     return .black
+        case .primary:     return Theme.Color.Primary.text
         case .secondary:   return .white
         case .destructive: return .white
         case .ghost:       return .white

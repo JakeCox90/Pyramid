@@ -4,7 +4,6 @@ import SwiftUI
 
 // Figma layout_F0GDNE: row, gap 24px, width 329, height 44
 // layout_9PMINZ: padding 12px 24px, height 44, fill width
-// fill_LRKB3T: linear-gradient(44deg, black → white) over #FFC758
 // fill_5J06A6: text #000000
 // style_MY14W0: Inter Bold 12, uppercase, center
 
@@ -36,14 +35,14 @@ extension MatchCarouselCard {
             Text("LOCKED")
                 .font(Theme.Typography.label01)
         }
-        .foregroundStyle(Color.white.opacity(0.4))
+        .foregroundStyle(Theme.Color.Content.Text.disabled)
         .frame(maxWidth: .infinity)
         .frame(height: 44)
-        .background(Color.white.opacity(0.1))
+        .background(Theme.Color.Surface.Background.highlight)
         .overlay(
             Capsule()
                 .stroke(
-                    Color.white.opacity(0.1),
+                    Theme.Color.Border.subtle,
                     lineWidth: 1
                 )
         )
@@ -51,8 +50,7 @@ extension MatchCarouselCard {
     }
 
     /// Figma: IconButton (46:4119) — 44×44 circle,
-    /// fill_J2XC2U gradient over #FFC758,
-    /// Bar Chart Icon 1 (46:4117) 24×24, white
+    /// Bar Chart Icon 1 (46:4117) 24×24, black
     private var statsIconButton: some View {
         Button {
             onStats?()
@@ -61,19 +59,9 @@ extension MatchCarouselCard {
                 .renderingMode(.template)
                 .resizable()
                 .frame(width: 20, height: 20)
-                .foregroundStyle(Color.black)
+                .foregroundStyle(Theme.Color.Primary.text)
                 .frame(width: 44, height: 44)
-                .background(
-                    ZStack {
-                        Color(hex: "FFC758")
-                        LinearGradient(
-                            colors: [.black, .white],
-                            startPoint: .bottomLeading,
-                            endPoint: .topTrailing
-                        )
-                        .blendMode(.softLight)
-                    }
-                )
+                .background(Theme.Color.Primary.resting)
                 .clipShape(Circle())
         }
         .buttonStyle(.plain)
@@ -137,43 +125,34 @@ extension MatchCarouselCard {
     ) -> some View {
         if isLoading {
             ProgressView()
-                .tint(Color.black)
+                .tint(Theme.Color.Primary.text)
         } else if isUsed {
             Text(usedLabel(for: teamId))
                 .font(Theme.Typography.overline)
-                .foregroundStyle(Color.white)
-                .opacity(0.3)
+                .foregroundStyle(
+                    Theme.Color.Content.Text.tertiary
+                )
         } else {
             Text(isPicked ? "PICKED" : label)
                 .font(Theme.Typography.overline)
                 .foregroundStyle(
                     isPicked
-                        ? Color.white
-                        : Color(hex: "000000")
+                        ? Theme.Color.Content.Text.default
+                        : Theme.Color.Primary.text
                 )
                 .tracking(0.8)
         }
     }
 
-    // fill_LRKB3T: linear-gradient(44deg, black 0%,
-    // white 100%) over #FFC758
     @ViewBuilder
     private func buttonBackground(
         isPicked: Bool,
         isUsed: Bool
     ) -> some View {
         if isPicked || isUsed {
-            Color.white.opacity(0.1)
+            Theme.Color.Surface.Background.highlight
         } else {
-            ZStack {
-                Color(hex: "FFC758")
-                LinearGradient(
-                    colors: [.black, .white],
-                    startPoint: .bottomLeading,
-                    endPoint: .topTrailing
-                )
-                .blendMode(.softLight)
-            }
+            Theme.Color.Primary.resting
         }
     }
 

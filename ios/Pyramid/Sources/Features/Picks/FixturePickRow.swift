@@ -32,7 +32,7 @@ struct FixturePickRow: View {
         .overlay(
             RoundedRectangle(cornerRadius: 24)
                 .stroke(
-                    Color.white.opacity(0.1),
+                    Theme.Color.Border.subtle,
                     lineWidth: 1
                 )
         )
@@ -41,23 +41,15 @@ struct FixturePickRow: View {
     // fill_CRMJ7P: gradient 225deg, 0% → 72%
     var cardBackground: some View {
         ZStack {
-            Color(hex: "241E31")
+            Theme.Color.Surface.Background.card
             LinearGradient(
                 stops: [
                     .init(
-                        color: Color(
-                            red: 94 / 255,
-                            green: 78 / 255,
-                            blue: 129 / 255
-                        ),
+                        color: Theme.Color.Match.Gradient.purpleStart,
                         location: 0.0
                     ),
                     .init(
-                        color: Color(
-                            red: 45 / 255,
-                            green: 37 / 255,
-                            blue: 61 / 255
-                        ),
+                        color: Theme.Color.Match.Gradient.purpleEnd,
                         location: 0.72
                     )
                 ],
@@ -145,8 +137,8 @@ extension FixturePickRow {
     ) -> some View {
         Text(name.uppercased())
             .font(Theme.Typography.overline)
-            .foregroundStyle(Color.white)
-            .opacity(isUsed ? 0.3 : 0.4)
+            .foregroundStyle(Theme.Color.Content.Text.disabled)
+            .opacity(isUsed ? 0.75 : 1.0)
             .lineLimit(1)
             .minimumScaleFactor(0.7)
     }
@@ -158,6 +150,6 @@ extension FixturePickRow {
     var vsLabel: some View {
         Text("VS")
             .font(Theme.Typography.overline)
-            .foregroundStyle(Color.white)
+            .foregroundStyle(Theme.Color.Content.Text.default)
     }
 }

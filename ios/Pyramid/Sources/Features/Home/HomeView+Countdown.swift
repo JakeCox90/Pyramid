@@ -11,13 +11,13 @@ extension HomeView {
             gameweekStatusView(
                 title: "In Progress",
                 icon: "sportscourt.fill",
-                color: Color(hex: "30D158")
+                color: Theme.Color.Match.Pill.inProgress
             )
         case .finished:
             gameweekStatusView(
                 title: "Complete",
                 icon: "checkmark.circle.fill",
-                color: Color.white.opacity(0.5)
+                color: Theme.Color.Content.Text.muted
             )
         case .unknown:
             EmptyView()
@@ -29,7 +29,7 @@ extension HomeView {
             Text("GAMEWEEK BEGINS")
                 .font(Theme.Typography.overline)
                 .foregroundStyle(
-                    Color.white.opacity(0.4)
+                    Theme.Color.Content.Text.disabled
                 )
 
             HStack(
@@ -38,12 +38,12 @@ extension HomeView {
             ) {
                 Text(countdownPrimary)
                     .font(.system(size: 34, weight: .bold))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Theme.Color.Content.Text.default)
 
                 Text(countdownSecondary)
                     .font(Theme.Typography.body)
                     .foregroundStyle(
-                        Color.white.opacity(0.4)
+                        Theme.Color.Content.Text.disabled
                     )
             }
         }
@@ -59,7 +59,7 @@ extension HomeView {
             Text("GAMEWEEK")
                 .font(Theme.Typography.overline)
                 .foregroundStyle(
-                    Color.white.opacity(0.4)
+                    Theme.Color.Content.Text.disabled
                 )
 
             HStack(spacing: 10) {
@@ -68,7 +68,7 @@ extension HomeView {
                     .foregroundStyle(color)
                 Text(title)
                     .font(.system(size: 34, weight: .bold))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Theme.Color.Content.Text.default)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)

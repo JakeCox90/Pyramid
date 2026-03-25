@@ -26,12 +26,12 @@ private func rgba(
 extension Theme {
     enum Color {
         enum Primary {
-            static let resting = solid("7695EF")
-            static let pressed = solid("3B62D0")
-            static let selected = adaptive("7695EF", "20387D")
-            static let text = solid("FFFFFF")
+            static let resting = solid("FFC758")
+            static let pressed = solid("E5B24E")
+            static let selected = adaptive("FFC758", "E5B24E")
+            static let text = solid("1D1D1B")
             static let disabled = adaptiveUI(
-                light: rgba(32, 39, 59, 0.1), dark: rgba(255, 255, 255, 0.1)
+                light: rgba(255, 199, 88, 0.4), dark: rgba(255, 199, 88, 0.3)
             )
         }
         enum Secondary {

@@ -20,7 +20,7 @@ struct TeamsUsedPill: View {
         .padding(.leading, 12)
         .padding(.trailing, 16)
         .frame(height: 40)
-        .background(Color.white.opacity(0.1))
+        .background(Theme.Color.Surface.Background.highlight)
         .clipShape(Capsule())
     }
 
@@ -46,6 +46,6 @@ struct TeamsUsedPill: View {
             "\(count) team\(count == 1 ? "" : "s") used"
         )
         .font(Theme.Typography.label02)
-        .foregroundStyle(Color.white)
+        .foregroundStyle(Theme.Color.Content.Text.default)
     }
 }

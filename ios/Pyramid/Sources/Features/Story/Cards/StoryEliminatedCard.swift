@@ -10,7 +10,7 @@ struct StoryEliminatedCard: View {
             VStack(spacing: Theme.Spacing.s50) {
                 Text("Eliminated")
                     .font(Theme.Typography.caption)
-                    .foregroundStyle(Theme.color(light: "FFC758", dark: "FFC758"))
+                    .foregroundStyle(Theme.Color.Primary.resting)
 
                 Text("\(players.count) out this week")
                     .font(Theme.Typography.h3)
@@ -42,7 +42,7 @@ struct StoryEliminatedCard: View {
                             }
                             .padding(.horizontal, Theme.Spacing.s40)
                             .padding(.vertical, Theme.Spacing.s30)
-                            .background(Color.white.opacity(0.05))
+                            .background(Theme.Color.Border.faint)
                             .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.r20))
                         }
                     }

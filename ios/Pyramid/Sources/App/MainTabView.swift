@@ -32,6 +32,7 @@ struct MainTabView: View {
                 .tag(Tab.profile)
                 .accessibilityIdentifier(AccessibilityID.Tab.profile)
         }
+        .tint(Theme.Color.Primary.resting)
         .onReceive(NotificationCenter.default.publisher(for: .navigateToScreen)) { notification in
             guard let screen = notification.object as? String else { return }
             switch DeepLinkScreen(rawValue: screen) {

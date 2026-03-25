@@ -58,7 +58,7 @@ struct PicksView: View {
                 } label: {
                     Image(systemName: "chevron.left")
                         .font(Theme.Typography.subhead)
-                        .foregroundStyle(Color.white)
+                        .foregroundStyle(Theme.Color.Content.Text.default)
                 }
             }
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -82,7 +82,7 @@ struct PicksView: View {
                             weight: .semibold
                         )
                     )
-                    .foregroundStyle(Color.white)
+                    .foregroundStyle(Theme.Color.Content.Text.default)
                 }
             }
         }
@@ -110,13 +110,13 @@ extension PicksView {
                     .font(Theme.Typography.overline)
                     .textCase(.uppercase)
                     .foregroundStyle(
-                        Color.white.opacity(0.6)
+                        Theme.Color.Content.Text.secondary
                     )
             }
 
             Text("Pick a team")
                 .font(Theme.Typography.h1)
-                .foregroundStyle(Color.white)
+                .foregroundStyle(Theme.Color.Content.Text.default)
 
             if !viewModel.usedTeamIds.isEmpty {
                 TeamsUsedPill(
@@ -152,7 +152,7 @@ extension PicksView {
 extension PicksView {
     private var loadingView: some View {
         ProgressView()
-            .tint(Color.white)
+            .tint(Theme.Color.Content.Text.default)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
@@ -161,12 +161,12 @@ extension PicksView {
             Image(systemName: Theme.Icon.Status.error)
                 .font(.system(size: 48))
                 .foregroundStyle(
-                    Color.white.opacity(0.3)
+                    Theme.Color.Content.Text.tertiary
                 )
             Text(message)
                 .font(Theme.Typography.body)
                 .foregroundStyle(
-                    Color.white.opacity(0.6)
+                    Theme.Color.Content.Text.secondary
                 )
                 .multilineTextAlignment(.center)
         }
@@ -179,17 +179,17 @@ extension PicksView {
             Image(systemName: Theme.Icon.Pick.deadline)
                 .font(.system(size: 56))
                 .foregroundStyle(
-                    Color.white.opacity(0.3)
+                    Theme.Color.Content.Text.tertiary
                 )
             Text("No fixtures this week")
                 .font(Theme.Typography.subhead)
-                .foregroundStyle(Color.white)
+                .foregroundStyle(Theme.Color.Content.Text.default)
             Text(
                 "Check back when the gameweek schedule is available."
             )
             .font(Theme.Typography.body)
             .foregroundStyle(
-                Color.white.opacity(0.6)
+                Theme.Color.Content.Text.secondary
             )
             .multilineTextAlignment(.center)
         }

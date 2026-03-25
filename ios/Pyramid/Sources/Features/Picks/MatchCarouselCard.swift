@@ -28,7 +28,7 @@ struct MatchCarouselCard: View {
         .overlay(
             RoundedRectangle(cornerRadius: 24)
                 .stroke(
-                    Color.white.opacity(0.1),
+                    Theme.Color.Border.subtle,
                     lineWidth: 1
                 )
         )
@@ -41,23 +41,15 @@ struct MatchCarouselCard: View {
     // fill_255PQ5: gradient 225deg, stops 0% → 72%
     private var cardBackground: some View {
         ZStack {
-            Color(hex: "241E31")
+            Theme.Color.Surface.Background.card
             LinearGradient(
                 stops: [
                     .init(
-                        color: Color(
-                            red: 94 / 255,
-                            green: 78 / 255,
-                            blue: 129 / 255
-                        ),
+                        color: Theme.Color.Match.Gradient.purpleStart,
                         location: 0.0
                     ),
                     .init(
-                        color: Color(
-                            red: 45 / 255,
-                            green: 37 / 255,
-                            blue: 61 / 255
-                        ),
+                        color: Theme.Color.Match.Gradient.purpleEnd,
                         location: 0.72
                     )
                 ],
@@ -83,7 +75,7 @@ struct MatchCarouselCard: View {
     /// between the matchup section and fixture details
     private var bottomDivider: some View {
         Rectangle()
-            .fill(Color.white.opacity(0.2))
+            .fill(Theme.Color.Border.default)
             .frame(width: 1)
             .frame(maxHeight: .infinity)
             .padding(.bottom, 8)
