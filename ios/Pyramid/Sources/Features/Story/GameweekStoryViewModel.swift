@@ -15,7 +15,7 @@ final class GameweekStoryViewModel: ObservableObject {
 
     private let storyService: GameweekStoryServiceProtocol
     private let standingsService: StandingsServiceProtocol
-    private let currentUserId: String?
+    let currentUserId: String?
 
     init(
         leagueId: String,
@@ -96,110 +96,4 @@ final class GameweekStoryViewModel: ObservableObject {
         hasBeenViewed = true
     }
 
-    // MARK: - Card Assembly
-
-    private func buildCards(
-        story: GameweekStory?,
-        members: [LeagueMember],
-        picks: [MemberPick],
-        upsetFixture: Fixture?,
-        wildcardPick: Pick?
-    ) -> [StoryCard] {
-        var result: [StoryCard] = []
-
-        let stillStanding = members.filter { $0.status == .active || $0.status == .winner }
-        let eliminatedThisWeek = members.filter {
-            $0.eliminatedInGameweekId == gameweek && $0.status == .eliminated
-        }
-        let totalCount = members.count
-        let isMassElim = story?.isMassElimination ?? false
-
-        // 1. Title (always)
-        result.append(.title(
-            leagueName: leagueName,
-            gameweek: gameweek,
-            aliveCount: stillStanding.count,
-            totalCount: totalCount
-        ))
-
-        // 2. Headline (if story exists with headline)
-        if let headline = story?.headline, let body = story?.body {
-            result.append(.headline(headline: headline, body: body))
-        }
-
-        // 3. Biggest Upset (if upset fixture was fetched)
-        if let fixture = upsetFixture {
-            let elimCount = eliminatedThisWeek.filter { member in
-                picks.first { $0.userId == member.userId }?.fixtureId == fixture.id
-            }.count
-            result.append(.upset(fixture: fixture, eliminationCount: max(elimCount, 1)))
-        }
-
-        // 4. Eliminated (if any eliminated this week)
-        if !eliminatedThisWeek.isEmpty {
-            let elimPlayers = eliminatedThisWeek.map { member -> EliminatedPlayer in
-                let pick = picks.first { $0.userId == member.userId }
-                let isAuto = pick == nil
-                return EliminatedPlayer(
-                    id: member.userId,
-                    displayName: member.profiles.displayLabel,
-                    teamName: pick?.teamName ?? "—",
-                    result: isAuto ? "Missed deadline" : (pick?.teamName ?? "—"),
-                    isAutoEliminated: isAuto
-                )
-            }
-            result.append(.eliminated(players: elimPlayers))
-        }
-
-        // 4b. Mass elimination card
-        if isMassElim {
-            result.append(.massElimination(playerCount: eliminatedThisWeek.count))
-        }
-
-        // 5. Wildcard
-        if let wcPick = wildcardPick {
-            let wcMember = members.first { $0.userId == wcPick.userId }
-            result.append(.wildcard(player: WildcardPlayer(
-                displayName: wcMember?.profiles.displayLabel ?? "Unknown",
-                teamName: wcPick.teamName,
-                result: wcPick.teamName,
-                survived: wcPick.result == .survived
-            )))
-        }
-
-        // 6. Your Pick (always)
-        let userPick = picks.first { $0.userId == currentUserId }
-        let userMember = members.first { $0.userId == currentUserId }
-        let userStatus: UserStoryStatus = {
-            if userMember?.status == .winner { return .winner }
-            if userPick == nil && userMember?.eliminatedInGameweekId == gameweek { return .missedDeadline }
-            if userPick?.result == .void { return .voidSurvived }
-            if userPick?.result == .eliminated { return .eliminated }
-            return .survived
-        }()
-
-        result.append(.yourPick(pick: YourPickResult(
-            teamName: userPick?.teamName,
-            teamId: userPick?.teamId,
-            result: userPick?.result.rawValue,
-            status: userStatus
-        )))
-
-        // 7. Standing (always)
-        let standingPlayers = stillStanding.map { member in
-            StandingPlayer(
-                id: member.userId,
-                displayName: member.profiles.displayLabel,
-                isCurrentUser: member.userId == currentUserId
-            )
-        }
-
-        result.append(.standing(
-            players: standingPlayers,
-            totalCount: totalCount,
-            userStatus: userStatus
-        ))
-
-        return result
-    }
 }

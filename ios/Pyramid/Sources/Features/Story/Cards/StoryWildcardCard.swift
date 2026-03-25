@@ -47,7 +47,9 @@ struct StoryWildcardCard: View {
             .padding(Theme.Spacing.s70)
         }
         .accessibilityLabel(
-            "Wildcard pick: \(player.displayName) chose \(player.teamName) and \(player.survived ? "survived" : "was eliminated")"
+            "Wildcard pick: \(player.displayName) chose "
+                + "\(player.teamName) and "
+                + "\(player.survived ? "survived" : "was eliminated")"
         )
     }
 }

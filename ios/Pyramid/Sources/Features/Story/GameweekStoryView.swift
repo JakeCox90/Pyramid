@@ -2,7 +2,8 @@ import SwiftUI
 
 struct GameweekStoryView: View {
     @StateObject private var viewModel: GameweekStoryViewModel
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.dismiss)
+    private var dismiss
 
     init(leagueId: String, gameweek: Int, leagueName: String, currentUserId: String?) {
         _viewModel = StateObject(wrappedValue: GameweekStoryViewModel(

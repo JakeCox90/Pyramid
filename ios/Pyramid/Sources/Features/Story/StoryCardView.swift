@@ -6,8 +6,12 @@ struct StoryCardView: View {
     var body: some View {
         switch card {
         case let .title(leagueName, gameweek, aliveCount, totalCount):
-            StoryTitleCard(leagueName: leagueName, gameweek: gameweek,
-                          aliveCount: aliveCount, totalCount: totalCount)
+            StoryTitleCard(
+                leagueName: leagueName,
+                gameweek: gameweek,
+                aliveCount: aliveCount,
+                totalCount: totalCount
+            )
         case let .headline(headline, body):
             StoryHeadlineCard(headline: headline, narrativeBody: body)
         case let .upset(fixture, eliminationCount):

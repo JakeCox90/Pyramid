@@ -2,7 +2,8 @@ import SwiftUI
 
 struct GameweekOverviewView: View {
     @ObservedObject var viewModel: GameweekStoryViewModel
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.dismiss)
+    private var dismiss
 
     var body: some View {
         NavigationStack {
@@ -87,8 +88,12 @@ struct GameweekOverviewView: View {
             ForEach(viewModel.cards, id: \.id) { card in
                 if case let .eliminated(players) = card {
                     ForEach(players) { player in
-                        pickRow(name: player.displayName, team: player.teamName,
-                               result: player.result, survived: false)
+                        pickRow(
+                            name: player.displayName,
+                            team: player.teamName,
+                            result: player.result,
+                            survived: false
+                        )
                     }
                 }
             }
