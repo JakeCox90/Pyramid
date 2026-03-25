@@ -139,7 +139,7 @@ final class HomeService: HomeServiceProtocol {
                 id, gameweek_id, home_team_id, home_team_name, \
                 home_team_short, home_team_logo, away_team_id, \
                 away_team_name, away_team_short, away_team_logo, \
-                kickoff_at, status, home_score, away_score
+                kickoff_at, status, home_score, away_score, venue
                 """
             )
             .eq("gameweek_id", value: gameweekId)

@@ -106,7 +106,7 @@ final class ResultsService: ResultsServiceProtocol {
                     id, gameweek_id,
                     home_team_id, home_team_name, home_team_short,
                     away_team_id, away_team_name, away_team_short,
-                    kickoff_at, status, home_score, away_score
+                    kickoff_at, status, home_score, away_score, venue
                 """)
                 .in("gameweek_id", values: gameweekIds)
                 .eq("status", value: "FT")

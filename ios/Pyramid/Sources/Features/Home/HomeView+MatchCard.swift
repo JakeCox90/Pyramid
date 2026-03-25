@@ -28,9 +28,10 @@ extension HomeView {
             pickedTeamLogo: badgeLogo,
             opponentName: opponent,
             homeTeamName: fixture.homeTeamName,
-            venue: FixtureMetadata.venue(
-                forHomeTeam: fixture.homeTeamName
-            ),
+            venue: fixture.venue
+                ?? FixtureMetadata.venue(
+                    forHomeTeam: fixture.homeTeamName
+                ),
             kickoff: fixture.kickoffAt,
             broadcast: FixtureMetadata.broadcastNote,
             homeScore: showScores ? fixture.homeScore : nil,
