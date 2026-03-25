@@ -15,7 +15,7 @@ extension PickCarouselView {
             // Back face: Stats card (pre-rotated 180°)
             MatchCarouselCardStats(
                 fixture: fixture,
-                stats: .placeholder,
+                stats: .from(fixture: fixture),
                 onBack: {
                     withAnimation(flipAnimation) {
                         isStatsRevealed = false

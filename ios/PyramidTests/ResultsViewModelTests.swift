@@ -51,7 +51,8 @@ final class ResultsViewModelTests: XCTestCase {
             awayTeamLogo: nil,
             kickoffAt: Date().addingTimeInterval(-86400),
             status: .fullTime, homeScore: 2, awayScore: 0,
-            venue: "Emirates Stadium"
+            venue: "Emirates Stadium",
+            homeWinProb: nil, drawProb: nil, awayWinProb: nil
         ),
         Fixture(
             id: 102, gameweekId: 5,
@@ -61,7 +62,8 @@ final class ResultsViewModelTests: XCTestCase {
             awayTeamLogo: nil,
             kickoffAt: Date().addingTimeInterval(-86400),
             status: .fullTime, homeScore: 0, awayScore: 1,
-            venue: "Stamford Bridge"
+            venue: "Stamford Bridge",
+            homeWinProb: nil, drawProb: nil, awayWinProb: nil
         ),
         Fixture(
             id: 201, gameweekId: 4,
@@ -71,7 +73,8 @@ final class ResultsViewModelTests: XCTestCase {
             awayTeamLogo: nil,
             kickoffAt: Date().addingTimeInterval(-172800),
             status: .fullTime, homeScore: 3, awayScore: 1,
-            venue: "Anfield"
+            venue: "Anfield",
+            homeWinProb: nil, drawProb: nil, awayWinProb: nil
         )
     ]
 
@@ -296,3 +299,4 @@ final class MockResultsService: ResultsServiceProtocol {
         return fixtures
     }
 }
+

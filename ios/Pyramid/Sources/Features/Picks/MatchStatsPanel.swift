@@ -39,6 +39,56 @@ struct MatchStats {
         drawOdds: "4/1",
         awayOdds: "14/1"
     )
+
+    static func from(fixture: Fixture) -> MatchStats {
+        MatchStats(
+            homeForm: placeholder.homeForm,
+            awayForm: placeholder.awayForm,
+            homeWinPct: fixture.homeWinProb.map {
+                Int($0 * 100)
+            } ?? placeholder.homeWinPct,
+            awayWinPct: fixture.awayWinProb.map {
+                Int($0 * 100)
+            } ?? placeholder.awayWinPct,
+            homeOdds: fractionalOdds(
+                from: fixture.homeWinProb
+            ),
+            drawOdds: fractionalOdds(
+                from: fixture.drawProb
+            ),
+            awayOdds: fractionalOdds(
+                from: fixture.awayWinProb
+            )
+        )
+    }
+
+    private static func fractionalOdds(
+        from probability: Double?
+    ) -> String {
+        guard let prob = probability,
+              prob > 0 else { return "—" }
+        let decimal = 1.0 / prob
+        let profit = decimal - 1.0
+
+        let commonDenominators = [1, 2, 4, 5, 10, 20]
+        var bestNum = Int(profit.rounded())
+        var bestDen = 1
+        var bestError = Double.infinity
+
+        for den in commonDenominators {
+            let num = Int((profit * Double(den)).rounded())
+            guard num > 0 else { continue }
+            let error = abs(
+                profit - Double(num) / Double(den)
+            )
+            if error < bestError {
+                bestError = error
+                bestNum = num
+                bestDen = den
+            }
+        }
+        return "\(bestNum)/\(bestDen)"
+    }
 }
 
 // MARK: - Stats Panel View

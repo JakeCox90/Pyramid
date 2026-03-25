@@ -74,6 +74,7 @@
 		493D6A14F5B4785D06363EEE /* LiveFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB7D9D64488A1DF3ABDF93E /* LiveFlag.swift */; };
 		4995279C4CAEB9551195E099 /* LeagueCompleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55215FBC5D5182D9EFF96329 /* LeagueCompleteView.swift */; };
 		4E70BBEDA3326F3325610985 /* LeagueMember.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCB24355D187DD94CBEFDA16 /* LeagueMember.swift */; };
+		4E8C8E475FA8D9E45C0C995F /* ProfileView+DevTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96CB5BC5251A5E5DD0340683 /* ProfileView+DevTools.swift */; };
 		4F6009C6A8B3FBBA8B636B29 /* MatchCard+Empty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8390F46699A23F2B22C381E6 /* MatchCard+Empty.swift */; };
 		5333C5A849111C688BBCCD20 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2633AE9B5F6EF75C4868CB74 /* main.swift */; };
 		5379AD328873AD0A7E3EF7DF /* TokenBrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B7B7EE506977472E2FA0242 /* TokenBrowserView.swift */; };
@@ -378,6 +379,7 @@
 		96279BADF0DD877B6F1E4583 /* WalletService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletService.swift; sourceTree = "<group>"; };
 		96674DC0AD23B2DFDB50F35E /* EditLeagueViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditLeagueViewModelTests.swift; sourceTree = "<group>"; };
 		96AFDFCCB30C96D19C892870 /* InputField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputField.swift; sourceTree = "<group>"; };
+		96CB5BC5251A5E5DD0340683 /* ProfileView+DevTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProfileView+DevTools.swift"; sourceTree = "<group>"; };
 		98C3955521BA672A614BB3C2 /* ActivityEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityEvent.swift; sourceTree = "<group>"; };
 		9918D720B144DE9CF231B58B /* GameweekStoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameweekStoryViewModel.swift; sourceTree = "<group>"; };
 		99422828C37F08F0029A7D0E /* LeaguePalette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaguePalette.swift; sourceTree = "<group>"; };
@@ -610,6 +612,7 @@
 				054083ED1D3E595360A2AB79 /* NotificationPreferencesViewModel.swift */,
 				D6F92FE092EC760C205458A7 /* ProfileView.swift */,
 				9EB990011128CCADE74C90CE /* ProfileView+DevReset.swift */,
+				96CB5BC5251A5E5DD0340683 /* ProfileView+DevTools.swift */,
 				ED35E7970CB18BDD49B9A131 /* ProfileView+Stats.swift */,
 				32DA20BB35D3324D2E896218 /* ProfileViewModel.swift */,
 				917C6F92C870B11E273EC5C5 /* DesignSystemBrowser */,
@@ -1210,6 +1213,7 @@
 				7C5CA7DDC77D53BE014A8737 /* ProfileService.swift in Sources */,
 				95265E073D594933F67003B6 /* ProfileStats.swift in Sources */,
 				B376FC7CE1C4A5D2BA44E1C5 /* ProfileView+DevReset.swift in Sources */,
+				4E8C8E475FA8D9E45C0C995F /* ProfileView+DevTools.swift in Sources */,
 				827D0432D1B3F2645EE11AE3 /* ProfileView+Stats.swift in Sources */,
 				07D4065B76C454F135FBEEF6 /* ProfileView.swift in Sources */,
 				B1884A48DEF1BF61EB073278 /* ProfileViewModel.swift in Sources */,
