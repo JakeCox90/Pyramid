@@ -19,6 +19,43 @@ struct MatchCard: View {
         case live
         /// Finished: purple gradient, score, FT pill, locked
         case finished
+
+        // MARK: - Colour Config
+
+        /// 225° gradient start — green for live, purple otherwise
+        var gradientStart: Color {
+            switch self {
+            case .live:
+                Color(hex: "4E815B")
+            case .preMatch, .finished:
+                Color(hex: "5E4E81")
+            }
+        }
+
+        /// 225° gradient end — shared across all phases
+        var gradientEnd: Color {
+            Color(hex: "2D253D")
+        }
+
+        /// VS circle fill (pre-match only)
+        var vsCircleFill: Color {
+            Color(hex: "3D3354")
+        }
+
+        /// Half-tint overlay
+        var halfTint: Color {
+            Color(hex: "241E31")
+        }
+
+        /// Positive pill background (live dot, survived)
+        var pillPositive: Color {
+            Color(hex: "51B56A")
+        }
+
+        /// Negative pill background (eliminated)
+        var pillNegative: Color {
+            Color(hex: "FF453A")
+        }
     }
 
     let pickedTeamName: String
@@ -80,7 +117,7 @@ private extension MatchCard {
             dividerLine
             ZStack {
                 Circle()
-                    .fill(Color(hex: "3D3354"))
+                    .fill(phase.vsCircleFill)
                 Circle()
                     .stroke(
                         Color.white.opacity(0.2),
@@ -131,13 +168,11 @@ extension MatchCard {
         LinearGradient(
             stops: [
                 .init(
-                    color: phase == .live
-                        ? Color(hex: "4E815B")
-                        : Color(hex: "5E4E81"),
+                    color: phase.gradientStart,
                     location: 0.0
                 ),
                 .init(
-                    color: Color(hex: "2D253D"),
+                    color: phase.gradientEnd,
                     location: 0.72
                 )
             ],
@@ -155,7 +190,7 @@ extension MatchCard {
             bottomTrailingRadius: 200,
             topTrailingRadius: 0
         )
-        .fill(Color(hex: "241E31").opacity(0.4))
+        .fill(phase.halfTint.opacity(0.4))
         .frame(width: 277, height: 132)
         .offset(y: -30)
     }
