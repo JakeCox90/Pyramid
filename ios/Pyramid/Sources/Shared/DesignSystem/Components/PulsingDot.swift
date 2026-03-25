@@ -7,7 +7,7 @@ struct PulsingDot: View {
 
     var body: some View {
         Circle()
-            .fill(Theme.Color.Status.Error.resting)
+            .fill(Theme.Color.Content.Text.default)
             .frame(width: 7, height: 7)
             .scaleEffect(reduceMotion ? 1.0 : (pulse ? 1.5 : 1.0))
             .animation(
