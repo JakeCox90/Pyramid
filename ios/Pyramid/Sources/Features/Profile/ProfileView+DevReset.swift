@@ -2,6 +2,45 @@ import SwiftUI
 
 #if DEBUG
 extension ProfileView {
+    func devToolButton(
+        title: String,
+        subtitle: String,
+        icon: String,
+        action: @escaping () -> Void
+    ) -> some View {
+        Button(action: action) {
+            HStack {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title)
+                        .font(Theme.Typography.body)
+                        .foregroundStyle(
+                            Theme.Color.Content.Text.default
+                        )
+                    Text(subtitle)
+                        .font(Theme.Typography.overline)
+                        .foregroundStyle(
+                            Theme.Color.Content.Text.subtle
+                        )
+                }
+                Spacer()
+                Image(systemName: icon)
+                    .foregroundStyle(
+                        Theme.Color.Content.Text.subtle
+                    )
+            }
+            .padding(Theme.Spacing.s30)
+            .background(
+                Theme.Color.Surface.Background.container
+            )
+            .clipShape(
+                RoundedRectangle(
+                    cornerRadius: Theme.Radius.default
+                )
+            )
+        }
+        .buttonStyle(.plain)
+    }
+
     func resetButton(
         title: String,
         subtitle: String,

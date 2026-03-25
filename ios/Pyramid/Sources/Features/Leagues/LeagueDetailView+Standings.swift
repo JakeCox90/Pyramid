@@ -1,0 +1,120 @@
+import SwiftUI
+
+// MARK: - Standings Content
+
+extension LeagueDetailView {
+    var standingsContent: some View {
+        ScrollView {
+            VStack(spacing: Theme.Spacing.s40) {
+                if viewModel.isCompleted {
+                    winnerBanner
+                }
+                statsHeader
+                if viewModel.currentGameweek != nil {
+                    gwRecapButton
+                }
+                myPickCard
+                if viewModel.members.isEmpty {
+                    emptyMembersView
+                } else {
+                    membersList
+                }
+                activitySection
+            }
+            .padding(.vertical, Theme.Spacing.s40)
+        }
+    }
+
+    var gwRecapButton: some View {
+        Button {
+            showStory = true
+        } label: {
+            HStack(spacing: Theme.Spacing.s20) {
+                Image(systemName: "play.circle.fill")
+                Text("GW Recap")
+                    .font(Theme.Typography.body)
+            }
+            .foregroundStyle(
+                Theme.color(
+                    light: "FFC758", dark: "FFC758"
+                )
+            )
+            .padding(.horizontal, Theme.Spacing.s40)
+            .padding(.vertical, Theme.Spacing.s20)
+            .background(
+                Theme.color(
+                    light: "FFC758", dark: "FFC758"
+                ).opacity(0.1)
+            )
+            .clipShape(Capsule())
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, Theme.Spacing.s40)
+        .accessibilityLabel("View gameweek recap")
+    }
+
+    var emptyMembersView: some View {
+        VStack(spacing: Theme.Spacing.s40) {
+            Image(systemName: Theme.Icon.League.members)
+                .font(.system(size: 48))
+                .foregroundStyle(
+                    Theme.Color.Border.default
+                )
+                .accessibilityHidden(true)
+            Text("No other members yet")
+                .font(Theme.Typography.subhead)
+                .foregroundStyle(
+                    Theme.Color.Content.Text.default
+                )
+            Text(
+                "Share the join code to invite players."
+            )
+            .font(Theme.Typography.body)
+            .foregroundStyle(
+                Theme.Color.Content.Text.disabled
+            )
+            .multilineTextAlignment(.center)
+        }
+        .padding(.horizontal, Theme.Spacing.s40)
+        .padding(.top, Theme.Spacing.s70)
+    }
+
+    var membersList: some View {
+        VStack(spacing: Theme.Spacing.s20) {
+            if !viewModel.isDeadlinePassed() {
+                HStack {
+                    Image(
+                        systemName: Theme.Icon.Pick.locked
+                    )
+                    .foregroundStyle(
+                        Theme.Color.Content.Text.disabled
+                    )
+                    .accessibilityHidden(true)
+                    Text(
+                        "Picks are hidden until kick-off"
+                    )
+                    .font(Theme.Typography.overline)
+                    .foregroundStyle(
+                        Theme.Color.Content.Text.disabled
+                    )
+                    Spacer()
+                }
+                .padding(.horizontal, Theme.Spacing.s40)
+            }
+
+            ForEach(viewModel.sortedMembers) { member in
+                MemberRow(
+                    member: member,
+                    pick: viewModel.pick(for: member),
+                    fixture: viewModel.pick(for: member)
+                        .flatMap {
+                            viewModel.fixture(for: $0)
+                        },
+                    deadlinePassed: viewModel
+                        .isDeadlinePassed()
+                )
+                .padding(.horizontal, Theme.Spacing.s40)
+            }
+        }
+    }
+}

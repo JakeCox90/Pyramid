@@ -10,6 +10,7 @@ struct ProfileView: View {
     @State var resetMessage: String?
     @State var gameweekPhase =
         DebugGameweekOverride.current
+    @State var showGameweekStory = false
     #endif
 
     var body: some View {
@@ -65,6 +66,23 @@ struct ProfileView: View {
             .task {
                 await viewModel.loadStats()
             }
+            #if DEBUG
+            .fullScreenCover(
+                isPresented: $showGameweekStory
+            ) {
+                GameweekStoryView(
+                    leagueId: viewModel.stats
+                        .leagueHistory.first?.id
+                        ?? "preview",
+                    gameweek: 20,
+                    leagueName: viewModel.stats
+                        .leagueHistory.first?.leagueName
+                        ?? "Sample League",
+                    currentUserId: appState.session?
+                        .user.id.uuidString
+                )
+            }
+            #endif
         }
     }
 }
@@ -166,6 +184,14 @@ private extension ProfileView {
                 .frame(maxWidth: .infinity, alignment: .leading)
 
             gameweekPhaseControl
+
+            devToolButton(
+                title: "Gameweek Recap",
+                subtitle: "Preview end-of-gameweek story",
+                icon: "book.pages"
+            ) {
+                showGameweekStory = true
+            }
 
             resetButton(
                 title: "Reset Game Data",
