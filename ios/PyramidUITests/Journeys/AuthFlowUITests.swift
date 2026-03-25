@@ -90,31 +90,33 @@ final class AuthFlowUITests: XCTestCase {
             throw XCTSkip("Already authenticated")
         }
 
-        // Clear any pre-filled fields (DEBUG builds pre-fill)
+        // Clear any pre-filled fields (DEBUG builds pre-fill).
+        // Use delete-per-character instead of the fragile
+        // long-press context-menu "Select All" approach which
+        // fails intermittently on CI.
         let emailField = app.textFields["you@example.com"]
         if emailField.waitForExistence(timeout: 5) {
             emailField.tap()
-            // Select all and delete
-            emailField.press(forDuration: 1.0)
-            if app.menuItems["Select All"]
-                .waitForExistence(timeout: 2) {
-                app.menuItems["Select All"].tap()
-                emailField.typeText(
-                    XCUIKeyboardKey.delete.rawValue
+            if let currentValue = emailField.value as? String,
+               !currentValue.isEmpty {
+                let deletes = String(
+                    repeating: XCUIKeyboardKey.delete.rawValue,
+                    count: currentValue.count
                 )
+                emailField.typeText(deletes)
             }
         }
 
         let passwordField = app.secureTextFields["Password"]
         if passwordField.waitForExistence(timeout: 5) {
             passwordField.tap()
-            passwordField.press(forDuration: 1.0)
-            if app.menuItems["Select All"]
-                .waitForExistence(timeout: 2) {
-                app.menuItems["Select All"].tap()
-                passwordField.typeText(
-                    XCUIKeyboardKey.delete.rawValue
+            if let currentValue = passwordField.value as? String,
+               !currentValue.isEmpty {
+                let deletes = String(
+                    repeating: XCUIKeyboardKey.delete.rawValue,
+                    count: currentValue.count
                 )
+                passwordField.typeText(deletes)
             }
         }
 

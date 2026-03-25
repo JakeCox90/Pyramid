@@ -86,6 +86,10 @@ extension XCUIElement {
     }
 
     /// Type text into the element after tapping it.
+    ///
+    /// Clears existing content by sending one delete key per
+    /// character — more reliable than the context-menu
+    /// "Select All" approach which can fail on CI.
     func clearAndType(
         _ text: String,
         file: StaticString = #file,
@@ -93,14 +97,14 @@ extension XCUIElement {
     ) {
         tapWhenReady(file: file, line: line)
 
-        // Select all existing text and delete it
-        if let existingText = value as? String, !existingText.isEmpty {
-            let selectAll = XCUIApplication()
-                .menuItems["Select All"]
-            if selectAll.exists {
-                selectAll.tap()
-            }
-            typeText(XCUIKeyboardKey.delete.rawValue)
+        // Delete existing text character-by-character
+        if let existingText = value as? String,
+           !existingText.isEmpty {
+            let deletes = String(
+                repeating: XCUIKeyboardKey.delete.rawValue,
+                count: existingText.count
+            )
+            typeText(deletes)
         }
 
         typeText(text)
