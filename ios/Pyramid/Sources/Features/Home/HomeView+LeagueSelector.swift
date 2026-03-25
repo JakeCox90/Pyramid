@@ -34,38 +34,67 @@ extension HomeView {
     ) -> some View {
         let isSelected = league.id
             == viewModel.selectedLeague?.id
+        let eliminated = viewModel.isEliminated(
+            in: league
+        )
         return Button {
             withAnimation(.easeInOut(duration: 0.2)) {
                 viewModel.selectLeague(league)
             }
         } label: {
+            leaguePillLabel(
+                league,
+                isSelected: isSelected,
+                eliminated: eliminated
+            )
+        }
+        .buttonStyle(.plain)
+    }
+
+    @ViewBuilder
+    private func leaguePillLabel(
+        _ league: League,
+        isSelected: Bool,
+        eliminated: Bool
+    ) -> some View {
+        HStack(spacing: Theme.Spacing.s10) {
+            if eliminated {
+                Image(systemName: "xmark.seal.fill")
+                    .font(.system(size: 12))
+                    .foregroundStyle(
+                        isSelected
+                            ? Color(hex: "FF453A")
+                            : .white.opacity(0.5)
+                    )
+            }
             Text(league.name)
                 .font(Theme.Typography.label01)
                 .foregroundStyle(
-                    isSelected ? .white : .white.opacity(0.5)
-                )
-                .padding(.horizontal, Theme.Spacing.s40)
-                .padding(.vertical, Theme.Spacing.s20)
-                .background(
                     isSelected
-                        ? Color.white.opacity(0.15)
-                        : Color.clear
-                )
-                .clipShape(Capsule())
-                .overlay(
-                    Capsule()
-                        .stroke(
-                            Color.white.opacity(
-                                isSelected ? 0 : 0.15
-                            ),
-                            lineWidth: 1
-                        )
-                )
-                .animation(
-                    .easeInOut(duration: 0.2),
-                    value: isSelected
+                        ? .white
+                        : .white.opacity(0.5)
                 )
         }
-        .buttonStyle(.plain)
+        .padding(.horizontal, Theme.Spacing.s40)
+        .padding(.vertical, Theme.Spacing.s20)
+        .background(
+            isSelected
+                ? Color.white.opacity(0.15)
+                : Color.clear
+        )
+        .clipShape(Capsule())
+        .overlay(
+            Capsule()
+                .stroke(
+                    Color.white.opacity(
+                        isSelected ? 0 : 0.15
+                    ),
+                    lineWidth: 1
+                )
+        )
+        .animation(
+            .easeInOut(duration: 0.2),
+            value: isSelected
+        )
     }
 }

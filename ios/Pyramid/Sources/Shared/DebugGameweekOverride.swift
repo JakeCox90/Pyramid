@@ -104,5 +104,19 @@ enum DebugGameweekOverride {
     static func clearFakePicks() {
         fakePicks.removeAll()
     }
+
+    // MARK: - Fake Elimination
+
+    /// League names to treat as eliminated in debug mode.
+    static var eliminatedLeagueNames: Set<String> = [
+        "Office Legends"
+    ]
+
+    /// Returns true if the league should appear eliminated in debug.
+    static func isDebugEliminated(
+        leagueName: String
+    ) -> Bool {
+        eliminatedLeagueNames.contains(leagueName)
+    }
 }
 #endif

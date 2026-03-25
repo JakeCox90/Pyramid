@@ -12,6 +12,7 @@ extension ComponentBrowserView {
             resultCardSection
             pickCarouselCardSection
             pickListCardSection
+            eliminationCardSection
             leagueCardSection
             playersRemainingSection
         }
