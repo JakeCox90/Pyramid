@@ -15,6 +15,9 @@ struct Fixture: Identifiable, Codable, Sendable, Equatable {
     let status: FixtureStatus
     let homeScore: Int?
     let awayScore: Int?
+    let homeWinProb: Double?
+    let drawProb: Double?
+    let awayWinProb: Double?
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -31,6 +34,9 @@ struct Fixture: Identifiable, Codable, Sendable, Equatable {
         case status
         case homeScore = "home_score"
         case awayScore = "away_score"
+        case homeWinProb = "home_win_prob"
+        case drawProb = "draw_prob"
+        case awayWinProb = "away_win_prob"
     }
 
     var hasKickedOff: Bool {

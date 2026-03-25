@@ -20,7 +20,10 @@ extension ComponentBrowserView {
                 .addingTimeInterval(86400),
             status: .notStarted,
             homeScore: nil,
-            awayScore: nil
+            awayScore: nil,
+            homeWinProb: nil,
+            drawProb: nil,
+            awayWinProb: nil
         )
     }
 }

@@ -236,14 +236,16 @@ final class MockPickService: PickServiceProtocol {
                     awayTeamId: 200, awayTeamName: "Chelsea", awayTeamShort: "CHE",
                     awayTeamLogo: nil,
                     kickoffAt: Date().addingTimeInterval(86400),
-                    status: .notStarted, homeScore: nil, awayScore: nil),
+                    status: .notStarted, homeScore: nil, awayScore: nil,
+                    homeWinProb: nil, drawProb: nil, awayWinProb: nil),
             Fixture(id: 2, gameweekId: gameweekId,
                     homeTeamId: 300, homeTeamName: "Liverpool", homeTeamShort: "LIV",
                     homeTeamLogo: nil,
                     awayTeamId: 400, awayTeamName: "Man City", awayTeamShort: "MCI",
                     awayTeamLogo: nil,
                     kickoffAt: Date().addingTimeInterval(90000),
-                    status: .notStarted, homeScore: nil, awayScore: nil)
+                    status: .notStarted, homeScore: nil, awayScore: nil,
+                    homeWinProb: nil, drawProb: nil, awayWinProb: nil)
         ]
     }
 
