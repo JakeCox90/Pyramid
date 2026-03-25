@@ -57,7 +57,7 @@ extension MatchCard {
         .padding(.vertical, 4)
         .padding(.leading, 12)
         .padding(.trailing, 8)
-        .background(Color(hex: "51B56A"))
+        .background(phase.pillPositive)
         .clipShape(Capsule())
     }
 
@@ -81,8 +81,8 @@ extension MatchCard {
             .padding(.horizontal, 14)
             .background(
                 survived
-                    ? Color(hex: "51B56A")
-                    : Color(hex: "FF453A")
+                    ? phase.pillPositive
+                    : phase.pillNegative
             )
             .clipShape(Capsule())
         } else {
