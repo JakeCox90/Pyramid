@@ -164,11 +164,6 @@ extension MatchCarouselCard {
             .foregroundStyle(
                 Color.white.opacity(0.4)
             )
-            Text(FixtureMetadata.broadcastNote)
-                .font(Theme.Typography.caption)
-                .foregroundStyle(
-                    Color.white.opacity(0.3)
-                )
         }
         .padding(.bottom, 12)
     }

@@ -27,8 +27,6 @@ extension ComponentBrowserView {
                     of: Date()
                         .addingTimeInterval(86400)
                 ),
-                broadcast: FixtureMetadata
-                    .broadcastNote,
                 phase: .preMatch,
                 buttonTitle: "CHANGE PICK",
                 onButtonTap: {}
@@ -49,8 +47,6 @@ extension ComponentBrowserView {
                     second: 0,
                     of: Date()
                 ),
-                broadcast: FixtureMetadata
-                    .broadcastNote,
                 phase: .preMatch,
                 isLocked: true
             )

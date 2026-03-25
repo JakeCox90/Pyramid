@@ -40,8 +40,4 @@ enum FixtureMetadata {
         "Wolverhampton": "Molineux Stadium",
         "Wolverhampton Wanderers": "Molineux Stadium"
     ]
-
-    /// Broadcast info for PL matches (generic UK).
-    static let broadcastNote =
-        "Sky Sports · TNT Sports · Amazon Prime"
 }

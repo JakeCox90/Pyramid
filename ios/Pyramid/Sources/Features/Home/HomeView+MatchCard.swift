@@ -32,7 +32,6 @@ extension HomeView {
                 forHomeTeam: fixture.homeTeamName
             ),
             kickoff: fixture.kickoffAt,
-            broadcast: FixtureMetadata.broadcastNote,
             homeScore: showScores ? fixture.homeScore : nil,
             awayScore: showScores ? fixture.awayScore : nil,
             phase: phase,
