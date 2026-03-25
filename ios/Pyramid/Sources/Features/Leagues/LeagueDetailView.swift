@@ -9,6 +9,7 @@ struct LeagueDetailView: View {
     @State var showShareSheet = false
     @State var showEditLeague = false
     @State var showStory = false
+    @State var showPickReveal = false
 
     init(league: League) {
         _viewModel = StateObject(wrappedValue: LeagueDetailViewModel(league: league))
@@ -101,6 +102,13 @@ struct LeagueDetailView: View {
             ) {
                 Task { await viewModel.load() }
             }
+        }
+        .sheet(isPresented: $showPickReveal) {
+            PickRevealView(
+                members: viewModel.sortedMembers,
+                picks: viewModel.lockedPicks,
+                fixtures: viewModel.fixtures
+            )
         }
         .fullScreenCover(isPresented: $showStory) {
             if let gameweek = viewModel.currentGameweek {
