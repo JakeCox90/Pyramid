@@ -140,9 +140,10 @@ extension MatchCarouselCard {
 
     var fixtureDetails: some View {
         VStack(spacing: 3) {
-            if let venue = FixtureMetadata.venue(
-                forHomeTeam: fixture.homeTeamName
-            ) {
+            if let venue = fixture.venue
+                ?? FixtureMetadata.venue(
+                    forHomeTeam: fixture.homeTeamName
+                ) {
                 Text(venue)
                     .font(Theme.Typography.label01)
                     .foregroundStyle(

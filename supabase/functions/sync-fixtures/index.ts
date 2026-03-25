@@ -126,6 +126,7 @@ Deno.serve(async (req) => {
         status: f.fixture.status.short,
         home_score: f.goals.home,
         away_score: f.goals.away,
+        venue: f.fixture.venue?.name ?? null,
         raw_api_response: f,
       }));
 

@@ -20,7 +20,8 @@ extension ComponentBrowserView {
                 .addingTimeInterval(86400),
             status: .notStarted,
             homeScore: nil,
-            awayScore: nil
+            awayScore: nil,
+            venue: "Emirates Stadium"
         )
     }
 }

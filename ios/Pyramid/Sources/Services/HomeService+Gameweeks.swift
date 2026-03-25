@@ -78,7 +78,7 @@ extension HomeService {
                 home_team_logo, away_team_id, \
                 away_team_name, away_team_short, \
                 away_team_logo, kickoff_at, status, \
-                home_score, away_score
+                home_score, away_score, venue
                 """
             )
             .in("id", values: fixtureIds)
