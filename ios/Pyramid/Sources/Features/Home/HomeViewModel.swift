@@ -223,7 +223,14 @@ final class HomeViewModel: ObservableObject {
     func isEliminated(
         in league: League
     ) -> Bool {
-        homeData?.memberStatuses[league.id]
+        #if DEBUG
+        if DebugGameweekOverride.isDebugEliminated(
+            leagueName: league.name
+        ) {
+            return true
+        }
+        #endif
+        return homeData?.memberStatuses[league.id]
             == .eliminated
     }
 
