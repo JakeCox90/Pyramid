@@ -57,6 +57,10 @@ final class LeagueDetailViewModel: ObservableObject {
         fixtures.values.contains { $0.status.isLive }
     }
 
+    var isRecapAvailable: Bool {
+        isDeadlinePassed() && !hasLiveFixtures
+    }
+
     @Published var currentUserId: String?
 
     var myPick: MemberPick? {

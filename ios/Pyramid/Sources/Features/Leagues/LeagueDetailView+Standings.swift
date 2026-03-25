@@ -11,7 +11,11 @@ extension LeagueDetailView {
                 }
                 statsHeader
                 if viewModel.currentGameweek != nil {
-                    gwRecapButton
+                    if viewModel.isRecapAvailable {
+                        gwRecapButton
+                    } else {
+                        gwRecapUnavailable
+                    }
                 }
                 myPickCard
                 if viewModel.members.isEmpty {
@@ -51,6 +55,36 @@ extension LeagueDetailView {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, Theme.Spacing.s40)
         .accessibilityLabel("View gameweek recap")
+    }
+
+    var gwRecapUnavailable: some View {
+        VStack(alignment: .leading, spacing: Theme.Spacing.s10) {
+            HStack(spacing: Theme.Spacing.s20) {
+                Image(systemName: "play.circle.fill")
+                Text("GW Recap")
+                    .font(Theme.Typography.body)
+            }
+            .foregroundStyle(
+                Theme.Color.Content.Text.disabled
+            )
+            .padding(.horizontal, Theme.Spacing.s40)
+            .padding(.vertical, Theme.Spacing.s20)
+            .background(
+                Theme.Color.Border.default.opacity(0.1)
+            )
+            .clipShape(Capsule())
+
+            Text("Recap available after settlement")
+                .font(Theme.Typography.overline)
+                .foregroundStyle(
+                    Theme.Color.Content.Text.disabled
+                )
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, Theme.Spacing.s40)
+        .accessibilityLabel(
+            "Gameweek recap not yet available"
+        )
     }
 
     var emptyMembersView: some View {
