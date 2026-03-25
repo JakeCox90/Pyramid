@@ -100,6 +100,8 @@ extension LeagueDetailView {
                     Spacer()
                 }
                 .padding(.horizontal, Theme.Spacing.s40)
+            } else {
+                revealPicksButton
             }
 
             ForEach(viewModel.sortedMembers) { member in
@@ -116,5 +118,36 @@ extension LeagueDetailView {
                 .padding(.horizontal, Theme.Spacing.s40)
             }
         }
+    }
+
+    var revealPicksButton: some View {
+        Button {
+            showPickReveal = true
+        } label: {
+            HStack(spacing: Theme.Spacing.s20) {
+                Image(
+                    systemName: "rectangle.stack.fill"
+                )
+                Text("Reveal All Picks")
+                    .font(Theme.Typography.body)
+            }
+            .foregroundStyle(
+                Theme.Color.Status.Success.resting
+            )
+            .padding(
+                .horizontal, Theme.Spacing.s40
+            )
+            .padding(
+                .vertical, Theme.Spacing.s20
+            )
+            .background(
+                Theme.Color.Status.Success.resting
+                    .opacity(0.1)
+            )
+            .clipShape(Capsule())
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, Theme.Spacing.s40)
+        .accessibilityLabel("Reveal all members' picks")
     }
 }
