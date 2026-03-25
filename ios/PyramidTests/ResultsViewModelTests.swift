@@ -50,7 +50,8 @@ final class ResultsViewModelTests: XCTestCase {
             awayTeamId: 200, awayTeamName: "Spurs", awayTeamShort: "TOT",
             awayTeamLogo: nil,
             kickoffAt: Date().addingTimeInterval(-86400),
-            status: .fullTime, homeScore: 2, awayScore: 0
+            status: .fullTime, homeScore: 2, awayScore: 0,
+            homeWinProb: nil, drawProb: nil, awayWinProb: nil
         ),
         Fixture(
             id: 102, gameweekId: 5,
@@ -59,7 +60,8 @@ final class ResultsViewModelTests: XCTestCase {
             awayTeamId: 400, awayTeamName: "Liverpool", awayTeamShort: "LIV",
             awayTeamLogo: nil,
             kickoffAt: Date().addingTimeInterval(-86400),
-            status: .fullTime, homeScore: 0, awayScore: 1
+            status: .fullTime, homeScore: 0, awayScore: 1,
+            homeWinProb: nil, drawProb: nil, awayWinProb: nil
         ),
         Fixture(
             id: 201, gameweekId: 4,
@@ -68,7 +70,8 @@ final class ResultsViewModelTests: XCTestCase {
             awayTeamId: 600, awayTeamName: "Man Utd", awayTeamShort: "MUN",
             awayTeamLogo: nil,
             kickoffAt: Date().addingTimeInterval(-172800),
-            status: .fullTime, homeScore: 3, awayScore: 1
+            status: .fullTime, homeScore: 3, awayScore: 1,
+            homeWinProb: nil, drawProb: nil, awayWinProb: nil
         )
     ]
 
