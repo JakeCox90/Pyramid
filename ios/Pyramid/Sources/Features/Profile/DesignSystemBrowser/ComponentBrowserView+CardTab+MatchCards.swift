@@ -266,7 +266,9 @@ extension ComponentBrowserView {
                     homeScore: nil,
                     awayScore: nil,
                     venue: "Emirates Stadium",
-                    homeWinProb: nil, drawProb: nil, awayWinProb: nil
+                    homeWinProb: 0.55,
+                    drawProb: 0.25,
+                    awayWinProb: 0.20
                 ),
                 stats: .placeholder,
                 onBack: {}

@@ -237,7 +237,8 @@ final class MockPickService: PickServiceProtocol {
                     awayTeamLogo: nil,
                     kickoffAt: Date().addingTimeInterval(86400),
                     status: .notStarted, homeScore: nil, awayScore: nil,
-                    venue: "Emirates Stadium"),
+                    venue: "Emirates Stadium",
+                    homeWinProb: nil, drawProb: nil, awayWinProb: nil),
             Fixture(id: 2, gameweekId: gameweekId,
                     homeTeamId: 300, homeTeamName: "Liverpool", homeTeamShort: "LIV",
                     homeTeamLogo: nil,
@@ -245,7 +246,8 @@ final class MockPickService: PickServiceProtocol {
                     awayTeamLogo: nil,
                     kickoffAt: Date().addingTimeInterval(90000),
                     status: .notStarted, homeScore: nil, awayScore: nil,
-                    venue: "Anfield")
+                    venue: "Anfield",
+                    homeWinProb: nil, drawProb: nil, awayWinProb: nil)
         ]
     }
 
