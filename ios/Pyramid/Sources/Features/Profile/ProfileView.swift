@@ -110,6 +110,14 @@ private extension ProfileView {
                 destination: NotificationPreferencesView()
             )
 
+            if FeatureFlags.paidFeaturesEnabled {
+                settingsRow(
+                    title: "Wallet",
+                    icon: "creditcard.fill",
+                    destination: WalletView()
+                )
+            }
+
             #if DEBUG
             settingsRow(
                 title: "Design System",
