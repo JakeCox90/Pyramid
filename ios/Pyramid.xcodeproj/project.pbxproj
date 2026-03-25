@@ -271,7 +271,7 @@
 		1189DFA9A9732FE172DBAF3B /* JoinPaidLeagueViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinPaidLeagueViewModelTests.swift; sourceTree = "<group>"; };
 		122BFD9D97922E7528B27AB7 /* Flag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Flag.swift; sourceTree = "<group>"; };
 		14E3E904D626693EFD0374A7 /* StoryEliminatedCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryEliminatedCard.swift; sourceTree = "<group>"; };
-		15D59E24206FC0EA7FED90FA /* PyramidTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PyramidTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		15D59E24206FC0EA7FED90FA /* PyramidTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = PyramidTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		160E699D5C48AC6090DFE610 /* ComponentBrowserView+ButtonTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ComponentBrowserView+ButtonTab.swift"; sourceTree = "<group>"; };
 		18E670F1EE9381EFB1353FCA /* LeaderboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaderboardView.swift; sourceTree = "<group>"; };
 		1A65C934EBDDDB947732C782 /* ComponentBrowserView+CardTab+MatchCards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ComponentBrowserView+CardTab+MatchCards.swift"; sourceTree = "<group>"; };
@@ -311,7 +311,7 @@
 		38CE9680947A70C1DCE06C85 /* Avatar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Avatar.swift; sourceTree = "<group>"; };
 		39A1D7AC4BDC5818E3CB3AD2 /* HomeService+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeService+Helpers.swift"; sourceTree = "<group>"; };
 		3A99F7D102F98CA327955FA1 /* DetailSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailSheet.swift; sourceTree = "<group>"; };
-		42379DA3E6430A94B9D0CCDB /* PyramidUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PyramidUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		42379DA3E6430A94B9D0CCDB /* PyramidUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = PyramidUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		42586F416E9A838F2E2B852E /* AchievementService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AchievementService.swift; sourceTree = "<group>"; };
 		4275A214EFB0ACFC61834626 /* LeagueDetailView+Stats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LeagueDetailView+Stats.swift"; sourceTree = "<group>"; };
 		441B35BCC706EBEB12885BF1 /* LeaguePaletteTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaguePaletteTests.swift; sourceTree = "<group>"; };
@@ -357,12 +357,12 @@
 		7AB86047F9178A4FF08B9548 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		7C88D6C6E49C97E4FB9C23E5 /* SubmitPickUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitPickUITests.swift; sourceTree = "<group>"; };
 		7CD91D4AEDDE7F6518970506 /* TokenBrowserView+Icons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TokenBrowserView+Icons.swift"; sourceTree = "<group>"; };
-		7E7530FCBBC1C0160B080649 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		7E7530FCBBC1C0160B080649 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		80B986FB70A636F5DD70A708 /* LeagueDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeagueDetailView.swift; sourceTree = "<group>"; };
 		8201BEA868E6328BFC5B5D4F /* PickRevealView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickRevealView.swift; sourceTree = "<group>"; };
 		8237708EA0EA0C0A611550B4 /* StoryWildcardCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryWildcardCard.swift; sourceTree = "<group>"; };
 		827A714AF4372F27BA00F9E3 /* ResultsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsViewModel.swift; sourceTree = "<group>"; };
-		82F47822297EAF10E0237AC5 /* Pyramid.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pyramid.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		82F47822297EAF10E0237AC5 /* Pyramid.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Pyramid.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8390F46699A23F2B22C381E6 /* MatchCard+Empty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MatchCard+Empty.swift"; sourceTree = "<group>"; };
 		83A1FC8F1E2D276FAA656066 /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
 		8479001FC7E3B6F9092C20B3 /* Inter-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-SemiBold.ttf"; sourceTree = "<group>"; };
@@ -1026,6 +1026,9 @@
 					8D5FE8017604D56B24BCF779 = {
 						TestTargetID = BA0B4CACCB7889CF292A7E0D;
 					};
+					BA0B4CACCB7889CF292A7E0D = {
+						DevelopmentTeam = "";
+					};
 				};
 			};
 			buildConfigurationList = 9B66A7C084CB0CEFAEB17DBD /* Build configuration list for PBXProject "Pyramid" */;
@@ -1342,13 +1345,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Pyramid/Resources/Pyramid.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = 3884WSP2ZC;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Pyramid/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.pyramidapp.app;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pyramid.app;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1360,13 +1363,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Pyramid/Resources/Pyramid.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = 3884WSP2ZC;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Pyramid/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.pyramidapp.app;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pyramid.app;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
