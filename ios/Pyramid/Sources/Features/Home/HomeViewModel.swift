@@ -219,6 +219,31 @@ final class HomeViewModel: ObservableObject {
         return .upcoming
     }
 
+    /// Whether the user is eliminated in the given league.
+    func isEliminated(
+        in league: League
+    ) -> Bool {
+        homeData?.memberStatuses[league.id]
+            == .eliminated
+    }
+
+    /// The elimination result for the given league, if the user
+    /// was eliminated and we have match data for it.
+    func eliminationResult(
+        for league: League
+    ) -> LeagueResult? {
+        guard isEliminated(in: league) else {
+            return nil
+        }
+        // Find the result that caused elimination
+        // (result == .eliminated in lastGwResults)
+        let results = homeData?.lastGwResults ?? []
+        return results.first {
+            $0.leagueId == league.id
+                && $0.result == .eliminated
+        }
+    }
+
     /// Previous pick results for the current or selected GW,
     /// filtered to the selected league.
     var previousPicks: [LeagueResult] {

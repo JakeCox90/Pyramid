@@ -4,6 +4,8 @@ struct HomeView: View {
     @StateObject var viewModel = HomeViewModel()
     @State var showPicks = false
     @State private var matchCardVisible = true
+    @State var showEliminationOverlay = false
+    @State var eliminationOverlayResult: LeagueResult?
 
     var body: some View {
         NavigationStack {
@@ -25,6 +27,31 @@ struct HomeView: View {
                     .ignoresSafeArea()
             )
             .task { await viewModel.load() }
+            .fullScreenCover(
+                isPresented: $showEliminationOverlay
+            ) {
+                if let result = eliminationOverlayResult {
+                    EliminationOverlay(
+                        leagueName: result.leagueName,
+                        pickedTeamName: result.teamName,
+                        opponentName: result.pickedHome
+                            ? result.awayTeamName
+                            : result.homeTeamName,
+                        homeScore: result.homeScore,
+                        awayScore: result.awayScore,
+                        pickedHome: result.pickedHome,
+                        onDismiss: {
+                            showEliminationOverlay = false
+                        }
+                    )
+                    .background(.black)
+                }
+            }
+            .onChange(
+                of: viewModel.homeData
+            ) { newData in
+                checkForElimination(data: newData)
+            }
             .navigationDestination(
                 isPresented: $showPicks
             ) {
@@ -135,7 +162,9 @@ struct HomeView: View {
     ) -> some View {
         ScrollView(showsIndicators: false) {
             VStack(spacing: Theme.Spacing.s40) {
-                if let context = viewModel
+                if viewModel.isEliminated(in: league) {
+                    eliminationSection(for: league)
+                } else if let context = viewModel
                     .currentPick(for: league) {
                     matchCard(context)
                         .opacity(matchCardVisible ? 1 : 0)
@@ -146,7 +175,9 @@ struct HomeView: View {
                     matchCardEmpty()
                 }
 
-                playersRemainingCard(for: league)
+                if !viewModel.isEliminated(in: league) {
+                    playersRemainingCard(for: league)
+                }
 
                 previousPicksSection(for: league)
             }

@@ -182,6 +182,61 @@ extension ComponentBrowserView {
     }
 }
 
+// MARK: - EliminationCard
+
+extension ComponentBrowserView {
+    var eliminationCardSection: some View {
+        VStack(
+            alignment: .leading,
+            spacing: Theme.Spacing.s30
+        ) {
+            ComponentHeader(
+                title: "EliminationCard"
+            )
+
+            ComponentCaption(
+                text: "Home team picked (lost)"
+            )
+            EliminationCard(
+                leagueName: "Sunday League",
+                gameweekName: "Gameweek 29",
+                pickedTeamName: "Arsenal",
+                pickedTeamLogo: nil,
+                opponentName: "Aston Villa",
+                homeTeamName: "Arsenal",
+                homeTeamShort: "ARS",
+                homeTeamLogo: nil,
+                awayTeamName: "Aston Villa",
+                awayTeamShort: "AVL",
+                awayTeamLogo: nil,
+                homeScore: 0,
+                awayScore: 2,
+                pickedHome: true
+            )
+
+            ComponentCaption(
+                text: "Away team picked (lost)"
+            )
+            EliminationCard(
+                leagueName: "Office Crew",
+                gameweekName: "Gameweek 29",
+                pickedTeamName: "Chelsea",
+                pickedTeamLogo: nil,
+                opponentName: "Liverpool",
+                homeTeamName: "Liverpool",
+                homeTeamShort: "LIV",
+                homeTeamLogo: nil,
+                awayTeamName: "Chelsea",
+                awayTeamShort: "CHE",
+                awayTeamLogo: nil,
+                homeScore: 3,
+                awayScore: 1,
+                pickedHome: false
+            )
+        }
+    }
+}
+
 // MARK: - StatsCard
 
 extension ComponentBrowserView {
