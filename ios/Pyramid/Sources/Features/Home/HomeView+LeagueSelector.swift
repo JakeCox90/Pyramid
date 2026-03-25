@@ -51,7 +51,8 @@ extension HomeView {
         .buttonStyle(.plain)
     }
 
-    @ViewBuilder private func leaguePillLabel(
+    @ViewBuilder
+    private func leaguePillLabel(
         _ league: League,
         isSelected: Bool,
         eliminated: Bool
