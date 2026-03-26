@@ -96,28 +96,12 @@ final class AuthFlowUITests: XCTestCase {
         // fails intermittently on CI.
         let emailField = app.textFields["you@example.com"]
         if emailField.waitForExistence(timeout: 5) {
-            emailField.tap()
-            if let currentValue = emailField.value as? String,
-               !currentValue.isEmpty {
-                let deletes = String(
-                    repeating: XCUIKeyboardKey.delete.rawValue,
-                    count: currentValue.count
-                )
-                emailField.typeText(deletes)
-            }
+            clearField(emailField)
         }
 
         let passwordField = app.secureTextFields["Password"]
         if passwordField.waitForExistence(timeout: 5) {
-            passwordField.tap()
-            if let currentValue = passwordField.value as? String,
-               !currentValue.isEmpty {
-                let deletes = String(
-                    repeating: XCUIKeyboardKey.delete.rawValue,
-                    count: currentValue.count
-                )
-                passwordField.typeText(deletes)
-            }
+            clearField(passwordField)
         }
 
         // Tap Sign In with empty fields
@@ -172,5 +156,20 @@ final class AuthFlowUITests: XCTestCase {
             createAccountButton.isEnabled,
             "Create account button should be enabled"
         )
+    }
+
+    // MARK: - Helpers
+
+    private func clearField(_ field: XCUIElement) {
+        field.tap()
+        // Double-tap to ensure keyboard focus is acquired
+        field.tap()
+        guard let currentValue = field.value as? String,
+              !currentValue.isEmpty else { return }
+        let deletes = String(
+            repeating: XCUIKeyboardKey.delete.rawValue,
+            count: currentValue.count
+        )
+        field.typeText(deletes)
     }
 }
