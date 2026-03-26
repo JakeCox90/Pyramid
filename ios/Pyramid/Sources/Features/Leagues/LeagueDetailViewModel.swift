@@ -10,6 +10,9 @@ final class LeagueDetailViewModel: ObservableObject {
     @Published var errorMessage: String?
     @Published var activityEvents: [ActivityEvent] = []
     @Published var showAllActivity = false
+    @Published var eliminationPick: MemberPick?
+    @Published var eliminationFixture: Fixture?
+    @Published var eliminationGameweekName: String?
 
     let league: League
 
@@ -62,6 +65,15 @@ final class LeagueDetailViewModel: ObservableObject {
     }
 
     @Published var currentUserId: String?
+
+    var currentUserMember: LeagueMember? {
+        guard let userId = currentUserId else { return nil }
+        return members.first { $0.userId == userId }
+    }
+
+    var isCurrentUserEliminated: Bool {
+        currentUserMember?.status == .eliminated
+    }
 
     var myPick: MemberPick? {
         guard let userId = currentUserId else { return nil }
@@ -116,6 +128,7 @@ final class LeagueDetailViewModel: ObservableObject {
             if isDeadlinePassed() {
                 try await refreshFixtures()
             }
+            await loadEliminationData()
             await loadActivityFeed()
         } catch {
             errorMessage = AppError.from(error).userMessage
@@ -130,6 +143,34 @@ final class LeagueDetailViewModel: ObservableObject {
         } catch {
             Log.picks.warning(
                 "Activity feed load failed: \(error.localizedDescription)"
+            )
+        }
+    }
+
+    func loadEliminationData() async {
+        guard let member = currentUserMember,
+              member.status == .eliminated,
+              let eliminationGwId = member.eliminatedInGameweekId
+        else { return }
+
+        do {
+            let picks = try await standingsService.fetchLockedPicks(
+                leagueId: league.id,
+                gameweekId: eliminationGwId
+            )
+            guard let userId = currentUserId,
+                  let pick = picks.first(where: { $0.userId == userId })
+            else { return }
+
+            let fixtures = try await pickService.fetchFixtures(for: eliminationGwId)
+            let fixture = fixtures.first { $0.id == pick.fixtureId }
+
+            eliminationPick = pick
+            eliminationFixture = fixture
+            eliminationGameweekName = "Gameweek \(eliminationGwId)"
+        } catch {
+            Log.picks.warning(
+                "Elimination data load failed: \(error.localizedDescription)"
             )
         }
     }
