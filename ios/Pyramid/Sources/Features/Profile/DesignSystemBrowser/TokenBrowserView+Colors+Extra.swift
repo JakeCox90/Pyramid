@@ -4,8 +4,7 @@ import SwiftUI
 // MARK: - Color Tokens (continued)
 
 extension TokenBrowserView {
-    @ViewBuilder
-    var colorSectionExtra: some View {
+    @ViewBuilder var colorSectionExtra: some View {
         ColorGroup(
             title: "Match > Pill",
             swatches: [
