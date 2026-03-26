@@ -14,6 +14,7 @@ secrets/
 .supabase/
 
 # ─── Xcode ───────────────────────────────────────────────────────────────────
+__Snapshots__/
 *.xcworkspace/xcuserdata/
 *.xcodeproj/xcuserdata/
 *.xcodeproj/project.xcworkspace/xcuserdata/
