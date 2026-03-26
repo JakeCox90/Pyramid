@@ -129,6 +129,29 @@ struct EliminationCardDemo: View {
     }
 }
 
+struct SurvivalCardDemo: View {
+    var body: some View {
+        DemoPageStatic {
+            SurvivalCard(
+                leagueName: "Sunday League",
+                gameweekName: "Gameweek 29",
+                pickedTeamName: "Liverpool",
+                pickedTeamLogo: nil,
+                opponentName: "Everton",
+                homeTeamName: "Liverpool",
+                homeTeamShort: "LIV",
+                homeTeamLogo: nil,
+                awayTeamName: "Everton",
+                awayTeamShort: "EVE",
+                awayTeamLogo: nil,
+                homeScore: 2,
+                awayScore: 1,
+                pickedHome: true
+            )
+        }
+    }
+}
+
 struct MatchStatsDemo: View {
     var body: some View {
         DemoPageStatic {
