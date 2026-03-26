@@ -4,12 +4,88 @@ import SwiftUI
 
 extension LeagueDetailView {
     var standingsContent: some View {
-        ScrollView {
+        VStack(spacing: 0) {
             VStack(spacing: Theme.Spacing.s40) {
                 if viewModel.isCompleted {
                     winnerBanner
                 }
                 statsHeader
+                tabPicker
+            }
+            .padding(.top, Theme.Spacing.s40)
+            .padding(.bottom, Theme.Spacing.s20)
+
+            tabContent
+        }
+    }
+
+    // MARK: - Tab Picker
+
+    private var tabPicker: some View {
+        HStack(spacing: Theme.Spacing.s10) {
+            ForEach(
+                LeagueDetailTab.allCases,
+                id: \.self
+            ) { tab in
+                Button {
+                    withAnimation(
+                        .easeInOut(duration: 0.2)
+                    ) {
+                        selectedTab = tab
+                    }
+                } label: {
+                    Text(tab.rawValue)
+                        .font(Theme.Typography.label01)
+                        .foregroundStyle(
+                            selectedTab == tab
+                                ? Theme.Color.Content
+                                    .Text.default
+                                : Theme.Color.Content
+                                    .Text.subtle
+                        )
+                        .padding(
+                            .horizontal,
+                            Theme.Spacing.s30
+                        )
+                        .padding(
+                            .vertical,
+                            Theme.Spacing.s20
+                        )
+                        .background(
+                            selectedTab == tab
+                                ? Theme.Color.Surface
+                                    .Background.highlight
+                                : Color.clear
+                        )
+                        .clipShape(Capsule())
+                }
+            }
+        }
+        .padding(.horizontal, Theme.Spacing.s40)
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    // MARK: - Tab Content
+
+    @ViewBuilder private var tabContent: some View {
+        switch selectedTab {
+        case .overview:
+            overviewContent
+        case .myPicks:
+            PickHistoryView(
+                leagueId: viewModel.league.id
+            )
+        case .results:
+            ResultsView(
+                leagueId: viewModel.league.id,
+                season: viewModel.league.season
+            )
+        }
+    }
+
+    private var overviewContent: some View {
+        ScrollView {
+            VStack(spacing: Theme.Spacing.s40) {
                 if viewModel.currentGameweek != nil {
                     if viewModel.isRecapAvailable {
                         gwRecapButton
@@ -26,7 +102,7 @@ extension LeagueDetailView {
                 activitySection
                 leaveLeagueButton
             }
-            .padding(.vertical, Theme.Spacing.s40)
+            .padding(.vertical, Theme.Spacing.s20)
         }
     }
 

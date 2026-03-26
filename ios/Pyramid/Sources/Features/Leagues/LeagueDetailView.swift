@@ -2,6 +2,7 @@ import SwiftUI
 
 struct LeagueDetailView: View {
     @StateObject var viewModel: LeagueDetailViewModel
+    @State var selectedTab: LeagueDetailTab = .overview
     @State var showPicks = false
     @State var showResults = false
     @State var showPickHistory = false
@@ -47,12 +48,6 @@ struct LeagueDetailView: View {
                         )
                     }
                     Button {
-                        showPickHistory = true
-                    } label: {
-                        Image(systemName: Theme.Icon.Pick.history)
-                    }
-                    .accessibilityLabel("Pick history")
-                    Button {
                         showShareSheet = true
                     } label: {
                         Image(systemName: Theme.Icon.Action.share)
@@ -79,14 +74,14 @@ struct LeagueDetailView: View {
         .navigationDestination(isPresented: $showPicks) {
             PicksView(leagueId: viewModel.league.id)
         }
-        .navigationDestination(isPresented: $showPickHistory) {
-            PickHistoryView(leagueId: viewModel.league.id)
-        }
         .navigationDestination(isPresented: $showResults) {
             ResultsView(
                 leagueId: viewModel.league.id,
                 season: viewModel.league.season
             )
+        }
+        .navigationDestination(isPresented: $showPickHistory) {
+            PickHistoryView(leagueId: viewModel.league.id)
         }
         .sheet(isPresented: $showCompleteView) {
             LeagueCompleteView(
