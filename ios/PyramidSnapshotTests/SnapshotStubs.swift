@@ -29,7 +29,10 @@ enum SnapshotStubs {
             status: .notStarted,
             homeScore: nil,
             awayScore: nil,
-            venue: "Emirates Stadium"
+            venue: "Emirates Stadium",
+            homeWinProb: 0.55,
+            drawProb: 0.25,
+            awayWinProb: 0.20
         )
     }
 
@@ -49,7 +52,10 @@ enum SnapshotStubs {
             status: .secondHalf,
             homeScore: 2,
             awayScore: 1,
-            venue: "Anfield"
+            venue: "Anfield",
+            homeWinProb: 0.60,
+            drawProb: 0.20,
+            awayWinProb: 0.20
         )
     }
 
@@ -69,7 +75,10 @@ enum SnapshotStubs {
             status: .secondHalf,
             homeScore: 0,
             awayScore: 0,
-            venue: "Anfield"
+            venue: "Anfield",
+            homeWinProb: 0.60,
+            drawProb: 0.20,
+            awayWinProb: 0.20
         )
     }
 
@@ -89,7 +98,10 @@ enum SnapshotStubs {
             status: .fullTime,
             homeScore: 3,
             awayScore: 0,
-            venue: "Etihad Stadium"
+            venue: "Etihad Stadium",
+            homeWinProb: 0.45,
+            drawProb: 0.25,
+            awayWinProb: 0.30
         )
     }
 
@@ -109,7 +121,10 @@ enum SnapshotStubs {
             status: .fullTime,
             homeScore: 1,
             awayScore: 2,
-            venue: "Etihad Stadium"
+            venue: "Etihad Stadium",
+            homeWinProb: 0.45,
+            drawProb: 0.25,
+            awayWinProb: 0.30
         )
     }
 }
