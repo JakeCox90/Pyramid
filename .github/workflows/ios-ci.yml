@@ -104,11 +104,11 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             | xcpretty
 
-  ui-test:
-    name: UI Tests
+  ui-test-auth:
+    name: UI Tests (Auth)
     needs: build
     runs-on: macos-14
-    timeout-minutes: 15
+    timeout-minutes: 10
 
     steps:
       - name: Checkout
@@ -123,7 +123,7 @@ jobs:
           name: derived-data
           path: ios/DerivedData/Build/Products
 
-      - name: UI Test
+      - name: UI Test — Auth
         working-directory: ios
         env:
           UI_TEST_EMAIL: ${{ secrets.UI_TEST_EMAIL }}
@@ -135,7 +135,78 @@ jobs:
             -scheme Pyramid \
             -destination "platform=iOS Simulator,name=iPhone 16,OS=18.2" \
             -derivedDataPath DerivedData \
-            -only-testing:PyramidUITests \
+            -only-testing:PyramidUITests/PyramidUITests \
+            -only-testing:PyramidUITests/AuthFlowUITests \
+            CODE_SIGNING_ALLOWED=NO \
+            | xcpretty
+
+  ui-test-league:
+    name: UI Tests (League)
+    needs: build
+    runs-on: macos-14
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_16.2.app
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: derived-data
+          path: ios/DerivedData/Build/Products
+
+      - name: UI Test — League
+        working-directory: ios
+        env:
+          UI_TEST_EMAIL: ${{ secrets.UI_TEST_EMAIL }}
+          UI_TEST_PASSWORD: ${{ secrets.UI_TEST_PASSWORD }}
+        run: |
+          set -o pipefail
+          xcodebuild test-without-building \
+            -project Pyramid.xcodeproj \
+            -scheme Pyramid \
+            -destination "platform=iOS Simulator,name=iPhone 16,OS=18.2" \
+            -derivedDataPath DerivedData \
+            -only-testing:PyramidUITests/CreateLeagueUITests \
+            CODE_SIGNING_ALLOWED=NO \
+            | xcpretty
+
+  ui-test-picks:
+    name: UI Tests (Picks)
+    needs: build
+    runs-on: macos-14
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_16.2.app
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: derived-data
+          path: ios/DerivedData/Build/Products
+
+      - name: UI Test — Picks
+        working-directory: ios
+        env:
+          UI_TEST_EMAIL: ${{ secrets.UI_TEST_EMAIL }}
+          UI_TEST_PASSWORD: ${{ secrets.UI_TEST_PASSWORD }}
+        run: |
+          set -o pipefail
+          xcodebuild test-without-building \
+            -project Pyramid.xcodeproj \
+            -scheme Pyramid \
+            -destination "platform=iOS Simulator,name=iPhone 16,OS=18.2" \
+            -derivedDataPath DerivedData \
+            -only-testing:PyramidUITests/SubmitPickUITests \
             CODE_SIGNING_ALLOWED=NO \
             | xcpretty
 
