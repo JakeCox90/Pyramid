@@ -13,7 +13,7 @@ concurrency:
 jobs:
   build:
     name: Build
-    runs-on: macos-15
+    runs-on: macos-14
     timeout-minutes: 20
 
     steps:
@@ -75,7 +75,7 @@ jobs:
   unit-test:
     name: Unit Tests
     needs: build
-    runs-on: macos-15
+    runs-on: macos-14
     timeout-minutes: 15
 
     steps:
@@ -107,7 +107,7 @@ jobs:
   ui-test:
     name: UI Tests
     needs: build
-    runs-on: macos-15
+    runs-on: macos-14
     timeout-minutes: 15
 
     steps:
@@ -141,7 +141,7 @@ jobs:
 
   lint:
     name: SwiftLint
-    runs-on: macos-15
+    runs-on: macos-14
     timeout-minutes: 10
 
     steps:
