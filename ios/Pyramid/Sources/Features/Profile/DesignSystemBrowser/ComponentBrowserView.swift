@@ -23,6 +23,7 @@ enum ComponentTab: String, CaseIterable {
     case playersLeft = "Players Left"
     case pulsingDot = "Pulsing Dot"
     case resultCard = "Result Card"
+    case survivalCard = "Survival"
     case teamBadge = "Team Badge"
     case teamsUsed = "Teams Used"
     case toast = "Toast"
@@ -143,6 +144,7 @@ struct ComponentBrowserView: View {
         case .playersLeft: PlayersRemainingDemo()
         case .pulsingDot: PulsingDotDemo()
         case .resultCard: ResultCardDemo()
+        case .survivalCard: SurvivalCardDemo()
         case .teamBadge: TeamBadgeDemo()
         case .teamsUsed: TeamsUsedPillDemo()
         case .toast: ToastDemo()

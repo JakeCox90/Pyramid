@@ -6,6 +6,8 @@ struct HomeView: View {
     @State private var matchCardVisible = true
     @State var showEliminationOverlay = false
     @State var eliminationOverlayResult: LeagueResult?
+    @State var showSurvivalOverlay = false
+    @State var survivalOverlayResult: LeagueResult?
 
     var body: some View {
         NavigationStack {
@@ -47,10 +49,31 @@ struct HomeView: View {
                     .background(.black)
                 }
             }
+            .fullScreenCover(
+                isPresented: $showSurvivalOverlay
+            ) {
+                if let result = survivalOverlayResult {
+                    SurvivalOverlay(
+                        leagueName: result.leagueName,
+                        pickedTeamName: result.teamName,
+                        opponentName: result.pickedHome
+                            ? result.awayTeamName
+                            : result.homeTeamName,
+                        homeScore: result.homeScore,
+                        awayScore: result.awayScore,
+                        pickedHome: result.pickedHome,
+                        onDismiss: {
+                            showSurvivalOverlay = false
+                        }
+                    )
+                    .background(.black)
+                }
+            }
             .onChange(
                 of: viewModel.homeData
             ) { newData in
                 checkForElimination(data: newData)
+                checkForSurvival(data: newData)
             }
             .navigationDestination(
                 isPresented: $showPicks

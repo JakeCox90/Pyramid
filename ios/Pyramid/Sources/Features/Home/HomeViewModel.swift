@@ -245,12 +245,24 @@ final class HomeViewModel: ObservableObject {
         guard isEliminated(in: league) else {
             return nil
         }
-        // Find the result that caused elimination
-        // (result == .eliminated in lastGwResults)
         let results = homeData?.lastGwResults ?? []
         return results.first {
             $0.leagueId == league.id
                 && $0.result == .eliminated
+        }
+    }
+
+    /// The survival result for the given league from last GW.
+    func survivalResult(
+        for league: League
+    ) -> LeagueResult? {
+        guard !isEliminated(in: league) else {
+            return nil
+        }
+        let results = homeData?.lastGwResults ?? []
+        return results.first {
+            $0.leagueId == league.id
+                && $0.result == .survived
         }
     }
 
