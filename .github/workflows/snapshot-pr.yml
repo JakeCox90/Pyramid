@@ -86,6 +86,8 @@ jobs:
       - name: Run snapshot tests
         if: steps.manifest.outputs.count != '0'
         working-directory: ios
+        # Record mode causes expected "failures" — snapshots are still generated
+        continue-on-error: true
         run: |
           set -o pipefail
 
