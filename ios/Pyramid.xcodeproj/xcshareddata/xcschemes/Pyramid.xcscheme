@@ -83,7 +83,7 @@
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "SUPABASE_URL"
-            value = "[&quot;isEnabled&quot;: true, &quot;value&quot;: &quot;&quot;]"
+            value = "[&quot;value&quot;: &quot;&quot;, &quot;isEnabled&quot;: true]"
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>
@@ -118,7 +118,7 @@
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "SUPABASE_URL"
-            value = "[&quot;isEnabled&quot;: true, &quot;value&quot;: &quot;&quot;]"
+            value = "[&quot;value&quot;: &quot;&quot;, &quot;isEnabled&quot;: true]"
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>
@@ -149,7 +149,7 @@
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "SUPABASE_URL"
-            value = "[&quot;isEnabled&quot;: true, &quot;value&quot;: &quot;&quot;]"
+            value = "[&quot;value&quot;: &quot;&quot;, &quot;isEnabled&quot;: true]"
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>
