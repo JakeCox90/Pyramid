@@ -163,4 +163,8 @@ final class MockLeagueService: LeagueServiceProtocol {
     ) async throws {
         if shouldFail { throw URLError(.badServerResponse) }
     }
+
+    func leaveLeague(leagueId: String) async throws {
+        if shouldFail { throw URLError(.badServerResponse) }
+    }
 }

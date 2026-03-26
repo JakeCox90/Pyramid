@@ -24,6 +24,7 @@ extension LeagueDetailView {
                     membersList
                 }
                 activitySection
+                leaveLeagueButton
             }
             .padding(.vertical, Theme.Spacing.s40)
         }
@@ -183,5 +184,25 @@ extension LeagueDetailView {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, Theme.Spacing.s40)
         .accessibilityLabel("Reveal all members' picks")
+    }
+
+    var leaveLeagueButton: some View {
+        Button {
+            showLeaveConfirmation = true
+        } label: {
+            HStack(spacing: Theme.Spacing.s10) {
+                Image(
+                    systemName: "rectangle.portrait.and.arrow.right"
+                )
+                Text("Leave League")
+                    .font(Theme.Typography.body)
+            }
+            .foregroundStyle(
+                Theme.Color.Status.Error.resting
+            )
+        }
+        .disabled(viewModel.isLeaving)
+        .padding(.top, Theme.Spacing.s40)
+        .accessibilityLabel("Leave this league")
     }
 }

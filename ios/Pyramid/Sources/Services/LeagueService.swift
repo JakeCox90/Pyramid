@@ -11,6 +11,7 @@ enum LeagueServiceError: LocalizedError, Equatable {
     case joinFailed(String)
     case fetchFailed(String)
     case updateFailed(String)
+    case leaveFailed(String)
 
     var errorDescription: String? {
         switch self {
@@ -25,6 +26,8 @@ enum LeagueServiceError: LocalizedError, Equatable {
         case .fetchFailed(let message):
             return message
         case .updateFailed(let message):
+            return message
+        case .leaveFailed(let message):
             return message
         }
     }
@@ -108,6 +111,7 @@ protocol LeagueServiceProtocol: Sendable {
         colorPalette: String,
         emoji: String
     ) async throws
+    func leaveLeague(leagueId: String) async throws
 }
 
 // MARK: - Implementation
@@ -224,6 +228,24 @@ final class LeagueService: LeagueServiceProtocol {
         } catch {
             Log.leagues.error("League update failed: \(error)")
             throw LeagueServiceError.updateFailed(
+                error.localizedDescription
+            )
+        }
+    }
+
+    func leaveLeague(leagueId: String) async throws {
+        do {
+            Log.leagues.info("Leaving league: \(leagueId)")
+            try await client.functions.invoke(
+                "leave-league",
+                options: FunctionInvokeOptions(
+                    body: ["league_id": leagueId]
+                )
+            )
+            Log.leagues.info("Left league: \(leagueId)")
+        } catch {
+            Log.leagues.error("Leave league failed: \(error)")
+            throw LeagueServiceError.leaveFailed(
                 error.localizedDescription
             )
         }

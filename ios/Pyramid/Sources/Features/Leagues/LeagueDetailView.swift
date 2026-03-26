@@ -10,6 +10,8 @@ struct LeagueDetailView: View {
     @State var showEditLeague = false
     @State var showStory = false
     @State var showPickReveal = false
+    @State var showLeaveConfirmation = false
+    @Environment(\.dismiss) private var dismiss
 
     init(league: League) {
         _viewModel = StateObject(wrappedValue: LeagueDetailViewModel(league: league))
@@ -120,6 +122,23 @@ struct LeagueDetailView: View {
                     currentUserId: viewModel.currentUserId
                 )
             }
+        }
+        .alert(
+            "Leave League",
+            isPresented: $showLeaveConfirmation
+        ) {
+            Button("Cancel", role: .cancel) {}
+            Button("Leave", role: .destructive) {
+                Task { await viewModel.leaveLeague() }
+            }
+        } message: {
+            Text(
+                "Are you sure you want to leave \(viewModel.league.name)? "
+                + "This action cannot be undone."
+            )
+        }
+        .onChange(of: viewModel.didLeaveLeague) { left in
+            if left { dismiss() }
         }
         .background(Theme.Color.Surface.Background.page.ignoresSafeArea())
         .task {

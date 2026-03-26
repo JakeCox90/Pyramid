@@ -13,12 +13,15 @@ final class LeagueDetailViewModel: ObservableObject {
     @Published var eliminationPick: MemberPick?
     @Published var eliminationFixture: Fixture?
     @Published var eliminationGameweekName: String?
+    @Published var isLeaving = false
+    @Published var didLeaveLeague = false
 
     let league: League
 
     private let standingsService: StandingsServiceProtocol
     private let pickService: PickServiceProtocol
     private let activityFeedService: ActivityFeedServiceProtocol
+    private let leagueService: LeagueServiceProtocol
     private var pollingTask: Task<Void, Never>?
 
     var sortedMembers: [LeagueMember] {
@@ -100,12 +103,14 @@ final class LeagueDetailViewModel: ObservableObject {
         league: League,
         standingsService: StandingsServiceProtocol = StandingsService(),
         pickService: PickServiceProtocol = PickService(),
-        activityFeedService: ActivityFeedServiceProtocol = ActivityFeedService()
+        activityFeedService: ActivityFeedServiceProtocol = ActivityFeedService(),
+        leagueService: LeagueServiceProtocol = LeagueService()
     ) {
         self.league = league
         self.standingsService = standingsService
         self.pickService = pickService
         self.activityFeedService = activityFeedService
+        self.leagueService = leagueService
     }
 
     func load() async {
@@ -186,6 +191,19 @@ final class LeagueDetailViewModel: ObservableObject {
     func isDeadlinePassed() -> Bool {
         guard let deadline = currentGameweek?.deadlineAt else { return false }
         return deadline <= Date()
+    }
+
+    // MARK: - Leave League
+
+    func leaveLeague() async {
+        isLeaving = true
+        do {
+            try await leagueService.leaveLeague(leagueId: league.id)
+            didLeaveLeague = true
+        } catch {
+            errorMessage = AppError.from(error).userMessage
+        }
+        isLeaving = false
     }
 
     // MARK: - Polling
