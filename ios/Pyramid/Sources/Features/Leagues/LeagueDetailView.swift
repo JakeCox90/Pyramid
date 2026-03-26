@@ -4,6 +4,8 @@ struct LeagueDetailView: View {
     @StateObject var viewModel: LeagueDetailViewModel
     @State var selectedTab: LeagueDetailTab = .overview
     @State var showPicks = false
+    @State var showResults = false
+    @State var showPickHistory = false
     @State var showCompleteView = false
     @State var showShareSheet = false
     @State var showEditLeague = false
@@ -68,6 +70,15 @@ struct LeagueDetailView: View {
         }
         .navigationDestination(isPresented: $showPicks) {
             PicksView(leagueId: viewModel.league.id)
+        }
+        .navigationDestination(isPresented: $showResults) {
+            ResultsView(
+                leagueId: viewModel.league.id,
+                season: viewModel.league.season
+            )
+        }
+        .navigationDestination(isPresented: $showPickHistory) {
+            PickHistoryView(leagueId: viewModel.league.id)
         }
         .sheet(isPresented: $showCompleteView) {
             LeagueCompleteView(
