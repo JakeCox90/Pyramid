@@ -63,7 +63,7 @@ extension XCUIElement {
     /// Returns `true` if found, `false` if timed out.
     @discardableResult
     func waitForElement(
-        timeout: TimeInterval = 10
+        timeout: TimeInterval = 5
     ) -> Bool {
         waitForExistence(timeout: timeout)
     }
@@ -71,7 +71,7 @@ extension XCUIElement {
     /// Tap the element after waiting for it to exist.
     /// Fails the test if the element does not appear.
     func tapWhenReady(
-        timeout: TimeInterval = 10,
+        timeout: TimeInterval = 5,
         file: StaticString = #file,
         line: UInt = #line
     ) {

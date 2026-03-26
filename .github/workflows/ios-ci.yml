@@ -11,10 +11,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-test:
-    name: Build & Test
+  build:
+    name: Build
     runs-on: macos-14
-    timeout-minutes: 30
+    timeout-minutes: 20
 
     steps:
       - name: Checkout
@@ -22,6 +22,14 @@ jobs:
 
       - name: Select Xcode
         run: sudo xcode-select -s /Applications/Xcode_16.2.app
+
+      - name: Cache Homebrew packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/Library/Caches/Homebrew
+            /usr/local/Cellar/xcodegen
+          key: brew-xcodegen-${{ runner.os }}
 
       - name: Install xcodegen
         run: brew install xcodegen
@@ -36,44 +44,169 @@ jobs:
           echo "SUPABASE_URL = ${{ secrets.SUPABASE_URL_DEV }}" > Debug.xcconfig
           echo "SUPABASE_ANON_KEY = ${{ secrets.SUPABASE_ANON_KEY_DEV }}" >> Debug.xcconfig
 
-      - name: Build
+      - name: Cache DerivedData
+        uses: actions/cache@v4
+        with:
+          path: ios/DerivedData
+          key: deriveddata-${{ runner.os }}-${{ hashFiles('ios/project.yml', 'ios/Pyramid/Sources/**/*.swift') }}
+          restore-keys: |
+            deriveddata-${{ runner.os }}-
+
+      - name: Build for testing
         working-directory: ios
         run: |
           set -o pipefail
-          xcodebuild build \
+          xcodebuild build-for-testing \
             -project Pyramid.xcodeproj \
             -scheme Pyramid \
             -destination "platform=iOS Simulator,name=iPhone 16,OS=18.2" \
+            -derivedDataPath DerivedData \
             -xcconfig Config/Debug.xcconfig \
             CODE_SIGNING_ALLOWED=NO \
             | xcpretty
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: derived-data
+          path: ios/DerivedData/Build/Products
+          retention-days: 1
+
+  unit-test:
+    name: Unit Tests
+    needs: build
+    runs-on: macos-14
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_16.2.app
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: derived-data
+          path: ios/DerivedData/Build/Products
 
       - name: Unit Test
         working-directory: ios
         run: |
           set -o pipefail
-          xcodebuild test \
+          xcodebuild test-without-building \
             -project Pyramid.xcodeproj \
             -scheme Pyramid \
             -destination "platform=iOS Simulator,name=iPhone 16,OS=18.2" \
-            -xcconfig Config/Debug.xcconfig \
+            -derivedDataPath DerivedData \
             -only-testing:PyramidTests \
             CODE_SIGNING_ALLOWED=NO \
             | xcpretty
 
-      - name: UI Test
+  ui-test-auth:
+    name: UI Tests (Auth)
+    needs: build
+    runs-on: macos-14
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_16.2.app
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: derived-data
+          path: ios/DerivedData/Build/Products
+
+      - name: UI Test — Auth
         working-directory: ios
         env:
           UI_TEST_EMAIL: ${{ secrets.UI_TEST_EMAIL }}
           UI_TEST_PASSWORD: ${{ secrets.UI_TEST_PASSWORD }}
         run: |
           set -o pipefail
-          xcodebuild test \
+          xcodebuild test-without-building \
             -project Pyramid.xcodeproj \
             -scheme Pyramid \
             -destination "platform=iOS Simulator,name=iPhone 16,OS=18.2" \
-            -xcconfig Config/Debug.xcconfig \
-            -only-testing:PyramidUITests \
+            -derivedDataPath DerivedData \
+            -only-testing:PyramidUITests/PyramidUITests \
+            -only-testing:PyramidUITests/AuthFlowUITests \
+            CODE_SIGNING_ALLOWED=NO \
+            | xcpretty
+
+  ui-test-league:
+    name: UI Tests (League)
+    needs: build
+    runs-on: macos-14
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_16.2.app
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: derived-data
+          path: ios/DerivedData/Build/Products
+
+      - name: UI Test — League
+        working-directory: ios
+        env:
+          UI_TEST_EMAIL: ${{ secrets.UI_TEST_EMAIL }}
+          UI_TEST_PASSWORD: ${{ secrets.UI_TEST_PASSWORD }}
+        run: |
+          set -o pipefail
+          xcodebuild test-without-building \
+            -project Pyramid.xcodeproj \
+            -scheme Pyramid \
+            -destination "platform=iOS Simulator,name=iPhone 16,OS=18.2" \
+            -derivedDataPath DerivedData \
+            -only-testing:PyramidUITests/CreateLeagueUITests \
+            CODE_SIGNING_ALLOWED=NO \
+            | xcpretty
+
+  ui-test-picks:
+    name: UI Tests (Picks)
+    needs: build
+    runs-on: macos-14
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_16.2.app
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: derived-data
+          path: ios/DerivedData/Build/Products
+
+      - name: UI Test — Picks
+        working-directory: ios
+        env:
+          UI_TEST_EMAIL: ${{ secrets.UI_TEST_EMAIL }}
+          UI_TEST_PASSWORD: ${{ secrets.UI_TEST_PASSWORD }}
+        run: |
+          set -o pipefail
+          xcodebuild test-without-building \
+            -project Pyramid.xcodeproj \
+            -scheme Pyramid \
+            -destination "platform=iOS Simulator,name=iPhone 16,OS=18.2" \
+            -derivedDataPath DerivedData \
+            -only-testing:PyramidUITests/SubmitPickUITests \
             CODE_SIGNING_ALLOWED=NO \
             | xcpretty
 
@@ -85,6 +218,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Cache Homebrew packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/Library/Caches/Homebrew
+            /usr/local/Cellar/swiftlint
+          key: brew-swiftlint-${{ runner.os }}
 
       - name: Install SwiftLint
         run: brew install swiftlint

@@ -16,7 +16,7 @@ enum AuthTestHelper {
     /// visible. No-ops if already authenticated.
     static func signInIfNeeded(
         app: XCUIApplication,
-        timeout: TimeInterval = 15
+        timeout: TimeInterval = 5
     ) {
         let signInButton = app.buttons["Sign In"]
 
@@ -49,7 +49,7 @@ enum AuthTestHelper {
 
         // Wait for the tab bar to appear (indicates successful auth)
         let leaguesTab = app.tabBars.buttons["Leagues"]
-        let signedIn = leaguesTab.waitForExistence(timeout: 15)
+        let signedIn = leaguesTab.waitForExistence(timeout: 5)
 
         // If sign-in failed (e.g. no backend), log but do not
         // hard-fail — scaffold tests are expected to run without
