@@ -31,19 +31,33 @@ struct LivePickContext: Identifiable, Equatable {
     let pick: Pick
     let fixture: Fixture
     let leagueName: String
+    /// The user's membership status in this league (active/eliminated/winner).
+    var memberStatus: LeagueMember.MemberStatus?
     var id: String { pick.id }
 
+    /// Whether the user is surviving based on live scores.
+    /// Falls back to `memberStatus` when fixture scores are unavailable
+    /// (e.g. during FT status transition edge cases).
     var isSurviving: Bool? {
-        guard fixture.status.isLive || fixture.status.isFinished else {
-            return nil
+        if fixture.status.isLive || fixture.status.isFinished {
+            let homeScore = fixture.homeScore ?? 0
+            let awayScore = fixture.awayScore ?? 0
+            if pick.teamId == fixture.homeTeamId {
+                return homeScore >= awayScore
+            } else {
+                return awayScore >= homeScore
+            }
         }
-        let homeScore = fixture.homeScore ?? 0
-        let awayScore = fixture.awayScore ?? 0
-        if pick.teamId == fixture.homeTeamId {
-            return homeScore >= awayScore
-        } else {
-            return awayScore >= homeScore
+        // Fallback: use league member status for settled state
+        if let memberStatus {
+            switch memberStatus {
+            case .active, .winner:
+                return true
+            case .eliminated:
+                return false
+            }
         }
+        return nil
     }
 }
 

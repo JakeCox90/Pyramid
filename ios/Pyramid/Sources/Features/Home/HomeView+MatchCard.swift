@@ -23,6 +23,23 @@ extension HomeView {
         let phase = matchCardPhase(fixture)
         let showScores = phase == .live || phase == .finished
 
+        // On the homepage, the hero card always shows the user's
+        // own pick. After settlement it must resolve to survived
+        // or eliminated — never show a bare "FT" flag.
+        let survived: Bool? = {
+            switch phase {
+            case .finished:
+                // isSurviving now falls back to memberStatus
+                // when scores are unavailable
+                return context.isSurviving
+                    ?? (context.memberStatus != .eliminated)
+            case .live:
+                return context.isSurviving
+            case .preMatch:
+                return nil
+            }
+        }()
+
         MatchCard(
             pickedTeamName: pickedTeam,
             pickedTeamLogo: badgeLogo,
@@ -36,8 +53,7 @@ extension HomeView {
             homeScore: showScores ? fixture.homeScore : nil,
             awayScore: showScores ? fixture.awayScore : nil,
             phase: phase,
-            survived: phase == .finished
-                ? context.isSurviving : nil,
+            survived: survived,
             isLocked: viewModel.isGameweekLocked,
             buttonTitle: "CHANGE PICK",
             onButtonTap: { showPicks = true }
