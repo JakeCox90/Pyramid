@@ -13,13 +13,16 @@ final class LeagueDetailViewModel: ObservableObject {
     @Published var eliminationPick: MemberPick?
     @Published var eliminationFixture: Fixture?
     @Published var eliminationGameweekName: String?
+    @Published var isLeaving = false
+    @Published var didLeaveLeague = false
 
     let league: League
 
     private let standingsService: StandingsServiceProtocol
-    private let pickService: PickServiceProtocol
+    let pickService: PickServiceProtocol
     private let activityFeedService: ActivityFeedServiceProtocol
-    private var pollingTask: Task<Void, Never>?
+    private let leagueService: LeagueServiceProtocol
+    var pollingTask: Task<Void, Never>?
 
     var sortedMembers: [LeagueMember] {
         members.sorted {
@@ -100,12 +103,14 @@ final class LeagueDetailViewModel: ObservableObject {
         league: League,
         standingsService: StandingsServiceProtocol = StandingsService(),
         pickService: PickServiceProtocol = PickService(),
-        activityFeedService: ActivityFeedServiceProtocol = ActivityFeedService()
+        activityFeedService: ActivityFeedServiceProtocol = ActivityFeedService(),
+        leagueService: LeagueServiceProtocol = LeagueService()
     ) {
         self.league = league
         self.standingsService = standingsService
         self.pickService = pickService
         self.activityFeedService = activityFeedService
+        self.leagueService = leagueService
     }
 
     func load() async {
@@ -188,45 +193,17 @@ final class LeagueDetailViewModel: ObservableObject {
         return deadline <= Date()
     }
 
-    // MARK: - Polling
+    // MARK: - Leave League
 
-    func startPolling() {
-        guard isDeadlinePassed() else { return }
-        pollingTask?.cancel()
-        pollingTask = Task { [weak self] in
-            while !Task.isCancelled {
-                guard let self else { return }
-                if !self.hasLiveFixtures {
-                    return
-                }
-                try? await Task.sleep(nanoseconds: 60_000_000_000)
-                if Task.isCancelled { return }
-                await self.silentRefreshFixtures()
-            }
-        }
-    }
-
-    func stopPolling() {
-        pollingTask?.cancel()
-        pollingTask = nil
-    }
-
-    @discardableResult
-    func refreshFixtures() async throws -> [Fixture] {
-        guard let gameweek = currentGameweek else { return [] }
-        let fetched = try await pickService.fetchFixtures(for: gameweek.id)
-        fixtures = Dictionary(uniqueKeysWithValues: fetched.map { ($0.id, $0) })
-        return fetched
-    }
-
-    private func silentRefreshFixtures() async {
+    func leaveLeague() async {
+        isLeaving = true
         do {
-            try await refreshFixtures()
-            if !hasLiveFixtures {
-                stopPolling()
-            }
+            try await leagueService.leaveLeague(leagueId: league.id)
+            didLeaveLeague = true
         } catch {
-            Log.picks.warning("Live score refresh failed: \(error.localizedDescription)")
+            errorMessage = AppError.from(error).userMessage
         }
+        isLeaving = false
     }
+
 }
