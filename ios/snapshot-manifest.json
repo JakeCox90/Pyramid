@@ -1,0 +1,44 @@
+{
+  "mappings": [
+    {
+      "sources": ["**/MatchCard*.swift", "**/MatchStatsPanel.swift"],
+      "testClass": "MatchCardSnapshotTests",
+      "label": "Match Cards"
+    },
+    {
+      "sources": ["**/PickCard*.swift", "**/PickCarousel*.swift", "**/MatchCarouselCard*.swift", "**/FixturePickRow*.swift"],
+      "testClass": "PickCardSnapshotTests",
+      "label": "Pick Cards"
+    },
+    {
+      "sources": ["**/LeagueCard*.swift"],
+      "testClass": "LeagueCardSnapshotTests",
+      "label": "League Cards"
+    },
+    {
+      "sources": ["**/ButtonThemeStyle*.swift"],
+      "testClass": "ButtonSnapshotTests",
+      "label": "Buttons"
+    },
+    {
+      "sources": ["**/InputField*.swift"],
+      "testClass": "InputSnapshotTests",
+      "label": "Inputs"
+    },
+    {
+      "sources": ["**/Flag.swift", "**/LiveFlag*.swift"],
+      "testClass": "FlagSnapshotTests",
+      "label": "Flags & Pills"
+    },
+    {
+      "sources": ["**/Toast*.swift"],
+      "testClass": "FeedbackSnapshotTests",
+      "label": "Feedback"
+    },
+    {
+      "sources": ["**/ThemeColors.swift", "**/ThemeSpacing.swift", "**/ThemeTypography.swift"],
+      "testClass": "TokenSnapshotTests",
+      "label": "Design Tokens"
+    }
+  ]
+}
