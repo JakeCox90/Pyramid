@@ -7,70 +7,38 @@
 
 | Ticket | Branch | Agent | Status | Key Files | Started |
 |--------|--------|-------|--------|-----------|---------|
-| PYR-42 | feature/PYR-42-sso-fix | iOS | In Progress | config.toml, .env.example, AuthService, Supabase dashboard | 2026-03-23 |
-| PYR-106 | feature/PYR-106-global-leaderboard | iOS+Backend | In Progress | supabase/migrations/, LeaderboardView, LeaderboardViewModel, LeaderboardService | 2026-03-23 |
-| PYR-131 | feature/PYR-131-pick-carousel | iOS | In Progress | PickCarouselView, MatchCarouselCard, PicksView, PicksViewModel | 2026-03-21 |
-| PYR-133 | feature/PYR-131-pick-carousel | iOS | In Progress | MatchCarouselCard, MatchCarouselCardStats | 2026-03-21 |
-| PYR-139 | feature/PYR-131-pick-carousel | iOS | In Progress | HomeData, HomeService | 2026-03-22 |
-| PYR-140 | feature/PYR-131-pick-carousel | iOS | In Progress | HomeViewModel | 2026-03-22 |
-| PYR-141 | feature/PYR-131-pick-carousel | iOS | In Progress | HomeView+Countdown | 2026-03-22 |
-| PYR-142 | feature/PYR-131-pick-carousel | iOS | In Progress | HomeView+MatchCard | 2026-03-22 |
-| PYR-143 | feature/PYR-131-pick-carousel | iOS | In Progress | HomeView+PlayersRemaining, HomeView+PreviousPicks | 2026-03-22 |
-| PYR-144 | feature/PYR-131-pick-carousel | iOS | In Progress | HomeView | 2026-03-22 |
-| PYR-96 | feature/PYR-96-player-avatars | iOS | In Progress | LeagueMember, StandingsService, LeagueDetailView+Row, LeagueCompleteView | 2026-03-23 |
-| PYR-105 | feature/PYR-105-personal-stats | iOS | In Progress | ProfileStats, ProfileService, ProfileView+Stats | 2026-03-23 |
-| PYR-63 | feature/PYR-63-ui-test-scaffold | iOS | In Progress | PyramidUITests/*, AccessibilityIdentifiers.swift, project.yml, ios-ci.yml | 2026-03-23 |
-| PYR-147 | feature/PYR-147-fix-pick-list-live-scores | iOS | In Progress | FixturePickRow, usage-guide.md | 2026-03-24 |
-| PYR-93 | feature/PYR-93-activity-feed | iOS | In Review | ActivityEvent, ActivityFeedService, LeagueDetailView+Activity, LeagueDetailViewModel | 2026-03-23 |
-| PYR-150 | feature/PYR-150-component-browser-tabs | iOS | In Progress | ComponentBrowserView*, DesignSystemBrowser/ | 2026-03-24 |
-| PYR-167 | feature/PYR-167-extract-venue | Backend+iOS | In Review | fixtures migration, sync-fixtures, Fixture.swift, FixtureMetadata.swift, service queries | 2026-03-25 |
+| — | — | — | — | — | — |
 
-> **Note:** PYR-131/133/139/140/141-144 are all on the same branch. This is a grouped delivery — tightly coupled pick carousel + homepage redesign work. All commits unmerged as of 2026-03-23.
+> No active agent work as of 2026-03-26.
+
+## Recommended Queue (2026-03-26)
+
+<!-- Next agent session: pick from this queue in order -->
+<!-- 1. PYR-182: Homepage hero card survived/eliminated variant (Homepage, High, 2pts) -->
+<!-- 2. PYR-186: Leave league with confirmation modal (Community, High, 2pts) — DONE -->
+<!-- 3. PYR-99: Survival celebration reactions (Community, Medium, 2pts) -->
+<!-- 4. PYR-161: Post-elimination spectator experience (Community, Medium, 2pts) -->
+<!-- 5. PYR-183: Players remaining redesign (Homepage, High, 3pts) -->
+<!-- 6. PYR-103: Shared tension moments (Community, Medium, 2pts) -->
 
 ## Recently Completed
 
 | Ticket | Branch | PR | Merged |
 |--------|--------|----|--------|
-| PYR-104 | feature/PYR-104-user-stats | In Review | 2026-03-23 |
-| PYR-122 | feature/PYR-122-picks-redesign | #82 | 2026-03-21 |
-| PYR-91 | feature/PYR-91-live-match-day-card | #65 | 2026-03-19 |
-| PYR-92 | feature/PYR-92-last-gw-results | #66 | 2026-03-20 |
-| PYR-116 | feature/PYR-116-touch-targets | #70 | 2026-03-19 |
-| PYR-117 | feature/PYR-117-voiceover-labels | #76 | 2026-03-20 |
-| PYR-118 | feature/PYR-118-hardcoded-colors | #69 | 2026-03-20 |
-| PYR-119 | feature/PYR-119-shared-state-views | #71 | 2026-03-20 |
-| PYR-120 | feature/PYR-120-session-timeout | #73 | 2026-03-20 |
-| PYR-121 | feature/PYR-121-pick-loading | #72 | 2026-03-20 |
-| PYR-122 | feature/PYR-122-error-messages | #67 | 2026-03-20 |
-| PYR-123 | feature/PYR-123-wallet-ux | #74 | 2026-03-20 |
-| PYR-124 | feature/PYR-124-dark-mode-root | #68 | 2026-03-20 |
-| PYR-125 | feature/PYR-125-reduce-motion | #75 | 2026-03-20 |
-| PYR-127 | feature/PYR-127-dev-seed | #77 | 2026-03-20 |
-| PYR-128 | feature/PYR-128-reset-edge-function | #78 | 2026-03-20 |
-| PYR-129 | feature/PYR-129-debug-reset-ui | #79 | 2026-03-20 |
-| PYR-130 | feature/PYR-130-reset-dev-script | #80 | 2026-03-20 |
-| PYR-39 | feature/PYR-39-social-sign-on | #63 | 2026-03-14 |
-| PYR-77 | feature/PYR-77-profile-overhaul | #62 | 2026-03-14 |
-| PYR-74 | feature/PYR-74-my-pick-card-agent | #60 | 2026-03-13 |
-| PYR-86 | feature/PYR-86-home-service | #59 | 2026-03-13 |
-| PYR-73 | feature/PYR-73-live-scores | #57 | 2026-03-12 |
-| PYR-85 | feature/PYR-85-home-tab | #48 | 2026-03-12 |
-| PYR-79 | feature/PYR-79-pick-history | #55 | 2026-03-12 |
-| PYR-78 | feature/PYR-78-league-share | #54 | 2026-03-12 |
-| PYR-75 | feature/PYR-75-pick-celebration | #52 | 2026-03-11 |
-| PYR-72 | feature/PYR-72-enhanced-empty-state | #50 | 2026-03-11 |
-| PYR-80 | feature/PYR-80-browse-free-leagues | #37 | 2026-03-10 |
-| PYR-70 | feature/PYR-70-sign-out | #38 | 2026-03-10 |
-| PYR-68 | feature/PYR-68-gameweek-advancement | #39 | 2026-03-10 |
-| PYR-66 | feature/PYR-66-winner-detection | #40 | 2026-03-10 |
-| PYR-69 | feature/PYR-69-league-completion | #44 | 2026-03-11 |
-| PYR-67 | feature/PYR-67-gw38-cutoff | #43 | 2026-03-11 |
-| PYR-83 | feature/PYR-83-club-badges | #41 | 2026-03-10 |
-| PYR-71 | feature/PYR-71-onboarding | #45 | 2026-03-11 |
-| PYR-84 | fix/PYR-84-pick-title-flash | #46 | 2026-03-11 |
-| PYR-62 | feature/PYR-62-results-history | #33 | 2026-03-09 |
-| PYR-49 | feature/PYR-49-usage-guide | #22 | 2026-03-08 |
-| PYR-46 | feature/PYR-46-swiftui-patterns | #23 | 2026-03-08 |
+| PYR-187 | feature/PYR-187-league-detail-tabs | #114 | 2026-03-26 |
+| PYR-186 | feature/PYR-186-leave-league | #113 | 2026-03-26 |
+| PYR-188 | feature/PYR-188-recap-close-button | #115 | 2026-03-26 |
+| PYR-185 | feature/PYR-185-elimination-card-league-state | #112 | 2026-03-26 |
+| PYR-170 | feature/PYR-170-paid-features-toggle | #110 | 2026-03-26 |
+| CI | chore/ci-speedup | #116 | 2026-03-26 |
+| PYR-149 | feature/PYR-149-wire-odds-v2 | #109 | 2026-03-25 |
+| PYR-169 | feature/PYR-169-remove-broadcast | #108 | 2026-03-25 |
+| PYR-167 | feature/PYR-167-extract-venue | #107 | 2026-03-25 |
+| PYR-98 | feature/PYR-98-elimination-cards | #106 | 2026-03-25 |
+| PYR-160 | feature/PYR-160-wire-wallet | #104 | 2026-03-25 |
+| PYR-162 | feature/PYR-162-gw-recap-empty-state | #103 | 2026-03-25 |
+| PYR-163 | feature/PYR-163-delete-picksheaderview | #102 | 2026-03-25 |
+| PYR-97 | feature/PYR-97-pick-reveal-animation | #101 | 2026-03-25 |
 
 ## Rules
 

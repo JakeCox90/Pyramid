@@ -22,7 +22,8 @@ struct MatchCard: View {
 
         // MARK: - Colour Config
 
-        /// 225° gradient start — green for live, purple otherwise
+        /// 225° gradient start — green for live, purple otherwise.
+        /// Use `gradientStart(survived:)` for outcome-aware colour.
         var gradientStart: Color {
             switch self {
             case .live:
@@ -32,9 +33,29 @@ struct MatchCard: View {
             }
         }
 
+        /// Outcome-aware gradient start for finished cards.
+        /// Survived = green, eliminated = red, nil = purple.
+        func gradientStart(survived: Bool?) -> Color {
+            guard self == .finished, let survived else {
+                return gradientStart
+            }
+            return survived
+                ? Theme.Color.Match.Gradient.liveStart
+                : Theme.Color.Elimination.gradientStart
+        }
+
         /// 225° gradient end — shared across all phases
         var gradientEnd: Color {
             Theme.Color.Match.Gradient.purpleEnd
+        }
+
+        /// Outcome-aware gradient end for eliminated cards.
+        func gradientEnd(survived: Bool?) -> Color {
+            guard self == .finished,
+                  let survived, !survived else {
+                return gradientEnd
+            }
+            return Theme.Color.Elimination.gradientEnd
         }
 
         /// VS circle fill (pre-match only)
@@ -150,11 +171,15 @@ extension MatchCard {
         LinearGradient(
             stops: [
                 .init(
-                    color: phase.gradientStart,
+                    color: phase.gradientStart(
+                        survived: survived
+                    ),
                     location: 0.0
                 ),
                 .init(
-                    color: phase.gradientEnd,
+                    color: phase.gradientEnd(
+                        survived: survived
+                    ),
                     location: 0.72
                 )
             ],

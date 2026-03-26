@@ -112,6 +112,30 @@ extension HomeViewModel {
     }
 }
 
+// MARK: - Previous Picks
+
+extension HomeViewModel {
+    /// Previous pick results for the current or selected GW,
+    /// filtered to the selected league.
+    var previousPicks: [LeagueResult] {
+        guard let league = selectedLeague
+        else { return [] }
+        return previousPicks(for: league)
+    }
+
+    func previousPicks(
+        for league: League
+    ) -> [LeagueResult] {
+        let all: [LeagueResult]
+        if selectedGameweek?.id == homeData?.gameweek?.id {
+            all = homeData?.lastGwResults ?? []
+        } else {
+            all = selectedGwPicks
+        }
+        return all.filter { $0.leagueId == league.id }
+    }
+}
+
 // MARK: - Polling
 
 extension HomeViewModel {
