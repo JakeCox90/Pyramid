@@ -4,6 +4,7 @@ struct GameweekStoryView: View {
     @StateObject private var viewModel: GameweekStoryViewModel
     @Environment(\.dismiss)
     private var dismiss
+    @State private var dragOffset: CGFloat = 0
 
     init(leagueId: String, gameweek: Int, leagueName: String, currentUserId: String?) {
         _viewModel = StateObject(wrappedValue: GameweekStoryViewModel(
@@ -40,6 +41,22 @@ struct GameweekStoryView: View {
         }
     }
 
+    private var closeButton: some View {
+        Button {
+            dismiss()
+        } label: {
+            Image(systemName: "xmark")
+                .font(.system(size: 14, weight: .bold))
+                .foregroundStyle(.white)
+                .frame(width: 30, height: 30)
+                .background(
+                    Circle()
+                        .fill(.white.opacity(0.2))
+                )
+        }
+        .accessibilityLabel("Close recap")
+    }
+
     private var storyContent: some View {
         ZStack {
             ForEach(Array(viewModel.cards.enumerated()), id: \.element.id) { index, card in
@@ -50,9 +67,12 @@ struct GameweekStoryView: View {
             }
 
             VStack {
-                progressBars
-                    .padding(.horizontal, 16)
-                    .padding(.top, 16)
+                HStack(alignment: .top) {
+                    progressBars
+                    closeButton
+                }
+                .padding(.horizontal, 16)
+                .padding(.top, 16)
                 Spacer()
 
                 if viewModel.currentIndex == viewModel.totalCards - 1 {
@@ -85,6 +105,24 @@ struct GameweekStoryView: View {
                 }
             }
         }
+        .offset(y: dragOffset)
+        .gesture(
+            DragGesture()
+                .onChanged { value in
+                    if value.translation.height > 0 {
+                        dragOffset = value.translation.height
+                    }
+                }
+                .onEnded { value in
+                    if value.translation.height > 120 {
+                        dismiss()
+                    } else {
+                        withAnimation(.easeOut(duration: 0.2)) {
+                            dragOffset = 0
+                        }
+                    }
+                }
+        )
     }
 
     private var progressBars: some View {
