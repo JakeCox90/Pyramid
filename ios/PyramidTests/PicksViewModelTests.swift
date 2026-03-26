@@ -201,6 +201,7 @@ final class MockPickService: PickServiceProtocol {
     private let usedTeamIds: Set<Int>
     private let shouldFail: Bool
     private let submitShouldFail: Bool
+    private let customFixtures: [Fixture]?
 
     var submitPickCalled = false
     var lastSubmitLeagueId: String?
@@ -213,13 +214,15 @@ final class MockPickService: PickServiceProtocol {
         currentPick: Pick? = nil,
         usedTeamIds: Set<Int> = [],
         shouldFail: Bool = false,
-        submitShouldFail: Bool = false
+        submitShouldFail: Bool = false,
+        fixtures: [Fixture]? = nil
     ) {
         self.gameweek = gameweek
         self.currentPick = currentPick
         self.usedTeamIds = usedTeamIds
         self.shouldFail = shouldFail
         self.submitShouldFail = submitShouldFail
+        self.customFixtures = fixtures
     }
 
     func fetchCurrentGameweek() async throws -> Gameweek {
@@ -229,6 +232,7 @@ final class MockPickService: PickServiceProtocol {
 
     func fetchFixtures(for gameweekId: Int) async throws -> [Fixture] {
         if shouldFail { throw URLError(.badServerResponse) }
+        if let customFixtures { return customFixtures }
         return [
             Fixture(id: 1, gameweekId: gameweekId,
                     homeTeamId: 100, homeTeamName: "Arsenal", homeTeamShort: "ARS",

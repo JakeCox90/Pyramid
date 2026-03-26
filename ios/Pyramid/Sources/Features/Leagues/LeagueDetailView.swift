@@ -61,7 +61,8 @@ struct LeagueDetailView: View {
                         Image(systemName: Theme.Icon.Pick.gameweek)
                     }
                     .accessibilityLabel("View results")
-                    if viewModel.league.status == .active {
+                    if viewModel.league.status == .active
+                        && !viewModel.isCurrentUserEliminated {
                         Button("My Pick") { showPicks = true }
                             .themed(
                                 .primary,

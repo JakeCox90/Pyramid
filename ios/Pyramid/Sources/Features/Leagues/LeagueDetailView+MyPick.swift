@@ -4,7 +4,10 @@ import SwiftUI
 
 extension LeagueDetailView {
     @ViewBuilder var myPickCard: some View {
-        if viewModel.isDeadlinePassed(), let pick = viewModel.myPick {
+        if viewModel.isCurrentUserEliminated {
+            eliminationCardContent
+                .padding(.horizontal, Theme.Spacing.s40)
+        } else if viewModel.isDeadlinePassed(), let pick = viewModel.myPick {
             Card {
                 if let fixture = viewModel.myFixture {
                     if fixture.status.isLive {
@@ -23,6 +26,34 @@ extension LeagueDetailView {
                     .strokeBorder(survivalBorderColor(pick: pick), lineWidth: 1.5)
             )
             .padding(.horizontal, Theme.Spacing.s40)
+        }
+    }
+
+    @ViewBuilder private var eliminationCardContent: some View {
+        if let pick = viewModel.eliminationPick,
+           let fixture = viewModel.eliminationFixture,
+           let gwName = viewModel.eliminationGameweekName {
+            let pickedHome = pick.teamId == fixture.homeTeamId
+            EliminationCard(
+                leagueName: viewModel.league.name,
+                gameweekName: gwName,
+                pickedTeamName: pick.teamName,
+                pickedTeamLogo: pickedHome
+                    ? fixture.homeTeamLogo
+                    : fixture.awayTeamLogo,
+                opponentName: pickedHome
+                    ? fixture.awayTeamName
+                    : fixture.homeTeamName,
+                homeTeamName: fixture.homeTeamName,
+                homeTeamShort: fixture.homeTeamShort,
+                homeTeamLogo: fixture.homeTeamLogo,
+                awayTeamName: fixture.awayTeamName,
+                awayTeamShort: fixture.awayTeamShort,
+                awayTeamLogo: fixture.awayTeamLogo,
+                homeScore: fixture.homeScore ?? 0,
+                awayScore: fixture.awayScore ?? 0,
+                pickedHome: pickedHome
+            )
         }
     }
 

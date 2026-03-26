@@ -140,6 +140,76 @@ final class LeagueDetailViewModelTests: XCTestCase {
         XCTAssertEqual(vm.eliminatedCount, 1)
     }
 
+    // MARK: - isCurrentUserEliminated
+
+    func testIsCurrentUserEliminatedReturnsTrueWhenEliminated() async {
+        let mock = MockStandingsService(members: Self.activeMembers)
+        let vm = LeagueDetailViewModel(
+            league: Self.league,
+            standingsService: mock,
+            pickService: MockPickService()
+        )
+        vm.currentUserId = "u2"
+
+        await vm.load()
+
+        XCTAssertTrue(vm.isCurrentUserEliminated)
+        XCTAssertNotNil(vm.currentUserMember)
+        XCTAssertEqual(vm.currentUserMember?.status, .eliminated)
+    }
+
+    func testIsCurrentUserEliminatedReturnsFalseWhenActive() async {
+        let mock = MockStandingsService(members: Self.activeMembers)
+        let vm = LeagueDetailViewModel(
+            league: Self.league,
+            standingsService: mock,
+            pickService: MockPickService()
+        )
+        vm.currentUserId = "u1"
+
+        await vm.load()
+
+        XCTAssertFalse(vm.isCurrentUserEliminated)
+    }
+
+    func testLoadEliminationDataSetsPickAndFixture() async {
+        let eliminationPick = MemberPick(
+            userId: "u2", teamName: "Chelsea",
+            result: .eliminated, isLocked: true, gameweekId: 5,
+            fixtureId: 99, teamId: 40
+        )
+        let eliminationFixture = Fixture(
+            id: 99, gameweekId: 5, homeTeamId: 40,
+            homeTeamName: "Chelsea", homeTeamShort: "CHE",
+            homeTeamLogo: nil, awayTeamId: 50,
+            awayTeamName: "Man City", awayTeamShort: "MCI",
+            awayTeamLogo: nil,
+            kickoffAt: Date().addingTimeInterval(-86400),
+            status: .fullTime, homeScore: 0, awayScore: 2,
+            venue: "Stamford Bridge",
+            homeWinProb: nil, drawProb: nil, awayWinProb: nil
+        )
+        let mock = MockStandingsService(
+            members: Self.activeMembers,
+            lockedPicks: [eliminationPick]
+        )
+        let pickService = MockPickService(fixtures: [eliminationFixture])
+        let vm = LeagueDetailViewModel(
+            league: Self.league,
+            standingsService: mock,
+            pickService: pickService
+        )
+        vm.currentUserId = "u2"
+
+        await vm.load()
+
+        XCTAssertNotNil(vm.eliminationPick)
+        XCTAssertEqual(vm.eliminationPick?.teamName, "Chelsea")
+        XCTAssertNotNil(vm.eliminationFixture)
+        XCTAssertEqual(vm.eliminationFixture?.id, 99)
+        XCTAssertEqual(vm.eliminationGameweekName, "Gameweek 5")
+    }
+
     // MARK: - isDeadlinePassed
 
     func testDeadlinePassedReturnsTrueWhenInPast() async {
