@@ -1,0 +1,126 @@
+name: Visual QA Snapshots
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+concurrency:
+  group: snapshots-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  snapshots:
+    name: Generate Snapshots
+    runs-on: macos-14
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine changed snapshot targets
+        id: manifest
+        run: |
+          CHANGED_FILES=$(git diff --name-only origin/main...HEAD)
+          MANIFEST="ios/snapshot-manifest.json"
+
+          MATCHED_CLASSES="[]"
+          MATCHED_LABELS="[]"
+
+          while IFS= read -r mapping; do
+            LABEL=$(echo "$mapping" | jq -r '.label')
+            TEST_CLASS=$(echo "$mapping" | jq -r '.testClass')
+            SOURCES=$(echo "$mapping" | jq -r '.sources[]')
+
+            MATCH=false
+            for pattern in $SOURCES; do
+              REGEX=$(echo "$pattern" | sed 's/\*\*/.*/' | sed 's/\*/.*/g')
+              if echo "$CHANGED_FILES" | grep -qE "$REGEX"; then
+                MATCH=true
+                break
+              fi
+            done
+
+            if [ "$MATCH" = true ]; then
+              MATCHED_CLASSES=$(echo "$MATCHED_CLASSES" | jq --arg c "$TEST_CLASS" '. + [$c]')
+              MATCHED_LABELS=$(echo "$MATCHED_LABELS" | jq --arg l "$LABEL" '. + [$l]')
+            fi
+          done < <(jq -c '.mappings[]' "$MANIFEST")
+
+          echo "classes=$(echo "$MATCHED_CLASSES" | jq -c '.')" >> "$GITHUB_OUTPUT"
+          echo "labels=$(echo "$MATCHED_LABELS" | jq -c '.')" >> "$GITHUB_OUTPUT"
+
+          COUNT=$(echo "$MATCHED_CLASSES" | jq 'length')
+          echo "count=$COUNT" >> "$GITHUB_OUTPUT"
+          echo "Matched $COUNT snapshot test classes"
+
+      - name: Early exit if no UI changes
+        if: steps.manifest.outputs.count == '0'
+        run: echo "No UI components changed — skipping snapshots"
+
+      - name: Select Xcode
+        if: steps.manifest.outputs.count != '0'
+        run: sudo xcode-select -s /Applications/Xcode_16.2.app
+
+      - name: Install xcodegen
+        if: steps.manifest.outputs.count != '0'
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        if: steps.manifest.outputs.count != '0'
+        working-directory: ios
+        run: xcodegen generate
+
+      - name: Write dev xcconfig
+        if: steps.manifest.outputs.count != '0'
+        working-directory: ios/Config
+        run: |
+          echo "SUPABASE_URL = ${{ secrets.SUPABASE_URL_DEV }}" > Debug.xcconfig
+          echo "SUPABASE_ANON_KEY = ${{ secrets.SUPABASE_ANON_KEY_DEV }}" >> Debug.xcconfig
+
+      - name: Run snapshot tests
+        if: steps.manifest.outputs.count != '0'
+        working-directory: ios
+        # Record mode causes expected "failures" — snapshots are still generated
+        continue-on-error: true
+        run: |
+          set -o pipefail
+
+          ONLY_TESTING=""
+          for class in $(echo '${{ steps.manifest.outputs.classes }}' | jq -r '.[]'); do
+            ONLY_TESTING="$ONLY_TESTING -only-testing:PyramidSnapshotTests/$class"
+          done
+
+          xcodebuild test \
+            -project Pyramid.xcodeproj \
+            -scheme Pyramid \
+            -destination "platform=iOS Simulator,name=iPhone 16,OS=18.2" \
+            -xcconfig Config/Debug.xcconfig \
+            $ONLY_TESTING \
+            CODE_SIGNING_ALLOWED=NO \
+            | xcpretty
+
+      - name: Upload snapshot artifacts
+        if: steps.manifest.outputs.count != '0'
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-qa-snapshots
+          path: ios/PyramidSnapshotTests/__Snapshots__/**/*.png
+          retention-days: 14
+
+      - name: Post PR comment with snapshots
+        if: steps.manifest.outputs.count != '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          chmod +x scripts/post-snapshots.sh
+          ./scripts/post-snapshots.sh \
+            ios/snapshot-manifest.json \
+            ios/PyramidSnapshotTests \
+            ${{ github.event.pull_request.number }} \
+            '${{ steps.manifest.outputs.labels }}'
