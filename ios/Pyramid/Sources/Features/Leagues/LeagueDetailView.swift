@@ -11,7 +11,8 @@ struct LeagueDetailView: View {
     @State var showStory = false
     @State var showPickReveal = false
     @State var showLeaveConfirmation = false
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.dismiss)
+    private var dismiss
 
     init(league: League) {
         _viewModel = StateObject(wrappedValue: LeagueDetailViewModel(league: league))
