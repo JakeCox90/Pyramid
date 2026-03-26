@@ -1,89 +1,58 @@
 #if DEBUG
 import SwiftUI
 
-// MARK: - Button Tab
+struct ButtonDemo: View {
+    @State private var variant: ButtonVariant = .primary
+    @State private var isLoading = false
+    @State private var isDisabled = false
+    @State private var fullWidth = true
+    @State private var label = "Button"
 
-extension ComponentBrowserView {
-    var buttonContent: some View {
-        Group {
-            buttonsSection
-            iconButtonsSection
-        }
-    }
-}
-
-// MARK: - Buttons
-
-private extension ComponentBrowserView {
-    var buttonsSection: some View {
-        VStack(
-            alignment: .leading,
-            spacing: Theme.Spacing.s30
-        ) {
-            ComponentHeader(title: "Button (.themed)")
-
-            Button("Primary") {}
-                .themed(.primary)
-            Button("Secondary") {}
-                .themed(.secondary)
-            Button("Destructive") {}
-                .themed(.destructive)
-            Button("Ghost") {}
-                .themed(.ghost)
-            Button("Loading") {}
-                .themed(.primary, isLoading: true)
-            Button("Disabled") {}
-                .themed(.primary)
-                .disabled(true)
-            Button("Compact") {}
-                .themed(.primary, fullWidth: false)
-        }
-    }
-}
-
-// MARK: - Icon Buttons
-
-private extension ComponentBrowserView {
-    var iconButtonsSection: some View {
-        VStack(
-            alignment: .leading,
-            spacing: Theme.Spacing.s30
-        ) {
-            ComponentHeader(title: "IconButton")
-
-            HStack(spacing: Theme.Spacing.s30) {
-                IconButton(
-                    icon: Theme.Icon.Navigation.add,
-                    variant: .primary
-                ) {}
-                IconButton(
-                    icon: Theme.Icon.Action.share,
-                    variant: .secondary
-                ) {}
-                IconButton(
-                    icon: Theme.Icon.Status.failure,
-                    variant: .destructive
-                ) {}
-                IconButton(
-                    icon: Theme.Icon.Navigation
-                        .notifications,
-                    variant: .ghost
-                ) {}
+    var body: some View {
+        DemoPage {
+            Button(label) {}
+                .themed(
+                    variant,
+                    isLoading: isLoading,
+                    fullWidth: fullWidth
+                )
+                .disabled(isDisabled)
+        } config: {
+            ConfigRow(label: "Variant") {
+                Picker("", selection: $variant) {
+                    Text("primary")
+                        .tag(ButtonVariant.primary)
+                    Text("secondary")
+                        .tag(ButtonVariant.secondary)
+                    Text("destructive")
+                        .tag(
+                            ButtonVariant.destructive
+                        )
+                    Text("ghost")
+                        .tag(ButtonVariant.ghost)
+                }
             }
-
-            HStack(spacing: Theme.Spacing.s10) {
-                Text("primary")
-                Spacer()
-                Text("secondary")
-                Spacer()
-                Text("destructive")
-                Spacer()
-                Text("ghost")
+            ConfigDivider()
+            ConfigRow(label: "Label") {
+                TextField("Label", text: $label)
+                    .multilineTextAlignment(.trailing)
+                    .font(Theme.Typography.body)
             }
-            .font(Theme.Typography.caption)
-            .foregroundStyle(
-                Theme.Color.Content.Text.subtle
-            )
+            ConfigDivider()
+            ConfigRow(label: "Loading") {
+                Toggle("", isOn: $isLoading)
+                    .labelsHidden()
+            }
+            ConfigDivider()
+            ConfigRow(label: "Disabled") {
+                Toggle("", isOn: $isDisabled)
+                    .labelsHidden()
+            }
+            ConfigDivider()
+            ConfigRow(label: "Full Width") {
+                Toggle("", isOn: $fullWidth)
+                    .labelsHidden()
+            }
         }
     }
 }

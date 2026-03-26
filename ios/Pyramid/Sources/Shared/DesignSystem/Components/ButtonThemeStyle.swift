@@ -56,13 +56,16 @@ struct ButtonThemeStyle: ButtonStyle {
     ) -> Color {
         switch variant {
         case .primary:
+            if !isEnabled {
+                return Theme.Color.Primary.disabled
+            }
             return pressed
-                ? Color(hex: "E5B24E")
-                : Color(hex: "FFC758")
+                ? Theme.Color.Primary.pressed
+                : Theme.Color.Primary.resting
         case .secondary:
             return pressed
-                ? Color.white.opacity(0.15)
-                : Color.white.opacity(0.1)
+                ? Theme.Color.Border.default
+                : Theme.Color.Surface.Background.highlight
         case .destructive:
             return pressed
                 ? Theme.Color.Status.Error.resting
@@ -70,17 +73,17 @@ struct ButtonThemeStyle: ButtonStyle {
                 : Theme.Color.Status.Error.resting
         case .ghost:
             return pressed
-                ? Color.white.opacity(0.05)
+                ? Theme.Color.Border.light
                 : .clear
         }
     }
 
     private var foregroundColor: Color {
         switch variant {
-        case .primary:     return .black
-        case .secondary:   return .white
-        case .destructive: return .white
-        case .ghost:       return .white
+        case .primary:     return Theme.Color.Primary.text
+        case .secondary:   return Theme.Color.Content.Text.default
+        case .destructive: return Theme.Color.Content.Text.default
+        case .ghost:       return Theme.Color.Content.Text.default
         }
     }
 }

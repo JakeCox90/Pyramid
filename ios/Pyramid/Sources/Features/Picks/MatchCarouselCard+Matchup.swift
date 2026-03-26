@@ -17,7 +17,7 @@ extension MatchCarouselCard {
 
             // Top divider: y:0 → y:217 (above VS circle)
             Rectangle()
-                .fill(Color.white.opacity(0.2))
+                .fill(Theme.Color.Border.default)
                 .frame(width: 1, height: 217)
                 .position(x: midX, y: 108.5)
 
@@ -26,7 +26,7 @@ extension MatchCarouselCard {
             let vsBottom: CGFloat = 257
             let segmentH = geo.size.height - vsBottom
             Rectangle()
-                .fill(Color.white.opacity(0.2))
+                .fill(Theme.Color.Border.default)
                 .frame(width: 1, height: segmentH)
                 .position(
                     x: midX,
@@ -62,7 +62,7 @@ extension MatchCarouselCard {
             // Team names aligned with VS circle center
             Text(fixture.homeTeamShort)
                 .font(Theme.Typography.h3)
-                .foregroundStyle(Color.white)
+                .foregroundStyle(Theme.Color.Content.Text.default)
                 .opacity(homeIsUsed ? 0.4 : 1.0)
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
@@ -71,7 +71,7 @@ extension MatchCarouselCard {
 
             Text(fixture.awayTeamShort)
                 .font(Theme.Typography.h3)
-                .foregroundStyle(Color.white)
+                .foregroundStyle(Theme.Color.Content.Text.default)
                 .opacity(awayIsUsed ? 0.4 : 1.0)
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
@@ -100,7 +100,7 @@ extension MatchCarouselCard {
                 bottomTrailingRadius: 200,
                 topTrailingRadius: 200
             )
-            .fill(Color(hex: "241E31"))
+            .fill(Theme.Color.Surface.Background.page)
             .frame(width: tintW, height: tintH)
             .position(x: tintW / 2, y: tintY)
 
@@ -110,7 +110,7 @@ extension MatchCarouselCard {
                 bottomTrailingRadius: 0,
                 topTrailingRadius: 0
             )
-            .fill(Color(hex: "241E31"))
+            .fill(Theme.Color.Surface.Background.page)
             .frame(width: tintW, height: tintH)
             .position(
                 x: w - tintW / 2, y: tintY
@@ -121,10 +121,10 @@ extension MatchCarouselCard {
     var vsCircleView: some View {
         ZStack {
             Circle()
-                .fill(Color(hex: "3D3354"))
+                .fill(Theme.Color.Surface.Background.elevated)
             Circle()
                 .stroke(
-                    Color.white.opacity(0.2),
+                    Theme.Color.Border.default,
                     lineWidth: 1
                 )
             vsText
@@ -135,7 +135,7 @@ extension MatchCarouselCard {
     var vsText: some View {
         Text("VS")
             .font(Theme.Typography.overline)
-            .foregroundStyle(Color.white)
+            .foregroundStyle(Theme.Color.Content.Text.default)
     }
 
     var fixtureDetails: some View {
@@ -147,7 +147,7 @@ extension MatchCarouselCard {
                 Text(venue)
                     .font(Theme.Typography.label01)
                     .foregroundStyle(
-                        Color.white.opacity(0.5)
+                        Theme.Color.Content.Text.subtle
                     )
             }
             Text(
@@ -163,7 +163,7 @@ extension MatchCarouselCard {
             )
             .font(Theme.Typography.label01)
             .foregroundStyle(
-                Color.white.opacity(0.4)
+                Theme.Color.Content.Text.subtle
             )
         }
         .padding(.bottom, 12)

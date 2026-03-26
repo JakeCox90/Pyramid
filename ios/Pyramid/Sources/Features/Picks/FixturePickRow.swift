@@ -32,7 +32,7 @@ struct FixturePickRow: View {
         .overlay(
             RoundedRectangle(cornerRadius: 24)
                 .stroke(
-                    Color.white.opacity(0.1),
+                    Theme.Color.Border.light,
                     lineWidth: 1
                 )
         )
@@ -41,23 +41,15 @@ struct FixturePickRow: View {
     // fill_CRMJ7P: gradient 225deg, 0% → 72%
     var cardBackground: some View {
         ZStack {
-            Color(hex: "241E31")
+            Theme.Color.Surface.Background.page
             LinearGradient(
                 stops: [
                     .init(
-                        color: Color(
-                            red: 94 / 255,
-                            green: 78 / 255,
-                            blue: 129 / 255
-                        ),
+                        color: Theme.Color.Match.Gradient.purpleStart,
                         location: 0.0
                     ),
                     .init(
-                        color: Color(
-                            red: 45 / 255,
-                            green: 37 / 255,
-                            blue: 61 / 255
-                        ),
+                        color: Theme.Color.Match.Gradient.purpleEnd,
                         location: 0.72
                     )
                 ],
@@ -145,19 +137,34 @@ extension FixturePickRow {
     ) -> some View {
         Text(name.uppercased())
             .font(Theme.Typography.overline)
-            .foregroundStyle(Color.white)
-            .opacity(isUsed ? 0.3 : 0.4)
+            .foregroundStyle(Theme.Color.Content.Text.disabled)
+            .opacity(isUsed ? 0.75 : 1.0)
             .lineLimit(1)
             .minimumScaleFactor(0.7)
     }
 
-    // layout_38AZYE: 17×15 at x:167.21, y:65
-    // style_U4AW74: Inter Bold 12, uppercase
-    // Always show "VS" — this is a pick card, not a results card.
-    // Matches MatchCarouselCard+Matchup.vsText behaviour.
+    // VS circle with vertical divider — matches MatchCarouselCard+Matchup
     var vsLabel: some View {
-        Text("VS")
-            .font(Theme.Typography.overline)
-            .foregroundStyle(Color.white)
+        ZStack {
+            // Vertical divider line behind VS circle
+            Rectangle()
+                .fill(Theme.Color.Border.default)
+                .frame(width: 1, height: 121)
+
+            // VS circle
+            ZStack {
+                Circle()
+                    .fill(Theme.Color.Surface.Background.elevated)
+                Circle()
+                    .stroke(
+                        Theme.Color.Border.default,
+                        lineWidth: 1
+                    )
+                Text("VS")
+                    .font(Theme.Typography.overline)
+                    .foregroundStyle(Theme.Color.Content.Text.default)
+            }
+            .frame(width: 32, height: 32)
+        }
     }
 }

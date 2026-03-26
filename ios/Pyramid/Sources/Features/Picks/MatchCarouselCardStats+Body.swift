@@ -30,7 +30,7 @@ extension MatchCarouselCardStats {
                 Text(venue)
                     .font(Theme.Typography.label01)
                     .foregroundStyle(
-                        Color.white.opacity(0.4)
+                        Theme.Color.Content.Text.disabled
                     )
             }
             Text(
@@ -47,7 +47,7 @@ extension MatchCarouselCardStats {
             .font(Theme.Typography.label01)
             .textCase(.uppercase)
             .foregroundStyle(
-                Color.white.opacity(0.4)
+                Theme.Color.Content.Text.disabled
             )
         }
         .frame(maxWidth: .infinity)
@@ -56,7 +56,7 @@ extension MatchCarouselCardStats {
     /// stroke_AZHE5X: rgba(255,255,255,0.2) 1px
     var sectionDivider: some View {
         Rectangle()
-            .fill(Color.white.opacity(0.2))
+            .fill(Theme.Color.Border.default)
             .frame(height: 1)
     }
 
@@ -65,7 +65,7 @@ extension MatchCarouselCardStats {
         Text("Last 5 games")
             .font(Theme.Typography.label01)
             .foregroundStyle(
-                Color.white.opacity(0.4)
+                Theme.Color.Content.Text.disabled
             )
     }
 
@@ -80,7 +80,7 @@ extension MatchCarouselCardStats {
 
             // Center vertical divider
             Rectangle()
-                .fill(Color.white.opacity(0.2))
+                .fill(Theme.Color.Border.default)
                 .frame(width: 1, height: 55)
 
             formColumn(
@@ -110,7 +110,7 @@ extension MatchCarouselCardStats {
             Text("\(winPct)% Win")
                 .font(Theme.Typography.label01)
                 .foregroundStyle(
-                    Color.white.opacity(0.4)
+                    Theme.Color.Content.Text.disabled
                 )
         }
         .frame(maxWidth: .infinity)
@@ -121,7 +121,7 @@ extension MatchCarouselCardStats {
         Text("Odds")
             .font(Theme.Typography.label01)
             .foregroundStyle(
-                Color.white.opacity(0.4)
+                Theme.Color.Content.Text.disabled
             )
     }
 
@@ -147,12 +147,12 @@ extension MatchCarouselCardStats {
             Text(label)
                 .font(Theme.Typography.label01)
                 .foregroundStyle(
-                    Color.white.opacity(0.4)
+                    Theme.Color.Content.Text.disabled
                 )
             Text(value)
                 .font(Theme.Typography.label01)
                 .foregroundStyle(
-                    Color.white.opacity(0.4)
+                    Theme.Color.Content.Text.disabled
                 )
         }
         .frame(width: 79)
@@ -160,7 +160,7 @@ extension MatchCarouselCardStats {
         .overlay(
             RoundedRectangle(cornerRadius: 12)
                 .stroke(
-                    Color.white.opacity(0.2),
+                    Theme.Color.Border.default,
                     lineWidth: 1
                 )
         )
@@ -169,7 +169,7 @@ extension MatchCarouselCardStats {
     /// Horizontal line between odds boxes
     private var oddsSeparator: some View {
         Rectangle()
-            .fill(Color.white.opacity(0.2))
+            .fill(Theme.Color.Border.default)
             .frame(height: 1)
     }
 }

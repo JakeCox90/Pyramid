@@ -1,19 +1,22 @@
 #if DEBUG
 import SwiftUI
 
-// MARK: - MatchCard Variants
+struct MatchCardDemo: View {
+    @State private var phase: MatchCard.Phase =
+        .preMatch
+    @State private var isLocked = false
+    @State private var survived: Int = 0
 
-extension ComponentBrowserView {
-    var matchCardSection: some View {
-        VStack(
-            alignment: .leading,
-            spacing: Theme.Spacing.s30
-        ) {
-            ComponentHeader(title: "MatchCard")
+    private var survivedValue: Bool? {
+        switch survived {
+        case 1: true
+        case 2: false
+        default: nil
+        }
+    }
 
-            ComponentCaption(
-                text: "Pre-Game (unlocked)"
-            )
+    var body: some View {
+        DemoPage {
             MatchCard(
                 pickedTeamName: "Arsenal",
                 pickedTeamLogo: nil,
@@ -27,172 +30,85 @@ extension ComponentBrowserView {
                     of: Date()
                         .addingTimeInterval(86400)
                 ),
-                phase: .preMatch,
+                homeScore: phase != .preMatch
+                    ? 2 : nil,
+                awayScore: phase != .preMatch
+                    ? 1 : nil,
+                phase: phase,
+                survived: phase == .finished
+                    ? survivedValue : nil,
+                isLocked: isLocked,
                 buttonTitle: "CHANGE PICK",
-                onButtonTap: {}
+                onButtonTap: isLocked ? nil : {}
             )
-
-            ComponentCaption(
-                text: "Pre-Game (locked)"
-            )
-            MatchCard(
-                pickedTeamName: "Arsenal",
-                pickedTeamLogo: nil,
-                opponentName: "Aston Villa",
-                homeTeamName: "Arsenal",
-                venue: "Emirates Stadium",
-                kickoff: Calendar.current.date(
-                    bySettingHour: 15,
-                    minute: 0,
-                    second: 0,
-                    of: Date()
-                ),
-                phase: .preMatch,
-                isLocked: true
-            )
-
-            ComponentCaption(
-                text: "In Progress (0-0)"
-            )
-            MatchCard(
-                pickedTeamName: "Liverpool",
-                pickedTeamLogo: nil,
-                opponentName: "Chelsea",
-                homeTeamName: "Liverpool",
-                homeScore: 0,
-                awayScore: 0,
-                phase: .live
-            )
-
-            ComponentCaption(
-                text: "In Progress (2-1)"
-            )
-            MatchCard(
-                pickedTeamName: "Liverpool",
-                pickedTeamLogo: nil,
-                opponentName: "Chelsea",
-                homeTeamName: "Liverpool",
-                homeScore: 2,
-                awayScore: 1,
-                phase: .live
-            )
-
-            ComponentCaption(
-                text: "Full Time — Survived"
-            )
-            MatchCard(
-                pickedTeamName: "Man City",
-                pickedTeamLogo: nil,
-                opponentName: "Tottenham",
-                homeTeamName: "Manchester City",
-                homeScore: 3,
-                awayScore: 0,
-                phase: .finished,
-                survived: true,
-                isLocked: true
-            )
-
-            ComponentCaption(
-                text: "Full Time — Eliminated"
-            )
-            MatchCard(
-                pickedTeamName: "Man City",
-                pickedTeamLogo: nil,
-                opponentName: "Tottenham",
-                homeTeamName: "Manchester City",
-                homeScore: 1,
-                awayScore: 2,
-                phase: .finished,
-                survived: false,
-                isLocked: true
-            )
-
-            ComponentCaption(
-                text: "Full Time — Pending"
-            )
-            MatchCard(
-                pickedTeamName: "Man City",
-                pickedTeamLogo: nil,
-                opponentName: "Tottenham",
-                homeTeamName: "Manchester City",
-                homeScore: 1,
-                awayScore: 1,
-                phase: .finished,
-                isLocked: true
-            )
-
-            ComponentCaption(
-                text: "Empty (no pick)"
-            )
-            MatchCard.empty(
-                isLocked: false,
-                onMakePick: {}
-            )
-
-            ComponentCaption(
-                text: "Empty (locked)"
-            )
-            MatchCard.empty(isLocked: true)
+        } config: {
+            ConfigRow(label: "Phase") {
+                Picker("", selection: $phase) {
+                    Text("preMatch")
+                        .tag(
+                            MatchCard.Phase.preMatch
+                        )
+                    Text("live")
+                        .tag(MatchCard.Phase.live)
+                    Text("finished")
+                        .tag(
+                            MatchCard.Phase.finished
+                        )
+                }
+            }
+            ConfigDivider()
+            ConfigRow(label: "Locked") {
+                Toggle("", isOn: $isLocked)
+                    .labelsHidden()
+            }
+            ConfigDivider()
+            ConfigRow(label: "Survived") {
+                Picker("", selection: $survived) {
+                    Text("nil").tag(0)
+                    Text("true").tag(1)
+                    Text("false").tag(2)
+                }
+            }
         }
     }
 }
 
-// MARK: - ResultCard
-
-extension ComponentBrowserView {
-    var resultCardSection: some View {
-        VStack(
-            alignment: .leading,
-            spacing: Theme.Spacing.s30
-        ) {
-            ComponentHeader(title: "ResultCard")
-
-            ComponentCaption(text: "Survived")
-            ResultCard(
-                homeTeamName: "Liverpool",
-                homeTeamShort: "LIV",
-                homeTeamLogo: nil,
-                awayTeamName: "Everton",
-                awayTeamShort: "EVE",
-                awayTeamLogo: nil,
-                homeScore: 2,
-                awayScore: 1,
-                pickedHome: true,
-                result: .survived
-            )
-
-            ComponentCaption(text: "Eliminated")
-            ResultCard(
-                homeTeamName: "Arsenal",
-                homeTeamShort: "ARS",
-                homeTeamLogo: nil,
-                awayTeamName: "Chelsea",
-                awayTeamShort: "CHE",
-                awayTeamLogo: nil,
-                homeScore: 0,
-                awayScore: 2,
-                pickedHome: true,
-                result: .eliminated
-            )
+struct ResultCardDemo: View {
+    var body: some View {
+        DemoPageStatic {
+            VStack(spacing: Theme.Spacing.s30) {
+                ResultCard(
+                    homeTeamName: "Liverpool",
+                    homeTeamShort: "LIV",
+                    homeTeamLogo: nil,
+                    awayTeamName: "Everton",
+                    awayTeamShort: "EVE",
+                    awayTeamLogo: nil,
+                    homeScore: 2,
+                    awayScore: 1,
+                    pickedHome: true,
+                    result: .survived
+                )
+                ResultCard(
+                    homeTeamName: "Arsenal",
+                    homeTeamShort: "ARS",
+                    homeTeamLogo: nil,
+                    awayTeamName: "Chelsea",
+                    awayTeamShort: "CHE",
+                    awayTeamLogo: nil,
+                    homeScore: 0,
+                    awayScore: 2,
+                    pickedHome: true,
+                    result: .eliminated
+                )
+            }
         }
     }
 }
 
-// MARK: - EliminationCard
-
-extension ComponentBrowserView {
-    var eliminationCardSection: some View {
-        VStack(
-            alignment: .leading,
-            spacing: Theme.Spacing.s30
-        ) {
-            ComponentHeader(
-                title: "EliminationCard"
-            )
-
-            ComponentCaption(
-                text: "Home team picked (lost)"
-            )
+struct EliminationCardDemo: View {
+    var body: some View {
+        DemoPageStatic {
             EliminationCard(
                 leagueName: "Sunday League",
                 gameweekName: "Gameweek 29",
@@ -209,45 +125,13 @@ extension ComponentBrowserView {
                 awayScore: 2,
                 pickedHome: true
             )
-
-            ComponentCaption(
-                text: "Away team picked (lost)"
-            )
-            EliminationCard(
-                leagueName: "Office Crew",
-                gameweekName: "Gameweek 29",
-                pickedTeamName: "Chelsea",
-                pickedTeamLogo: nil,
-                opponentName: "Liverpool",
-                homeTeamName: "Liverpool",
-                homeTeamShort: "LIV",
-                homeTeamLogo: nil,
-                awayTeamName: "Chelsea",
-                awayTeamShort: "CHE",
-                awayTeamLogo: nil,
-                homeScore: 3,
-                awayScore: 1,
-                pickedHome: false
-            )
         }
     }
 }
 
-// MARK: - StatsCard
-
-extension ComponentBrowserView {
-    var statsCardSection: some View {
-        VStack(
-            alignment: .leading,
-            spacing: Theme.Spacing.s30
-        ) {
-            ComponentHeader(
-                title: "MatchCarouselCardStats"
-            )
-
-            ComponentCaption(
-                text: "Stats (card back)"
-            )
+struct MatchStatsDemo: View {
+    var body: some View {
+        DemoPageStatic {
             MatchCarouselCardStats(
                 fixture: Fixture(
                     id: 1,
@@ -276,5 +160,4 @@ extension ComponentBrowserView {
         }
     }
 }
-
 #endif

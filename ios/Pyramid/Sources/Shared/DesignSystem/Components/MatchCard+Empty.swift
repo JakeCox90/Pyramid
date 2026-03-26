@@ -25,7 +25,7 @@ extension MatchCard {
         .overlay(
             RoundedRectangle(cornerRadius: 24)
                 .stroke(
-                    Color.white.opacity(0.2),
+                    Theme.Color.Border.default,
                     lineWidth: 1
                 )
         )
@@ -40,14 +40,14 @@ extension MatchCard {
                 .resizable()
                 .frame(width: 66, height: 66)
                 .foregroundStyle(
-                    Color.white.opacity(0.2)
+                    Theme.Color.Border.default
                 )
 
             // Figma: H3, #FFF 30%
             Text("No selection yet")
                 .font(Theme.Typography.h3)
                 .foregroundStyle(
-                    Color.white.opacity(0.3)
+                    Theme.Color.Content.Text.tertiary
                 )
 
             // Figma: Label02, #FFF 30%, 225px wide
@@ -66,7 +66,7 @@ extension MatchCard {
     /// Figma: Vector 2 — 1px divider at y=354
     private static var emptyDivider: some View {
         Rectangle()
-            .fill(Color.white.opacity(0.2))
+            .fill(Theme.Color.Border.default)
             .frame(height: 1)
     }
 

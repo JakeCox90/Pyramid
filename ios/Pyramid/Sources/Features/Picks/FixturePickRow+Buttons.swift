@@ -41,14 +41,14 @@ extension FixturePickRow {
             Text("LOCKED")
                 .font(Theme.Typography.label01)
         }
-        .foregroundStyle(Color.white.opacity(0.4))
+        .foregroundStyle(Theme.Color.Content.Text.disabled)
         .frame(maxWidth: .infinity)
         .frame(height: 44)
-        .background(Color.white.opacity(0.1))
+        .background(Theme.Color.Surface.Background.highlight)
         .overlay(
             Capsule()
                 .stroke(
-                    Color.white.opacity(0.1),
+                    Theme.Color.Border.light,
                     lineWidth: 1
                 )
         )
@@ -131,10 +131,10 @@ extension FixturePickRow {
             && !isThisSub
         let disabled = isLocked || isSubmitting || isUsed
 
-        // fill_RNW9LA: rgba(255,255,255,0.1)
+        // Picked: yellow accent; unpicked: white 10% fill
         let fill = isPicked
-            ? Color(hex: "FFC758")
-            : Color.white.opacity(0.1) // fill_RNW9LA
+            ? Theme.Color.Primary.resting
+            : Theme.Color.Surface.Background.highlight
 
         var alpha = 1.0
         if isThisSub {
@@ -183,12 +183,11 @@ extension FixturePickRow {
     ) -> some View {
         if state.isThisSubmitting {
             ProgressView()
-                .tint(Color.black)
+                .tint(Theme.Color.Primary.text)
         } else if state.isUsed {
             Text(state.usedLabel)
                 .font(Theme.Typography.overline)
-                .foregroundStyle(Color.white)
-                .opacity(0.3)
+                .foregroundStyle(Theme.Color.Content.Text.tertiary)
                 .tracking(0.8)
         } else {
             Text(
@@ -199,8 +198,8 @@ extension FixturePickRow {
             .font(Theme.Typography.overline)
             .foregroundStyle(
                 state.isPicked
-                    ? Color.black
-                    : Color.white
+                    ? Theme.Color.Primary.text
+                    : Theme.Color.Content.Text.default
             )
             .tracking(0.8)
         }

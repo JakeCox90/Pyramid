@@ -14,9 +14,9 @@ enum FormResult: String, Identifiable {
     // fill_YV73OV: #7DC3A0 (green), fill_46FMUX: #F87272 (red)
     var color: Color {
         switch self {
-        case .win: return Color(hex: "7DC3A0")
-        case .draw: return Color.white.opacity(0.3)
-        case .loss: return Color(hex: "F87272")
+        case .win: return Theme.Color.Form.win
+        case .draw: return Theme.Color.Form.draw
+        case .loss: return Theme.Color.Form.loss
         }
     }
 }
@@ -109,8 +109,8 @@ struct MatchStatsPanel: View {
     private var topGradient: some View {
         LinearGradient(
             colors: [
-                Color(hex: "241E31"),
-                Color(hex: "241E31").opacity(0)
+                Theme.Color.Surface.Background.page,
+                Theme.Color.Surface.Background.page.opacity(0)
             ],
             startPoint: .top,
             endPoint: .bottom
@@ -140,21 +140,19 @@ extension MatchStatsPanel {
         HStack {
             Text(fixture.homeTeamName.uppercased())
                 .font(Theme.Typography.subhead)
-                .foregroundStyle(Color.white)
-                .opacity(0.4)
+                .foregroundStyle(Theme.Color.Content.Text.disabled)
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
                 .frame(maxWidth: .infinity)
 
             // stroke_31DNTO: rgba(255,255,255,0.2), 1px
             Rectangle()
-                .fill(Color.white.opacity(0.2))
+                .fill(Theme.Color.Border.default)
                 .frame(width: 1, height: 20)
 
             Text(fixture.awayTeamName.uppercased())
                 .font(Theme.Typography.subhead)
-                .foregroundStyle(Color.white)
-                .opacity(0.4)
+                .foregroundStyle(Theme.Color.Content.Text.disabled)
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
                 .frame(maxWidth: .infinity)
@@ -171,8 +169,7 @@ extension MatchStatsPanel {
         VStack(spacing: 12) {
             Text("FORM")
                 .font(Theme.Typography.overline)
-                .foregroundStyle(Color.white)
-                .opacity(0.4)
+                .foregroundStyle(Theme.Color.Content.Text.disabled)
 
             HStack {
                 formColumn(
@@ -180,7 +177,7 @@ extension MatchStatsPanel {
                     winPct: stats.homeWinPct
                 )
                 Rectangle()
-                    .fill(Color.white.opacity(0.2))
+                    .fill(Theme.Color.Border.default)
                     .frame(width: 1, height: 50)
                 formColumn(
                     results: stats.awayForm,
@@ -205,8 +202,7 @@ extension MatchStatsPanel {
             }
             Text("\(winPct)% WIN")
                 .font(Theme.Typography.overline)
-                .foregroundStyle(Color.white)
-                .opacity(0.4)
+                .foregroundStyle(Theme.Color.Content.Text.disabled)
         }
         .frame(maxWidth: .infinity)
     }
@@ -222,8 +218,7 @@ extension MatchStatsPanel {
         VStack(spacing: 12) {
             Text("ODDS")
                 .font(Theme.Typography.overline)
-                .foregroundStyle(Color.white)
-                .opacity(0.4)
+                .foregroundStyle(Theme.Color.Content.Text.disabled)
 
             HStack(spacing: 0) {
                 oddsBox(label: "HOME", value: stats.homeOdds)
@@ -242,19 +237,17 @@ extension MatchStatsPanel {
         VStack(spacing: 4) {
             Text(label)
                 .font(Theme.Typography.overline)
-                .foregroundStyle(Color.white)
-                .opacity(0.4)
+                .foregroundStyle(Theme.Color.Content.Text.disabled)
             Text(value)
                 .font(Theme.Typography.overline)
-                .foregroundStyle(Color.white)
-                .opacity(0.4)
+                .foregroundStyle(Theme.Color.Content.Text.disabled)
         }
         .frame(width: 79)
         .padding(.vertical, 8)
         .overlay(
             RoundedRectangle(cornerRadius: 12)
                 .stroke(
-                    Color.white.opacity(0.2),
+                    Theme.Color.Border.default,
                     lineWidth: 1
                 )
         )
@@ -263,7 +256,7 @@ extension MatchStatsPanel {
     // layout_ZS9FZ1: 48px wide separator line
     private var oddsSeparator: some View {
         Rectangle()
-            .fill(Color.white.opacity(0.2))
+            .fill(Theme.Color.Border.default)
             .frame(width: 48, height: 1)
     }
 }

@@ -117,7 +117,7 @@ struct PalettePicker: View {
                 Text(palette.displayName)
                     .font(Theme.Typography.caption)
                     .fontWeight(.semibold)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Theme.Color.Content.Text.default)
             )
             .overlay(
                 RoundedRectangle(
@@ -125,7 +125,7 @@ struct PalettePicker: View {
                 )
                 .strokeBorder(
                     selected == palette.rawValue
-                        ? .white
+                        ? Theme.Color.Content.Text.default
                         : .clear,
                     lineWidth: 2
                 )

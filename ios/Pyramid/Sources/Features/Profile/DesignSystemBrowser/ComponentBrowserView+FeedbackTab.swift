@@ -1,162 +1,169 @@
 #if DEBUG
 import SwiftUI
 
-// MARK: - Feedback Tab
+struct EmptyStateDemo: View {
+    @State private var title = "No Leagues Yet"
+    @State private var message =
+        "Join or create a league to get started."
+    @State private var buttonTitle = "Create League"
+    @State private var showButton = true
 
-extension ComponentBrowserView {
-    var feedbackContent: some View {
-        Group {
-            placeholderSection
-            toastSection
-            iconBadgeSection
-            detailSheetSection
-        }
-    }
-}
-
-// MARK: - Placeholder
-
-extension ComponentBrowserView {
-    var placeholderSection: some View {
-        VStack(
-            alignment: .leading,
-            spacing: Theme.Spacing.s30
-        ) {
-            ComponentHeader(title: "PlaceholderView")
-
-            ComponentCaption(
-                text: "Empty state configuration"
-            )
+    var body: some View {
+        DemoPage {
             PlaceholderView(
                 icon: Theme.Icon.League.trophy,
-                title: "No Leagues Yet",
-                message:
-                    "Join or create a league to get started.",
-                buttonTitle: "Create League",
-                onAction: {}
+                title: title,
+                message: message,
+                buttonTitle: showButton
+                    ? buttonTitle : nil,
+                onAction: showButton ? {} : nil
             )
-            .frame(height: 260)
-            .background(
-                Theme.Color.Surface.Background
-                    .container
-            )
-            .clipShape(
-                RoundedRectangle(
-                    cornerRadius: Theme.Radius.r30
-                )
-            )
-
-            ComponentCaption(
-                text: "Error state configuration"
-            )
-            PlaceholderView(
-                icon: Theme.Icon.Status.error,
-                title: "Something went wrong",
-                message: "Failed to load data.",
-                buttonTitle: "Try Again",
-                onAsyncAction: {}
-            )
-            .frame(height: 260)
-            .background(
-                Theme.Color.Surface.Background
-                    .container
-            )
-            .clipShape(
-                RoundedRectangle(
-                    cornerRadius: Theme.Radius.r30
-                )
-            )
-        }
-    }
-}
-
-// MARK: - Toast
-
-extension ComponentBrowserView {
-    var toastSection: some View {
-        VStack(
-            alignment: .leading,
-            spacing: Theme.Spacing.s30
-        ) {
-            ComponentHeader(title: "Toast")
-
-            Toast(config: ToastConfiguration(
-                icon: "trophy.fill",
-                title: "Achievement Unlocked",
-                subtitle: "You earned a new badge",
-                style: .success
-            ))
-
-            Toast(config: ToastConfiguration(
-                icon: "exclamationmark.triangle",
-                title: "Connection Lost",
-                style: .warning
-            ))
-        }
-    }
-}
-
-// MARK: - IconBadge
-
-extension ComponentBrowserView {
-    var iconBadgeSection: some View {
-        VStack(
-            alignment: .leading,
-            spacing: Theme.Spacing.s30
-        ) {
-            ComponentHeader(title: "IconBadge")
-
-            ComponentCaption(text: "Active badges")
-            HStack(spacing: Theme.Spacing.s20) {
-                IconBadge(config: IconBadgeConfiguration(
-                    icon: "shield.fill",
-                    label: "Survivor",
-                    tier: 1,
-                    style: .success
-                ))
-                IconBadge(config: IconBadgeConfiguration(
-                    icon: "trophy.fill",
-                    label: "Champion",
-                    tier: 2,
-                    style: .warning
-                ))
+        } config: {
+            ConfigRow(label: "Title") {
+                TextField("Title", text: $title)
+                    .multilineTextAlignment(.trailing)
+                    .font(Theme.Typography.body)
             }
-
-            ComponentCaption(text: "Locked badge")
-            IconBadge(config: IconBadgeConfiguration(
-                icon: "lock.fill",
-                label: "Locked",
-                isActive: false,
-                style: .neutral
-            ))
+            ConfigDivider()
+            ConfigRow(label: "Message") {
+                TextField("Message", text: $message)
+                    .multilineTextAlignment(.trailing)
+                    .font(Theme.Typography.body)
+            }
+            ConfigDivider()
+            ConfigRow(label: "Show Button") {
+                Toggle("", isOn: $showButton)
+                    .labelsHidden()
+            }
+            ConfigDivider()
+            ConfigRow(label: "Button Title") {
+                TextField(
+                    "Button", text: $buttonTitle
+                )
+                .multilineTextAlignment(.trailing)
+                .font(Theme.Typography.body)
+                .opacity(showButton ? 1 : 0.4)
+            }
         }
     }
 }
 
-// MARK: - DetailSheet
+struct ToastDemo: View {
+    @State private var style: FlagVariant = .success
+    @State private var title = "Achievement Unlocked"
+    @State private var subtitle =
+        "You earned a new badge"
+    @State private var showSubtitle = true
 
-extension ComponentBrowserView {
-    var detailSheetSection: some View {
-        VStack(
-            alignment: .leading,
-            spacing: Theme.Spacing.s30
-        ) {
-            ComponentHeader(title: "DetailSheet")
-
-            DetailSheet(config: DetailSheetConfiguration(
-                icon: "flame.fill",
-                iconStyle: .warning,
-                title: "Iron Wall",
-                subtitle:
-                    "Survive 5 consecutive gameweeks",
-                metadata: [
-                    ("Unlocked", "March 23, 2026"),
-                    ("League", "Office League")
-                ],
-                body: "You survived 5 gameweeks in a row without being eliminated."
+    var body: some View {
+        DemoPage {
+            Toast(config: ToastConfiguration(
+                icon: style == .success
+                    ? "trophy.fill"
+                    : "exclamationmark.triangle",
+                title: title,
+                subtitle: showSubtitle
+                    ? subtitle : nil,
+                style: style
             ))
+        } config: {
+            ConfigRow(label: "Style") {
+                Picker("", selection: $style) {
+                    Text("success")
+                        .tag(FlagVariant.success)
+                    Text("error")
+                        .tag(FlagVariant.error)
+                    Text("neutral")
+                        .tag(FlagVariant.neutral)
+                    Text("warning")
+                        .tag(FlagVariant.warning)
+                }
+            }
+            ConfigDivider()
+            ConfigRow(label: "Title") {
+                TextField("Title", text: $title)
+                    .multilineTextAlignment(.trailing)
+                    .font(Theme.Typography.body)
+            }
+            ConfigDivider()
+            ConfigRow(label: "Subtitle") {
+                Toggle("", isOn: $showSubtitle)
+                    .labelsHidden()
+            }
+            ConfigDivider()
+            ConfigRow(label: "Subtitle Text") {
+                TextField(
+                    "Subtitle", text: $subtitle
+                )
+                .multilineTextAlignment(.trailing)
+                .font(Theme.Typography.body)
+                .opacity(showSubtitle ? 1 : 0.4)
+            }
         }
     }
 }
 
+struct DetailSheetDemo: View {
+    @State private var iconStyle: FlagVariant =
+        .warning
+    @State private var title = "Iron Wall"
+    @State private var subtitle =
+        "Survive 5 consecutive gameweeks"
+    @State private var showBody = true
+
+    var body: some View {
+        DemoPage {
+            DetailSheet(
+                config: DetailSheetConfiguration(
+                    icon: "flame.fill",
+                    iconStyle: iconStyle,
+                    title: title,
+                    subtitle: subtitle,
+                    metadata: [
+                        (
+                            "Unlocked",
+                            "March 23, 2026"
+                        ),
+                        ("League", "Office League")
+                    ],
+                    body: showBody
+                        ? "You survived 5 gameweeks in a row."
+                        : nil
+                )
+            )
+        } config: {
+            ConfigRow(label: "Icon Style") {
+                Picker("", selection: $iconStyle) {
+                    Text("success")
+                        .tag(FlagVariant.success)
+                    Text("error")
+                        .tag(FlagVariant.error)
+                    Text("neutral")
+                        .tag(FlagVariant.neutral)
+                    Text("warning")
+                        .tag(FlagVariant.warning)
+                }
+            }
+            ConfigDivider()
+            ConfigRow(label: "Title") {
+                TextField("Title", text: $title)
+                    .multilineTextAlignment(.trailing)
+                    .font(Theme.Typography.body)
+            }
+            ConfigDivider()
+            ConfigRow(label: "Subtitle") {
+                TextField(
+                    "Subtitle", text: $subtitle
+                )
+                .multilineTextAlignment(.trailing)
+                .font(Theme.Typography.body)
+            }
+            ConfigDivider()
+            ConfigRow(label: "Show Body") {
+                Toggle("", isOn: $showBody)
+                    .labelsHidden()
+            }
+        }
+    }
+}
 #endif

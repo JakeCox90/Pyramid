@@ -24,7 +24,7 @@ extension HomeView {
                 Text(league.name)
                     .font(Theme.Typography.label01)
             }
-            .foregroundStyle(.white)
+            .foregroundStyle(Theme.Color.Content.Text.default)
             .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
@@ -63,32 +63,32 @@ extension HomeView {
                     .font(.system(size: 12))
                     .foregroundStyle(
                         isSelected
-                            ? Color(hex: "FF453A")
-                            : .white.opacity(0.5)
+                            ? Theme.Color.Match.Pill.negative
+                            : Theme.Color.Content.Text.subtle
                     )
             }
             Text(league.name)
                 .font(Theme.Typography.label01)
                 .foregroundStyle(
                     isSelected
-                        ? .white
-                        : .white.opacity(0.5)
+                        ? Theme.Color.Content.Text.default
+                        : Theme.Color.Content.Text.subtle
                 )
         }
         .padding(.horizontal, Theme.Spacing.s40)
         .padding(.vertical, Theme.Spacing.s20)
         .background(
             isSelected
-                ? Color.white.opacity(0.15)
+                ? Theme.Color.Border.default
                 : Color.clear
         )
         .clipShape(Capsule())
         .overlay(
             Capsule()
                 .stroke(
-                    Color.white.opacity(
-                        isSelected ? 0 : 0.15
-                    ),
+                    isSelected
+                        ? Color.clear
+                        : Theme.Color.Border.default,
                     lineWidth: 1
                 )
         )

@@ -104,8 +104,8 @@ extension PickCarouselView {
                 Circle()
                     .fill(
                         index == currentIndex
-                            ? Color.white
-                            : Color.white.opacity(0.3)
+                            ? Theme.Color.Content.Text.default
+                            : Theme.Color.Content.Text.tertiary
                     )
                     .frame(width: 8, height: 8)
                     .animation(
@@ -133,20 +133,20 @@ extension PickCarouselView {
                 .font(Theme.Typography.overline)
                 .textCase(.uppercase)
                 .foregroundStyle(
-                    Color.white.opacity(0.4)
+                    Theme.Color.Content.Text.disabled
                 )
             }
 
             Text("Pick a team")
                 .font(Theme.Typography.h1)
-                .foregroundStyle(Color.white)
+                .foregroundStyle(Theme.Color.Content.Text.default)
 
             Text(
                 "Select a winning team from this week's fixtures"
             )
             .font(Theme.Typography.label02)
             .foregroundStyle(
-                Color.white.opacity(0.4)
+                Theme.Color.Content.Text.disabled
             )
 
         }

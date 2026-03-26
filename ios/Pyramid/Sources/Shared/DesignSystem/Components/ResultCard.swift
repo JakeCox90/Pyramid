@@ -27,7 +27,7 @@ struct ResultCard: View {
         .overlay(
             RoundedRectangle(cornerRadius: 24)
                 .strokeBorder(
-                    Color.white.opacity(0.1),
+                    Theme.Color.Border.light,
                     lineWidth: 1
                 )
         )
@@ -50,7 +50,7 @@ private extension ResultCard {
             )
             Text(homeTeamShort)
                 .font(Theme.Typography.body)
-                .foregroundStyle(.white)
+                .foregroundStyle(Theme.Color.Content.Text.default)
             Spacer()
         }
         .frame(maxWidth: .infinity)
@@ -61,16 +61,16 @@ private extension ResultCard {
             resultIcon(isHome: true)
             Text("\(homeScore)")
                 .font(Theme.Typography.h2)
-                .foregroundStyle(.white)
+                .foregroundStyle(Theme.Color.Content.Text.default)
                 .monospacedDigit()
             Text("\u{2013}")
                 .font(Theme.Typography.h3)
                 .foregroundStyle(
-                    .white.opacity(0.4)
+                    Theme.Color.Content.Text.disabled
                 )
             Text("\(awayScore)")
                 .font(Theme.Typography.h2)
-                .foregroundStyle(.white)
+                .foregroundStyle(Theme.Color.Content.Text.default)
                 .monospacedDigit()
             resultIcon(isHome: false)
         }
@@ -81,7 +81,7 @@ private extension ResultCard {
             Spacer()
             Text(awayTeamShort)
                 .font(Theme.Typography.body)
-                .foregroundStyle(.white)
+                .foregroundStyle(Theme.Color.Content.Text.default)
             TeamBadge(
                 teamName: awayTeamName,
                 logoURL: awayTeamLogo,
@@ -99,7 +99,7 @@ private extension ResultCard {
                 systemName: "checkmark.circle.fill"
             )
             .font(.system(size: 14))
-            .foregroundStyle(Color(hex: "6CCE78"))
+            .foregroundStyle(Theme.Color.Match.winIndicator)
         } else if picked && result == .eliminated {
             Image(
                 systemName: "xmark.circle.fill"
@@ -117,11 +117,11 @@ private extension ResultCard {
         LinearGradient(
             stops: [
                 .init(
-                    color: Color(hex: "5E4E81"),
+                    color: Theme.Color.Match.Gradient.purpleStart,
                     location: 0.0
                 ),
                 .init(
-                    color: Color(hex: "2D253D"),
+                    color: Theme.Color.Match.Gradient.purpleEnd,
                     location: 0.72
                 )
             ],

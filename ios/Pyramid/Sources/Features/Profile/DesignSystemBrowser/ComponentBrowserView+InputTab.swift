@@ -1,73 +1,58 @@
 #if DEBUG
 import SwiftUI
 
-// MARK: - Input Tab
+struct InputFieldDemo: View {
+    @State private var text = ""
+    @State private var showError = false
+    @State private var isSecure = false
+    @State private var label = "Default"
 
-extension ComponentBrowserView {
-    var inputContent: some View {
-        Group {
-            inputFieldsSection
-            emojiPickerSection
-            palettePickerSection
-        }
-    }
-}
-
-// MARK: - Input Fields
-
-private extension ComponentBrowserView {
-    var inputFieldsSection: some View {
-        VStack(
-            alignment: .leading,
-            spacing: Theme.Spacing.s30
-        ) {
-            ComponentHeader(title: "InputField")
-
+    var body: some View {
+        DemoPage {
             InputField(
-                label: "Default",
-                text: $sampleText,
-                placeholder: "Enter text..."
-            )
-            InputField(
-                label: "With Error",
-                text: .constant("Bad value"),
+                label: label,
+                text: $text,
                 placeholder: "Enter text...",
-                errorMessage: "Invalid input"
+                errorMessage: showError
+                    ? "Invalid input" : nil,
+                isSecure: isSecure
             )
-            InputField(
-                label: "Secure",
-                text: .constant(""),
-                placeholder: "Password",
-                isSecure: true
-            )
+        } config: {
+            ConfigRow(label: "Label") {
+                TextField("Label", text: $label)
+                    .multilineTextAlignment(.trailing)
+                    .font(Theme.Typography.body)
+            }
+            ConfigDivider()
+            ConfigRow(label: "Show Error") {
+                Toggle("", isOn: $showError)
+                    .labelsHidden()
+            }
+            ConfigDivider()
+            ConfigRow(label: "Secure") {
+                Toggle("", isOn: $isSecure)
+                    .labelsHidden()
+            }
         }
     }
 }
 
-// MARK: - Emoji Picker
+struct EmojiPickerDemo: View {
+    @State private var selected = "⚽"
 
-private extension ComponentBrowserView {
-    var emojiPickerSection: some View {
-        VStack(
-            alignment: .leading,
-            spacing: Theme.Spacing.s30
-        ) {
-            ComponentHeader(title: "EmojiPicker")
-            EmojiPicker(selected: $sampleEmoji)
+    var body: some View {
+        DemoPageStatic {
+            EmojiPicker(selected: $selected)
         }
     }
 }
 
-// MARK: - Palette Picker
+struct PalettePickerDemo: View {
+    @State private var selected = "primary"
 
-private extension ComponentBrowserView {
-    var palettePickerSection: some View {
-        VStack(
-            alignment: .leading,
-            spacing: Theme.Spacing.s30
-        ) {
-            ComponentHeader(title: "PalettePicker")
-            PalettePicker(selected: $samplePalette)
+    var body: some View {
+        DemoPageStatic {
+            PalettePicker(selected: $selected)
         }
     }
 }

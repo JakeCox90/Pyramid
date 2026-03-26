@@ -19,7 +19,7 @@ extension PickCarouselView {
                     Text("\(teamsLeft) teams left")
                         .font(Theme.Typography.label02)
                         .foregroundStyle(
-                            Color.white.opacity(0.4)
+                            Theme.Color.Content.Text.disabled
                         )
                         .fixedSize()
                     badgeRail(teams: allTeams)
@@ -32,7 +32,7 @@ extension PickCarouselView {
             .overlay(
                 Capsule()
                     .stroke(
-                        Color.white.opacity(0.1),
+                        Theme.Color.Border.light,
                         lineWidth: 1
                     )
             )
@@ -45,18 +45,18 @@ extension PickCarouselView {
             LinearGradient(
                 stops: [
                     .init(
-                        color: Color(hex: "5E4E81"),
+                        color: Theme.Color.Match.Gradient.purpleStart,
                         location: 0.0
                     ),
                     .init(
-                        color: Color(hex: "2D253D"),
+                        color: Theme.Color.Match.Gradient.purpleEnd,
                         location: 0.72
                     )
                 ],
                 startPoint: .topTrailing,
                 endPoint: .bottomLeading
             )
-            Color.white.opacity(0.1)
+            Theme.Color.Surface.Background.highlight
         }
     }
 

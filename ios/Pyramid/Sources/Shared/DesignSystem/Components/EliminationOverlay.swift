@@ -57,7 +57,7 @@ private extension EliminationOverlay {
     var skullIcon: some View {
         Image(systemName: "xmark.seal.fill")
             .font(.system(size: 80))
-            .foregroundStyle(.white)
+            .foregroundStyle(Theme.Color.Content.Text.default)
             .shadow(
                 color: .red.opacity(0.6),
                 radius: 20
@@ -76,7 +76,7 @@ private extension EliminationOverlay {
         Text("YOU'VE BEEN\nELIMINATED")
             .font(Theme.Typography.h1)
             .multilineTextAlignment(.center)
-            .foregroundStyle(.white)
+            .foregroundStyle(Theme.Color.Content.Text.default)
             .offset(y: appeared ? 0 : 30)
             .animation(
                 .easeOut(duration: 0.5)
@@ -88,28 +88,28 @@ private extension EliminationOverlay {
     var leagueLabel: some View {
         Text(leagueName)
             .font(Theme.Typography.body)
-            .foregroundStyle(.white.opacity(0.7))
+            .foregroundStyle(Theme.Color.Content.Text.subtle)
     }
 
     var scoreDisplay: some View {
         HStack(spacing: Theme.Spacing.s30) {
             Text(pickedHome ? "YOU" : "OPP")
                 .font(Theme.Typography.overline)
-                .foregroundStyle(.white.opacity(0.5))
+                .foregroundStyle(Theme.Color.Content.Text.subtle)
             Text("\(homeScore)")
                 .font(Theme.Typography.h1)
-                .foregroundStyle(.white)
+                .foregroundStyle(Theme.Color.Content.Text.default)
                 .monospacedDigit()
             Text("\u{2013}")
                 .font(Theme.Typography.h2)
-                .foregroundStyle(.white.opacity(0.4))
+                .foregroundStyle(Theme.Color.Content.Text.subtle)
             Text("\(awayScore)")
                 .font(Theme.Typography.h1)
-                .foregroundStyle(.white)
+                .foregroundStyle(Theme.Color.Content.Text.default)
                 .monospacedDigit()
             Text(pickedHome ? "OPP" : "YOU")
                 .font(Theme.Typography.overline)
-                .foregroundStyle(.white.opacity(0.5))
+                .foregroundStyle(Theme.Color.Content.Text.subtle)
         }
         .opacity(appeared ? 1 : 0)
         .animation(
@@ -123,7 +123,7 @@ private extension EliminationOverlay {
             "You picked \(pickedTeamName) vs \(opponentName)"
         )
         .font(Theme.Typography.label01)
-        .foregroundStyle(.white.opacity(0.5))
+        .foregroundStyle(Theme.Color.Content.Text.subtle)
         .multilineTextAlignment(.center)
         .opacity(appeared ? 1 : 0)
         .animation(
@@ -135,7 +135,7 @@ private extension EliminationOverlay {
     var dismissHint: some View {
         Text("Tap anywhere to continue")
             .font(Theme.Typography.caption)
-            .foregroundStyle(.white.opacity(0.3))
+            .foregroundStyle(Theme.Color.Content.Text.tertiary)
             .padding(.bottom, Theme.Spacing.s60)
             .opacity(appeared ? 1 : 0)
             .animation(
@@ -148,11 +148,11 @@ private extension EliminationOverlay {
         LinearGradient(
             stops: [
                 .init(
-                    color: Color(hex: "8B1A1A"),
+                    color: Theme.Color.Elimination.gradientStart,
                     location: 0.0
                 ),
                 .init(
-                    color: Color(hex: "1A0A0A"),
+                    color: Theme.Color.Elimination.gradientEnd,
                     location: 0.7
                 )
             ],

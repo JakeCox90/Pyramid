@@ -15,14 +15,14 @@ enum LeaguePalette: String, CaseIterable, Sendable {
     /// Top color of the gradient (225 deg, 0%).
     var gradientStart: Color {
         switch self {
-        case .primary: return Color(hex: "5E4E81")
+        case .primary: return Theme.Color.Match.Gradient.purpleStart
         }
     }
 
     /// Bottom color of the gradient (225 deg, 72%).
     var gradientEnd: Color {
         switch self {
-        case .primary: return Color(hex: "2D253D")
+        case .primary: return Theme.Color.Match.Gradient.purpleEnd
         }
     }
 

@@ -27,7 +27,7 @@ struct MatchCarouselCardStats: View {
         .overlay(
             RoundedRectangle(cornerRadius: 24)
                 .stroke(
-                    Color.white.opacity(0.1),
+                    Theme.Color.Border.light,
                     lineWidth: 1
                 )
         )
@@ -40,15 +40,15 @@ struct MatchCarouselCardStats: View {
     // fill_YB7865: gradient 225deg over #241E31
     private var cardBackground: some View {
         ZStack {
-            Color(hex: "241E31")
+            Theme.Color.Surface.Background.page
             LinearGradient(
                 stops: [
                     .init(
-                        color: Color(hex: "5E4E81"),
+                        color: Theme.Color.Match.Gradient.purpleStart,
                         location: 0.0
                     ),
                     .init(
-                        color: Color(hex: "2D253D"),
+                        color: Theme.Color.Match.Gradient.purpleEnd,
                         location: 0.72
                     )
                 ],
@@ -82,7 +82,7 @@ extension MatchCarouselCardStats {
                 bottomTrailingRadius: 200,
                 topTrailingRadius: 200
             )
-            .fill(Color(hex: "241E31"))
+            .fill(Theme.Color.Surface.Background.page)
             .frame(width: tintW, height: tintH)
             .position(x: tintW / 2, y: tintH / 2)
 
@@ -92,7 +92,7 @@ extension MatchCarouselCardStats {
                 bottomTrailingRadius: 8,
                 topTrailingRadius: 8
             )
-            .fill(Color(hex: "241E31"))
+            .fill(Theme.Color.Surface.Background.page)
             .frame(width: tintW, height: tintH)
             .position(
                 x: w - tintW / 2, y: tintH / 2
@@ -120,7 +120,7 @@ extension MatchCarouselCardStats {
                     .system(size: 16, weight: .bold)
                 )
                 .textCase(.uppercase)
-                .foregroundStyle(Color.white)
+                .foregroundStyle(Theme.Color.Content.Text.default)
                 .position(x: midX / 2, y: 30)
 
             // layout_2I61OO: "A. Villa" at x:215 y:21
@@ -129,7 +129,7 @@ extension MatchCarouselCardStats {
                     .system(size: 16, weight: .bold)
                 )
                 .textCase(.uppercase)
-                .foregroundStyle(Color.white)
+                .foregroundStyle(Theme.Color.Content.Text.default)
                 .position(x: midX + midX / 2, y: 30)
         }
         .frame(height: 62)
@@ -149,10 +149,10 @@ extension MatchCarouselCardStats {
         Button(action: onBack) {
             Text("Close")
                 .font(Theme.Typography.label01)
-                .foregroundStyle(Color.white)
+                .foregroundStyle(Theme.Color.Content.Text.default)
                 .frame(maxWidth: .infinity)
                 .frame(height: 44)
-                .background(Color.white.opacity(0.1))
+                .background(Theme.Color.Surface.Background.highlight)
                 .clipShape(Capsule())
         }
         .buttonStyle(.plain)

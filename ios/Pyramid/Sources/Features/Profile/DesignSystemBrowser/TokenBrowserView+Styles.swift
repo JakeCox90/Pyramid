@@ -222,34 +222,11 @@ extension TokenBrowserView {
         ]
     }
 
-    // MARK: Gradient
-
-    var gradientSection: some View {
-        VStack(alignment: .leading, spacing: Theme.Spacing.s20) {
-            HStack(spacing: Theme.Spacing.s30) {
-                RoundedRectangle(cornerRadius: Theme.Radius.r20)
-                    .fill(Theme.Gradient.primary)
-                    .frame(width: 48, height: 48)
-                Text("primary")
-                    .font(Theme.Typography.body)
-                    .foregroundStyle(
-                        Theme.Color.Content.Text.default
-                    )
-                Spacer()
-                Text("linear-gradient")
-                    .font(Theme.Typography.caption)
-                    .foregroundStyle(
-                        Theme.Color.Content.Text.subtle
-                    )
-            }
-        }
-    }
-
 }
 
 // MARK: - Supporting Types
 
-private struct TypographyToken {
+struct TypographyToken {
     let name: String
     let font: Font
     let detail: String
@@ -260,7 +237,7 @@ struct SpacingToken {
     let value: CGFloat
 }
 
-private struct ShadowToken {
+struct ShadowToken {
     let name: String
     let style: Theme.Shadow.Style
 }

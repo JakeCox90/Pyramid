@@ -26,35 +26,25 @@ struct MatchCard: View {
         var gradientStart: Color {
             switch self {
             case .live:
-                Color(hex: "4E815B")
+                Theme.Color.Match.Gradient.liveStart
             case .preMatch, .finished:
-                Color(hex: "5E4E81")
+                Theme.Color.Match.Gradient.purpleStart
             }
         }
 
         /// 225° gradient end — shared across all phases
         var gradientEnd: Color {
-            Color(hex: "2D253D")
+            Theme.Color.Match.Gradient.purpleEnd
         }
 
         /// VS circle fill (pre-match only)
         var vsCircleFill: Color {
-            Color(hex: "3D3354")
+            Theme.Color.Surface.Background.elevated
         }
 
         /// Half-tint overlay
         var halfTint: Color {
-            Color(hex: "241E31")
-        }
-
-        /// Positive pill background (live dot, survived)
-        var pillPositive: Color {
-            Color(hex: "51B56A")
-        }
-
-        /// Negative pill background (eliminated)
-        var pillNegative: Color {
-            Color(hex: "FF453A")
+            Theme.Color.Surface.Background.page
         }
     }
 
@@ -119,12 +109,12 @@ private extension MatchCard {
                     .fill(phase.vsCircleFill)
                 Circle()
                     .stroke(
-                        Color.white.opacity(0.2),
+                        Theme.Color.Border.default,
                         lineWidth: 1
                     )
                 Text("VS")
                     .font(Theme.Typography.overline)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Theme.Color.Content.Text.default)
             }
             .frame(width: 40, height: 40)
             dividerLine
@@ -137,7 +127,7 @@ private extension MatchCard {
                 Text(venue)
                     .font(Theme.Typography.label01)
                     .foregroundStyle(
-                        Color.white.opacity(0.5)
+                        Theme.Color.Content.Text.subtle
                     )
             }
             if let kickoff {
@@ -146,7 +136,7 @@ private extension MatchCard {
                 )
                 .font(Theme.Typography.label01)
                 .foregroundStyle(
-                    Color.white.opacity(0.5)
+                    Theme.Color.Content.Text.subtle
                 )
             }
         }
@@ -204,25 +194,25 @@ extension MatchCard {
         Text("YOUR PICK")
             .font(Theme.Typography.overline)
             .foregroundStyle(
-                Color.white.opacity(0.4)
+                Theme.Color.Content.Text.subtle
             )
     }
 
     var pickedTeamTitle: some View {
         Text(pickedTeamName)
             .font(Theme.Typography.h2)
-            .foregroundStyle(.white)
+            .foregroundStyle(Theme.Color.Content.Text.default)
     }
 
     var opponentTitle: some View {
         Text(opponentName)
             .font(Theme.Typography.h3)
-            .foregroundStyle(.white)
+            .foregroundStyle(Theme.Color.Content.Text.default)
     }
 
     var dividerLine: some View {
         Rectangle()
-            .fill(Color.white.opacity(0.2))
+            .fill(Theme.Color.Border.default)
             .frame(height: 1)
     }
 

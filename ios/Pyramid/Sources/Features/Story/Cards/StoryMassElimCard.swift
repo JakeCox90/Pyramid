@@ -10,11 +10,11 @@ struct StoryMassElimCard: View {
             VStack(spacing: Theme.Spacing.s60) {
                 Text("Mass Elimination")
                     .font(Theme.Typography.caption)
-                    .foregroundStyle(Theme.color(light: "FFC758", dark: "FFC758"))
+                    .foregroundStyle(Theme.Color.Primary.resting)
 
                 Image(systemName: "bolt.fill")
                     .font(.system(size: 56))
-                    .foregroundStyle(Theme.color(light: "FFC758", dark: "FFC758"))
+                    .foregroundStyle(Theme.Color.Primary.resting)
 
                 Text("Everyone Out")
                     .font(Theme.Typography.h2)
