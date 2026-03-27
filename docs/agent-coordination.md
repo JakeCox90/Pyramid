@@ -7,24 +7,25 @@
 
 | Ticket | Branch | Agent | Status | Key Files | Started |
 |--------|--------|-------|--------|-----------|---------|
-| PYR-191 | feature/PYR-191-production-cicd | Orchestrator | In Progress | .github/workflows/deploy-*.yml, docs/runbooks/production-deployment.md, ios/Config/Release.xcconfig, ios/exportOptions.plist | 2026-03-27 |
+| (none) | — | — | — | — | — |
 
 ## Recommended Queue (2026-03-27)
 
 <!-- Next agent session: pick from this queue in order -->
-<!-- 1. PYR-191: Production CI/CD pipeline (Launch Readiness, Urgent) — biggest launch blocker -->
-<!-- 2. PYR-192: Error monitoring / crash reporting (Launch Readiness, Urgent) -->
-<!-- 3. PYR-161: Post-elimination spectator experience (Community V1, Medium, 2pts) — completes V1 milestone -->
-<!-- 4. PYR-194: Rate limiting on Edge Functions (Launch Readiness, High) — follows PYR-193 -->
-<!-- 5. PYR-183: Players remaining redesign (Homepage, High, 3pts) -->
-<!-- 6. PYR-103: Shared tension moments (Community V2, Medium, 2pts) -->
-<!-- 7. PYR-195: Uptime monitoring and health checks (Launch Readiness, High) -->
-<!-- 8. PYR-190: Analytics infrastructure (Launch Readiness, High) -->
+<!-- 1. PYR-203: Withdrawal atomicity (Launch Readiness, Urgent, 3pts) — financial security gap -->
+<!-- 2. PYR-183: Players remaining redesign (Homepage, High, 3pts) — project 86% complete -->
+<!-- 3. PYR-161: Post-elimination spectator (Community V1, Medium, 2pts) — completes V1 milestone -->
+<!-- 4. PYR-204: Atomic stake deduction (Launch Readiness, High, 3pts) — pairs with PYR-203 -->
+<!-- 5. PYR-194: Rate limiting (Launch Readiness, High) — follows PYR-193 -->
+<!-- 6. PYR-195: Uptime monitoring (Launch Readiness, High) -->
+<!-- 7. PYR-103: Shared tension moments (Community V2, Medium, 2pts) -->
+<!-- 8. PYR-190: Analytics infrastructure (Launch Readiness, High) — planning ticket -->
 
 ## Recently Completed
 
 | Ticket | Branch | PR | Merged |
 |--------|--------|----|--------|
+| PYR-192 | feature/PYR-192-error-monitoring | #128 | 2026-03-27 |
 | PYR-202 | feature/PYR-202-topup-production-guard | #122 | 2026-03-27 |
 | PYR-193 | feature/PYR-193-security-hardening | #120 | 2026-03-27 |
 | PYR-173 | feature/PYR-173-visual-qa-snapshots | #119 | 2026-03-26 |
