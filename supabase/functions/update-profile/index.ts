@@ -12,6 +12,7 @@
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { getServiceClient, responseHeaders } from "../_shared/supabase.ts";
+import { checkRateLimit, rateLimitResponse } from "../_shared/rate-limit.ts";
 import { createLogger } from "../_shared/logger.ts";
 import { sanitizeString } from "../_shared/validation.ts";
 
@@ -164,6 +165,10 @@ Deno.serve(async (req) => {
   // Update profile via service client (RLS on profiles already restricts to own row,
   // but we use service client + explicit where clause for consistency with other functions)
   const db = getServiceClient();
+
+  // Rate limit check
+  const rateCheck = await checkRateLimit(db, user.id, "update-profile");
+  if (!rateCheck.allowed) return rateLimitResponse(rateCheck.retryAfter!, origin);
 
   const { data: profile, error: updateError } = await db
     .from("profiles")

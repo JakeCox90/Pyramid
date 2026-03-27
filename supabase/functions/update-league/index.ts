@@ -9,6 +9,7 @@
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { getServiceClient, responseHeaders } from "../_shared/supabase.ts";
+import { checkRateLimit, rateLimitResponse } from "../_shared/rate-limit.ts";
 import { isUUID, sanitizeString } from "../_shared/validation.ts";
 import { createLogger } from "../_shared/logger.ts";
 import { validateLeagueContent } from "../_shared/profanity.ts";
@@ -91,6 +92,10 @@ Deno.serve(async (req) => {
   }
 
   const db = getServiceClient();
+
+  // Rate limit check
+  const rateCheck = await checkRateLimit(db, user.id, "update-league");
+  if (!rateCheck.allowed) return rateLimitResponse(rateCheck.retryAfter!, origin);
 
   // Verify caller is the league admin (created_by)
   const { data: league, error: fetchError } = await db

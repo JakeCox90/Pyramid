@@ -10,6 +10,7 @@
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { getServiceClient, responseHeaders } from "../_shared/supabase.ts";
+import { checkRateLimit, rateLimitResponse } from "../_shared/rate-limit.ts";
 import { createLogger } from "../_shared/logger.ts";
 import { isValidAPNsToken } from "../_shared/validation.ts";
 
@@ -85,6 +86,10 @@ Deno.serve(async (req) => {
   }
 
   const db = getServiceClient();
+
+  // Rate limit check
+  const rateCheck = await checkRateLimit(db, user.id, "register-device-token");
+  if (!rateCheck.allowed) return rateLimitResponse(rateCheck.retryAfter!, origin);
 
   // Upsert device token — on conflict (user_id, token) update last_seen_at
   const { error: upsertErr } = await db.from("device_tokens").upsert(

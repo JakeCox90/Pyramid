@@ -11,6 +11,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { getServiceClient, responseHeaders } from "../_shared/supabase.ts";
 import { createLogger } from "../_shared/logger.ts";
+import { checkRateLimit, rateLimitResponse } from "../_shared/rate-limit.ts";
 
 interface WalletBalanceResponse {
   available_to_play_pence: number;
@@ -73,6 +74,10 @@ Deno.serve(async (req) => {
   }
 
   const db = getServiceClient();
+
+  // Rate limit check
+  const rateCheck = await checkRateLimit(db, user.id, "get-wallet");
+  if (!rateCheck.allowed) return rateLimitResponse(rateCheck.retryAfter!, origin);
 
   // Read from user_wallet_balances view
   const { data: wallet, error: walletError } = await db
