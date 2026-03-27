@@ -18,7 +18,7 @@
 //   The league status is updated last; if that update fails, the league remains in 'waiting'
 //   state and the function can be safely re-run.
 
-import { getServiceClient, serviceHeaders } from "../_shared/supabase.ts";
+import { getServiceClient, serviceHeaders, requireServiceRole } from "../_shared/supabase.ts";
 import { createLogger } from "../_shared/logger.ts";
 import { isUUID } from "../_shared/validation.ts";
 
@@ -61,11 +61,8 @@ Deno.serve(async (req) => {
   const log = createLogger("refund-stake", req);
 
   // Internal-only: require service role key
-  const authHeader = req.headers.get("Authorization") ?? "";
-  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
-  if (!serviceKey || !authHeader.includes(serviceKey)) {
-    return json({ error: "Forbidden — service role required" }, 403);
-  }
+  const auth = requireServiceRole(req);
+  if (!auth.authorized) return auth.errorResponse!;
 
   let body: RequestBody;
   try {

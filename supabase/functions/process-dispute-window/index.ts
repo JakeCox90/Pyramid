@@ -16,7 +16,7 @@
 //
 // Idempotency: running twice in the same minute is safe — the query returns 0 eligible rows.
 
-import { getServiceClient, serviceHeaders } from "../_shared/supabase.ts";
+import { getServiceClient, serviceHeaders, requireServiceRole } from "../_shared/supabase.ts";
 import { createLogger } from "../_shared/logger.ts";
 
 interface ProcessResult {
@@ -37,11 +37,8 @@ Deno.serve(async (req) => {
   }
 
   // Internal-only: require service role key
-  const authHeader = req.headers.get("Authorization") ?? "";
-  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
-  if (!serviceKey || !authHeader.includes(serviceKey)) {
-    return json({ error: "Unauthorized — service role required" }, 401);
-  }
+  const auth = requireServiceRole(req);
+  if (!auth.authorized) return auth.errorResponse!;
 
   const log = createLogger("process-dispute-window", req);
   const db = getServiceClient();
