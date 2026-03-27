@@ -142,7 +142,7 @@ Deno.serve(async (req) => {
   const gameweekIdForCheck = fixture.gameweek_id as number;
   const { data: gwDeadline } = await db
     .from("gameweeks")
-    .select("deadline_at")
+    .select("deadline_at, round_number")
     .eq("id", gameweekIdForCheck)
     .maybeSingle();
 
@@ -205,18 +205,20 @@ Deno.serve(async (req) => {
     }
   }
 
-  // 6. Check team not already used in a different gameweek this season
+  // 6. Check team not already used in a different gameweek this round
+  const currentRoundNumber = gwDeadline?.round_number as number;
   const { data: usedTeams } = await db
     .from("used_teams")
     .select("team_id")
     .eq("league_id", league_id)
     .eq("user_id", user.id)
     .eq("team_id", team_id)
+    .eq("round_number", currentRoundNumber)
     .neq("gameweek_id", gameweekId);
 
   if (usedTeams && usedTeams.length > 0) {
     return errorResponse(
-      `You already used ${team_name} this season`,
+      `You already used ${team_name} this round`,
       "TEAM_USED",
       409,
       origin
