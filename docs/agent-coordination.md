@@ -7,7 +7,7 @@
 
 | Ticket | Branch | Agent | Status | Key Files | Started |
 |--------|--------|-------|--------|-----------|---------|
-| PYR-191 | feature/PYR-191-production-cicd | Orchestrator | In Progress | .github/workflows/deploy-*.yml, docs/runbooks/production-deployment.md, ios/Config/Release.xcconfig, ios/exportOptions.plist | 2026-03-27 |
+| PYR-203 | feature/PYR-203-withdrawal-atomicity | Orchestrator | In Progress | supabase/functions/request-withdrawal/index.ts, supabase/migrations/ | 2026-03-27 |
 
 ## Recommended Queue (2026-03-27)
 
