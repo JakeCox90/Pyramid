@@ -78,6 +78,16 @@ Deno.serve(async (req) => {
     return errorResponse("Unauthorized", "UNAUTHORIZED", 401, origin);
   }
 
+  // GATE: PYR-25 — Stripe integration pending. In non-dev environments,
+  // block all top-ups until real payment verification is implemented.
+  const environment = Deno.env.get("ENVIRONMENT") || "production";
+  if (environment !== "dev") {
+    return new Response(
+      JSON.stringify({ error: "Payment processing not yet available" }),
+      { status: 503, headers: responseHeaders(origin) },
+    );
+  }
+
   // Parse and validate body
   let body: TopUpBody;
   try {
