@@ -112,14 +112,12 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL_PROD }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY_PROD }}
         run: |
-          cat > Release.xcconfig <<'XCEOF'
-          SUPABASE_URL = $(SUPABASE_URL_VALUE)
-          SUPABASE_ANON_KEY = $(SUPABASE_ANON_KEY_VALUE)
-          PAID_FEATURES_ENABLED = NO
-          OTHER_SWIFT_FLAGS = $(inherited)
-          XCEOF
-          sed -i '' "s|\\$(SUPABASE_URL_VALUE)|${SUPABASE_URL}|" Release.xcconfig
-          sed -i '' "s|\\$(SUPABASE_ANON_KEY_VALUE)|${SUPABASE_ANON_KEY}|" Release.xcconfig
+          printf '%s\n' \
+            "SUPABASE_URL = ${SUPABASE_URL}" \
+            "SUPABASE_ANON_KEY = ${SUPABASE_ANON_KEY}" \
+            "PAID_FEATURES_ENABLED = NO" \
+            'OTHER_SWIFT_FLAGS = $(inherited)' \
+            > Release.xcconfig
 
       - name: Install Apple certificate and provisioning profile
         env:
