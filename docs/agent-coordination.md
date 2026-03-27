@@ -7,24 +7,25 @@
 
 | Ticket | Branch | Agent | Status | Key Files | Started |
 |--------|--------|-------|--------|-----------|---------|
-| PYR-191 | feature/PYR-191-production-cicd | Orchestrator | In Progress | .github/workflows/deploy-*.yml, docs/runbooks/production-deployment.md, ios/Config/Release.xcconfig, ios/exportOptions.plist | 2026-03-27 |
+| — | — | — | — | — | — |
 
 ## Recommended Queue (2026-03-27)
 
 <!-- Next agent session: pick from this queue in order -->
+<!-- Next agent session: pick from this queue in order -->
 <!-- 1. PYR-191: Production CI/CD pipeline (Launch Readiness, Urgent) — biggest launch blocker -->
-<!-- 2. PYR-192: Error monitoring / crash reporting (Launch Readiness, Urgent) -->
+<!-- 2. PYR-194: Rate limiting on Edge Functions (Launch Readiness, High) — follows PYR-193 -->
 <!-- 3. PYR-161: Post-elimination spectator experience (Community V1, Medium, 2pts) — completes V1 milestone -->
-<!-- 4. PYR-194: Rate limiting on Edge Functions (Launch Readiness, High) — follows PYR-193 -->
-<!-- 5. PYR-183: Players remaining redesign (Homepage, High, 3pts) -->
-<!-- 6. PYR-103: Shared tension moments (Community V2, Medium, 2pts) -->
-<!-- 7. PYR-195: Uptime monitoring and health checks (Launch Readiness, High) -->
-<!-- 8. PYR-190: Analytics infrastructure (Launch Readiness, High) -->
+<!-- 4. PYR-183: Players remaining redesign (Homepage, High, 3pts) -->
+<!-- 5. PYR-103: Shared tension moments (Community V2, Medium, 2pts) -->
+<!-- 6. PYR-195: Uptime monitoring and health checks (Launch Readiness, High) -->
+<!-- 7. PYR-190: Analytics infrastructure (Launch Readiness, High) -->
 
 ## Recently Completed
 
 | Ticket | Branch | PR | Merged |
 |--------|--------|----|--------|
+| PYR-203 | feature/PYR-203-withdrawal-atomicity | #129 | 2026-03-27 |
 | PYR-202 | feature/PYR-202-topup-production-guard | #122 | 2026-03-27 |
 | PYR-193 | feature/PYR-193-security-hardening | #120 | 2026-03-27 |
 | PYR-173 | feature/PYR-173-visual-qa-snapshots | #119 | 2026-03-26 |

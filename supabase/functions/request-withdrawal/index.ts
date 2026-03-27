@@ -110,52 +110,14 @@ Deno.serve(async (req) => {
 
   const db = getServiceClient();
 
-  // Check withdrawable balance
-  const { data: wallet, error: walletError } = await db
-    .from("user_wallet_balances")
-    .select("withdrawable_pence")
-    .eq("user_id", user.id)
-    .maybeSingle();
-
-  if (walletError) {
-    log.error("Failed to fetch wallet balance", walletError);
-    return errorResponse("Failed to fetch wallet balance", "FETCH_FAILED", 500, origin);
-  }
-
-  const withdrawable = wallet?.withdrawable_pence ?? 0;
-
-  if (withdrawable < amount_pence) {
-    return errorResponse(
-      `Insufficient withdrawable balance. Available: ${withdrawable}p, requested: ${amount_pence}p`,
-      "INSUFFICIENT_BALANCE",
-      402,
-      origin,
-    );
-  }
-
-  // Check last withdrawal — max 1 per day (rules §8)
-  const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-  const { data: recentWithdrawal } = await db
-    .from("wallet_transactions")
-    .select("id, created_at")
-    .eq("user_id", user.id)
-    .eq("type", "withdrawal")
-    .gte("created_at", oneDayAgo)
-    .limit(1)
-    .maybeSingle();
-
-  if (recentWithdrawal) {
-    return errorResponse(
-      "Only one withdrawal per day is allowed (rules §8). Please try again tomorrow.",
-      "WITHDRAWAL_RATE_LIMITED",
-      429,
-      origin,
-    );
-  }
+  // Idempotency key: one withdrawal per user per calendar day (UTC).
+  // This deduplicates retries and enforces the 1-per-day rule at the DB level.
+  const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+  const idempotencyKey = `withdrawal:${user.id}:${today}`;
 
   // TODO: initiate Stripe payout once PYR-25 GATE resolved.
   // When Stripe is live, this should:
-  //   1. Look up the user's Stripe connected account / bank account ID (stored in profiles or a payment_methods table).
+  //   1. Look up the user's Stripe connected account / bank account ID.
   //   2. Create a Stripe Transfer or Payout via the Stripe API.
   //   3. Store the Stripe payout_id in reference_id and notes.
   //   4. Withdrawal fee is passed through at cost — shown to user before confirmation.
@@ -164,29 +126,65 @@ Deno.serve(async (req) => {
     { userId: user.id, amount_pence },
   );
 
-  // Write withdrawal transaction
-  const balanceAfter = withdrawable - amount_pence;
+  // Atomic withdrawal: balance check + cooldown + insert all inside a Postgres function
+  // with pg_advisory_xact_lock to prevent concurrent race conditions.
+  const { data: result, error: rpcError } = await db.rpc("atomic_withdrawal", {
+    p_user_id: user.id,
+    p_amount_pence: amount_pence,
+    p_idempotency_key: idempotencyKey,
+  }).single();
 
-  const { data: tx, error: txError } = await db
-    .from("wallet_transactions")
-    .insert({
-      user_id: user.id,
-      type: "withdrawal",
-      amount_pence,
-      balance_after_pence: balanceAfter,
-      notes: "Withdrawal request — Stripe payout pending (stub: PYR-25 GATE not yet resolved)",
-    })
-    .select("id")
-    .single();
+  if (rpcError) {
+    const msg = rpcError.message ?? "";
 
-  if (txError || !tx) {
-    log.error("Failed to write withdrawal transaction", txError);
+    // Idempotency: duplicate key means same-day retry — return the existing transaction
+    if (rpcError.code === "23505") {
+      log.info("Duplicate withdrawal (idempotency hit)", { userId: user.id, idempotencyKey });
+      const { data: existing } = await db
+        .from("wallet_transactions")
+        .select("id")
+        .eq("idempotency_key", idempotencyKey)
+        .single();
+      const { data: wallet } = await db
+        .from("user_wallet_balances")
+        .select("withdrawable_pence")
+        .eq("user_id", user.id)
+        .maybeSingle();
+      const response: WithdrawalResponse = {
+        transaction_id: existing?.id as string ?? "unknown",
+        withdrawable_pence: wallet?.withdrawable_pence ?? 0,
+      };
+      return new Response(JSON.stringify(response), {
+        status: 200,
+        headers: responseHeaders(origin),
+      });
+    }
+
+    if (msg.includes("INSUFFICIENT_BALANCE")) {
+      return errorResponse(
+        "Insufficient withdrawable balance",
+        "INSUFFICIENT_BALANCE",
+        402,
+        origin,
+      );
+    }
+
+    if (msg.includes("WITHDRAWAL_RATE_LIMITED")) {
+      return errorResponse(
+        "Only one withdrawal per day is allowed (rules §8). Please try again tomorrow.",
+        "WITHDRAWAL_RATE_LIMITED",
+        429,
+        origin,
+      );
+    }
+
+    log.error("Withdrawal failed", rpcError, { userId: user.id, amount_pence });
     return errorResponse("Failed to process withdrawal", "WITHDRAWAL_FAILED", 500, origin);
   }
 
   const response: WithdrawalResponse = {
-    transaction_id: tx.id as string,
-    withdrawable_pence: balanceAfter,
+    transaction_id: result.transaction_id as string,
+    withdrawable_pence: result.withdrawable_after_pence as number,
   };
 
   return new Response(JSON.stringify(response), {
