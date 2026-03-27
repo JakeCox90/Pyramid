@@ -16,6 +16,7 @@ import {
 } from "../_shared/api-football.ts";
 import type { H2HMeeting } from "../_shared/api-football.ts";
 import { createLogger } from "../_shared/logger.ts";
+import { serviceHeaders } from "../_shared/supabase.ts";
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -66,7 +67,7 @@ function setCache(key: string, meetings: H2HMeeting[]): void {
 function json(body: unknown, status: number): Response {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { "Content-Type": "application/json" },
+    headers: serviceHeaders(),
   });
 }
 

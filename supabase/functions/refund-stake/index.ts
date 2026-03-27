@@ -18,7 +18,7 @@
 //   The league status is updated last; if that update fails, the league remains in 'waiting'
 //   state and the function can be safely re-run.
 
-import { getServiceClient } from "../_shared/supabase.ts";
+import { getServiceClient, serviceHeaders } from "../_shared/supabase.ts";
 import { createLogger } from "../_shared/logger.ts";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -43,7 +43,7 @@ interface LeagueMemberRow {
 function json(body: unknown, status: number): Response {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { "Content-Type": "application/json" },
+    headers: serviceHeaders(),
   });
 }
 

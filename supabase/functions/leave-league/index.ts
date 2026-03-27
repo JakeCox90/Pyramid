@@ -6,7 +6,8 @@
 // Errors (JSON): { error: string, code: 'NOT_MEMBER' | 'UNAUTHORIZED' | ... }
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { corsHeaders, getServiceClient } from "../_shared/supabase.ts";
+import { getServiceClient, responseHeaders } from "../_shared/supabase.ts";
+import { isUUID } from "../_shared/validation.ts";
 import { createLogger } from "../_shared/logger.ts";
 
 interface LeaveResponse {
@@ -28,7 +29,7 @@ function errorResponse(
   const body: ErrorResponse = { error: message, code };
   return new Response(JSON.stringify(body), {
     status,
-    headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+    headers: responseHeaders(origin),
   });
 }
 
@@ -50,7 +51,7 @@ Deno.serve(async (req) => {
   const origin = req.headers.get("origin");
 
   if (req.method === "OPTIONS") {
-    return new Response(null, { status: 204, headers: corsHeaders(origin) });
+    return new Response(null, { status: 204, headers: responseHeaders(origin) });
   }
 
   const log = createLogger("leave-league", req);
@@ -83,6 +84,10 @@ Deno.serve(async (req) => {
     return errorResponse("league_id is required", "INVALID_BODY", 400, origin);
   }
 
+  if (!isUUID(leagueId)) {
+    return errorResponse("league_id must be a valid UUID", "INVALID_BODY", 400, origin);
+  }
+
   const db = getServiceClient();
 
   // ── Look up the membership row ──────────────────────────────────────────
@@ -103,7 +108,7 @@ Deno.serve(async (req) => {
     const response: LeaveResponse = { league_id: leagueId, left: true };
     return new Response(JSON.stringify(response), {
       status: 200,
-      headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+      headers: responseHeaders(origin),
     });
   }
 
@@ -141,6 +146,6 @@ Deno.serve(async (req) => {
   const response: LeaveResponse = { league_id: leagueId, left: true };
   return new Response(JSON.stringify(response), {
     status: 200,
-    headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+    headers: responseHeaders(origin),
   });
 });

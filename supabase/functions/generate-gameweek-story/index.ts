@@ -1,4 +1,4 @@
-import { getServiceClient } from "../_shared/supabase.ts";
+import { getServiceClient, serviceHeaders } from "../_shared/supabase.ts";
 import { createLogger } from "../_shared/logger.ts";
 import { alertSlack } from "../_shared/alert.ts";
 import { buildStoryContext } from "./analysis.ts";
@@ -135,6 +135,6 @@ Deno.serve(async (req) => {
 function json(body: unknown, status: number): Response {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { "Content-Type": "application/json" },
+    headers: serviceHeaders(),
   });
 }

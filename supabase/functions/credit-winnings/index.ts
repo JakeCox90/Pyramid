@@ -10,7 +10,7 @@
 // Idempotency key: 'winnings:<league_id>:<round_id>:<user_id>'
 // dispute_window_expires_at = now() + 24 hours (rules §6.2)
 
-import { getServiceClient } from "../_shared/supabase.ts";
+import { getServiceClient, serviceHeaders } from "../_shared/supabase.ts";
 import { createLogger } from "../_shared/logger.ts";
 
 interface CreditWinningsBody {
@@ -29,7 +29,7 @@ interface CreditWinningsResponse {
 function json(body: unknown, status: number): Response {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { "Content-Type": "application/json" },
+    headers: serviceHeaders(),
   });
 }
 

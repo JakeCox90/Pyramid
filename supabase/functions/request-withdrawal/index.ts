@@ -14,7 +14,8 @@
 // Stripe payout is stubbed pending PYR-25 GATE resolution (no real Stripe account yet).
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { corsHeaders, getServiceClient } from "../_shared/supabase.ts";
+import { responseHeaders, getServiceClient } from "../_shared/supabase.ts";
+import { validateAmountPence } from "../_shared/validation.ts";
 import { createLogger } from "../_shared/logger.ts";
 
 const MIN_WITHDRAWAL_PENCE = 2000; // £20
@@ -42,7 +43,7 @@ function errorResponse(
   const body: ErrorResponse = { error: message, code };
   return new Response(JSON.stringify(body), {
     status,
-    headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+    headers: responseHeaders(origin),
   });
 }
 
@@ -50,7 +51,7 @@ Deno.serve(async (req) => {
   const origin = req.headers.get("origin");
 
   if (req.method === "OPTIONS") {
-    return new Response(null, { status: 204, headers: corsHeaders(origin) });
+    return new Response(null, { status: 204, headers: responseHeaders(origin) });
   }
 
   if (req.method !== "POST") {
@@ -92,13 +93,9 @@ Deno.serve(async (req) => {
 
   const { amount_pence } = body;
 
-  if (!amount_pence || typeof amount_pence !== "number" || amount_pence <= 0) {
-    return errorResponse(
-      "amount_pence must be a positive integer",
-      "INVALID_AMOUNT",
-      400,
-      origin,
-    );
+  const amountCheck = validateAmountPence(amount_pence, 1, 500000);
+  if (!amountCheck.valid) {
+    return errorResponse(amountCheck.error, "INVALID_AMOUNT", 400, origin);
   }
 
   // Minimum withdrawal: £20 (rules §8)
@@ -194,6 +191,6 @@ Deno.serve(async (req) => {
 
   return new Response(JSON.stringify(response), {
     status: 200,
-    headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+    headers: responseHeaders(origin),
   });
 });

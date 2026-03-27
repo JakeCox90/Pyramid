@@ -20,7 +20,7 @@
 //   eliminated in the same GW → reinstate all, continue to next GW.
 //   Picks keep result "survived" so that team counts as used this round.
 
-import { getServiceClient } from "../_shared/supabase.ts";
+import { getServiceClient, serviceHeaders } from "../_shared/supabase.ts";
 import { createLogger } from "../_shared/logger.ts";
 import { alertSlack } from "../_shared/alert.ts";
 import { determinePickResult, findNoPickMemberIds, isGameweekFullySettled, hasSingleSurvivor, isFinalGameweek } from "./settlement.ts";
@@ -704,6 +704,6 @@ Deno.serve(async (req) => {
 function json(body: unknown, status: number): Response {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { "Content-Type": "application/json" },
+    headers: serviceHeaders(),
   });
 }

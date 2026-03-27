@@ -11,7 +11,8 @@
 //              MATCH_STARTED | PICK_LOCKED | TEAM_USED | GAMEWEEK_CLOSED
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { corsHeaders, getServiceClient } from "../_shared/supabase.ts";
+import { responseHeaders, getServiceClient } from "../_shared/supabase.ts";
+import { isUUID, isPositiveInteger, sanitizeString } from "../_shared/validation.ts";
 import { createLogger } from "../_shared/logger.ts";
 
 interface SubmitPickBody {
@@ -42,7 +43,7 @@ function errorResponse(
   const body: ErrorResponse = { error: message, code };
   return new Response(JSON.stringify(body), {
     status,
-    headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+    headers: responseHeaders(origin),
   });
 }
 
@@ -50,7 +51,7 @@ Deno.serve(async (req) => {
   const origin = req.headers.get("origin");
 
   if (req.method === "OPTIONS") {
-    return new Response(null, { status: 204, headers: corsHeaders(origin) });
+    return new Response(null, { status: 204, headers: responseHeaders(origin) });
   }
 
   if (req.method !== "POST") {
@@ -94,6 +95,18 @@ Deno.serve(async (req) => {
   if (!league_id || !fixture_id || !team_id || !team_name) {
     return errorResponse("Missing required fields", "INVALID_BODY", 400, origin);
   }
+
+  if (!isUUID(league_id)) {
+    return errorResponse("league_id must be a valid UUID", "INVALID_BODY", 400, origin);
+  }
+  if (!isPositiveInteger(fixture_id)) {
+    return errorResponse("fixture_id must be a positive integer", "INVALID_BODY", 400, origin);
+  }
+  if (!isPositiveInteger(team_id)) {
+    return errorResponse("team_id must be a positive integer", "INVALID_BODY", 400, origin);
+  }
+
+  const sanitizedTeamName = sanitizeString(team_name, 100);
 
   const db = getServiceClient();
 
@@ -181,13 +194,13 @@ Deno.serve(async (req) => {
     if (existingPick.team_id === team_id && existingPick.fixture_id === fixture_id) {
       const response: SubmitPickResponse = {
         pick_id: existingPick.id as string,
-        team_name,
+        team_name: sanitizedTeamName,
         fixture_id,
         is_locked: false,
       };
       return new Response(JSON.stringify(response), {
         status: 200,
-        headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+        headers: responseHeaders(origin),
       });
     }
   }
@@ -220,7 +233,7 @@ Deno.serve(async (req) => {
         gameweek_id: gameweekId,
         fixture_id,
         team_id,
-        team_name,
+        team_name: sanitizedTeamName,
         is_locked: false,
         result: "pending",
         submitted_at: new Date().toISOString(),
@@ -237,13 +250,13 @@ Deno.serve(async (req) => {
 
   const response: SubmitPickResponse = {
     pick_id: upsertedPick.id as string,
-    team_name,
+    team_name: sanitizedTeamName,
     fixture_id,
     is_locked: upsertedPick.is_locked as boolean,
   };
 
   return new Response(JSON.stringify(response), {
     status: 200,
-    headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+    headers: responseHeaders(origin),
   });
 });

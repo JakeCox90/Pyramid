@@ -9,8 +9,9 @@
 // Response 200: { registered: true }
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { corsHeaders, getServiceClient } from "../_shared/supabase.ts";
+import { getServiceClient, responseHeaders } from "../_shared/supabase.ts";
 import { createLogger } from "../_shared/logger.ts";
+import { isValidAPNsToken } from "../_shared/validation.ts";
 
 interface RequestBody {
   token: string;
@@ -20,7 +21,7 @@ interface RequestBody {
 function json(body: unknown, status: number, origin: string | null): Response {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+    headers: responseHeaders(origin),
   });
 }
 
@@ -28,7 +29,7 @@ Deno.serve(async (req) => {
   const origin = req.headers.get("origin");
 
   if (req.method === "OPTIONS") {
-    return new Response(null, { status: 204, headers: corsHeaders(origin) });
+    return new Response(null, { status: 204, headers: responseHeaders(origin) });
   }
 
   if (req.method !== "POST") {
@@ -73,7 +74,15 @@ Deno.serve(async (req) => {
     return json({ error: "token is required and must be non-empty" }, 400, origin);
   }
 
+  if (!isValidAPNsToken(token)) {
+    return json({ error: "Invalid APNs token format — expected 64 hex characters" }, 400, origin);
+  }
+
   const platform = body.platform ?? "ios";
+
+  if (platform !== "ios") {
+    return json({ error: "Only 'ios' platform is supported" }, 400, origin);
+  }
 
   const db = getServiceClient();
 
