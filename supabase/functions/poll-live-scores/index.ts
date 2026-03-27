@@ -190,9 +190,10 @@ Deno.serve(async (req) => {
       headers: serviceHeaders(),
     });
   } catch (err) {
+    console.error(err);
     log.error("poll-live-scores failed", err, {});
     await alertSlack("poll-live-scores failed", { error: String(err) });
-    return new Response(JSON.stringify({ error: String(err) }), {
+    return new Response(JSON.stringify({ error: "Internal server error" }), {
       status: 500,
       headers: serviceHeaders(),
     });

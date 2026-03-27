@@ -12,6 +12,7 @@
 
 import { getServiceClient, serviceHeaders } from "../_shared/supabase.ts";
 import { createLogger } from "../_shared/logger.ts";
+import { isUUID } from "../_shared/validation.ts";
 
 interface CreditWinningsBody {
   user_id: string;
@@ -59,14 +60,23 @@ Deno.serve(async (req) => {
   if (!user_id || typeof user_id !== "string") {
     return json({ error: "user_id is required" }, 400);
   }
+  if (!isUUID(user_id)) {
+    return json({ error: "user_id must be a valid UUID" }, 400);
+  }
   if (!amount_pence || typeof amount_pence !== "number" || amount_pence <= 0) {
     return json({ error: "amount_pence must be a positive integer" }, 400);
   }
   if (!league_id || typeof league_id !== "string") {
     return json({ error: "league_id is required" }, 400);
   }
+  if (!isUUID(league_id)) {
+    return json({ error: "league_id must be a valid UUID" }, 400);
+  }
   if (!round_id || typeof round_id !== "string") {
     return json({ error: "round_id is required" }, 400);
+  }
+  if (!isUUID(round_id)) {
+    return json({ error: "round_id must be a valid UUID" }, 400);
   }
 
   const db = getServiceClient();

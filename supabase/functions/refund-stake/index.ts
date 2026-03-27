@@ -20,6 +20,7 @@
 
 import { getServiceClient, serviceHeaders } from "../_shared/supabase.ts";
 import { createLogger } from "../_shared/logger.ts";
+import { isUUID } from "../_shared/validation.ts";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -76,6 +77,9 @@ Deno.serve(async (req) => {
   const { leagueId } = body;
   if (!leagueId || typeof leagueId !== "string") {
     return json({ error: "leagueId is required" }, 400);
+  }
+  if (!isUUID(leagueId)) {
+    return json({ error: "leagueId must be a valid UUID" }, 400);
   }
 
   const db = getServiceClient();

@@ -123,10 +123,11 @@ Deno.serve(async (req) => {
     return json({ status: "created", headline, hasEditorial: !!headline }, 201);
   } catch (err) {
     log.error("Story generation failed", err, { leagueId, gameweek });
+    const safeError = String(err?.message || "Unknown error").substring(0, 200);
     await alertSlack("generate-gameweek-story failed", {
       leagueId,
       gameweek,
-      error: err instanceof Error ? err.message : String(err),
+      error: safeError,
     });
     return json({ error: "Internal server error" }, 500);
   }
