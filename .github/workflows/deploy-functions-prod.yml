@@ -1,0 +1,160 @@
+name: Deploy Edge Functions (Production)
+
+# ─── Manual-only production deployment ────────────────────────────────────────
+# Deploys all Edge Functions to the production Supabase project.
+# Requires approval from the "production" GitHub Environment.
+#
+# Rollback: re-run this workflow from the last known-good tagged commit.
+# Tags are created automatically on each successful deploy.
+#
+# Required GitHub Secrets:
+#   SUPABASE_ACCESS_TOKEN     — Supabase Management API token (shared with dev)
+#   SUPABASE_PROJECT_REF_PROD — Production project ref (cracvbokmvryhhclzxxw)
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: "Type 'deploy-prod' to confirm production deployment"
+        required: true
+        type: string
+      dry_run:
+        description: "Dry run (list functions only, don't deploy)"
+        required: false
+        type: boolean
+        default: false
+
+concurrency:
+  group: deploy-functions-prod
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    name: Validate confirmation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check confirmation string
+        env:
+          CONFIRM_INPUT: ${{ inputs.confirm }}
+        run: |
+          if [ "$CONFIRM_INPUT" != "deploy-prod" ]; then
+            echo "::error::Confirmation failed. Expected 'deploy-prod'."
+            exit 1
+          fi
+
+  deploy:
+    name: Deploy to Production
+    needs: validate
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF_PROD }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Set production environment secrets
+        if: inputs.dry_run == false
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          supabase secrets set ENVIRONMENT=production \
+            --project-ref "$PROJECT_REF"
+
+      - name: Deploy user-facing Edge Functions
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        # User-facing functions: called by the iOS app with a user JWT.
+        # --no-verify-jwt is required because Supabase gateway only verifies
+        # HS256 (anon/service-role keys), but user JWTs are signed with ES256.
+        # Auth is enforced internally via getUser() in each function.
+        run: |
+          USER_FUNCTIONS=(
+            create-league
+            join-league
+            join-paid-league
+            submit-pick
+            get-wallet
+            top-up
+            request-withdrawal
+            register-device-token
+            update-profile
+            update-league
+            validate-league-content
+            leave-league
+          )
+
+          for fn in "${USER_FUNCTIONS[@]}"; do
+            if [ "$DRY_RUN" = "true" ]; then
+              echo "[DRY RUN] Would deploy $fn (user-facing)"
+            else
+              echo "Deploying $fn (user-facing) to production..."
+              supabase functions deploy "$fn" \
+                --no-verify-jwt \
+                --project-ref "$PROJECT_REF"
+            fi
+          done
+
+      - name: Deploy service-role Edge Functions
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        # Service-role functions: called internally by other functions or cron.
+        # --no-verify-jwt is required because these use service-role key auth
+        # (checked internally via requireServiceRole()), not gateway JWT.
+        run: |
+          SERVICE_FUNCTIONS=(
+            settle-picks
+            credit-winnings
+            distribute-prizes
+            refund-stake
+            process-dispute-window
+            poll-live-scores
+            sync-fixtures
+            sync-odds
+            get-head-to-head
+            generate-gameweek-story
+          )
+
+          for fn in "${SERVICE_FUNCTIONS[@]}"; do
+            if [ "$DRY_RUN" = "true" ]; then
+              echo "[DRY RUN] Would deploy $fn (service-role)"
+            else
+              echo "Deploying $fn (service-role) to production..."
+              supabase functions deploy "$fn" \
+                --no-verify-jwt \
+                --project-ref "$PROJECT_REF"
+            fi
+          done
+
+      - name: Tag successful deployment
+        if: inputs.dry_run == false
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          TAG="prod-functions-$(date -u +'%Y-%m-%d-%H%M')-r${GITHUB_RUN_NUMBER}"
+          git tag "$TAG"
+          git push origin "$TAG"
+          echo "TAG=$TAG" >> "$GITHUB_ENV"
+          echo "Tagged deployment: $TAG"
+          echo "To rollback, re-run this workflow from commit: $(git rev-parse --short HEAD)"
+
+      - name: Deployment summary
+        env:
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          echo "## Edge Functions Production Deployment" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          if [ "$DRY_RUN" = "true" ]; then
+            echo "**Mode:** Dry run (no changes made)" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "**Mode:** Live deployment" >> "$GITHUB_STEP_SUMMARY"
+            echo "**Tag:** ${TAG:-unknown}" >> "$GITHUB_STEP_SUMMARY"
+          fi
+          echo "**Commit:** $(git rev-parse --short HEAD)" >> "$GITHUB_STEP_SUMMARY"
+          echo "**User-facing functions:** 12" >> "$GITHUB_STEP_SUMMARY"
+          echo "**Service-role functions:** 10" >> "$GITHUB_STEP_SUMMARY"
