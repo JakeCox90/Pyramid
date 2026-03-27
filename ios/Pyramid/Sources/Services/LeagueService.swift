@@ -134,6 +134,7 @@ final class LeagueService: LeagueServiceProtocol {
             return response
         } catch {
             Log.leagues.error("League creation failed: \(error)")
+            CrashReporter.capture(error, context: ["service": "league", "op": "create"])
             throw LeagueServiceError.createFailed(error.localizedDescription)
         }
     }
@@ -164,6 +165,7 @@ final class LeagueService: LeagueServiceProtocol {
             return response
         } catch {
             Log.leagues.error("Join league failed: \(error)")
+            CrashReporter.capture(error, context: ["service": "league", "op": "join"])
             throw LeagueServiceError.joinFailed(error.localizedDescription)
         }
     }

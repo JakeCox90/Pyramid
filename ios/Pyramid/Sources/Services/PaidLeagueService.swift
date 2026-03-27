@@ -57,11 +57,21 @@ final class PaidLeagueService: PaidLeagueServiceProtocol {
                    body.contains("LEAGUE_CAP_REACHED") {
                     throw PaidLeagueServiceError.leagueCapReached
                 }
+                CrashReporter.capture(error, context: [
+                    "service": "paid_league", "op": "join",
+                    "http_code": "\(code)"
+                ])
                 throw PaidLeagueServiceError.joinFailed(error.localizedDescription)
             default:
+                CrashReporter.capture(error, context: [
+                    "service": "paid_league", "op": "join"
+                ])
                 throw PaidLeagueServiceError.joinFailed(error.localizedDescription)
             }
         } catch {
+            CrashReporter.capture(error, context: [
+                "service": "paid_league", "op": "join"
+            ])
             throw PaidLeagueServiceError.joinFailed(error.localizedDescription)
         }
     }

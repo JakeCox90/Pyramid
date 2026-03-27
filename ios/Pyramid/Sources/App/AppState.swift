@@ -28,6 +28,9 @@ final class AppState: ObservableObject {
             Log.auth.info(
                 "Session loaded: user=\(self.session?.user.id.uuidString.prefix(8) ?? "nil")"
             )
+            if let userId = session.user.id.uuidString as String? {
+                CrashReporter.setUser(id: userId)
+            }
             checkOnboardingStatus()
         } catch is TimeoutError {
             Log.auth.error("Session load timed out")
@@ -85,7 +88,12 @@ final class AppState: ObservableObject {
                 Log.auth.info("Auth event: \(event.rawValue)")
                 self.session = session
                 if event == .signedIn {
+                    if let userId = session?.user.id.uuidString {
+                        CrashReporter.setUser(id: userId)
+                    }
                     self.checkOnboardingStatus()
+                } else if event == .signedOut {
+                    CrashReporter.clearUser()
                 }
             }
         }

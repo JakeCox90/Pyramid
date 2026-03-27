@@ -83,6 +83,7 @@
 		3E92D3C2AD50FD17C0C7CCDA /* testSecure.1.png in Resources */ = {isa = PBXBuildFile; fileRef = 351D07E9C7FEB8302C012D31 /* testSecure.1.png */; };
 		3F32BA661E634457F47722B2 /* AccessibilityIdentifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B75186CF685B78BC630FE75 /* AccessibilityIdentifiers.swift */; };
 		4158F9216528DE7492A1CD18 /* SurvivalOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = E681B6EF0CC503D121633BB7 /* SurvivalOverlay.swift */; };
+		4317FA7EED213B6077C6C93E /* CrashReporterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABDC6A5C0B2B34FD29A10C08 /* CrashReporterTests.swift */; };
 		43719977EE7B3580675F2502 /* PickCarouselView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7B70F46A18B97C74EBD0946 /* PickCarouselView.swift */; };
 		4668BAF70224B38BF6FF3B73 /* CreateLeagueViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EADF3F67687936B1B06DE55 /* CreateLeagueViewModelTests.swift */; };
 		478B810C56986DE56E039678 /* AchievementCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1526F2324FE62EC205A4386 /* AchievementCatalog.swift */; };
@@ -156,6 +157,7 @@
 		94414CFCD6B1A40B6466906A /* OnboardingPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58F9ED18587B1BBE59491449 /* OnboardingPage.swift */; };
 		95265E073D594933F67003B6 /* ProfileStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF5355DBEE8617419611EB2 /* ProfileStats.swift */; };
 		95A1198CA6A44F7D28FE10A7 /* HomeViewModel+Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A3037EF6BD849AEF9880B03 /* HomeViewModel+Actions.swift */; };
+		95DE8DD28B4E1923165FA045 /* CrashReporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26D8584F4EDA8051C6B6D7A /* CrashReporter.swift */; };
 		96D1A82E790D90918DA4B672 /* WalletView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8BCD3F46DADD8CD42294C6C /* WalletView.swift */; };
 		970B81075CE49DA82362F6F5 /* PicksView+Banners.swift in Sources */ = {isa = PBXBuildFile; fileRef = D53530567182778A2FE44BD5 /* PicksView+Banners.swift */; };
 		976970E376FBEB55CCD2BB4C /* BrowseLeague.swift in Sources */ = {isa = PBXBuildFile; fileRef = 912FDAAEFFFBE2AAE048CC05 /* BrowseLeague.swift */; };
@@ -254,6 +256,7 @@
 		E5ED1AA2DD0E551DA8EFE506 /* MatchCarouselCard+Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE9FFF5E0423DA75E8591610 /* MatchCarouselCard+Buttons.swift */; };
 		E6AAD391B915E2113B7AA062 /* testDisabled.1.png in Resources */ = {isa = PBXBuildFile; fileRef = 8057BC5BB5647344CC9F6A31 /* testDisabled.1.png */; };
 		E8CCFE142C5AD3A5F736C196 /* SnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = 516166C4527CEB406FC16052 /* SnapshotTesting */; };
+		E8F69205D2012A4B62BD20D2 /* SentrySwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 90AF328C343476922DF49D2A /* SentrySwiftUI */; };
 		E9E8ACAF257655722C530346 /* MatchCard+Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036556E5FB614A524B070B5A /* MatchCard+Result.swift */; };
 		EA15E4B40CF0B4AD6018E9B7 /* ResultsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 827A714AF4372F27BA00F9E3 /* ResultsViewModel.swift */; };
 		EA57A2E5E39C664FBA18C87D /* CreateLeagueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C387D07BEAC18E4F601DE2EF /* CreateLeagueView.swift */; };
@@ -493,6 +496,7 @@
 		A820EA2E715BCCC4D24C745F /* JoinPaidLeagueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinPaidLeagueView.swift; sourceTree = "<group>"; };
 		A9C4E5AFEFEB3ACDA2C10669 /* testEmpty.1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = testEmpty.1.png; sourceTree = "<group>"; };
 		AA4FE14AA544CCF12E9B1E51 /* TeamsUsedPill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamsUsedPill.swift; sourceTree = "<group>"; };
+		ABDC6A5C0B2B34FD29A10C08 /* CrashReporterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrashReporterTests.swift; sourceTree = "<group>"; };
 		AC857B6BCCCD943AF030BFF0 /* GameweekStory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameweekStory.swift; sourceTree = "<group>"; };
 		AD7BAEC05B2931D2A196CC6E /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		AE9FFF5E0423DA75E8591610 /* MatchCarouselCard+Buttons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MatchCarouselCard+Buttons.swift"; sourceTree = "<group>"; };
@@ -548,6 +552,7 @@
 		E04649B287B41088276E8C86 /* testPreMatchUnlocked.1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = testPreMatchUnlocked.1.png; sourceTree = "<group>"; };
 		E1A811D21C2D67B9DDC29037 /* testPrimary.1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = testPrimary.1.png; sourceTree = "<group>"; };
 		E1C8C30BF7F9A32AEAC93132 /* WalletBalance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletBalance.swift; sourceTree = "<group>"; };
+		E26D8584F4EDA8051C6B6D7A /* CrashReporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrashReporter.swift; sourceTree = "<group>"; };
 		E3279A501B523C79840175DE /* testSuccessFlag.1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = testSuccessFlag.1.png; sourceTree = "<group>"; };
 		E3DDC9C2802382345F6FFE54 /* Achievement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Achievement.swift; sourceTree = "<group>"; };
 		E681B6EF0CC503D121633BB7 /* SurvivalOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurvivalOverlay.swift; sourceTree = "<group>"; };
@@ -586,6 +591,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				18E72417EAA25C39CDB7DA80 /* Supabase in Frameworks */,
+				E8F69205D2012A4B62BD20D2 /* SentrySwiftUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -616,6 +622,7 @@
 			isa = PBXGroup;
 			children = (
 				8A13501440E745127E554365 /* AuthViewModelTests.swift */,
+				ABDC6A5C0B2B34FD29A10C08 /* CrashReporterTests.swift */,
 				6EADF3F67687936B1B06DE55 /* CreateLeagueViewModelTests.swift */,
 				96674DC0AD23B2DFDB50F35E /* EditLeagueViewModelTests.swift */,
 				62DD3CEBABDBB6CF41146B92 /* JoinLeagueViewModelTests.swift */,
@@ -1137,6 +1144,7 @@
 				1B75186CF685B78BC630FE75 /* AccessibilityIdentifiers.swift */,
 				CB29F01766DC5BCB51AB45C5 /* AppError.swift */,
 				298239CC4E1599B8F4D3DD6B /* ColorHex.swift */,
+				E26D8584F4EDA8051C6B6D7A /* CrashReporter.swift */,
 				4C513F45B233663C3BB3B022 /* DebugGameweekOverride.swift */,
 				48C9C8665BDFF415589ABE7A /* FeatureFlags.swift */,
 				AD7BAEC05B2931D2A196CC6E /* Log.swift */,
@@ -1246,6 +1254,7 @@
 			name = Pyramid;
 			packageProductDependencies = (
 				9BBCF177D8E7D14FC85A2F79 /* Supabase */,
+				90AF328C343476922DF49D2A /* SentrySwiftUI */,
 			);
 			productName = Pyramid;
 			productReference = 82F47822297EAF10E0237AC5 /* Pyramid.app */;
@@ -1299,6 +1308,7 @@
 			mainGroup = F17C7339A213A5A583380444;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
+				43316A586FA3EA6E8317FD24 /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
 				FC9A131FE18AC18D2FCAFB89 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */,
 				2B6602D8A98069AF91E8D16D /* XCRemoteSwiftPackageReference "supabase-swift" */,
 			);
@@ -1427,6 +1437,7 @@
 				F7533E22491D819B548CC502 /* ComponentBrowserView.swift in Sources */,
 				B9AC5BCA9BD7755B156821B6 /* ConfettiView.swift in Sources */,
 				5D805060B29CFF39886A7253 /* ContentModerationService.swift in Sources */,
+				95DE8DD28B4E1923165FA045 /* CrashReporter.swift in Sources */,
 				EA57A2E5E39C664FBA18C87D /* CreateLeagueView.swift in Sources */,
 				5B1D3BD5BF64D0868A40FD12 /* CreateLeagueViewModel.swift in Sources */,
 				AFE98027CDA7108C9D5A839F /* DebugGameweekOverride.swift in Sources */,
@@ -1614,6 +1625,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7148A25510275A0026B45C25 /* AuthViewModelTests.swift in Sources */,
+				4317FA7EED213B6077C6C93E /* CrashReporterTests.swift in Sources */,
 				4668BAF70224B38BF6FF3B73 /* CreateLeagueViewModelTests.swift in Sources */,
 				EC4A6EA50F4DBADB5B4267DD /* EditLeagueViewModelTests.swift in Sources */,
 				CE3177E452A07A93E0C07479 /* JoinLeagueViewModelTests.swift in Sources */,
@@ -1979,6 +1991,14 @@
 				minimumVersion = 2.0.0;
 			};
 		};
+		43316A586FA3EA6E8317FD24 /* XCRemoteSwiftPackageReference "sentry-cocoa" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/getsentry/sentry-cocoa";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
 		FC9A131FE18AC18D2FCAFB89 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/pointfreeco/swift-snapshot-testing";
@@ -1994,6 +2014,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = FC9A131FE18AC18D2FCAFB89 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */;
 			productName = SnapshotTesting;
+		};
+		90AF328C343476922DF49D2A /* SentrySwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 43316A586FA3EA6E8317FD24 /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
+			productName = SentrySwiftUI;
 		};
 		9BBCF177D8E7D14FC85A2F79 /* Supabase */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -289,7 +289,7 @@ Deno.serve(async (req) => {
     log.error("failed to update league status", leagueUpdateErr, { leagueId });
   }
 
-  log.complete("ok", { leagueId, allocations: allocations.length, netPot });
+  await log.complete("ok", { leagueId, allocations: allocations.length, netPot });
 
   return json({ leagueId, allocations }, 200);
 });

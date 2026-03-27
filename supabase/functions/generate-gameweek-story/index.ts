@@ -119,7 +119,7 @@ Deno.serve(async (req) => {
       throw insertError;
     }
 
-    log.complete("ok", { leagueId, gameweek, hasEditorial: !!headline });
+    await log.complete("ok", { leagueId, gameweek, hasEditorial: !!headline });
     return json({ status: "created", headline, hasEditorial: !!headline }, 201);
   } catch (err) {
     log.error("Story generation failed", err, { leagueId, gameweek });

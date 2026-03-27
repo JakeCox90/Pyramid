@@ -184,7 +184,7 @@ Deno.serve(async (req) => {
     updated_at: profile.updated_at,
   };
 
-  log.complete("ok", { userId: user.id });
+  await log.complete("ok", { userId: user.id });
 
   return new Response(JSON.stringify(response), {
     status: 200,

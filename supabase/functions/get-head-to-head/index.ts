@@ -113,7 +113,7 @@ Deno.serve(async (req) => {
   const key = cacheKey(homeTeamId, awayTeamId, count);
   const cached = getCached(key);
   if (cached) {
-    log.complete("cache-hit", { homeTeamId, awayTeamId, count, meetings: cached.length });
+    await log.complete("cache-hit", { homeTeamId, awayTeamId, count, meetings: cached.length });
     const response: SuccessResponse = { meetings: cached, cached: true };
     return json(response, 200);
   }
@@ -133,7 +133,7 @@ Deno.serve(async (req) => {
     // Cache the result
     setCache(key, meetings);
 
-    log.complete("ok", { homeTeamId, awayTeamId, count, meetings: meetings.length });
+    await log.complete("ok", { homeTeamId, awayTeamId, count, meetings: meetings.length });
     const response: SuccessResponse = { meetings, cached: false };
     return json(response, 200);
   } catch (err) {

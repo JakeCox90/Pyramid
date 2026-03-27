@@ -104,7 +104,7 @@ Deno.serve(async (req) => {
       );
     }
 
-    log.complete("ok", { mode, callerId });
+    await log.complete("ok", { mode, callerId });
 
     return new Response(JSON.stringify(data), {
       status: 200,
