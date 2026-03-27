@@ -11,8 +11,9 @@
 // only writes to profiles — visibility is enforced by read-path functions.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { corsHeaders, getServiceClient } from "../_shared/supabase.ts";
+import { getServiceClient, responseHeaders } from "../_shared/supabase.ts";
 import { createLogger } from "../_shared/logger.ts";
+import { sanitizeString } from "../_shared/validation.ts";
 
 const DISPLAY_NAME_MIN = 2;
 const DISPLAY_NAME_MAX = 30;
@@ -44,7 +45,7 @@ function errorResponse(
   const body: ErrorResponse = { error: message, code };
   return new Response(JSON.stringify(body), {
     status,
-    headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+    headers: responseHeaders(origin),
   });
 }
 
@@ -61,7 +62,7 @@ Deno.serve(async (req) => {
   const origin = req.headers.get("origin");
 
   if (req.method === "OPTIONS") {
-    return new Response(null, { status: 204, headers: corsHeaders(origin) });
+    return new Response(null, { status: 204, headers: responseHeaders(origin) });
   }
 
   if (req.method !== "PATCH") {
@@ -121,7 +122,7 @@ Deno.serve(async (req) => {
     if (body.display_name === null) {
       updates.display_name = null;
     } else {
-      const trimmed = body.display_name!.trim();
+      const trimmed = sanitizeString(body.display_name!, 30);
       if (trimmed.length < DISPLAY_NAME_MIN || trimmed.length > DISPLAY_NAME_MAX) {
         return errorResponse(
           `Display name must be between ${DISPLAY_NAME_MIN} and ${DISPLAY_NAME_MAX} characters`,
@@ -187,6 +188,6 @@ Deno.serve(async (req) => {
 
   return new Response(JSON.stringify(response), {
     status: 200,
-    headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+    headers: responseHeaders(origin),
   });
 });

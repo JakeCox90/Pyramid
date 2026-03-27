@@ -9,7 +9,7 @@
 // Response 403: { error: "Reset is only available in dev environment" }
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { corsHeaders, getServiceClient } from "../_shared/supabase.ts";
+import { getServiceClient, responseHeaders } from "../_shared/supabase.ts";
 import { createLogger } from "../_shared/logger.ts";
 
 interface ResetBody {
@@ -30,7 +30,7 @@ function errorResponse(
   const body: ErrorResponse = { error: message, code };
   return new Response(JSON.stringify(body), {
     status,
-    headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+    headers: responseHeaders(origin),
   });
 }
 
@@ -38,7 +38,7 @@ Deno.serve(async (req) => {
   const origin = req.headers.get("origin");
 
   if (req.method === "OPTIONS") {
-    return new Response(null, { status: 204, headers: corsHeaders(origin) });
+    return new Response(null, { status: 204, headers: responseHeaders(origin) });
   }
 
   if (req.method !== "POST") {
@@ -127,7 +127,7 @@ Deno.serve(async (req) => {
 
     return new Response(JSON.stringify(data), {
       status: 200,
-      headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+      headers: responseHeaders(origin),
     });
   } catch (err) {
     log.error("Unexpected error during reset", err);

@@ -18,7 +18,7 @@ import {
   SETTLED_STATUSES,
   VOID_STATUSES,
 } from "../_shared/api-football.ts";
-import { getServiceClient } from "../_shared/supabase.ts";
+import { getServiceClient, serviceHeaders, requireServiceRole } from "../_shared/supabase.ts";
 import { createLogger } from "../_shared/logger.ts";
 import { alertSlack } from "../_shared/alert.ts";
 
@@ -36,9 +36,12 @@ Deno.serve(async (req) => {
   if (req.method !== "GET" && req.method !== "POST") {
     return new Response(JSON.stringify({ error: "Method not allowed" }), {
       status: 405,
-      headers: { "Content-Type": "application/json" },
+      headers: serviceHeaders(),
     });
   }
+
+  const auth = requireServiceRole(req);
+  if (!auth.authorized) return auth.errorResponse!;
 
   const log = createLogger("poll-live-scores", req);
 
@@ -46,7 +49,7 @@ Deno.serve(async (req) => {
   if (!apiKey) {
     return new Response(JSON.stringify({ error: "API_FOOTBALL_KEY not configured" }), {
       status: 500,
-      headers: { "Content-Type": "application/json" },
+      headers: serviceHeaders(),
     });
   }
 
@@ -65,7 +68,7 @@ Deno.serve(async (req) => {
     if (gwError || !currentGw) {
       return new Response(
         JSON.stringify({ error: "No current gameweek found", detail: gwError?.message }),
-        { status: 200, headers: { "Content-Type": "application/json" } },
+        { status: 200, headers: serviceHeaders() },
       );
     }
 
@@ -184,14 +187,14 @@ Deno.serve(async (req) => {
 
     return new Response(JSON.stringify(results), {
       status: 200,
-      headers: { "Content-Type": "application/json" },
+      headers: serviceHeaders(),
     });
   } catch (err) {
     log.error("poll-live-scores failed", err, {});
     await alertSlack("poll-live-scores failed", { error: String(err) });
     return new Response(JSON.stringify({ error: String(err) }), {
       status: 500,
-      headers: { "Content-Type": "application/json" },
+      headers: serviceHeaders(),
     });
   }
 });

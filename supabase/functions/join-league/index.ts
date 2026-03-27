@@ -7,7 +7,8 @@
 // Errors (JSON): { error: string, code: 'NOT_FOUND' | 'ALREADY_MEMBER' | 'STARTED' | 'FULL' | ... }
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { corsHeaders, getServiceClient } from "../_shared/supabase.ts";
+import { getServiceClient, responseHeaders } from "../_shared/supabase.ts";
+import { isAlphanumeric } from "../_shared/validation.ts";
 import { createLogger } from "../_shared/logger.ts";
 
 interface LeaguePreview {
@@ -37,7 +38,7 @@ function errorResponse(
   const body: ErrorResponse = { error: message, code };
   return new Response(JSON.stringify(body), {
     status,
-    headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+    headers: responseHeaders(origin),
   });
 }
 
@@ -59,7 +60,7 @@ Deno.serve(async (req) => {
   const origin = req.headers.get("origin");
 
   if (req.method === "OPTIONS") {
-    return new Response(null, { status: 204, headers: corsHeaders(origin) });
+    return new Response(null, { status: 204, headers: responseHeaders(origin) });
   }
 
   const log = createLogger("join-league", req);
@@ -83,7 +84,7 @@ Deno.serve(async (req) => {
     const url = new URL(req.url);
     const code = url.searchParams.get("code")?.trim().toUpperCase();
 
-    if (!code || code.length !== 6) {
+    if (!code || code.length !== 6 || !isAlphanumeric(code)) {
       return errorResponse("Invalid join code format", "INVALID_CODE", 400, origin);
     }
 
@@ -117,7 +118,7 @@ Deno.serve(async (req) => {
 
     return new Response(JSON.stringify(preview), {
       status: 200,
-      headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+      headers: responseHeaders(origin),
     });
   }
 
@@ -131,7 +132,7 @@ Deno.serve(async (req) => {
     }
 
     const code = body.code?.trim().toUpperCase();
-    if (!code || code.length !== 6) {
+    if (!code || code.length !== 6 || !isAlphanumeric(code)) {
       return errorResponse("Invalid join code format", "INVALID_CODE", 400, origin);
     }
 
@@ -197,7 +198,7 @@ Deno.serve(async (req) => {
 
     return new Response(JSON.stringify(response), {
       status: 200,
-      headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+      headers: responseHeaders(origin),
     });
   }
 

@@ -7,7 +7,7 @@
 // Response 200: { valid: boolean, field?: string, reason?: string }
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { corsHeaders } from "../_shared/supabase.ts";
+import { responseHeaders } from "../_shared/supabase.ts";
 import { validateLeagueContent } from "../_shared/profanity.ts";
 
 function errorResponse(
@@ -20,7 +20,7 @@ function errorResponse(
     JSON.stringify({ error: message, code }),
     {
       status,
-      headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+      headers: responseHeaders(origin),
     },
   );
 }
@@ -29,7 +29,7 @@ Deno.serve(async (req) => {
   const origin = req.headers.get("origin");
 
   if (req.method === "OPTIONS") {
-    return new Response(null, { status: 204, headers: corsHeaders(origin) });
+    return new Response(null, { status: 204, headers: responseHeaders(origin) });
   }
 
   if (req.method !== "POST") {
@@ -69,6 +69,6 @@ Deno.serve(async (req) => {
 
   return new Response(JSON.stringify(result), {
     status: 200,
-    headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+    headers: responseHeaders(origin),
   });
 });

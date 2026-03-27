@@ -7,38 +7,32 @@
 
 | Ticket | Branch | Agent | Status | Key Files | Started |
 |--------|--------|-------|--------|-----------|---------|
-| — | — | — | — | — | — |
+| PYR-193 | feature/PYR-193-security-hardening | Orchestrator | In Progress | supabase/functions/_shared/supabase.ts, all Edge Function index.ts files, .github/workflows/deploy-functions.yml, supabase/config.toml | 2026-03-27 |
 
-> No active agent work as of 2026-03-26.
-
-## Recommended Queue (2026-03-26)
+## Recommended Queue (2026-03-27)
 
 <!-- Next agent session: pick from this queue in order -->
-<!-- 1. PYR-182: Homepage hero card survived/eliminated variant (Homepage, High, 2pts) -->
-<!-- 2. PYR-186: Leave league with confirmation modal (Community, High, 2pts) — DONE -->
-<!-- 3. PYR-99: Survival celebration reactions (Community, Medium, 2pts) -->
-<!-- 4. PYR-161: Post-elimination spectator experience (Community, Medium, 2pts) -->
+<!-- 1. PYR-193: Security hardening — CORS, JWT, input validation (Launch Readiness, Urgent) -->
+<!-- 2. PYR-191: Production CI/CD pipeline (Launch Readiness, Urgent) -->
+<!-- 3. PYR-192: Error monitoring / crash reporting (Launch Readiness, Urgent) -->
+<!-- 4. PYR-161: Post-elimination spectator experience (Community V1, Medium, 2pts) — completes milestone -->
 <!-- 5. PYR-183: Players remaining redesign (Homepage, High, 3pts) -->
-<!-- 6. PYR-103: Shared tension moments (Community, Medium, 2pts) -->
+<!-- 6. PYR-103: Shared tension moments (Community V2, Medium, 2pts) -->
+<!-- 7. PYR-194: Rate limiting on Edge Functions (Launch Readiness, High) -->
 
 ## Recently Completed
 
 | Ticket | Branch | PR | Merged |
 |--------|--------|----|--------|
+| PYR-173 | feature/PYR-173-visual-qa-snapshots | #119 | 2026-03-26 |
+| PYR-99 | feature/PYR-99-survival-reactions | #118 | 2026-03-26 |
+| PYR-182 | feature/PYR-182-hero-card-settlement | #117 | 2026-03-26 |
 | PYR-187 | feature/PYR-187-league-detail-tabs | #114 | 2026-03-26 |
 | PYR-186 | feature/PYR-186-leave-league | #113 | 2026-03-26 |
 | PYR-188 | feature/PYR-188-recap-close-button | #115 | 2026-03-26 |
 | PYR-185 | feature/PYR-185-elimination-card-league-state | #112 | 2026-03-26 |
 | PYR-170 | feature/PYR-170-paid-features-toggle | #110 | 2026-03-26 |
 | CI | chore/ci-speedup | #116 | 2026-03-26 |
-| PYR-149 | feature/PYR-149-wire-odds-v2 | #109 | 2026-03-25 |
-| PYR-169 | feature/PYR-169-remove-broadcast | #108 | 2026-03-25 |
-| PYR-167 | feature/PYR-167-extract-venue | #107 | 2026-03-25 |
-| PYR-98 | feature/PYR-98-elimination-cards | #106 | 2026-03-25 |
-| PYR-160 | feature/PYR-160-wire-wallet | #104 | 2026-03-25 |
-| PYR-162 | feature/PYR-162-gw-recap-empty-state | #103 | 2026-03-25 |
-| PYR-163 | feature/PYR-163-delete-picksheaderview | #102 | 2026-03-25 |
-| PYR-97 | feature/PYR-97-pick-reveal-animation | #101 | 2026-03-25 |
 
 ## Rules
 

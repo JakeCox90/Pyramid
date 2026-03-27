@@ -11,7 +11,7 @@
 // Designed to be called via cron ~24h before each gameweek deadline.
 
 import { ApiFootballClient } from "../_shared/api-football.ts";
-import { getServiceClient } from "../_shared/supabase.ts";
+import { getServiceClient, serviceHeaders, requireServiceRole } from "../_shared/supabase.ts";
 import { createLogger } from "../_shared/logger.ts";
 
 /**
@@ -39,27 +39,20 @@ Deno.serve(async (req) => {
   if (req.method !== "POST") {
     return new Response(JSON.stringify({ error: "Method not allowed" }), {
       status: 405,
-      headers: { "Content-Type": "application/json" },
+      headers: serviceHeaders(),
     });
   }
+
+  const auth = requireServiceRole(req);
+  if (!auth.authorized) return auth.errorResponse!;
 
   const log = createLogger("sync-odds", req);
-
-  // Service-role only
-  const authHeader = req.headers.get("Authorization") ?? "";
-  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
-  if (!serviceKey || !authHeader.includes(serviceKey)) {
-    return new Response(JSON.stringify({ error: "Unauthorized" }), {
-      status: 401,
-      headers: { "Content-Type": "application/json" },
-    });
-  }
 
   const apiKey = Deno.env.get("API_FOOTBALL_KEY");
   if (!apiKey) {
     return new Response(JSON.stringify({ error: "API_FOOTBALL_KEY not configured" }), {
       status: 500,
-      headers: { "Content-Type": "application/json" },
+      headers: serviceHeaders(),
     });
   }
 
@@ -91,14 +84,14 @@ Deno.serve(async (req) => {
       log.error("Failed to fetch fixtures", fetchError);
       return new Response(JSON.stringify({ error: "Failed to fetch fixtures" }), {
         status: 500,
-        headers: { "Content-Type": "application/json" },
+        headers: serviceHeaders(),
       });
     }
 
     if (!fixtures || fixtures.length === 0) {
       return new Response(
         JSON.stringify({ synced: 0, message: "No fixtures need odds" }),
-        { status: 200, headers: { "Content-Type": "application/json" } },
+        { status: 200, headers: serviceHeaders() },
       );
     }
 
@@ -163,13 +156,13 @@ Deno.serve(async (req) => {
 
     return new Response(
       JSON.stringify({ synced, skipped, total: fixtures.length }),
-      { status: 200, headers: { "Content-Type": "application/json" } },
+      { status: 200, headers: serviceHeaders() },
     );
   } catch (err) {
     log.error("sync-odds error", err);
     return new Response(JSON.stringify({ error: String(err) }), {
       status: 500,
-      headers: { "Content-Type": "application/json" },
+      headers: serviceHeaders(),
     });
   }
 });

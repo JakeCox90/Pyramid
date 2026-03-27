@@ -54,9 +54,28 @@ enabled = false
 client_id = ""
 secret = ""
 
-# Edge Functions — disable gateway JWT verification.
-# Our functions validate auth internally via getUser(), which supports ES256 JWTs.
-# The gateway only verifies HS256 (anon/service-role), rejecting user JWTs signed with ES256.
+# ─── Edge Functions — JWT verification strategy ───────────────────────────────
+#
+# verify_jwt = false for ALL functions. This is intentional:
+#
+# Why: Supabase gateway only verifies HS256 tokens (anon/service-role keys).
+# Our user JWTs are signed with ES256 (Supabase Auth default). The gateway
+# would reject all user requests with a 401 if verify_jwt were true.
+#
+# How auth is enforced instead:
+#   - User-facing functions: call getUser() internally, which validates ES256 JWTs
+#   - Service-role functions: check Authorization header for service role key
+#     via requireServiceRole() (see _shared/supabase.ts)
+#   - Cron functions: same requireServiceRole() guard — Supabase cron scheduler
+#     sends the service role key automatically
+#
+# Security layers beyond JWT:
+#   - CORS allowlist: only approved origins get Access-Control-Allow-Origin
+#   - Security headers: X-Content-Type-Options, X-Frame-Options, HSTS, Referrer-Policy
+#   - Input validation: UUID format, integer bounds, string sanitization, amount caps
+#
+# ─── User-facing functions (iOS app → getUser() auth) ─────────────────────────
+
 [functions.create-league]
 verify_jwt = false
 
@@ -81,10 +100,23 @@ verify_jwt = false
 [functions.update-league]
 verify_jwt = false
 
+[functions.update-profile]
+verify_jwt = false
+
+[functions.validate-league-content]
+verify_jwt = false
+
+[functions.leave-league]
+verify_jwt = false
+
 [functions.register-device-token]
 verify_jwt = false
 
-# Service-role-only functions — these also validate auth internally
+[functions.reset-dev-data]
+verify_jwt = false
+
+# ─── Service-role functions (internal only → requireServiceRole() auth) ───────
+
 [functions.settle-picks]
 verify_jwt = false
 
@@ -107,6 +139,12 @@ verify_jwt = false
 verify_jwt = false
 
 [functions.sync-odds]
+verify_jwt = false
+
+[functions.get-head-to-head]
+verify_jwt = false
+
+[functions.generate-gameweek-story]
 verify_jwt = false
 
 # Project references (not secret — safe to commit)

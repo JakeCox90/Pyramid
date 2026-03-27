@@ -7,7 +7,8 @@
 // Response 201: { league_id: string, join_code: string, name: string }
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { corsHeaders, getServiceClient } from "../_shared/supabase.ts";
+import { getServiceClient, responseHeaders } from "../_shared/supabase.ts";
+import { sanitizeString } from "../_shared/validation.ts";
 import { createLogger } from "../_shared/logger.ts";
 import { validateLeagueContent } from "../_shared/profanity.ts";
 
@@ -55,7 +56,7 @@ function errorResponse(
   const body: ErrorResponse = { error: message, code };
   return new Response(JSON.stringify(body), {
     status,
-    headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+    headers: responseHeaders(origin),
   });
 }
 
@@ -63,7 +64,7 @@ Deno.serve(async (req) => {
   const origin = req.headers.get("origin");
 
   if (req.method === "OPTIONS") {
-    return new Response(null, { status: 204, headers: corsHeaders(origin) });
+    return new Response(null, { status: 204, headers: responseHeaders(origin) });
   }
 
   if (req.method !== "POST") {
@@ -104,7 +105,7 @@ Deno.serve(async (req) => {
   }
 
   // Validate name
-  const name = body.name?.trim();
+  const name = sanitizeString(body.name ?? "", 40);
   if (!name || name.length < 3 || name.length > 40) {
     return errorResponse(
       "League name must be between 3 and 40 characters",
@@ -125,7 +126,7 @@ Deno.serve(async (req) => {
     return errorResponse("Invalid emoji", "INVALID_EMOJI", 400, origin);
   }
 
-  const description = body.description?.trim() ?? null;
+  const description = body.description ? sanitizeString(body.description, 80) : null;
   if (description && description.length > 80) {
     return errorResponse("Description must be 80 characters or fewer", "INVALID_DESCRIPTION", 400, origin);
   }
@@ -226,6 +227,6 @@ Deno.serve(async (req) => {
 
   return new Response(JSON.stringify(response), {
     status: 201,
-    headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+    headers: responseHeaders(origin),
   });
 });

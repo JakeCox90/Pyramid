@@ -16,7 +16,7 @@
 //
 // Idempotency: running twice in the same minute is safe — the query returns 0 eligible rows.
 
-import { getServiceClient } from "../_shared/supabase.ts";
+import { getServiceClient, serviceHeaders } from "../_shared/supabase.ts";
 import { createLogger } from "../_shared/logger.ts";
 
 interface ProcessResult {
@@ -27,7 +27,7 @@ interface ProcessResult {
 function json(body: unknown, status: number): Response {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { "Content-Type": "application/json" },
+    headers: serviceHeaders(),
   });
 }
 
