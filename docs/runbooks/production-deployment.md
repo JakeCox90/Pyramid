@@ -111,14 +111,11 @@ These secrets are needed for `deploy-testflight.yml`:
    ```
 5. Add as `APPLE_PROVISIONING_PROFILE` in GitHub Secrets
 
-#### Step-by-step: Update exportOptions.plist
+#### Note: exportOptions.plist
 
-After setting up the certificate and profile:
+The `ios/exportOptions.plist` file contains a `TEAM_ID_PLACEHOLDER` value. This is **intentional** — the CI workflow patches it at build time using the `APPLE_TEAM_ID` secret via PlistBuddy. You do not need to commit your real Team ID into the file.
 
-1. Open `ios/exportOptions.plist`
-2. Replace `TEAM_ID_PLACEHOLDER` with your actual Apple Team ID
-3. Replace `Pyramid Distribution` with the exact name of your provisioning profile (if different)
-4. Commit the change
+If your provisioning profile name differs from `Pyramid Distribution`, update the profile name in `exportOptions.plist` and commit the change.
 
 ---
 
