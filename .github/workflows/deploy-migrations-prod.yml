@@ -1,0 +1,109 @@
+name: Deploy Migrations (Production)
+
+# ─── Manual-only production database migration ────────────────────────────────
+# Applies pending Supabase migrations to the production database.
+# Always previews changes before applying. Requires "production" Environment approval.
+#
+# Required GitHub Secrets:
+#   SUPABASE_ACCESS_TOKEN      — Supabase Management API token
+#   SUPABASE_PROJECT_REF_PROD  — Production project ref (cracvbokmvryhhclzxxw)
+#   SUPABASE_DB_PASSWORD_PROD  — Production database password
+#
+# Usage:
+#   1. Trigger manually from Actions tab
+#   2. Set dry_run=true to preview without applying
+#   3. Review the diff output in the workflow logs
+#   4. Re-run with dry_run=false to apply
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: "Type 'migrate-prod' to confirm production migration"
+        required: true
+        type: string
+      dry_run:
+        description: "Preview only — show pending migrations without applying"
+        required: false
+        type: boolean
+        default: true
+
+jobs:
+  validate:
+    name: Validate confirmation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check confirmation string
+        if: inputs.confirm != 'migrate-prod'
+        run: |
+          echo "::error::You must type 'migrate-prod' to confirm. Got: '${{ inputs.confirm }}'"
+          exit 1
+
+  migrate:
+    name: Apply Migrations
+    needs: validate
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Link to production project
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          supabase link \
+            --project-ref ${{ secrets.SUPABASE_PROJECT_REF_PROD }} \
+            --password ${{ secrets.SUPABASE_DB_PASSWORD_PROD }}
+
+      - name: Preview pending migrations
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          echo "=== Migration files in repo ==="
+          ls -la supabase/migrations/
+          echo ""
+          echo "=== Checking remote migration history ==="
+          supabase migration list \
+            --project-ref ${{ secrets.SUPABASE_PROJECT_REF_PROD }} || true
+          echo ""
+          echo "=== Pending changes (db diff) ==="
+          supabase db diff \
+            --linked \
+            --schema public || echo "No schema differences detected"
+
+      - name: Apply migrations
+        if: inputs.dry_run == false
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          echo "Applying migrations to production..."
+          supabase db push \
+            --linked \
+            --password ${{ secrets.SUPABASE_DB_PASSWORD_PROD }}
+          echo "Migrations applied successfully."
+
+      - name: Tag successful migration
+        if: inputs.dry_run == false
+        run: |
+          TAG="prod-migration-$(date -u +'%Y-%m-%d-%H%M')"
+          git tag "$TAG"
+          git push origin "$TAG"
+          echo "Tagged migration: $TAG"
+
+      - name: Migration summary
+        run: |
+          echo "## Database Migration — Production" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            echo "**Mode:** Preview only (no changes applied)" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "**Mode:** Live migration" >> "$GITHUB_STEP_SUMMARY"
+            echo "**Tag:** prod-migration-$(date -u +'%Y-%m-%d-%H%M')" >> "$GITHUB_STEP_SUMMARY"
+          fi
+          echo "**Commit:** $(git rev-parse --short HEAD)" >> "$GITHUB_STEP_SUMMARY"
+          MIGRATION_COUNT=$(ls supabase/migrations/*.sql 2>/dev/null | wc -l | tr -d ' ')
+          echo "**Total migration files:** $MIGRATION_COUNT" >> "$GITHUB_STEP_SUMMARY"

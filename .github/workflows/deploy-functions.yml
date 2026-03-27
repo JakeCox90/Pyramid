@@ -1,4 +1,8 @@
-name: Deploy Edge Functions
+name: Deploy Edge Functions (Dev)
+
+# ─── Automatic dev deployment ─────────────────────────────────────────────────
+# Deploys to the DEV Supabase project on every push to main.
+# For production deployment, use deploy-functions-prod.yml (manual trigger).
 
 on:
   workflow_dispatch:

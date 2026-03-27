@@ -7,7 +7,7 @@
 
 | Ticket | Branch | Agent | Status | Key Files | Started |
 |--------|--------|-------|--------|-----------|---------|
-| (none) | | | | | |
+| PYR-191 | feature/PYR-191-production-cicd | Orchestrator | In Progress | .github/workflows/deploy-*.yml, docs/runbooks/production-deployment.md, ios/Config/Release.xcconfig, ios/exportOptions.plist | 2026-03-27 |
 
 ## Recommended Queue (2026-03-27)
 

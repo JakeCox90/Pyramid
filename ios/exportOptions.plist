@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Export method: app-store for TestFlight / App Store distribution -->
+	<key>method</key>
+	<string>app-store</string>
+
+	<!-- Upload to App Store Connect (TestFlight) -->
+	<key>destination</key>
+	<string>upload</string>
+
+	<!-- Strip Swift symbols to reduce binary size -->
+	<key>stripSwiftSymbols</key>
+	<true/>
+
+	<!-- Upload symbols for crash reporting -->
+	<key>uploadSymbols</key>
+	<true/>
+
+	<!-- Automatic signing: set to false for CI manual signing.
+	     The DEVELOPMENT_TEAM and provisioning profile are set
+	     via xcodebuild build settings in the workflow. -->
+	<key>signingStyle</key>
+	<string>manual</string>
+
+	<!-- Team ID is injected by CI via DEVELOPMENT_TEAM build setting.
+	     This placeholder is overridden at build time. -->
+	<key>teamID</key>
+	<string>TEAM_ID_PLACEHOLDER</string>
+
+	<key>provisioningProfiles</key>
+	<dict>
+		<!-- Bundle ID → Provisioning profile name.
+		     The actual profile is installed from secrets in CI.
+		     Update this value to match your provisioning profile name. -->
+		<key>com.pyramid.app</key>
+		<string>Pyramid Distribution</string>
+	</dict>
+</dict>
+</plist>
