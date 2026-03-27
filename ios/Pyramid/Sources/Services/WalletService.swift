@@ -50,6 +50,7 @@ final class WalletService: WalletServiceProtocol {
             return balance
         } catch {
             Log.wallet.error("Wallet fetch failed: \(error.localizedDescription)")
+            CrashReporter.capture(error, context: ["service": "wallet", "op": "fetch"])
             throw WalletServiceError.fetchFailed(error.localizedDescription)
         }
     }
@@ -86,6 +87,10 @@ final class WalletService: WalletServiceProtocol {
             Log.wallet.info("Withdrawal request succeeded: \(amountPence)p")
         } catch {
             Log.wallet.error("Withdrawal failed: \(error.localizedDescription)")
+            CrashReporter.capture(error, context: [
+                "service": "wallet", "op": "withdrawal",
+                "amount_pence": "\(amountPence)"
+            ])
             throw WalletServiceError.withdrawalFailed(error.localizedDescription)
         }
     }
@@ -113,6 +118,10 @@ final class WalletService: WalletServiceProtocol {
             Log.wallet.info("Top-up succeeded: \(amountPence)p")
         } catch {
             Log.wallet.error("Top-up failed: \(error.localizedDescription)")
+            CrashReporter.capture(error, context: [
+                "service": "wallet", "op": "top_up",
+                "amount_pence": "\(amountPence)"
+            ])
             throw WalletServiceError.topUpFailed(error.localizedDescription)
         }
     }

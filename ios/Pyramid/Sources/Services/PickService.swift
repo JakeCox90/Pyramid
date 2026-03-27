@@ -211,6 +211,10 @@ final class PickService: PickServiceProtocol {
             return response
         } catch {
             Log.picks.error("Pick submission failed: \(error.localizedDescription)")
+            CrashReporter.capture(error, context: [
+                "service": "picks", "op": "submit",
+                "league_id": leagueId, "fixture_id": "\(fixtureId)"
+            ])
             throw PickServiceError.submitFailed(error.localizedDescription)
         }
     }

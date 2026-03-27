@@ -183,7 +183,7 @@ Deno.serve(async (req) => {
     const advanced = await maybeAdvanceGameweek(db, currentGw.id, currentGw.round_number, log);
     results.gameweekAdvanced = advanced;
 
-    log.complete("ok", results);
+    await log.complete("ok", results);
 
     return new Response(JSON.stringify(results), {
       status: 200,

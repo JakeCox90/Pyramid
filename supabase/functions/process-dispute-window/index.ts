@@ -77,6 +77,6 @@ Deno.serve(async (req) => {
     total_pence_released: totalPenceReleased,
   };
 
-  log.complete("ok", result);
+  await log.complete("ok", result);
   return json(result, 200);
 });

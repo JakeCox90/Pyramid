@@ -1,20 +1,27 @@
 // Shared structured logger for Edge Functions
 // Outputs JSON lines to stdout/stderr for indexing by Supabase log drain.
+// Errors are also forwarded to Sentry when the DSN is configured.
 //
 // Usage:
 //   import { createLogger } from "../_shared/logger.ts";
 //   const log = createLogger("settle-picks", req);
 //   log.info("Settlement started", { fixtureId: 123 });
 //   log.error("DB write failed", error, { leagueId: "abc" });
-//   return log.complete("ok", response);
+//   await log.complete("ok", response);
+
+import {
+  initSentry,
+  captureException,
+  flushSentry,
+} from "./sentry.ts";
 
 export interface Logger {
   readonly requestId: string;
   info(message: string, data?: Record<string, unknown>): void;
   warn(message: string, data?: Record<string, unknown>): void;
   error(message: string, err?: unknown, data?: Record<string, unknown>): void;
-  /** Log completion with duration and return void. Use at end of handler. */
-  complete(outcome: string, data?: Record<string, unknown>): void;
+  /** Log completion with duration, flush Sentry, and return void. */
+  complete(outcome: string, data?: Record<string, unknown>): Promise<void>;
 }
 
 /**
@@ -22,6 +29,8 @@ export interface Logger {
  * Generates a request ID from the request headers (x-request-id) or crypto.randomUUID().
  */
 export function createLogger(functionName: string, req?: Request): Logger {
+  initSentry();
+
   const requestId =
     req?.headers.get("x-request-id") ?? crypto.randomUUID();
   const startTime = performance.now();
@@ -63,13 +72,19 @@ export function createLogger(functionName: string, req?: Request): Logger {
       if (err instanceof Error) {
         errorData.error = err.message;
         errorData.stack = err.stack;
+        captureException(err, { function: functionName, requestId });
       } else if (err != null) {
         errorData.error = String(err);
+        captureException(new Error(String(err)), {
+          function: functionName,
+          requestId,
+        });
       }
       emit("error", message, errorData);
     },
-    complete(outcome: string, data?: Record<string, unknown>) {
+    async complete(outcome: string, data?: Record<string, unknown>) {
       emit("info", `${functionName} complete`, { outcome, ...data });
+      await flushSentry();
     },
   };
 }

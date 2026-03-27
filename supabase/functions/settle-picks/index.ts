@@ -692,7 +692,7 @@ Deno.serve(async (req) => {
     await db.from("fixtures").update({ settled_at: new Date().toISOString() }).eq("id", fixtureId);
   }
 
-  log.complete("ok", summary);
+  await log.complete("ok", summary);
   return json(summary, 200);
 });
 

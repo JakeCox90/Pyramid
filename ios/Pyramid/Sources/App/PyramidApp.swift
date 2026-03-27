@@ -25,6 +25,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate, @preconcurrency UNUser
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
+        CrashReporter.start()
         UNUserNotificationCenter.current().delegate = self
         return true
     }

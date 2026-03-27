@@ -63,6 +63,8 @@ jobs:
         run: |
           supabase secrets set ENVIRONMENT=production \
             --project-ref "$PROJECT_REF"
+          supabase secrets set SENTRY_DSN_EDGE=${{ secrets.SENTRY_DSN_EDGE_PROD }} \
+            --project-ref "$PROJECT_REF"
 
       - name: Deploy user-facing Edge Functions
         env:
