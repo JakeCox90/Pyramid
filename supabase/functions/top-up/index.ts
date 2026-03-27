@@ -111,7 +111,7 @@ Deno.serve(async (req) => {
     return errorResponse("Invalid stripe_payment_intent_id format", "INVALID_BODY", 400, origin);
   }
 
-  const amountCheck = validateAmountPence(amount_pence, 1, 100000);
+  const amountCheck = validateAmountPence(amount_pence, 1, 10000);
   if (!amountCheck.valid) {
     return errorResponse(amountCheck.error, "INVALID_AMOUNT", 400, origin);
   }

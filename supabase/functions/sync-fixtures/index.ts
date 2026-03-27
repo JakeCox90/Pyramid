@@ -156,8 +156,9 @@ Deno.serve(async (req) => {
       { status: 200, headers: serviceHeaders() },
     );
   } catch (err) {
+    console.error(err);
     log.error("sync-fixtures error", err);
-    return new Response(JSON.stringify({ error: String(err) }), {
+    return new Response(JSON.stringify({ error: "Internal server error" }), {
       status: 500,
       headers: serviceHeaders(),
     });

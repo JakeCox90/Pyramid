@@ -93,7 +93,7 @@ Deno.serve(async (req) => {
 
   const { amount_pence } = body;
 
-  const amountCheck = validateAmountPence(amount_pence, 1, 500000);
+  const amountCheck = validateAmountPence(amount_pence, 1, 50000);
   if (!amountCheck.valid) {
     return errorResponse(amountCheck.error, "INVALID_AMOUNT", 400, origin);
   }

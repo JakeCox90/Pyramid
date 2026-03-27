@@ -39,13 +39,16 @@ const DEFAULT_ALLOWED_ORIGINS: string[] = [
   "http://localhost:54321",
 ];
 
+let _cachedOrigins: Set<string> | null = null;
 function getAllowedOrigins(): Set<string> {
+  if (_cachedOrigins) return _cachedOrigins;
   const extra = Deno.env.get("ALLOWED_ORIGINS");
   const origins = [...DEFAULT_ALLOWED_ORIGINS];
   if (extra) {
     origins.push(...extra.split(",").map((o) => o.trim()).filter(Boolean));
   }
-  return new Set(origins);
+  _cachedOrigins = new Set(origins);
+  return _cachedOrigins;
 }
 
 export function corsHeaders(origin: string | null): Record<string, string> {
@@ -54,6 +57,7 @@ export function corsHeaders(origin: string | null): Record<string, string> {
     return {
       "Access-Control-Allow-Headers":
         "authorization, x-client-info, apikey, content-type",
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
     };
   }
 
@@ -63,6 +67,7 @@ export function corsHeaders(origin: string | null): Record<string, string> {
       "Access-Control-Allow-Origin": origin,
       "Access-Control-Allow-Headers":
         "authorization, x-client-info, apikey, content-type",
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
     };
   }
 
@@ -71,6 +76,7 @@ export function corsHeaders(origin: string | null): Record<string, string> {
   return {
     "Access-Control-Allow-Headers":
       "authorization, x-client-info, apikey, content-type",
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
   };
 }
 

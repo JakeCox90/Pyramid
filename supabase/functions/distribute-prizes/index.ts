@@ -33,6 +33,7 @@
 import { createLogger } from "../_shared/logger.ts";
 import { alertSlack } from "../_shared/alert.ts";
 import { getServiceClient, serviceHeaders } from "../_shared/supabase.ts";
+import { isUUID } from "../_shared/validation.ts";
 import {
   computePrizeAllocations,
   determineFinishingPositions,
@@ -94,6 +95,9 @@ Deno.serve(async (req) => {
   const { leagueId } = body;
   if (!leagueId || typeof leagueId !== "string") {
     return json({ error: "leagueId is required" }, 400);
+  }
+  if (!isUUID(leagueId)) {
+    return json({ error: "leagueId must be a valid UUID" }, 400);
   }
 
   const db = getServiceClient();
