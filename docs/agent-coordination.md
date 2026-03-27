@@ -7,7 +7,7 @@
 
 | Ticket | Branch | Agent | Status | Key Files | Started |
 |--------|--------|-------|--------|-----------|---------|
-| PYR-202 | feature/PYR-202-topup-production-guard | Backend | In Progress | supabase/functions/top-up/index.ts | 2026-03-27 |
+| (none) | | | | | |
 
 ## Recommended Queue (2026-03-27)
 
@@ -25,6 +25,7 @@
 
 | Ticket | Branch | PR | Merged |
 |--------|--------|----|--------|
+| PYR-202 | feature/PYR-202-topup-production-guard | #122 | 2026-03-27 |
 | PYR-193 | feature/PYR-193-security-hardening | #120 | 2026-03-27 |
 | PYR-173 | feature/PYR-173-visual-qa-snapshots | #119 | 2026-03-26 |
 | PYR-99 | feature/PYR-99-survival-reactions | #118 | 2026-03-26 |
