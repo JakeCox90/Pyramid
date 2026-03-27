@@ -7,7 +7,7 @@
 
 | Ticket | Branch | Agent | Status | Key Files | Started |
 |--------|--------|-------|--------|-----------|---------|
-| (none) | | | | | |
+| PYR-202 | feature/PYR-202-topup-production-guard | Backend | In Progress | supabase/functions/top-up/index.ts | 2026-03-27 |
 
 ## Recommended Queue (2026-03-27)
 
