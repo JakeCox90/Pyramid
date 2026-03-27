@@ -232,32 +232,21 @@ Deno.serve(async (req) => {
     );
   }
 
-  // ── 5. Add user as member with pseudonym ──────────────────────────────────
-  // Re-fetch current player count to assign correct pseudonym (join-order based)
-  const { data: currentCountRow } = await db
-    .from("league_members")
-    .select("id", { count: "exact", head: true })
-    .eq("league_id", targetLeague.id);
+  // ── 5+6. Atomic: add member + deduct stake in a single Postgres transaction ─
+  // Pseudonym is based on current count; the atomic function handles the insert.
+  const pseudonym = generatePseudonym(targetLeague.player_count + 1);
 
-  // @ts-ignore — Supabase returns count in the response headers, not data
-  const existingCount: number = currentCountRow ?? 0;
+  const { data: joinResult, error: joinError } = await db.rpc("atomic_join_paid_league", {
+    p_user_id: user.id,
+    p_league_id: targetLeague.id,
+    p_pseudonym: pseudonym,
+    p_stake_pence: STAKE_PENCE,
+  }).single();
 
-  // Note: there's a small race window here in concurrent joins. In production,
-  // pseudonym assignment should be done in a Postgres function (advisory lock or
-  // a sequence per league) to guarantee uniqueness. For now: pseudonym = count + 1.
-  const newPosition = existingCount + 1;
-  const pseudonym = generatePseudonym(newPosition);
+  if (joinError) {
+    const msg = joinError.message ?? "";
 
-  const { error: memberInsertError } = await db.from("league_members").insert({
-    league_id: targetLeague.id,
-    user_id: user.id,
-    status: "active",
-    pseudonym,
-  });
-
-  if (memberInsertError) {
-    // Unique constraint on (league_id, user_id) — already a member
-    if (memberInsertError.code === "23505") {
+    if (msg.includes("ALREADY_MEMBER") || joinError.code === "23505") {
       return errorResponse(
         "You are already a member of this league",
         "ALREADY_MEMBER",
@@ -265,34 +254,21 @@ Deno.serve(async (req) => {
         origin,
       );
     }
-    log.error("Failed to insert league member", memberInsertError);
+
+    if (msg.includes("INSUFFICIENT_BALANCE")) {
+      return errorResponse(
+        "Insufficient balance to cover the £5 stake. Please top up your wallet.",
+        "INSUFFICIENT_BALANCE",
+        402,
+        origin,
+      );
+    }
+
+    log.error("Atomic join failed", joinError, { userId: user.id, leagueId: targetLeague.id });
     return errorResponse("Failed to join league", "JOIN_FAILED", 500, origin);
   }
 
-  // ── 6. Deduct stake from Available to Play ────────────────────────────────
-  const balanceAfter = availableToPlay - STAKE_PENCE;
-  const { error: stakeError } = await db.from("wallet_transactions").insert({
-    user_id: user.id,
-    type: "stake",
-    amount_pence: STAKE_PENCE,
-    balance_after_pence: balanceAfter,
-    reference_id: targetLeague.id,
-    notes: `Stake for paid league ${targetLeague.id}`,
-  });
-
-  if (stakeError) {
-    // Non-fatal: member was added, but stake write failed. Log for ops team to reconcile.
-    log.error("CRITICAL: stake deduction failed", stakeError, { userId: user.id, leagueId: targetLeague.id });
-  }
-
-  // ── 7. Compute new player count and update league status ──────────────────
-  const { data: updatedCountRow } = await db
-    .from("league_members")
-    .select("id", { count: "exact", head: true })
-    .eq("league_id", targetLeague.id);
-
-  // @ts-ignore — count in response
-  const newPlayerCount: number = updatedCountRow ?? newPosition;
+  const newPlayerCount: number = joinResult.new_player_count as number;
 
   const newStatus = computeLeagueStatusAfterJoin(newPlayerCount);
   const leagueFull = isLeagueFull(newPlayerCount);

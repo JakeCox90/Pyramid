@@ -7,7 +7,7 @@
 
 | Ticket | Branch | Agent | Status | Key Files | Started |
 |--------|--------|-------|--------|-----------|---------|
-| — | — | — | — | — | — |
+| PYR-204 | feature/PYR-204-atomic-stake-deduction | Orchestrator | In Progress | supabase/functions/join-paid-league/index.ts, supabase/migrations/ | 2026-03-27 |
 
 ## Recommended Queue (2026-03-27)
 
