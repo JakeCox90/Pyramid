@@ -76,7 +76,6 @@ jobs:
             update-league
             validate-league-content
             leave-league
-            reset-dev-data
           )
 
           for fn in "${USER_FUNCTIONS[@]}"; do
@@ -124,6 +123,8 @@ jobs:
       - name: Tag successful deployment
         if: inputs.dry_run == false
         run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
           TAG="prod-functions-$(date -u +'%Y-%m-%d-%H%M')"
           git tag "$TAG"
           git push origin "$TAG"
@@ -141,5 +142,5 @@ jobs:
             echo "**Tag:** prod-functions-$(date -u +'%Y-%m-%d-%H%M')" >> "$GITHUB_STEP_SUMMARY"
           fi
           echo "**Commit:** $(git rev-parse --short HEAD)" >> "$GITHUB_STEP_SUMMARY"
-          echo "**User-facing functions:** 13" >> "$GITHUB_STEP_SUMMARY"
+          echo "**User-facing functions:** 12" >> "$GITHUB_STEP_SUMMARY"
           echo "**Service-role functions:** 10" >> "$GITHUB_STEP_SUMMARY"
