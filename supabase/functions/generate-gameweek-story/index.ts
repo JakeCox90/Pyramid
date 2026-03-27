@@ -1,4 +1,4 @@
-import { getServiceClient, serviceHeaders } from "../_shared/supabase.ts";
+import { getServiceClient, serviceHeaders, requireServiceRole } from "../_shared/supabase.ts";
 import { createLogger } from "../_shared/logger.ts";
 import { alertSlack } from "../_shared/alert.ts";
 import { buildStoryContext } from "./analysis.ts";
@@ -14,11 +14,8 @@ Deno.serve(async (req) => {
     return json({ error: "Method not allowed" }, 405);
   }
 
-  const authHeader = req.headers.get("Authorization") ?? "";
-  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
-  if (!serviceKey || !authHeader.includes(serviceKey)) {
-    return json({ error: "Unauthorized" }, 401);
-  }
+  const auth = requireServiceRole(req);
+  if (!auth.authorized) return auth.errorResponse!;
 
   const log = createLogger("generate-gameweek-story", req);
 

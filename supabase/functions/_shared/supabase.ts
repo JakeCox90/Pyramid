@@ -117,7 +117,8 @@ export function serviceHeaders(): Record<string, string> {
 export function requireServiceRole(req: Request): { authorized: boolean; errorResponse?: Response } {
   const authHeader = req.headers.get("Authorization") ?? "";
   const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
-  if (!serviceKey || !authHeader.includes(serviceKey)) {
+  const token = authHeader.replace(/^Bearer\s+/i, "").trim();
+  if (!serviceKey || token !== serviceKey) {
     return {
       authorized: false,
       errorResponse: new Response(

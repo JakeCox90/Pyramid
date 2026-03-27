@@ -16,7 +16,7 @@ import {
 } from "../_shared/api-football.ts";
 import type { H2HMeeting } from "../_shared/api-football.ts";
 import { createLogger } from "../_shared/logger.ts";
-import { serviceHeaders } from "../_shared/supabase.ts";
+import { serviceHeaders, requireServiceRole } from "../_shared/supabase.ts";
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -81,11 +81,8 @@ Deno.serve(async (req) => {
   const log = createLogger("get-head-to-head", req);
 
   // Service-role auth — this endpoint is internal-only
-  const authHeader = req.headers.get("Authorization") ?? "";
-  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
-  if (!serviceKey || !authHeader.includes(serviceKey)) {
-    return json({ error: "Unauthorized — service role required" }, 401);
-  }
+  const auth = requireServiceRole(req);
+  if (!auth.authorized) return auth.errorResponse!;
 
   // Parse body
   let body: RequestBody;

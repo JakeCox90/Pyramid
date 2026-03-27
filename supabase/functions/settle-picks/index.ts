@@ -20,7 +20,7 @@
 //   eliminated in the same GW → reinstate all, continue to next GW.
 //   Picks keep result "survived" so that team counts as used this round.
 
-import { getServiceClient, serviceHeaders } from "../_shared/supabase.ts";
+import { getServiceClient, serviceHeaders, requireServiceRole } from "../_shared/supabase.ts";
 import { createLogger } from "../_shared/logger.ts";
 import { alertSlack } from "../_shared/alert.ts";
 import { determinePickResult, findNoPickMemberIds, isGameweekFullySettled, hasSingleSurvivor, isFinalGameweek } from "./settlement.ts";
@@ -507,11 +507,8 @@ Deno.serve(async (req) => {
   const log = createLogger("settle-picks", req);
 
   // Internal-only: require service role key
-  const authHeader = req.headers.get("Authorization") ?? "";
-  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
-  if (!serviceKey || !authHeader.includes(serviceKey)) {
-    return json({ error: "Unauthorized — service role required" }, 401);
-  }
+  const auth = requireServiceRole(req);
+  if (!auth.authorized) return auth.errorResponse!;
 
   let body: RequestBody;
   try {
