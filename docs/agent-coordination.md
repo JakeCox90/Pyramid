@@ -7,8 +7,7 @@
 
 | Ticket | Branch | Agent | Status | Key Files | Started |
 |--------|--------|-------|--------|-----------|---------|
-| PYR-204 | feature/PYR-204-atomic-stake-deduction | Orchestrator | In Progress | supabase/functions/join-paid-league/index.ts, supabase/migrations/ | 2026-03-27 |
-| PYR-194 | feature/PYR-194-rate-limiting | Orchestrator | In Progress | supabase/functions/_shared/rate-limit.ts, supabase/migrations/, 11 Edge Function index.ts files | 2026-03-27 |
+| PYR-195 | feature/PYR-195-health-checks | Orchestrator | In Progress | supabase/functions/health/index.ts, docs/runbooks/health-monitoring.md | 2026-03-30 |
 
 ## Recommended Queue (2026-03-27)
 
