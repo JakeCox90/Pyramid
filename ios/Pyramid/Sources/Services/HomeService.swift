@@ -120,6 +120,14 @@ final class HomeService: HomeServiceProtocol {
         let playerCounts = await fetchAllPlayerCounts(
             leagues: leagues
         )
+        let memberSummaries = await fetchAllMemberSummaries(
+            leagues: leagues
+        )
+        let eliminationStats = await fetchAllEliminationStats(
+            userId: userId,
+            leagues: leagues,
+            gameweekId: gameweek?.id
+        )
 
         return HomeData(
             leagues: leagues, gameweek: gameweek,
@@ -127,7 +135,10 @@ final class HomeService: HomeServiceProtocol {
             fixtures: fixtures,
             lastGwResults: lastGwResults,
             allGameweeks: allGws,
-            playerCounts: playerCounts
+            playerCounts: playerCounts,
+            userId: userId,
+            memberSummaries: memberSummaries,
+            eliminationStats: eliminationStats
         )
     }
 

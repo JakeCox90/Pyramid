@@ -74,4 +74,83 @@ extension HomeService {
             return result
         }
     }
+
+    /// Fetches member summaries for all leagues concurrently.
+    func fetchAllMemberSummaries(
+        leagues: [League]
+    ) async -> [String: [MemberSummary]] {
+        await withTaskGroup(
+            of: (String, [MemberSummary]).self
+        ) { group in
+            for league in leagues {
+                group.addTask {
+                    do {
+                        let summaries = try await self
+                            .fetchMemberSummaries(
+                                leagueId: league.id
+                            )
+                        return (league.id, summaries)
+                    } catch {
+                        return (league.id, [])
+                    }
+                }
+            }
+            var result: [String: [MemberSummary]] = [:]
+            for await (id, summaries) in group {
+                result[id] = summaries
+            }
+            return result
+        }
+    }
+
+    /// Fetches elimination stats for all leagues concurrently.
+    func fetchAllEliminationStats(
+        userId: String,
+        leagues: [League],
+        gameweekId: Int?
+    ) async -> [String: EliminationStats] {
+        guard let gwId = gameweekId else { return [:] }
+        return await withTaskGroup(
+            of: (String, EliminationStats).self
+        ) { group in
+            for league in leagues {
+                group.addTask {
+                    do {
+                        async let eliminated = self
+                            .fetchEliminatedThisWeek(
+                                leagueId: league.id,
+                                gameweekId: gwId
+                            )
+                        async let streak = self
+                            .fetchSurvivalStreak(
+                                userId: userId,
+                                leagueId: league.id
+                            )
+                        return (
+                            league.id,
+                            EliminationStats(
+                                eliminatedThisWeek:
+                                    try await eliminated,
+                                survivalStreak:
+                                    try await streak
+                            )
+                        )
+                    } catch {
+                        return (
+                            league.id,
+                            EliminationStats(
+                                eliminatedThisWeek: 0,
+                                survivalStreak: 0
+                            )
+                        )
+                    }
+                }
+            }
+            var result: [String: EliminationStats] = [:]
+            for await (id, stats) in group {
+                result[id] = stats
+            }
+            return result
+        }
+    }
 }
