@@ -7,12 +7,29 @@ extension HomeView {
     func playersRemainingCard(
         for league: League
     ) -> some View {
-        let remaining = viewModel.playersRemaining(
+        let counts = viewModel.homeData?
+            .playerCounts[league.id]
+        let stats = viewModel.eliminationStats(
             for: league
         )
-        if !remaining.isEmpty {
+        let members = viewModel.memberSummaries(
+            for: league
+        )
+        let userStatus = viewModel.homeData?
+            .memberStatuses[league.id] ?? .active
+        let userId = viewModel.currentUserId
+
+        if let counts, counts.total > 0 {
             PlayersRemainingCard(
-                remaining: remaining
+                activeCount: counts.active,
+                totalCount: counts.total,
+                eliminatedThisWeek: stats?
+                    .eliminatedThisWeek ?? 0,
+                survivalStreak: stats?
+                    .survivalStreak ?? 0,
+                userStatus: userStatus,
+                currentUserId: userId,
+                members: members
             )
         }
     }
