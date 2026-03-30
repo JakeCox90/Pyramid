@@ -7,28 +7,22 @@
 
 | Ticket | Branch | Agent | Status | Key Files | Started |
 |--------|--------|-------|--------|-----------|---------|
-<<<<<<< HEAD
-| PYR-204 | feature/PYR-204-atomic-stake-deduction | Orchestrator | In Progress | supabase/functions/join-paid-league/index.ts, supabase/migrations/ | 2026-03-27 |
-=======
-| PYR-194 | feature/PYR-194-rate-limiting | Orchestrator | In Progress | supabase/functions/_shared/rate-limit.ts, supabase/migrations/, 11 Edge Function index.ts files | 2026-03-27 |
->>>>>>> 5f49df3 (feat(PYR-194): per-user rate limiting on Edge Functions)
+| PYR-190 | feature/PYR-190-analytics-infrastructure | Orchestrator | In Review | docs/plans/proposals/analytics-strategy.md | 2026-03-30 |
 
-## Recommended Queue (2026-03-27)
+## Recommended Queue (2026-03-30)
 
-<!-- Next agent session: pick from this queue in order -->
-<!-- Next agent session: pick from this queue in order -->
-<!-- 1. PYR-191: Production CI/CD pipeline (Launch Readiness, Urgent) — biggest launch blocker -->
-<!-- 2. PYR-194: Rate limiting on Edge Functions (Launch Readiness, High) — follows PYR-193 -->
-<!-- 3. PYR-161: Post-elimination spectator experience (Community V1, Medium, 2pts) — completes V1 milestone -->
-<!-- 4. PYR-183: Players remaining redesign (Homepage, High, 3pts) -->
-<!-- 5. PYR-103: Shared tension moments (Community V2, Medium, 2pts) -->
-<!-- 6. PYR-195: Uptime monitoring and health checks (Launch Readiness, High) -->
-<!-- 7. PYR-190: Analytics infrastructure (Launch Readiness, High) -->
+<!-- Next: PYR-209 (Monitoring config), PYR-183 (Players remaining) -->
 
 ## Recently Completed
 
 | Ticket | Branch | PR | Merged |
 |--------|--------|----|--------|
+| PYR-197 | feature/PYR-197-prod-migration-strategy | #135 | 2026-03-30 |
+| PYR-195 | feature/PYR-195-health-check | #134 | 2026-03-30 |
+| PYR-194 | feature/PYR-194-rate-limiting | #131 | 2026-03-30 |
+| PYR-161 | feature/PYR-161-spectator-experience | #133 | 2026-03-30 |
+| PYR-207 | feature/PYR-207-used-teams-docs | #132 | 2026-03-30 |
+| PYR-204 | feature/PYR-204-atomic-stake-deduction | #130 | 2026-03-27 |
 | PYR-203 | feature/PYR-203-withdrawal-atomicity | #129 | 2026-03-27 |
 | PYR-202 | feature/PYR-202-topup-production-guard | #122 | 2026-03-27 |
 | PYR-193 | feature/PYR-193-security-hardening | #120 | 2026-03-27 |
