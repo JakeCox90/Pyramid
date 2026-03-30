@@ -36,6 +36,11 @@
       "label": "Feedback"
     },
     {
+      "sources": ["**/PlayersRemainingCard*.swift"],
+      "testClass": "PlayersRemainingSnapshotTests",
+      "label": "Players Remaining"
+    },
+    {
       "sources": ["**/ThemeColors.swift", "**/ThemeSpacing.swift", "**/ThemeTypography.swift"],
       "testClass": "TokenSnapshotTests",
       "label": "Design Tokens"
