@@ -7,6 +7,7 @@
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { getServiceClient, responseHeaders } from "../_shared/supabase.ts";
+import { checkRateLimit, rateLimitResponse } from "../_shared/rate-limit.ts";
 import { isUUID } from "../_shared/validation.ts";
 import { createLogger } from "../_shared/logger.ts";
 
@@ -89,6 +90,10 @@ Deno.serve(async (req) => {
   }
 
   const db = getServiceClient();
+
+  // Rate limit check
+  const rateCheck = await checkRateLimit(db, user.id, "leave-league");
+  if (!rateCheck.allowed) return rateLimitResponse(rateCheck.retryAfter!, origin);
 
   // ── Look up the membership row ──────────────────────────────────────────
   const { data: member, error: memberError } = await db

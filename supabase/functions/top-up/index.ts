@@ -11,6 +11,7 @@
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { responseHeaders, getServiceClient } from "../_shared/supabase.ts";
+import { checkRateLimit, rateLimitResponse } from "../_shared/rate-limit.ts";
 import { validateAmountPence, isValidStripePaymentIntentId } from "../_shared/validation.ts";
 import { createLogger } from "../_shared/logger.ts";
 
@@ -140,6 +141,10 @@ Deno.serve(async (req) => {
   );
 
   const db = getServiceClient();
+
+  // Rate limit check
+  const rateCheck = await checkRateLimit(db, user.id, "top-up");
+  if (!rateCheck.allowed) return rateLimitResponse(rateCheck.retryAfter!, origin);
 
   // Idempotency key: top_up:<payment_intent_id> — safe to replay
   const idempotencyKey = `top_up:${stripe_payment_intent_id}`;
