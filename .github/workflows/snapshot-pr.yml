@@ -2,7 +2,7 @@ name: Visual QA Snapshots
 
 on:
   pull_request:
-    types: [opened, synchronize]
+    types: [opened, synchronize, closed]
 
 concurrency:
   group: snapshots-${{ github.event.pull_request.number }}
@@ -11,10 +11,11 @@ concurrency:
 jobs:
   snapshots:
     name: Generate Snapshots
+    if: github.event.action != 'closed'
     runs-on: macos-14
     timeout-minutes: 20
     permissions:
-      contents: read
+      contents: write
       pull-requests: write
 
     steps:
@@ -124,3 +125,17 @@ jobs:
             ios/PyramidSnapshotTests \
             ${{ github.event.pull_request.number }} \
             '${{ steps.manifest.outputs.labels }}'
+
+  cleanup:
+    name: Cleanup Snapshot Branch
+    runs-on: ubuntu-latest
+    if: github.event.action == 'closed'
+    permissions:
+      contents: write
+    steps:
+      - name: Delete snapshot branch
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api "repos/${{ github.repository }}/git/refs/heads/snapshots/pr-${{ github.event.pull_request.number }}" \
+            -X DELETE 2>/dev/null || true
