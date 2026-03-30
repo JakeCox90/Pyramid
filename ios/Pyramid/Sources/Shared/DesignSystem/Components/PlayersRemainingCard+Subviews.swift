@@ -21,9 +21,7 @@ extension PlayersRemainingCard {
                 let isCurrent =
                     member.userId == currentUserId
                 Group {
-                    if isCurrent
-                        && member.avatarURL == nil
-                    {
+                    if isCurrent && member.avatarURL == nil {
                         currentUserInitials(
                             name: member.displayName
                         )

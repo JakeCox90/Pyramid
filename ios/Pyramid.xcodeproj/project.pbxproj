@@ -174,6 +174,7 @@
 		9CD751BAC526544FEB268AFB /* AchievementsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5351293F2E0348B198ED4B09 /* AchievementsView.swift */; };
 		9E93958EE250D6B6BF0D1852 /* PickHistoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D977B122AEA6F2FD67E78811 /* PickHistoryViewModel.swift */; };
 		9E9FB184FDAD9D611FE50C82 /* PaidLeague.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF72C30AD8BCA7C858A0099 /* PaidLeague.swift */; };
+		9F22FCCF570CBA879B52F126 /* HomeViewModel+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B349DEF36BAC5E78FD3749 /* HomeViewModel+Helpers.swift */; };
 		9FDA2E665ECC5099CEBFEBC3 /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 874E08D53EE944B77076D513 /* Toast.swift */; };
 		A0CC5E7B90F5BED1C335F674 /* testDefault.1.png in Resources */ = {isa = PBXBuildFile; fileRef = 78BB3FBB25799F8EF69DF142 /* testDefault.1.png */; };
 		A109EC01570935EEA0659200 /* AppleSignInCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70E0ABF6DBF67D43B8A72403 /* AppleSignInCoordinator.swift */; };
@@ -524,6 +525,7 @@
 		C0BC1F7ED72DB97CB74AE6C4 /* ButtonSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonSnapshotTests.swift; sourceTree = "<group>"; };
 		C1AD3B0370515121B54104E3 /* testWarningToast.1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = testWarningToast.1.png; sourceTree = "<group>"; };
 		C1BE5AB66D75DBBC1C9404F7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		C2B349DEF36BAC5E78FD3749 /* HomeViewModel+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeViewModel+Helpers.swift"; sourceTree = "<group>"; };
 		C387D07BEAC18E4F601DE2EF /* CreateLeagueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateLeagueView.swift; sourceTree = "<group>"; };
 		C3E0A73D229A05E74EF8109C /* FlagSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlagSnapshotTests.swift; sourceTree = "<group>"; };
 		C4D1CCAF5D25A85F75E467DC /* DevResetService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevResetService.swift; sourceTree = "<group>"; };
@@ -898,6 +900,7 @@
 				3277DDE60F62C0F5B000C736 /* HomeView+Survival.swift */,
 				2015515265CB0DEA4256073A /* HomeViewModel.swift */,
 				4A3037EF6BD849AEF9880B03 /* HomeViewModel+Actions.swift */,
+				C2B349DEF36BAC5E78FD3749 /* HomeViewModel+Helpers.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -1486,6 +1489,7 @@
 				BC7C4C5B11ECD9C97DDEC8DE /* HomeView+Survival.swift in Sources */,
 				09C7D71D93EEFEBA179955E1 /* HomeView.swift in Sources */,
 				95A1198CA6A44F7D28FE10A7 /* HomeViewModel+Actions.swift in Sources */,
+				9F22FCCF570CBA879B52F126 /* HomeViewModel+Helpers.swift in Sources */,
 				0EE5AAF2D746D1A12E5C7D57 /* HomeViewModel.swift in Sources */,
 				1A22817EE9784BAC33BABC2E /* IconBadge.swift in Sources */,
 				75252D8DD2892D50DCE90B73 /* IconButton.swift in Sources */,

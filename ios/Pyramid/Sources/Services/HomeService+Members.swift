@@ -1,144 +1,135 @@
 import Foundation
 import Supabase
 
-// MARK: - Member Summaries & Elimination Stats
+// MARK: - League Stats (via Edge Function)
 
 extension HomeService {
-    /// Fetches lightweight member summaries for avatar display.
-    func fetchMemberSummaries(
-        leagueId: String
-    ) async throws -> [MemberSummary] {
-        let rows: [MemberSummaryRow] = try await client
-            .from("league_members")
-            .select("""
-                user_id, status, \
-                profiles(username, display_name, avatar_url)
-                """)
-            .eq("league_id", value: leagueId)
-            .execute()
-            .value
-
-        return rows.map { row in
-            MemberSummary(
-                userId: row.userId,
-                displayName: row.profiles.displayLabel,
-                avatarURL: row.profiles.avatarUrl,
-                status: row.status
+    /// Fetches all league stats in a single edge function call.
+    /// Replaces 5N individual queries with one batched request.
+    func fetchLeagueStats(
+        leagueIds: [String],
+        currentGameweekId: Int?
+    ) async throws -> LeagueStatsResponse {
+        let body = LeagueStatsRequest(
+            leagueIds: leagueIds,
+            currentGameweekId: currentGameweekId
+        )
+        let response: LeagueStatsResponse =
+            try await client.functions.invoke(
+                "get-league-stats",
+                options: FunctionInvokeOptions(
+                    body: body
+                )
             )
-        }
-    }
-
-    /// Counts members eliminated in the current gameweek.
-    func fetchEliminatedThisWeek(
-        leagueId: String,
-        gameweekId: Int
-    ) async throws -> Int {
-        let rows: [EliminatedCheckRow] = try await client
-            .from("league_members")
-            .select("id")
-            .eq("league_id", value: leagueId)
-            .eq("status", value: "eliminated")
-            .eq("eliminated_in_gameweek_id", value: gameweekId)
-            .execute()
-            .value
-
-        return rows.count
-    }
-
-    /// Fetches the gameweek ID in which the user was eliminated.
-    func fetchEliminatedGameweekId(
-        userId: String,
-        leagueId: String
-    ) async throws -> Int? {
-        let rows: [EliminatedGwRow] = try await client
-            .from("league_members")
-            .select("eliminated_in_gameweek_id")
-            .eq("league_id", value: leagueId)
-            .eq("user_id", value: userId)
-            .eq("status", value: "eliminated")
-            .execute()
-            .value
-
-        return rows.first?.eliminatedInGameweekId
-    }
-
-    /// Counts consecutive survived picks for a user in a league,
-    /// walking backwards from the most recent settled gameweek.
-    func fetchSurvivalStreak(
-        userId: String,
-        leagueId: String
-    ) async throws -> Int {
-        let picks: [StreakPickRow] = try await client
-            .from("picks")
-            .select("result, gameweek_id")
-            .eq("user_id", value: userId)
-            .eq("league_id", value: leagueId)
-            .neq("result", value: "pending")
-            .order("gameweek_id", ascending: false)
-            .execute()
-            .value
-
-        var streak = 0
-        for pick in picks {
-            if pick.result == .survived {
-                streak += 1
-            } else {
-                break
-            }
-        }
-        return streak
+        return response
     }
 }
 
-// MARK: - Private Row Types
+// MARK: - Request / Response Types
 
-private struct MemberSummaryRow: Decodable {
+private struct LeagueStatsRequest: Encodable {
+    let leagueIds: [String]
+    let currentGameweekId: Int?
+
+    enum CodingKeys: String, CodingKey {
+        case leagueIds = "league_ids"
+        case currentGameweekId = "current_gameweek_id"
+    }
+}
+
+struct LeagueStatsResponse: Decodable {
+    let leagues: [String: LeagueStatsEntry]
+}
+
+struct LeagueStatsEntry: Decodable {
+    let playerCounts: PlayerCountEntry
+    let memberSummaries: [MemberSummaryEntry]
+    let eliminationStats: EliminationStatsEntry
+
+    enum CodingKeys: String, CodingKey {
+        case playerCounts = "player_counts"
+        case memberSummaries = "member_summaries"
+        case eliminationStats = "elimination_stats"
+    }
+}
+
+struct PlayerCountEntry: Decodable {
+    let active: Int
+    let total: Int
+}
+
+struct MemberSummaryEntry: Decodable {
     let userId: String
-    let status: LeagueMember.MemberStatus
-    let profiles: ProfileRow
+    let displayName: String
+    let avatarUrl: String?
+    let status: String
 
     enum CodingKeys: String, CodingKey {
         case userId = "user_id"
+        case displayName = "display_name"
+        case avatarUrl = "avatar_url"
         case status
-        case profiles
-    }
-
-    struct ProfileRow: Decodable {
-        let username: String
-        let displayName: String?
-        let avatarUrl: String?
-
-        enum CodingKeys: String, CodingKey {
-            case username
-            case displayName = "display_name"
-            case avatarUrl = "avatar_url"
-        }
-
-        var displayLabel: String {
-            displayName ?? username
-        }
     }
 }
 
-private struct EliminatedCheckRow: Decodable {
-    let id: String
-}
-
-private struct EliminatedGwRow: Decodable {
-    let eliminatedInGameweekId: Int?
+struct EliminationStatsEntry: Decodable {
+    let eliminatedThisWeek: Int
+    let survivalStreak: Int
+    let eliminatedGameweekId: Int?
 
     enum CodingKeys: String, CodingKey {
-        case eliminatedInGameweekId =
-            "eliminated_in_gameweek_id"
+        case eliminatedThisWeek = "eliminated_this_week"
+        case survivalStreak = "survival_streak"
+        case eliminatedGameweekId = "eliminated_gameweek_id"
     }
 }
 
-private struct StreakPickRow: Decodable {
-    let result: PickResult
-    let gameweekId: Int
+// MARK: - Mapping to Domain Models
 
-    enum CodingKeys: String, CodingKey {
-        case result
-        case gameweekId = "gameweek_id"
+extension LeagueStatsResponse {
+    func toPlayerCounts() -> [String: PlayerCount] {
+        var result: [String: PlayerCount] = [:]
+        for (id, entry) in leagues {
+            result[id] = PlayerCount(
+                active: entry.playerCounts.active,
+                total: entry.playerCounts.total
+            )
+        }
+        return result
+    }
+
+    func toMemberSummaries() -> [String: [MemberSummary]] {
+        var result: [String: [MemberSummary]] = [:]
+        for (id, entry) in leagues {
+            result[id] = entry.memberSummaries.map {
+                MemberSummary(
+                    userId: $0.userId,
+                    displayName: $0.displayName,
+                    avatarURL: $0.avatarUrl,
+                    status: LeagueMember.MemberStatus(
+                        rawValue: $0.status
+                    ) ?? .active
+                )
+            }
+        }
+        return result
+    }
+
+    func toEliminationStats() -> [String: EliminationStats] {
+        var result: [String: EliminationStats] = [:]
+        for (id, entry) in leagues {
+            result[id] = EliminationStats(
+                eliminatedThisWeek: entry
+                    .eliminationStats
+                    .eliminatedThisWeek,
+                survivalStreak: entry
+                    .eliminationStats
+                    .survivalStreak,
+                eliminatedGameweekId: entry
+                    .eliminationStats
+                    .eliminatedGameweekId
+            )
+        }
+        return result
     }
 }
