@@ -115,6 +115,9 @@ verify_jwt = false
 [functions.reset-dev-data]
 verify_jwt = false
 
+[functions.health]
+verify_jwt = false
+
 # ─── Service-role functions (internal only → requireServiceRole() auth) ───────
 
 [functions.settle-picks]
