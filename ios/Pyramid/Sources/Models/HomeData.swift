@@ -1,9 +1,24 @@
 import Foundation
 
-/// Per-league player count.
+/// Per-league player count with optional elimination history.
 struct PlayerCount: Sendable, Equatable {
     let active: Int
     let total: Int
+    /// Eliminations per gameweek: [(gameweekId, eliminatedCount)], sorted by GW.
+    let eliminationHistory: [EliminationSnapshot]
+
+    init(active: Int, total: Int, eliminationHistory: [EliminationSnapshot] = []) {
+        self.active = active
+        self.total = total
+        self.eliminationHistory = eliminationHistory
+    }
+}
+
+/// A single gameweek's elimination count.
+struct EliminationSnapshot: Sendable, Equatable, Identifiable {
+    let gameweekId: Int
+    let eliminated: Int
+    var id: Int { gameweekId }
 }
 
 /// Aggregate data for the home screen, fetched in a single service call.

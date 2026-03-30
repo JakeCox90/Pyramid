@@ -72,11 +72,44 @@ struct PlayersRemainingDemo: View {
         DemoPageStatic {
             VStack(spacing: Theme.Spacing.s30) {
                 PlayersRemainingCard(
-                    remaining: "8/12"
+                    playerCount: PlayerCount(
+                        active: 8, total: 12,
+                        eliminationHistory: [
+                            EliminationSnapshot(
+                                gameweekId: 1,
+                                eliminated: 2
+                            ),
+                            EliminationSnapshot(
+                                gameweekId: 2,
+                                eliminated: 2
+                            ),
+                        ]
+                    ),
+                    onTap: nil
                 )
                 PlayersRemainingCard(
-                    remaining: "5/10",
-                    onSeeResults: {}
+                    playerCount: PlayerCount(
+                        active: 2, total: 30,
+                        eliminationHistory: [
+                            EliminationSnapshot(
+                                gameweekId: 1,
+                                eliminated: 5
+                            ),
+                            EliminationSnapshot(
+                                gameweekId: 2,
+                                eliminated: 8
+                            ),
+                            EliminationSnapshot(
+                                gameweekId: 3,
+                                eliminated: 10
+                            ),
+                            EliminationSnapshot(
+                                gameweekId: 4,
+                                eliminated: 5
+                            ),
+                        ]
+                    ),
+                    onTap: {}
                 )
             }
         }

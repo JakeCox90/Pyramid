@@ -25,20 +25,34 @@ extension HomeService {
         return rows
     }
 
-    /// Fetches active and total player counts for a league.
+    /// Fetches active/total player counts and per-GW elimination history.
     func fetchPlayerCounts(
         leagueId: String
-    ) async throws -> (active: Int, total: Int) {
+    ) async throws -> PlayerCount {
         let rows: [PlayerCountRow] = try await client
             .from("league_members")
-            .select("status")
+            .select("status, eliminated_in_gameweek_id")
             .eq("league_id", value: leagueId)
             .execute()
             .value
 
         let total = rows.count
         let active = rows.filter { $0.status == .active }.count
-        return (active: active, total: total)
+
+        var elimByGw: [Int: Int] = [:]
+        for row in rows where row.eliminatedInGameweekId != nil {
+            let gwId = row.eliminatedInGameweekId!
+            elimByGw[gwId, default: 0] += 1
+        }
+        let history = elimByGw
+            .map { EliminationSnapshot(gameweekId: $0.key, eliminated: $0.value) }
+            .sorted { $0.gameweekId < $1.gameweekId }
+
+        return PlayerCount(
+            active: active,
+            total: total,
+            eliminationHistory: history
+        )
     }
 
     /// Fetches settled picks for a user in a specific gameweek
@@ -135,4 +149,10 @@ extension HomeService {
 
 private struct PlayerCountRow: Decodable {
     let status: LeagueMember.MemberStatus
+    let eliminatedInGameweekId: Int?
+
+    enum CodingKeys: String, CodingKey {
+        case status
+        case eliminatedInGameweekId = "eliminated_in_gameweek_id"
+    }
 }

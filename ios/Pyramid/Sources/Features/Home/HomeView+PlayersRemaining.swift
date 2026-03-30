@@ -7,12 +7,12 @@ extension HomeView {
     func playersRemainingCard(
         for league: League
     ) -> some View {
-        let remaining = viewModel.playersRemaining(
+        if let counts = viewModel.playerCounts(
             for: league
-        )
-        if !remaining.isEmpty {
+        ), counts.total > 0 {
             PlayersRemainingCard(
-                remaining: remaining
+                playerCount: counts,
+                onTap: nil
             )
         }
     }

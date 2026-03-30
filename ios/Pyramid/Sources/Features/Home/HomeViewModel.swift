@@ -140,6 +140,12 @@ final class HomeViewModel: ObservableObject {
         return "\(counts.active) of \(counts.total)"
     }
 
+    func playerCounts(
+        for league: League
+    ) -> PlayerCount? {
+        homeData?.playerCounts[league.id]
+    }
+
     var gameweekOptions: [Gameweek] {
         homeData?.allGameweeks ?? []
     }

@@ -52,13 +52,7 @@ extension HomeService {
                             .fetchPlayerCounts(
                                 leagueId: league.id
                             )
-                        return (
-                            league.id,
-                            PlayerCount(
-                                active: counts.active,
-                                total: counts.total
-                            )
-                        )
+                        return (league.id, counts)
                     } catch {
                         return (
                             league.id,
