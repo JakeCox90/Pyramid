@@ -205,7 +205,11 @@ Deno.serve(async (req) => {
     }
   }
 
-  // 6. Check team not already used in a different gameweek this season
+  // 6. Check team not already used in a different gameweek this season.
+  //    NOTE: This query is scoped to the entire league (i.e. the full round),
+  //    which is correct for single-round leagues. When multi-round support is
+  //    added (see ADR-005), this must be scoped to the current round_id so
+  //    that used_teams reset between rounds.
   const { data: usedTeams } = await db
     .from("used_teams")
     .select("team_id")
