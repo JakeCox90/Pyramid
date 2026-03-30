@@ -40,8 +40,9 @@ enum AppError: LocalizedError {
     /// Inspects `error` and returns the most appropriate `AppError` category.
     static func from(_ error: Error) -> AppError {
         // Rate limiting (HTTP 429)
-        let description429 = error.localizedDescription.lowercased()
-        if description429.contains("429") || description429.contains("rate_limited") || description429.contains("too many requests") {
+        let desc = error.localizedDescription.lowercased()
+        let rateLimitKeywords = ["429", "rate_limited", "too many requests"]
+        if rateLimitKeywords.contains(where: { desc.contains($0) }) {
             return .rateLimited(retryAfter: nil)
         }
 
