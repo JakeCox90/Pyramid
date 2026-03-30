@@ -12,6 +12,7 @@ struct LeagueDetailView: View {
     @State var showStory = false
     @State var showPickReveal = false
     @State var showLeaveConfirmation = false
+    @State var showBrowseLeagues = false
     @Environment(\.dismiss)
     private var dismiss
 
@@ -118,6 +119,9 @@ struct LeagueDetailView: View {
                     currentUserId: viewModel.currentUserId
                 )
             }
+        }
+        .sheet(isPresented: $showBrowseLeagues) {
+            BrowseLeaguesView()
         }
         .alert(
             "Leave League",

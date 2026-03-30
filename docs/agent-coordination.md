@@ -7,7 +7,8 @@
 
 | Ticket | Branch | Agent | Status | Key Files | Started |
 |--------|--------|-------|--------|-----------|---------|
-| PYR-207 | feature/PYR-207-pick-round-scoping | Orchestrator | In Progress | supabase/functions/submit-pick/index.ts | 2026-03-27 |
+| PYR-204 | feature/PYR-204-atomic-stake-deduction | Orchestrator | In Progress | supabase/functions/join-paid-league/index.ts, supabase/migrations/ | 2026-03-27 |
+| PYR-194 | feature/PYR-194-rate-limiting | Orchestrator | In Progress | supabase/functions/_shared/rate-limit.ts, supabase/migrations/, 11 Edge Function index.ts files | 2026-03-27 |
 
 ## Recommended Queue (2026-03-27)
 
