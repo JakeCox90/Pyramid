@@ -126,7 +126,8 @@ final class HomeService: HomeServiceProtocol {
         let eliminationStats = await fetchAllEliminationStats(
             userId: userId,
             leagues: leagues,
-            gameweekId: gameweek?.id
+            gameweekId: gameweek?.id,
+            memberStatuses: statuses
         )
 
         return HomeData(

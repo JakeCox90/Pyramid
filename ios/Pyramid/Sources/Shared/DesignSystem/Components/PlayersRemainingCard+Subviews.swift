@@ -57,7 +57,7 @@ extension PlayersRemainingCard {
     private func currentUserInitials(
         name: String
     ) -> some View {
-        Text(avatarInitials(for: name))
+        Text(Avatar.initials(for: name))
             .font(AvatarSize.small.font)
             .fontWeight(.semibold)
             .foregroundStyle(
@@ -69,19 +69,6 @@ extension PlayersRemainingCard {
             )
             .background(Theme.Color.Primary.resting)
             .clipShape(Circle())
-    }
-
-    private func avatarInitials(
-        for name: String
-    ) -> String {
-        let parts = name.split(separator: " ")
-        if parts.count >= 2 {
-            return String(
-                parts[0].prefix(1)
-                    + parts[1].prefix(1)
-            ).uppercased()
-        }
-        return String(name.prefix(2)).uppercased()
     }
 
     var eliminatedAvatars: some View {

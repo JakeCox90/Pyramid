@@ -104,42 +104,58 @@ extension HomeService {
     }
 
     /// Fetches elimination stats for all leagues concurrently.
+    /// - Parameter memberStatuses: used to skip the eliminated-GW
+    ///   query for leagues where the user is still active.
     func fetchAllEliminationStats(
         userId: String,
         leagues: [League],
-        gameweekId: Int?
+        gameweekId: Int?,
+        memberStatuses: [String: LeagueMember.MemberStatus]
     ) async -> [String: EliminationStats] {
-        guard let gwId = gameweekId else { return [:] }
         return await withTaskGroup(
             of: (String, EliminationStats).self
         ) { group in
             for league in leagues {
+                let isEliminated =
+                    memberStatuses[league.id] == .eliminated
                 group.addTask {
                     do {
-                        async let eliminated = self
-                            .fetchEliminatedThisWeek(
-                                leagueId: league.id,
-                                gameweekId: gwId
-                            )
-                        async let streak = self
+                        // eliminatedThisWeek needs a GW
+                        let eliminated: Int
+                        if let gwId = gameweekId {
+                            eliminated = try await self
+                                .fetchEliminatedThisWeek(
+                                    leagueId: league.id,
+                                    gameweekId: gwId
+                                )
+                        } else {
+                            eliminated = 0
+                        }
+                        // Streak is historical — always fetch
+                        let streak = try await self
                             .fetchSurvivalStreak(
                                 userId: userId,
                                 leagueId: league.id
                             )
-                        async let elimGwId = self
-                            .fetchEliminatedGameweekId(
-                                userId: userId,
-                                leagueId: league.id
-                            )
+                        // Only query elimGwId for eliminated
+                        let elimGwId: Int?
+                        if isEliminated {
+                            elimGwId = try await self
+                                .fetchEliminatedGameweekId(
+                                    userId: userId,
+                                    leagueId: league.id
+                                )
+                        } else {
+                            elimGwId = nil
+                        }
                         return (
                             league.id,
                             EliminationStats(
                                 eliminatedThisWeek:
-                                    try await eliminated,
-                                survivalStreak:
-                                    try await streak,
+                                    eliminated,
+                                survivalStreak: streak,
                                 eliminatedGameweekId:
-                                    try await elimGwId
+                                    elimGwId
                             )
                         )
                     } catch {

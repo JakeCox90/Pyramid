@@ -82,7 +82,9 @@ struct Avatar: View {
             .clipShape(Circle())
     }
 
-    private var initials: String {
+    /// Derives display initials from a name (e.g. "Jake Cox" → "JC").
+    /// Shared so other components can match Avatar's initials logic.
+    static func initials(for name: String) -> String {
         let parts = name.split(separator: " ")
         if parts.count >= 2 {
             return String(
@@ -91,6 +93,10 @@ struct Avatar: View {
             ).uppercased()
         }
         return String(name.prefix(2)).uppercased()
+    }
+
+    private var initials: String {
+        Self.initials(for: name)
     }
 
     private var initialsColor: Color {
