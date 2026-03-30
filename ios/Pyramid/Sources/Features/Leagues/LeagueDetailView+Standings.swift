@@ -94,6 +94,9 @@ extension LeagueDetailView {
                     }
                 }
                 myPickCard
+                if viewModel.isCurrentUserEliminated {
+                    spectatorBanner
+                }
                 if viewModel.members.isEmpty {
                     emptyMembersView
                 } else {
