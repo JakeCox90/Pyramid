@@ -8,6 +8,7 @@ enum AppError: LocalizedError {
     case network(underlying: Error)
     case auth(underlying: Error)
     case server(underlying: Error)
+    case rateLimited(retryAfter: Int?)
     case domain(message: String, underlying: Error)
     case unknown(underlying: Error)
 
@@ -21,6 +22,8 @@ enum AppError: LocalizedError {
             return "Your session has expired. Please sign in again."
         case .server:
             return "Something went wrong on our end. Please try again later."
+        case .rateLimited:
+            return "You're doing that too fast. Please wait a moment and try again."
         case .domain(let message, _):
             return message
         case .unknown:
@@ -36,6 +39,12 @@ enum AppError: LocalizedError {
 
     /// Inspects `error` and returns the most appropriate `AppError` category.
     static func from(_ error: Error) -> AppError {
+        // Rate limiting (HTTP 429)
+        let description429 = error.localizedDescription.lowercased()
+        if description429.contains("429") || description429.contains("rate_limited") || description429.contains("too many requests") {
+            return .rateLimited(retryAfter: nil)
+        }
+
         // Network errors
         if let urlError = error as? URLError {
             switch urlError.code {
