@@ -29,7 +29,7 @@ BODY+="Auto-generated from components changed in this PR"$'\n\n'
 
 FOUND_IMAGES=false
 
-for label in $(echo "$MATCHED_LABELS" | jq -r '.[]'); do
+while IFS= read -r label; do
   TEST_CLASS=$(jq -r --arg l "$label" \
     '.mappings[] | select(.label == $l) | .testClass' "$MANIFEST")
 
@@ -51,7 +51,7 @@ for label in $(echo "$MATCHED_LABELS" | jq -r '.[]'); do
   done
 
   BODY+=$'\n'
-done
+done < <(echo "$MATCHED_LABELS" | jq -r '.[]')
 
 if [ "$FOUND_IMAGES" = false ]; then
   echo "No snapshot images found — skipping PR comment"
