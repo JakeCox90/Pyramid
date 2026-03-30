@@ -18,6 +18,13 @@ struct PlayersRemainingCard: View {
         userStatus == .eliminated
     }
 
+    private var survivingBadgeText: String {
+        if percentage >= 100 {
+            return "All players standing"
+        }
+        return "Top \(percentage)% \u{2014} Still standing"
+    }
+
     private var eliminatedBadgeText: String {
         if let gwId = eliminatedGameweekId {
             return "Eliminated in GW \(gwId)"
@@ -143,8 +150,7 @@ extension PlayersRemainingCard {
                 )
             } else {
                 badgePill(
-                    text:
-                        "Top \(percentage)% \u{2014} Still standing",
+                    text: survivingBadgeText,
                     foreground: Theme.Color.Status.Success
                         .resting,
                     background: Theme.Color.Status.Success

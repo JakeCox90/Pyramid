@@ -151,9 +151,7 @@ extension PlayersRemainingCard {
                         .resting
                 )
 
-                Rectangle()
-                    .fill(Theme.Color.Border.light)
-                    .frame(width: 1, height: 40)
+                statDivider
 
                 statItem(
                     value: "\(percentage)%",
@@ -165,9 +163,7 @@ extension PlayersRemainingCard {
                             .resting
                 )
 
-                Rectangle()
-                    .fill(Theme.Color.Border.light)
-                    .frame(width: 1, height: 40)
+                statDivider
 
                 statItem(
                     value: "\(survivalStreak)",
@@ -178,6 +174,9 @@ extension PlayersRemainingCard {
                         .default
                 )
             }
+            .fixedSize(
+                horizontal: false, vertical: true
+            )
             .padding(.top, Theme.Spacing.s30)
         }
     }
@@ -200,5 +199,11 @@ extension PlayersRemainingCard {
                 .lineLimit(2)
         }
         .frame(maxWidth: .infinity)
+    }
+
+    private var statDivider: some View {
+        Rectangle()
+            .fill(Theme.Color.Border.light)
+            .frame(width: 1)
     }
 }
