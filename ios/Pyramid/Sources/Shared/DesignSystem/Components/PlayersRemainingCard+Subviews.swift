@@ -18,11 +18,23 @@ extension PlayersRemainingCard {
 
         return HStack(spacing: Theme.Spacing.s20) {
             ForEach(visible) { member in
-                Avatar(
-                    name: member.displayName,
-                    imageURL: member.avatarURL,
-                    size: .small
-                )
+                let isCurrent =
+                    member.userId == currentUserId
+                Group {
+                    if isCurrent
+                        && member.avatarURL == nil
+                    {
+                        currentUserInitials(
+                            name: member.displayName
+                        )
+                    } else {
+                        Avatar(
+                            name: member.displayName,
+                            imageURL: member.avatarURL,
+                            size: .small
+                        )
+                    }
+                }
                 .overlay(
                     Circle()
                         .stroke(
@@ -42,6 +54,36 @@ extension PlayersRemainingCard {
         }
     }
 
+    private func currentUserInitials(
+        name: String
+    ) -> some View {
+        Text(avatarInitials(for: name))
+            .font(AvatarSize.small.font)
+            .fontWeight(.semibold)
+            .foregroundStyle(
+                Theme.Color.Content.Text.contrast
+            )
+            .frame(
+                width: AvatarSize.small.dimension,
+                height: AvatarSize.small.dimension
+            )
+            .background(Theme.Color.Primary.resting)
+            .clipShape(Circle())
+    }
+
+    private func avatarInitials(
+        for name: String
+    ) -> String {
+        let parts = name.split(separator: " ")
+        if parts.count >= 2 {
+            return String(
+                parts[0].prefix(1)
+                    + parts[1].prefix(1)
+            ).uppercased()
+        }
+        return String(name.prefix(2)).uppercased()
+    }
+
     var eliminatedAvatars: some View {
         let sorted = eliminated.sorted {
             $0.userId == currentUserId ? true
@@ -53,7 +95,7 @@ extension PlayersRemainingCard {
         )
         let overflow = eliminated.count - visible.count
 
-        return HStack(spacing: Theme.Spacing.s10) {
+        return HStack(spacing: Theme.Spacing.s20) {
             ForEach(visible) { member in
                 let isCurrentUser =
                     member.userId == currentUserId
@@ -65,11 +107,7 @@ extension PlayersRemainingCard {
                     )
                     .uppercased()
                 )
-                .font(
-                    .system(
-                        size: isCurrentUser ? 9 : 8
-                    )
-                )
+                .font(Theme.Typography.overline)
                 .foregroundStyle(
                     isCurrentUser
                         ? Theme.Color.Status.Error

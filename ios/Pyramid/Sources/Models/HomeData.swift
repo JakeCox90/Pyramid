@@ -19,6 +19,7 @@ struct MemberSummary: Identifiable, Sendable, Equatable {
 struct EliminationStats: Sendable, Equatable {
     let eliminatedThisWeek: Int
     let survivalStreak: Int
+    let eliminatedGameweekId: Int?
 }
 
 /// Aggregate data for the home screen, fetched in a single service call.

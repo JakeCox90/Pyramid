@@ -103,6 +103,7 @@ struct PlayersRemainingDemo: View {
                     totalCount: 12,
                     eliminatedThisWeek: 4,
                     survivalStreak: 3,
+                    eliminatedGameweekId: nil,
                     userStatus: .active,
                     currentUserId: "me",
                     members: Self.mockMembers
@@ -112,6 +113,7 @@ struct PlayersRemainingDemo: View {
                     totalCount: 10,
                     eliminatedThisWeek: 3,
                     survivalStreak: 2,
+                    eliminatedGameweekId: 3,
                     userStatus: .eliminated,
                     currentUserId: "u3",
                     members: Self.mockMembers

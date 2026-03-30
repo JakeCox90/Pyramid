@@ -126,13 +126,20 @@ extension HomeService {
                                 userId: userId,
                                 leagueId: league.id
                             )
+                        async let elimGwId = self
+                            .fetchEliminatedGameweekId(
+                                userId: userId,
+                                leagueId: league.id
+                            )
                         return (
                             league.id,
                             EliminationStats(
                                 eliminatedThisWeek:
                                     try await eliminated,
                                 survivalStreak:
-                                    try await streak
+                                    try await streak,
+                                eliminatedGameweekId:
+                                    try await elimGwId
                             )
                         )
                     } catch {
@@ -140,7 +147,8 @@ extension HomeService {
                             league.id,
                             EliminationStats(
                                 eliminatedThisWeek: 0,
-                                survivalStreak: 0
+                                survivalStreak: 0,
+                                eliminatedGameweekId: nil
                             )
                         )
                     }

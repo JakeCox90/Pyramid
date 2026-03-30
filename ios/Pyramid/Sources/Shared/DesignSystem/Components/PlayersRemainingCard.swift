@@ -7,6 +7,7 @@ struct PlayersRemainingCard: View {
     let totalCount: Int
     let eliminatedThisWeek: Int
     let survivalStreak: Int
+    let eliminatedGameweekId: Int?
     let userStatus: LeagueMember.MemberStatus
     let currentUserId: String
     let members: [MemberSummary]
@@ -15,6 +16,13 @@ struct PlayersRemainingCard: View {
 
     var isEliminated: Bool {
         userStatus == .eliminated
+    }
+
+    private var eliminatedBadgeText: String {
+        if let gwId = eliminatedGameweekId {
+            return "Eliminated in GW \(gwId)"
+        }
+        return "Eliminated in GW \(survivalStreak + 1)"
     }
 
     var percentage: Int {
@@ -47,8 +55,10 @@ struct PlayersRemainingCard: View {
         VStack(spacing: Theme.Spacing.s40) {
             ringSection
             badgeSection
-            survivorAvatars
-            eliminatedAvatars
+            VStack(spacing: Theme.Spacing.s30) {
+                survivorAvatars
+                eliminatedAvatars
+            }
             statsRow
         }
         .padding(Theme.Spacing.s40)
@@ -125,7 +135,7 @@ extension PlayersRemainingCard {
         Group {
             if isEliminated {
                 badgePill(
-                    text: "Eliminated in GW \(survivalStreak + 1)",
+                    text: eliminatedBadgeText,
                     foreground: Theme.Color.Status.Error
                         .resting,
                     background: Theme.Color.Status.Error

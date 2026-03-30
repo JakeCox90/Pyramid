@@ -27,6 +27,8 @@ extension HomeView {
                     .eliminatedThisWeek ?? 0,
                 survivalStreak: stats?
                     .survivalStreak ?? 0,
+                eliminatedGameweekId: stats?
+                    .eliminatedGameweekId,
                 userStatus: userStatus,
                 currentUserId: userId,
                 members: members

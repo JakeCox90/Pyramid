@@ -45,6 +45,23 @@ extension HomeService {
         return rows.count
     }
 
+    /// Fetches the gameweek ID in which the user was eliminated.
+    func fetchEliminatedGameweekId(
+        userId: String,
+        leagueId: String
+    ) async throws -> Int? {
+        let rows: [EliminatedGwRow] = try await client
+            .from("league_members")
+            .select("eliminated_in_gameweek_id")
+            .eq("league_id", value: leagueId)
+            .eq("user_id", value: userId)
+            .eq("status", value: "eliminated")
+            .execute()
+            .value
+
+        return rows.first?.eliminatedInGameweekId
+    }
+
     /// Counts consecutive survived picks for a user in a league,
     /// walking backwards from the most recent settled gameweek.
     func fetchSurvivalStreak(
@@ -105,6 +122,15 @@ private struct MemberSummaryRow: Decodable {
 
 private struct EliminatedCheckRow: Decodable {
     let id: String
+}
+
+private struct EliminatedGwRow: Decodable {
+    let eliminatedInGameweekId: Int?
+
+    enum CodingKeys: String, CodingKey {
+        case eliminatedInGameweekId =
+            "eliminated_in_gameweek_id"
+    }
 }
 
 private struct StreakPickRow: Decodable {
