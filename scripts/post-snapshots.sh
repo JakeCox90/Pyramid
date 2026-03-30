@@ -14,6 +14,8 @@ if [ -z "$REPO" ]; then
   exit 1
 fi
 
+SNAP_BRANCH="snapshots/pr-${PR_NUMBER}"
+
 # Delete any existing snapshot comment (identified by marker)
 EXISTING=$(gh api "repos/${REPO}/issues/${PR_NUMBER}/comments" \
   --jq '.[] | select(.body | contains("<!-- snapshot-qa -->")) | .id' 2>/dev/null || true)
@@ -22,69 +24,63 @@ if [ -n "$EXISTING" ]; then
   gh api "repos/${REPO}/issues/comments/${EXISTING}" -X DELETE 2>/dev/null || true
 fi
 
-# Upload a PNG to GitHub via the camo/image upload endpoint and return the URL.
-# Uses the same mechanism as drag-and-drop images in GitHub comments.
+# Ensure snapshot branch exists
+ensure_branch() {
+  if ! gh api "repos/${REPO}/git/ref/heads/${SNAP_BRANCH}" >/dev/null 2>&1; then
+    echo "Creating snapshot branch ${SNAP_BRANCH}..."
+    local MAIN_SHA
+    MAIN_SHA=$(gh api "repos/${REPO}/git/ref/heads/main" --jq '.object.sha')
+    gh api "repos/${REPO}/git/refs" \
+      -X POST \
+      -f "ref=refs/heads/${SNAP_BRANCH}" \
+      -f "sha=${MAIN_SHA}" || {
+        echo "ERROR: Failed to create branch ${SNAP_BRANCH}"
+        return 1
+      }
+  fi
+}
+
+# Upload a PNG to the snapshot branch via Contents API
 upload_image() {
   local file="$1"
   local filename
   filename=$(basename "$file")
+  local filepath="snapshots/${filename}"
 
-  # Upload via GitHub's attachment API
-  local response
-  response=$(curl -s -X POST \
-    "https://uploads.github.com/repos/${REPO}/issues/${PR_NUMBER}/comments" \
-    -H "Authorization: token ${GH_TOKEN}" \
-    -H "Content-Type: image/png" \
-    -H "Content-Length: $(wc -c < "$file")" \
-    --data-binary "@${file}" 2>/dev/null || echo "")
-
-  # Fallback: commit image to a snapshot branch and use raw URL
-  local SNAP_BRANCH="snapshots/pr-${PR_NUMBER}"
-  local SNAP_PATH="snapshots/${filename}"
-
-  # Base64 encode the image
   local CONTENT
   CONTENT=$(base64 -i "$file")
 
-  # Check if file already exists on this branch
+  # Check if file exists (to get SHA for update)
   local SHA=""
-  SHA=$(gh api "repos/${REPO}/contents/${SNAP_PATH}?ref=${SNAP_BRANCH}" \
+  SHA=$(gh api "repos/${REPO}/contents/${filepath}?ref=${SNAP_BRANCH}" \
     --jq '.sha' 2>/dev/null || echo "")
 
-  local PUT_BODY
+  local RESULT
   if [ -n "$SHA" ]; then
-    PUT_BODY=$(jq -n --arg msg "snapshot: ${filename}" \
-      --arg content "$CONTENT" \
-      --arg branch "$SNAP_BRANCH" \
-      --arg sha "$SHA" \
-      '{message: $msg, content: $content, branch: $branch, sha: $sha}')
+    RESULT=$(gh api "repos/${REPO}/contents/${filepath}" \
+      -X PUT \
+      -f "message=snapshot: ${filename}" \
+      -f "content=${CONTENT}" \
+      -f "branch=${SNAP_BRANCH}" \
+      -f "sha=${SHA}" 2>&1) || {
+        echo "ERROR uploading ${filename} (update): ${RESULT}"
+        return 1
+      }
   else
-    # Ensure branch exists (create from default branch if needed)
-    gh api "repos/${REPO}/git/refs" \
-      -X POST \
-      -f "ref=refs/heads/${SNAP_BRANCH}" \
-      -f "sha=$(gh api repos/${REPO}/git/ref/heads/main --jq '.object.sha')" \
-      2>/dev/null || true
-
-    PUT_BODY=$(jq -n --arg msg "snapshot: ${filename}" \
-      --arg content "$CONTENT" \
-      --arg branch "$SNAP_BRANCH" \
-      '{message: $msg, content: $content, branch: $branch}')
+    RESULT=$(gh api "repos/${REPO}/contents/${filepath}" \
+      -X PUT \
+      -f "message=snapshot: ${filename}" \
+      -f "content=${CONTENT}" \
+      -f "branch=${SNAP_BRANCH}" 2>&1) || {
+        echo "ERROR uploading ${filename} (create): ${RESULT}"
+        return 1
+      }
   fi
 
-  local UPLOAD_RESULT
-  UPLOAD_RESULT=$(gh api "repos/${REPO}/contents/${SNAP_PATH}" \
-    -X PUT \
-    --input - <<< "$PUT_BODY" 2>/dev/null || echo "")
-
+  # Extract raw URL
   local RAW_URL
-  RAW_URL=$(echo "$UPLOAD_RESULT" | jq -r '.content.download_url // empty')
-
-  if [ -n "$RAW_URL" ]; then
-    echo "$RAW_URL"
-  else
-    echo ""
-  fi
+  RAW_URL=$(echo "$RESULT" | jq -r '.content.download_url // empty')
+  echo "$RAW_URL"
 }
 
 # Build comment body
@@ -93,6 +89,7 @@ BODY+="## Visual QA Snapshots"$'\n'
 BODY+="Auto-generated from components changed in this PR."$'\n\n'
 
 FOUND_IMAGES=false
+BRANCH_CREATED=false
 
 while IFS= read -r label; do
   TEST_CLASS=$(jq -r --arg l "$label" \
@@ -101,7 +98,17 @@ while IFS= read -r label; do
   SNAP_DIR="${SNAPSHOTS_DIR}/__Snapshots__/${TEST_CLASS}"
 
   if [ ! -d "$SNAP_DIR" ]; then
+    echo "Directory not found: ${SNAP_DIR}"
     continue
+  fi
+
+  # Create branch on first image found
+  if [ "$BRANCH_CREATED" = false ]; then
+    ensure_branch || {
+      echo "Failed to create snapshot branch, falling back to artifact links"
+      break
+    }
+    BRANCH_CREATED=true
   fi
 
   BODY+="### ${label}"$'\n\n'
@@ -112,12 +119,14 @@ while IFS= read -r label; do
     BASENAME=$(basename "$png" .png)
 
     echo "Uploading ${BASENAME}.png ..."
-    IMG_URL=$(upload_image "$png")
+    IMG_URL=$(upload_image "$png") || IMG_URL=""
 
     if [ -n "$IMG_URL" ]; then
+      echo "  -> ${IMG_URL}"
       BODY+="**\`${BASENAME}\`**"$'\n\n'
-      BODY+="![${BASENAME}](${IMG_URL})"$'\n\n'
+      BODY+="<img src=\"${IMG_URL}\" width=\"345\" />"$'\n\n'
     else
+      echo "  -> FAILED"
       BODY+="**\`${BASENAME}\`** — upload failed, see artifacts"$'\n\n'
     fi
   done
