@@ -140,6 +140,23 @@ final class HomeViewModel: ObservableObject {
         return "\(counts.active) of \(counts.total)"
     }
 
+    /// The authenticated user's ID from the last home data fetch.
+    var currentUserId: String {
+        homeData?.userId ?? ""
+    }
+
+    func memberSummaries(
+        for league: League
+    ) -> [MemberSummary] {
+        homeData?.memberSummaries[league.id] ?? []
+    }
+
+    func eliminationStats(
+        for league: League
+    ) -> EliminationStats? {
+        homeData?.eliminationStats[league.id]
+    }
+
     var gameweekOptions: [Gameweek] {
         homeData?.allGameweeks ?? []
     }
