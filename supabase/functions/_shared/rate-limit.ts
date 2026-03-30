@@ -25,6 +25,7 @@ export const RATE_LIMITS: Record<string, RateLimitConfig> = {
   "register-device-token":   { maxRequests: 10, windowSeconds: 60 },
   "get-head-to-head":        { maxRequests: 30, windowSeconds: 60 },
   "validate-league-content": { maxRequests: 10, windowSeconds: 60 },
+  "get-league-stats":        { maxRequests: 30, windowSeconds: 60 },
 };
 
 // ─── Rate limit check ───────────────────────────────────────────────────────────
