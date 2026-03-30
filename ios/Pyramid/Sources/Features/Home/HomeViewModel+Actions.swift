@@ -188,7 +188,10 @@ extension HomeViewModel {
                 fixtures: map,
                 lastGwResults: data.lastGwResults,
                 allGameweeks: data.allGameweeks,
-                playerCounts: data.playerCounts
+                playerCounts: data.playerCounts,
+                userId: data.userId,
+                memberSummaries: data.memberSummaries,
+                eliminationStats: data.eliminationStats
             )
             updatePolling()
         } catch {

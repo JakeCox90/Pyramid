@@ -102,11 +102,7 @@ final class HomeService: HomeServiceProtocol {
         let gameweek = try await gwFetch
         let lastGw = try await lastGwFetch
         let leagueIds = leagues.map(\.id)
-        let leagueMap = Dictionary(
-            uniqueKeysWithValues: leagues.map {
-                ($0.id, $0.name)
-            }
-        )
+        let leagueMap = Dictionary(uniqueKeysWithValues: leagues.map { ($0.id, $0.name) })
 
         let (picks, fixtures) = try await fetchPicksAndFixtures(
             userId: userId, gameweek: gameweek, leagueIds: leagueIds
@@ -117,8 +113,8 @@ final class HomeService: HomeServiceProtocol {
         )
         let season = gameweek?.season ?? lastGw?.season ?? 2025
         let allGws = try await fetchAllGameweeks(season: season)
-        let playerCounts = await fetchAllPlayerCounts(
-            leagues: leagues
+        let leagueStats = await fetchAllLeagueStats(
+            leagueIds: leagueIds, gameweekId: gameweek?.id
         )
 
         return HomeData(
@@ -127,7 +123,10 @@ final class HomeService: HomeServiceProtocol {
             fixtures: fixtures,
             lastGwResults: lastGwResults,
             allGameweeks: allGws,
-            playerCounts: playerCounts
+            playerCounts: leagueStats?.toPlayerCounts() ?? [:],
+            userId: userId,
+            memberSummaries: leagueStats?.toMemberSummaries() ?? [:],
+            eliminationStats: leagueStats?.toEliminationStats() ?? [:]
         )
     }
 

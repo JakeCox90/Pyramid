@@ -68,15 +68,55 @@ struct LeagueCardDemo: View {
 }
 
 struct PlayersRemainingDemo: View {
+    private static let mockMembers: [MemberSummary] = [
+        MemberSummary(
+            userId: "me",
+            displayName: "You",
+            avatarURL: nil,
+            status: .active
+        ),
+        MemberSummary(
+            userId: "u2",
+            displayName: "Alice",
+            avatarURL: nil,
+            status: .active
+        ),
+        MemberSummary(
+            userId: "u3",
+            displayName: "Bob",
+            avatarURL: nil,
+            status: .eliminated
+        ),
+        MemberSummary(
+            userId: "u4",
+            displayName: "Carol",
+            avatarURL: nil,
+            status: .active
+        )
+    ]
+
     var body: some View {
         DemoPageStatic {
             VStack(spacing: Theme.Spacing.s30) {
                 PlayersRemainingCard(
-                    remaining: "8/12"
+                    activeCount: 8,
+                    totalCount: 12,
+                    eliminatedThisWeek: 4,
+                    survivalStreak: 3,
+                    eliminatedGameweekId: nil,
+                    userStatus: .active,
+                    currentUserId: "me",
+                    members: Self.mockMembers
                 )
                 PlayersRemainingCard(
-                    remaining: "5/10",
-                    onSeeResults: {}
+                    activeCount: 2,
+                    totalCount: 10,
+                    eliminatedThisWeek: 3,
+                    survivalStreak: 2,
+                    eliminatedGameweekId: 3,
+                    userStatus: .eliminated,
+                    currentUserId: "u3",
+                    members: Self.mockMembers
                 )
             }
         }

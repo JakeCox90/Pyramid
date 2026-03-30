@@ -6,6 +6,22 @@ struct PlayerCount: Sendable, Equatable {
     let total: Int
 }
 
+/// Lightweight member info for avatar display.
+struct MemberSummary: Identifiable, Sendable, Equatable {
+    let userId: String
+    let displayName: String
+    let avatarURL: String?
+    let status: LeagueMember.MemberStatus
+    var id: String { userId }
+}
+
+/// Per-league elimination statistics.
+struct EliminationStats: Sendable, Equatable {
+    let eliminatedThisWeek: Int
+    let survivalStreak: Int
+    let eliminatedGameweekId: Int?
+}
+
 /// Aggregate data for the home screen, fetched in a single service call.
 struct HomeData: Sendable, Equatable {
     /// User's leagues with member counts.
@@ -24,6 +40,12 @@ struct HomeData: Sendable, Equatable {
     let allGameweeks: [Gameweek]
     /// Player counts per league: (active, total), keyed by league ID.
     let playerCounts: [String: PlayerCount]
+    /// The authenticated user's ID (for highlighting in avatar rows).
+    let userId: String
+    /// Member summaries per league for avatar display, keyed by league ID.
+    let memberSummaries: [String: [MemberSummary]]
+    /// Elimination stats per league, keyed by league ID.
+    let eliminationStats: [String: EliminationStats]
 }
 
 /// A user's pick paired with its fixture and league name for homepage display.

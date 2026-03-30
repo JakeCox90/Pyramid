@@ -7,17 +7,22 @@
 
 | Ticket | Branch | Agent | Status | Key Files | Started |
 |--------|--------|-------|--------|-----------|---------|
-| PYR-196 | feature/PYR-196-backup-disaster-recovery | Orchestrator | In Progress | docs/runbooks/backup-disaster-recovery.md | 2026-03-30 |
+| PYR-190 | feature/PYR-190-analytics-infrastructure | Orchestrator | In Review | docs/plans/proposals/analytics-strategy.md | 2026-03-30 |
 
 ## Recommended Queue (2026-03-30)
 
-<!-- Next: PYR-190 (Analytics), PYR-209 (Monitoring config), PYR-183 (Players remaining) -->
+<!-- Next: PYR-209 (Monitoring config), PYR-183 (Players remaining) -->
 
 ## Recently Completed
 
 | Ticket | Branch | PR | Merged |
 |--------|--------|----|--------|
 | PYR-197 | feature/PYR-197-prod-migration-strategy | #135 | 2026-03-30 |
+| PYR-195 | feature/PYR-195-health-check | #134 | 2026-03-30 |
+| PYR-194 | feature/PYR-194-rate-limiting | #131 | 2026-03-30 |
+| PYR-161 | feature/PYR-161-spectator-experience | #133 | 2026-03-30 |
+| PYR-207 | feature/PYR-207-used-teams-docs | #132 | 2026-03-30 |
+| PYR-204 | feature/PYR-204-atomic-stake-deduction | #130 | 2026-03-27 |
 | PYR-203 | feature/PYR-203-withdrawal-atomicity | #129 | 2026-03-27 |
 | PYR-202 | feature/PYR-202-topup-production-guard | #122 | 2026-03-27 |
 | PYR-193 | feature/PYR-193-security-hardening | #120 | 2026-03-27 |

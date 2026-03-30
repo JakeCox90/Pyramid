@@ -38,40 +38,21 @@ extension HomeService {
         )
     }
 
-    /// Fetches player counts for all leagues concurrently.
-    func fetchAllPlayerCounts(
-        leagues: [League]
-    ) async -> [String: PlayerCount] {
-        await withTaskGroup(
-            of: (String, PlayerCount).self
-        ) { group in
-            for league in leagues {
-                group.addTask {
-                    do {
-                        let counts = try await self
-                            .fetchPlayerCounts(
-                                leagueId: league.id
-                            )
-                        return (
-                            league.id,
-                            PlayerCount(
-                                active: counts.active,
-                                total: counts.total
-                            )
-                        )
-                    } catch {
-                        return (
-                            league.id,
-                            PlayerCount(active: 0, total: 0)
-                        )
-                    }
-                }
-            }
-            var result: [String: PlayerCount] = [:]
-            for await (id, count) in group {
-                result[id] = count
-            }
-            return result
+    /// Fetches all league stats in a single edge function call.
+    func fetchAllLeagueStats(
+        leagueIds: [String],
+        gameweekId: Int?
+    ) async -> LeagueStatsResponse? {
+        do {
+            return try await fetchLeagueStats(
+                leagueIds: leagueIds,
+                currentGameweekId: gameweekId
+            )
+        } catch {
+            Log.home.error(
+                "League stats fetch failed: \(error)"
+            )
+            return nil
         }
     }
 }
