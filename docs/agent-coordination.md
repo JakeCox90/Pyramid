@@ -7,16 +7,20 @@
 
 | Ticket | Branch | Agent | Status | Key Files | Started |
 |--------|--------|-------|--------|-----------|---------|
-| PYR-190 | feature/PYR-190-analytics-infrastructure | Orchestrator | In Review | docs/plans/proposals/analytics-strategy.md | 2026-03-30 |
+| PYR-213 | feature/PYR-213-token-freshness-ci | Other agent | In Progress | scripts/generate-tokens.js, .github/workflows/ | 2026-03-31 |
+| PYR-198 | feature/PYR-198-verify-prod-deploy | Orchestrator | In Review | .github/workflows/deploy-functions*.yml | 2026-03-31 |
+| PYR-209 | feature/PYR-209-uptime-monitoring | Orchestrator | In Review | .github/workflows/health-check.yml, docs/runbooks/ | 2026-03-31 |
 
-## Recommended Queue (2026-03-30)
+## Recommended Queue (2026-03-31)
 
-<!-- Next: PYR-209 (Monitoring config), PYR-183 (Players remaining) -->
+<!-- Next: PYR-103 (Shared tension moments), PYR-111 (Rival tracking), PYR-94 (Stats widget) -->
 
 ## Recently Completed
 
 | Ticket | Branch | PR | Merged |
 |--------|--------|----|--------|
+| PYR-210 | feature/PYR-210-ios-client-update | #142 | 2026-03-31 |
+| PYR-190 | feature/PYR-190-analytics-infrastructure | #137 | 2026-03-31 |
 | PYR-197 | feature/PYR-197-prod-migration-strategy | #135 | 2026-03-30 |
 | PYR-195 | feature/PYR-195-health-check | #134 | 2026-03-30 |
 | PYR-194 | feature/PYR-194-rate-limiting | #131 | 2026-03-30 |

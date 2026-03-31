@@ -1,0 +1,141 @@
+name: Scheduled Health Check
+
+# ─── Automated uptime monitoring ────────────────────────────────────────────
+# Pings the /health endpoint on a schedule and alerts on failure or degradation.
+# Acts as a lightweight uptime monitor until an external service (BetterStack)
+# is configured. See docs/runbooks/health-monitoring.md for response steps.
+#
+# Required GitHub Secrets:
+#   SUPABASE_SERVICE_ROLE_KEY_PROD — Production service-role key
+#   SUPABASE_PROJECT_REF_PROD     — Production project ref
+#
+# GitHub Actions minutes: ~1,440/month at 15-min intervals (within free tier).
+# Upgrade to BetterStack (free, 5-min intervals) for tighter monitoring.
+
+on:
+  schedule:
+    # Every 15 minutes — balances responsiveness with GitHub Actions free tier
+    # (2,000 min/month). Switch to BetterStack for 5-min intervals.
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to check"
+        required: true
+        type: choice
+        options:
+          - production
+          - dev
+        default: production
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+    env:
+      PROJECT_REF: ${{ inputs.environment == 'dev' && secrets.SUPABASE_PROJECT_REF_DEV || secrets.SUPABASE_PROJECT_REF_PROD }}
+      SERVICE_KEY: ${{ inputs.environment == 'dev' && secrets.SUPABASE_SERVICE_ROLE_KEY || secrets.SUPABASE_SERVICE_ROLE_KEY_PROD }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            .github
+
+      - name: Validate secrets
+        run: |
+          if [ -z "$PROJECT_REF" ]; then
+            echo "::error::Project ref secret is not set (SUPABASE_PROJECT_REF_PROD or _DEV)"
+            exit 1
+          fi
+          if [ -z "$SERVICE_KEY" ]; then
+            echo "::error::Service role key secret is not set"
+            exit 1
+          fi
+
+      - name: Ping health endpoint
+        id: health
+        run: |
+          HEALTH_URL="https://${PROJECT_REF}.supabase.co/functions/v1/health"
+
+          HTTP_CODE=$(curl -s -o response.json -w "%{http_code}" \
+            -H "Authorization: Bearer ${SERVICE_KEY}" \
+            --max-time 30 \
+            "$HEALTH_URL")
+
+          echo "http_code=$HTTP_CODE" >> "$GITHUB_OUTPUT"
+
+          if [ "$HTTP_CODE" -eq 200 ]; then
+            STATUS=$(jq -r '.status' response.json)
+            echo "status=$STATUS" >> "$GITHUB_OUTPUT"
+            echo "Health check returned: $STATUS"
+            jq '.' response.json
+          else
+            echo "status=unreachable" >> "$GITHUB_OUTPUT"
+            echo "::error::Health check failed with HTTP $HTTP_CODE"
+            cat response.json 2>/dev/null || echo "No response body"
+            exit 1
+          fi
+
+      - name: Fail on degraded status
+        if: steps.health.outputs.status == 'degraded'
+        run: |
+          echo "::warning::Health endpoint returned 'degraded' — one or more checks have warnings"
+          jq '.checks | to_entries[] | select(.value.status != "pass") | "\(.key): \(.value.status) — \(.value.message)"' response.json 2>/dev/null || true
+          # Degraded is a real problem (quota exhaustion, settlement delays) — alert on it
+          exit 1
+
+      - name: Ensure failure label exists
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            try {
+              await github.rest.issues.getLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                name: 'health-check-failure'
+              });
+            } catch (e) {
+              if (e.status === 404) {
+                await github.rest.issues.createLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  name: 'health-check-failure',
+                  color: 'd73a4a',
+                  description: 'Automated health check alert — see docs/runbooks/health-monitoring.md'
+                });
+              }
+            }
+
+      - name: Create or update failure issue
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const existing = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: 'health-check-failure',
+              state: 'open',
+              per_page: 1
+            });
+
+            const status = '${{ steps.health.outputs.status }}';
+            const httpCode = '${{ steps.health.outputs.http_code }}';
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+
+            if (existing.data.length > 0) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: existing.data[0].number,
+                body: `Health check failed again at ${new Date().toISOString()}.\n**HTTP:** ${httpCode} | **Status:** ${status}\n**Run:** ${runUrl}`
+              });
+            } else {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: 'Automated health check failing',
+                body: `The scheduled health check is failing.\n\n**HTTP Code:** ${httpCode}\n**Status:** ${status}\n**First detected:** ${new Date().toISOString()}\n**Run:** ${runUrl}\n\nSee [health monitoring runbook](docs/runbooks/health-monitoring.md) for response steps.\n\n_This issue will receive comments on subsequent failures. Close it when the issue is resolved._`,
+                labels: ['health-check-failure']
+              });
+            }
