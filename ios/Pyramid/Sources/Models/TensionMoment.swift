@@ -1,10 +1,11 @@
 import Foundation
 
 struct TensionMoment: Identifiable, Equatable {
-    let id: Int
-    let teamName: String
     let teamId: Int
+    let teamName: String
     let pickCount: Int
+
+    var id: Int { teamId }
 
     var flavorText: String {
         switch pickCount {

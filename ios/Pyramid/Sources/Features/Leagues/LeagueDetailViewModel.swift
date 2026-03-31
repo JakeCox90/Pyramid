@@ -105,9 +105,8 @@ final class LeagueDetailViewModel: ObservableObject {
         return grouped.compactMap { teamId, picks in
             guard picks.count >= 2 else { return nil }
             return TensionMoment(
-                id: teamId,
-                teamName: picks[0].teamName,
                 teamId: teamId,
+                teamName: picks[0].teamName,
                 pickCount: picks.count
             )
         }
