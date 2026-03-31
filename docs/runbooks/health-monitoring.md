@@ -47,11 +47,11 @@ curl -H "Authorization: Bearer $SUPABASE_SERVICE_ROLE_KEY" \
 
 ## Automated Monitoring (GitHub Actions)
 
-A scheduled GitHub Actions workflow (`.github/workflows/health-check.yml`) pings the health endpoint every 5 minutes. On failure it:
+A scheduled GitHub Actions workflow (`.github/workflows/health-check.yml`) pings the health endpoint every 15 minutes. On failure or degradation it:
 - Creates a GitHub Issue labeled `health-check-failure` (or comments on an existing open one)
-- Logs degraded status as warnings in the workflow run
+- Alerts on both `unhealthy` (503) and `degraded` (200 with warnings) status
 
-This provides baseline monitoring without external service dependencies. Requires `SUPABASE_SERVICE_ROLE_KEY_PROD` in GitHub Secrets.
+This provides baseline monitoring without external service dependencies. Requires `SUPABASE_SERVICE_ROLE_KEY_PROD` and `SUPABASE_PROJECT_REF_PROD` in GitHub Secrets. Upgrade to BetterStack for 5-minute intervals.
 
 ## External Monitoring Setup (Recommended Upgrade)
 
@@ -62,6 +62,7 @@ This provides baseline monitoring without external service dependencies. Require
    - **URL:** `https://cracvbokmvryhhclzxxw.supabase.co/functions/v1/health`
    - **Method:** GET
    - **Headers:** `Authorization: Bearer <prod-service-role-key>`
+   - **Security note:** The service-role key grants full database access. If BetterStack is ever deprovisioned or credentials are suspected compromised, rotate the key immediately in Supabase Dashboard > Settings > API.
    - **Check interval:** 5 minutes
    - **Expected status:** 200
    - **Confirmation period:** 2 minutes (avoid false alarms)
