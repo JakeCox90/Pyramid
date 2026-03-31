@@ -39,6 +39,9 @@ final class HomeViewModel: ObservableObject {
     @Published var selectedGameweek: Gameweek?
     @Published var selectedGwPicks: [LeagueResult] = []
     @Published var selectedLeague: League?
+    @Published var showGameweekSummary = false
+    @Published var gameweekSummaryItems: [GameweekSummaryItem] = []
+    @Published var summaryStartIndex: Int = 0
 
     let homeService: HomeServiceProtocol
     var pollingTask: Task<Void, Never>?
@@ -67,6 +70,18 @@ final class HomeViewModel: ObservableObject {
             }
             updatePolling()
             startCountdown()
+            // Build gameweek summary and auto-show if first time
+            gameweekSummaryItems = buildSummaryItems()
+            if gameweekPhase == .finished,
+               !gameweekSummaryItems.isEmpty,
+               let gwId = homeData?.gameweek?.id {
+                let key = "gw_summary_seen_\(gwId)"
+                if !UserDefaults.standard.bool(forKey: key) {
+                    UserDefaults.standard.set(true, forKey: key)
+                    summaryStartIndex = 0
+                    showGameweekSummary = true
+                }
+            }
         } catch {
             errorMessage = AppError.from(error).userMessage
         }
@@ -75,6 +90,16 @@ final class HomeViewModel: ObservableObject {
 
     func selectLeague(_ league: League) {
         selectedLeague = league
+    }
+
+    /// Opens the Gameweek Summary overlay scrolled to a specific league.
+    func showSummary(for leagueId: String) {
+        if let index = gameweekSummaryItems.firstIndex(
+            where: { $0.leagueId == leagueId }
+        ) {
+            summaryStartIndex = index
+        }
+        showGameweekSummary = true
     }
 
     // MARK: - Computed State

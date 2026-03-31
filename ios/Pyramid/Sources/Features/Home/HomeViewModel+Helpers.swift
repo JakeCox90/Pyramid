@@ -105,3 +105,55 @@ extension HomeViewModel {
         }
     }
 }
+
+// MARK: - Gameweek Summary Builder
+
+extension HomeViewModel {
+    /// Builds summary items for all leagues that have settled results.
+    func buildSummaryItems() -> [GameweekSummaryItem] {
+        guard let data = homeData else { return [] }
+        let results = data.lastGwResults
+
+        return data.leagues.compactMap { league in
+            // Find a result for this league (survived or eliminated)
+            guard let result = results.first(where: {
+                $0.leagueId == league.id
+            }) else { return nil }
+
+            let summaryResult: GameweekSummaryItem.SummaryResult
+            switch result.result {
+            case .survived:
+                summaryResult = .survived
+            case .eliminated:
+                summaryResult = .eliminated
+            default:
+                return nil
+            }
+
+            let counts = data.playerCounts[league.id]
+            let stats = data.eliminationStats[league.id]
+
+            return GameweekSummaryItem(
+                leagueId: league.id,
+                leagueName: result.leagueName,
+                result: summaryResult,
+                pickedTeamName: result.teamName,
+                opponentName: result.pickedHome
+                    ? result.awayTeamName
+                    : result.homeTeamName,
+                homeTeamName: result.homeTeamName,
+                homeTeamShort: result.homeTeamShort,
+                homeTeamLogo: result.homeTeamLogo,
+                awayTeamName: result.awayTeamName,
+                awayTeamShort: result.awayTeamShort,
+                awayTeamLogo: result.awayTeamLogo,
+                homeScore: result.homeScore,
+                awayScore: result.awayScore,
+                pickedHome: result.pickedHome,
+                survivalStreak: stats?.survivalStreak ?? 0,
+                playersRemaining: counts?.active ?? 0,
+                totalPlayers: counts?.total ?? 0
+            )
+        }
+    }
+}
