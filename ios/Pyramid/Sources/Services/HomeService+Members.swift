@@ -102,13 +102,21 @@ extension LeagueStatsResponse {
         var result: [String: [MemberSummary]] = [:]
         for (id, entry) in leagues {
             result[id] = entry.memberSummaries.map {
-                MemberSummary(
+                let status = LeagueMember.MemberStatus(
+                    rawValue: $0.status
+                )
+                if status == nil {
+                    Log.home.warning(
+                        "Unknown member status '\($0.status)'"
+                            + " for user \($0.userId)"
+                            + " — defaulting to .eliminated"
+                    )
+                }
+                return MemberSummary(
                     userId: $0.userId,
                     displayName: $0.displayName,
                     avatarURL: $0.avatarUrl,
-                    status: LeagueMember.MemberStatus(
-                        rawValue: $0.status
-                    ) ?? .active
+                    status: status ?? .eliminated
                 )
             }
         }
