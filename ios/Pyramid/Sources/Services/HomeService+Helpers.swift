@@ -43,6 +43,7 @@ extension HomeService {
         leagueIds: [String],
         gameweekId: Int?
     ) async -> LeagueStatsResponse? {
+        guard !leagueIds.isEmpty else { return nil }
         do {
             return try await fetchLeagueStats(
                 leagueIds: leagueIds,
