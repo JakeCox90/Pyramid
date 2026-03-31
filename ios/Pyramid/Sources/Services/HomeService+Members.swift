@@ -107,9 +107,7 @@ extension LeagueStatsResponse {
                 )
                 if status == nil {
                     Log.home.warning(
-                        "Unknown member status '\($0.status)'"
-                            + " for user \($0.userId)"
-                            + " — defaulting to .eliminated"
+                        "Unknown member status '\($0.status)' for user \($0.userId) — defaulting to .eliminated"
                     )
                 }
                 return MemberSummary(
