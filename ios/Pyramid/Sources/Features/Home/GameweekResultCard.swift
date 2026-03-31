@@ -34,7 +34,7 @@ struct GameweekResultCard: View {
                     spacing: Theme.Spacing.s10
                 ) {
                     Text(isSurvived ? "Survived" : "Eliminated")
-                        .font(Theme.Typography.h4)
+                        .font(Theme.Typography.subhead)
                         .foregroundStyle(resultColor)
 
                     Text(pickSummary)

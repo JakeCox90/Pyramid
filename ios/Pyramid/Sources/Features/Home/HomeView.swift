@@ -4,10 +4,6 @@ struct HomeView: View {
     @StateObject var viewModel = HomeViewModel()
     @State var showPicks = false
     @State private var matchCardVisible = true
-    @State var showEliminationOverlay = false
-    @State var eliminationOverlayResult: LeagueResult?
-    @State var showSurvivalOverlay = false
-    @State var survivalOverlayResult: LeagueResult?
 
     var body: some View {
         NavigationStack {
@@ -30,50 +26,16 @@ struct HomeView: View {
             )
             .task { await viewModel.load() }
             .fullScreenCover(
-                isPresented: $showEliminationOverlay
+                isPresented: $viewModel.showGameweekSummary
             ) {
-                if let result = eliminationOverlayResult {
-                    EliminationOverlay(
-                        leagueName: result.leagueName,
-                        pickedTeamName: result.teamName,
-                        opponentName: result.pickedHome
-                            ? result.awayTeamName
-                            : result.homeTeamName,
-                        homeScore: result.homeScore,
-                        awayScore: result.awayScore,
-                        pickedHome: result.pickedHome,
-                        onDismiss: {
-                            showEliminationOverlay = false
-                        }
-                    )
-                    .background(.black)
-                }
-            }
-            .fullScreenCover(
-                isPresented: $showSurvivalOverlay
-            ) {
-                if let result = survivalOverlayResult {
-                    SurvivalOverlay(
-                        leagueName: result.leagueName,
-                        pickedTeamName: result.teamName,
-                        opponentName: result.pickedHome
-                            ? result.awayTeamName
-                            : result.homeTeamName,
-                        homeScore: result.homeScore,
-                        awayScore: result.awayScore,
-                        pickedHome: result.pickedHome,
-                        onDismiss: {
-                            showSurvivalOverlay = false
-                        }
-                    )
-                    .background(.black)
-                }
-            }
-            .onChange(
-                of: viewModel.homeData
-            ) { newData in
-                checkForElimination(data: newData)
-                checkForSurvival(data: newData)
+                GameweekSummaryView(
+                    items: viewModel.gameweekSummaryItems,
+                    startIndex: viewModel.summaryStartIndex,
+                    onDismiss: {
+                        viewModel.showGameweekSummary = false
+                    }
+                )
+                .background(.clear)
             }
             .navigationDestination(
                 isPresented: $showPicks
@@ -185,7 +147,17 @@ struct HomeView: View {
     ) -> some View {
         ScrollView(showsIndicators: false) {
             VStack(spacing: Theme.Spacing.s40) {
-                if viewModel.isEliminated(in: league) {
+                // Post-settlement: show result card
+                if let summaryItem = viewModel
+                    .gameweekSummaryItems
+                    .first(where: { $0.leagueId == league.id }) {
+                    GameweekResultCard(item: summaryItem) {
+                        viewModel.showSummary(
+                            for: league.id
+                        )
+                    }
+                // Pre-settlement: existing cards
+                } else if viewModel.isEliminated(in: league) {
                     eliminationSection(for: league)
                 } else if let context = viewModel
                     .currentPick(for: league) {
