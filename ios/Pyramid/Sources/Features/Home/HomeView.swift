@@ -147,20 +147,14 @@ struct HomeView: View {
     ) -> some View {
         ScrollView(showsIndicators: false) {
             VStack(spacing: Theme.Spacing.s40) {
-                // Post-settlement: result card (additive, not replacing)
-                if let summaryItem = viewModel
-                    .gameweekSummaryItems
-                    .first(where: { $0.leagueId == league.id }) {
-                    GameweekResultCard(item: summaryItem) {
-                        viewModel.showSummary(
-                            for: league.id
-                        )
-                    }
-                }
-
-                // Pick / elimination / empty state
+                // Pick / elimination / survival / empty state
                 if viewModel.isEliminated(in: league) {
                     eliminationSection(for: league)
+                } else if viewModel.gameweekPhase == .finished,
+                          viewModel.survivalResult(
+                            for: league
+                          ) != nil {
+                    survivalSection(for: league)
                 } else if let context = viewModel
                     .currentPick(for: league) {
                     matchCard(context)
