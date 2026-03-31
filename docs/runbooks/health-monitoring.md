@@ -45,7 +45,15 @@ curl -H "Authorization: Bearer $SUPABASE_SERVICE_ROLE_KEY" \
 | `gameweek_data` | Verifies current GW exists with fixtures | No current GW or 0 fixtures | Query error |
 | `settlement` | Checks for unsettled FT picks | Pending picks with FT results for >6h | Query error |
 
-## External Monitoring Setup
+## Automated Monitoring (GitHub Actions)
+
+A scheduled GitHub Actions workflow (`.github/workflows/health-check.yml`) pings the health endpoint every 5 minutes. On failure it:
+- Creates a GitHub Issue labeled `health-check-failure` (or comments on an existing open one)
+- Logs degraded status as warnings in the workflow run
+
+This provides baseline monitoring without external service dependencies. Requires `SUPABASE_SERVICE_ROLE_KEY_PROD` in GitHub Secrets.
+
+## External Monitoring Setup (Recommended Upgrade)
 
 ### Recommended: BetterStack (free tier)
 

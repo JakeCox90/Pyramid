@@ -1,0 +1,94 @@
+name: Scheduled Health Check
+
+# ─── Automated uptime monitoring ────────────────────────────────────────────
+# Pings the /health endpoint every 5 minutes and alerts on failure.
+# Acts as a lightweight uptime monitor until an external service (BetterStack)
+# is configured.
+#
+# Required GitHub Secrets:
+#   SUPABASE_SERVICE_ROLE_KEY_PROD — Production service-role key
+#   SUPABASE_PROJECT_REF_PROD     — Production project ref (cracvbokmvryhhclzxxw)
+#   ALERT_EMAIL                    — Email for failure notifications (optional)
+
+on:
+  schedule:
+    # Every 5 minutes
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to check"
+        required: true
+        type: choice
+        options:
+          - production
+          - dev
+        default: production
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+    env:
+      PROJECT_REF: ${{ inputs.environment == 'dev' && 'qvmzmeizluqcdkcjsqyd' || secrets.SUPABASE_PROJECT_REF_PROD || 'cracvbokmvryhhclzxxw' }}
+      SERVICE_KEY: ${{ inputs.environment == 'dev' && secrets.SUPABASE_SERVICE_ROLE_KEY || secrets.SUPABASE_SERVICE_ROLE_KEY_PROD }}
+    steps:
+      - name: Ping health endpoint
+        id: health
+        run: |
+          HEALTH_URL="https://${PROJECT_REF}.supabase.co/functions/v1/health"
+
+          HTTP_CODE=$(curl -s -o response.json -w "%{http_code}" \
+            -H "Authorization: Bearer ${SERVICE_KEY}" \
+            --max-time 30 \
+            "$HEALTH_URL")
+
+          echo "http_code=$HTTP_CODE" >> "$GITHUB_OUTPUT"
+
+          if [ "$HTTP_CODE" -eq 200 ]; then
+            STATUS=$(jq -r '.status' response.json)
+            echo "status=$STATUS" >> "$GITHUB_OUTPUT"
+            echo "Health check passed: $STATUS"
+            jq '.' response.json
+          else
+            echo "status=unreachable" >> "$GITHUB_OUTPUT"
+            echo "::error::Health check failed with HTTP $HTTP_CODE"
+            cat response.json 2>/dev/null || echo "No response body"
+            exit 1
+          fi
+
+      - name: Check for degraded status
+        if: steps.health.outputs.status == 'degraded'
+        run: |
+          echo "::warning::Health endpoint returned 'degraded' — one or more checks have warnings"
+          jq '.checks | to_entries[] | select(.value.status != "pass") | "\(.key): \(.value.status) — \(.value.message)"' response.json
+
+      - name: Create failure issue
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = `Health check failure: ${new Date().toISOString().slice(0, 16)}`;
+            const existing = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: 'health-check-failure',
+              state: 'open',
+              per_page: 1
+            });
+            if (existing.data.length > 0) {
+              // Add comment to existing issue instead of creating duplicates
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: existing.data[0].number,
+                body: `Health check failed again at ${new Date().toISOString()}.\nHTTP code: ${{ steps.health.outputs.http_code }}\nSee [workflow run](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})`
+              });
+            } else {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title,
+                body: `The scheduled health check failed.\n\n**HTTP Code:** ${{ steps.health.outputs.http_code }}\n**Status:** ${{ steps.health.outputs.status }}\n**Run:** ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}\n\nSee [health monitoring runbook](docs/runbooks/health-monitoring.md) for response steps.`,
+                labels: ['health-check-failure']
+              });
+            }
