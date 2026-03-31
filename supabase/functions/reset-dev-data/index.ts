@@ -1,19 +1,19 @@
 // Edge Function: reset-dev-data
 // Resets the dev environment seed data by calling the dev_reset_data Postgres function.
-// Protected by service-role auth and environment check.
+// Protected by user JWT auth and environment check.
 //
 // POST /reset-dev-data
-// Headers: Authorization: Bearer <service-role-key>
-// Body: { "mode": "game" | "full", "caller_id"?: "<uuid>" }
+// Headers: Authorization: Bearer <user-jwt>
+// Body: { "mode": "game" | "full" }
 // Response 200: { success: true, mode: string, clearOnboarding: boolean }
 // Response 403: { error: "Reset is only available in dev environment" }
 
-import { getServiceClient, requireServiceRole, responseHeaders } from "../_shared/supabase.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { getServiceClient, responseHeaders } from "../_shared/supabase.ts";
 import { createLogger } from "../_shared/logger.ts";
 
 interface ResetBody {
   mode: "game" | "full";
-  caller_id?: string;
 }
 
 interface ErrorResponse {
@@ -45,9 +45,27 @@ Deno.serve(async (req) => {
     return errorResponse("Method not allowed", "METHOD_NOT_ALLOWED", 405, origin);
   }
 
-  // ── Service-role auth — only internal/admin callers can reset data ──────
-  const auth = requireServiceRole(req);
-  if (!auth.authorized) return auth.errorResponse!;
+  // ── User JWT auth — verify caller is authenticated ────────────────────────
+  const authHeader = req.headers.get("Authorization") ?? "";
+  const token = authHeader.replace(/^Bearer\s+/i, "").trim();
+
+  if (!token) {
+    return errorResponse("Missing auth token", "UNAUTHORIZED", 401, origin);
+  }
+
+  const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
+  const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
+  const userClient = createClient(supabaseUrl, supabaseAnonKey, {
+    global: { headers: { Authorization: `Bearer ${token}` } },
+    auth: { autoRefreshToken: false, persistSession: false },
+  });
+  const { data: { user }, error: authError } = await userClient.auth.getUser();
+
+  if (authError || !user) {
+    return errorResponse("Invalid auth token", "UNAUTHORIZED", 401, origin);
+  }
+
+  const callerId = user.id;
 
   const log = createLogger("reset-dev-data", req);
 
@@ -82,7 +100,6 @@ Deno.serve(async (req) => {
     );
   }
 
-  const callerId = body.caller_id ?? "00000000-0000-0000-0000-000000000000";
   log.info("Starting dev reset", { mode, callerId });
 
   // ── Call the Postgres function (via service role to bypass RLS) ──────────
