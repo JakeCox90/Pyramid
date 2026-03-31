@@ -4,6 +4,9 @@ name: Deploy Edge Functions (Production)
 # Deploys all Edge Functions to the production Supabase project.
 # Requires approval from the "production" GitHub Environment.
 #
+# Function list is read from supabase/functions/manifest.json — add new
+# functions there, not here. Functions with auth: "dev-only" are excluded.
+#
 # Rollback: re-run this workflow from the last known-good tagged commit.
 # Tags are created automatically on each successful deploy.
 #
@@ -82,21 +85,10 @@ jobs:
         # HS256 (anon/service-role keys), but user JWTs are signed with ES256.
         # Auth is enforced internally via getUser() in each function.
         run: |
-          USER_FUNCTIONS=(
-            create-league
-            join-league
-            join-paid-league
-            submit-pick
-            get-wallet
-            top-up
-            request-withdrawal
-            register-device-token
-            update-profile
-            update-league
-            validate-league-content
-            leave-league
-            get-league-stats
-          )
+          MANIFEST="supabase/functions/manifest.json"
+
+          # Read user-facing functions from manifest (excludes dev-only and service)
+          readarray -t USER_FUNCTIONS < <(jq -r '.functions | to_entries[] | select(.value.auth == "user") | .key' "$MANIFEST")
 
           FAILED=()
           for fn in "${USER_FUNCTIONS[@]}"; do
@@ -128,19 +120,10 @@ jobs:
         # --no-verify-jwt is required because these use service-role key auth
         # (checked internally via requireServiceRole()), not gateway JWT.
         run: |
-          SERVICE_FUNCTIONS=(
-            settle-picks
-            credit-winnings
-            distribute-prizes
-            refund-stake
-            process-dispute-window
-            poll-live-scores
-            sync-fixtures
-            sync-odds
-            get-head-to-head
-            generate-gameweek-story
-            health
-          )
+          MANIFEST="supabase/functions/manifest.json"
+
+          # Read service-role functions from manifest (excludes dev-only and user)
+          readarray -t SERVICE_FUNCTIONS < <(jq -r '.functions | to_entries[] | select(.value.auth == "service") | .key' "$MANIFEST")
 
           FAILED=()
           for fn in "${SERVICE_FUNCTIONS[@]}"; do
@@ -163,6 +146,15 @@ jobs:
           fi
 
           echo "SERVICE_COUNT=${#SERVICE_FUNCTIONS[@]}" >> "$GITHUB_ENV"
+
+      - name: Log skipped dev-only functions
+        run: |
+          MANIFEST="supabase/functions/manifest.json"
+          DEV_ONLY=$(jq -r '.functions | to_entries[] | select(.value.auth == "dev-only") | .key' "$MANIFEST")
+          if [ -n "$DEV_ONLY" ]; then
+            echo "Skipped dev-only functions (not deployed to prod):"
+            echo "$DEV_ONLY" | while read -r fn; do echo "  - $fn"; done
+          fi
 
       - name: Tag successful deployment
         if: inputs.dry_run == false

@@ -1,0 +1,30 @@
+{
+  "_comment": "Edge Function deployment manifest. Source of truth for which functions exist and how they authenticate. Both deploy-functions.yml and deploy-functions-prod.yml read this file — add new functions here, not in workflow files.",
+  "functions": {
+    "create-league":          { "auth": "user" },
+    "credit-winnings":        { "auth": "service" },
+    "distribute-prizes":      { "auth": "service" },
+    "generate-gameweek-story": { "auth": "service" },
+    "get-head-to-head":       { "auth": "service" },
+    "get-league-stats":       { "auth": "user" },
+    "get-wallet":             { "auth": "user" },
+    "health":                 { "auth": "service" },
+    "join-league":            { "auth": "user" },
+    "join-paid-league":       { "auth": "user" },
+    "leave-league":           { "auth": "user" },
+    "poll-live-scores":       { "auth": "service" },
+    "process-dispute-window": { "auth": "service" },
+    "refund-stake":           { "auth": "service" },
+    "register-device-token":  { "auth": "user" },
+    "request-withdrawal":     { "auth": "user" },
+    "reset-dev-data":         { "auth": "dev-only" },
+    "settle-picks":           { "auth": "service" },
+    "submit-pick":            { "auth": "user" },
+    "sync-fixtures":          { "auth": "service" },
+    "sync-odds":              { "auth": "service" },
+    "top-up":                 { "auth": "user" },
+    "update-league":          { "auth": "user" },
+    "update-profile":         { "auth": "user" },
+    "validate-league-content": { "auth": "user" }
+  }
+}
