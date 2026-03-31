@@ -7,18 +7,18 @@
 
 | Ticket | Branch | Agent | Status | Key Files | Started |
 |--------|--------|-------|--------|-----------|---------|
-| PYR-213 | feature/PYR-213-token-freshness-ci | Other agent | In Progress | scripts/generate-tokens.js, .github/workflows/ | 2026-03-31 |
-| PYR-198 | feature/PYR-198-verify-prod-deploy | Orchestrator | In Review | .github/workflows/deploy-functions*.yml | 2026-03-31 |
-| PYR-209 | feature/PYR-209-uptime-monitoring | Orchestrator | In Review | .github/workflows/health-check.yml, docs/runbooks/ | 2026-03-31 |
+| PYR-213 | feature/PYR-213-token-freshness-ci | Other agent | In Review | scripts/generate-tokens.js, .github/workflows/ | 2026-03-31 |
 
 ## Recommended Queue (2026-03-31)
 
-<!-- Next: PYR-103 (Shared tension moments), PYR-111 (Rival tracking), PYR-94 (Stats widget) -->
+<!-- Priority order: PYR-103 (Shared tension, 2pts, Todo), PYR-111 (Rival tracking, 3pts, Todo), PYR-100 (Chat backend, 5pts, Backlog), PYR-94 (Stats widget, 2pts, Backlog), PYR-108 (Records wall, 2pts, Backlog) -->
 
 ## Recently Completed
 
 | Ticket | Branch | PR | Merged |
 |--------|--------|----|--------|
+| PYR-198 | feature/PYR-198-verify-prod-deploy | #143 | 2026-03-31 |
+| PYR-209 | feature/PYR-209-uptime-monitoring | #145 | 2026-03-31 |
 | PYR-210 | feature/PYR-210-ios-client-update | #142 | 2026-03-31 |
 | PYR-190 | feature/PYR-190-analytics-infrastructure | #137 | 2026-03-31 |
 | PYR-197 | feature/PYR-197-prod-migration-strategy | #135 | 2026-03-30 |
