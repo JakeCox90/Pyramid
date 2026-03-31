@@ -7,11 +7,11 @@
 
 | Ticket | Branch | Agent | Status | Key Files | Started |
 |--------|--------|-------|--------|-----------|---------|
-| — | — | — | No active work | — | — |
+| PYR-103 | feature/PYR-103-shared-tension-moments | Claude | In Progress | TensionMoment.swift, TensionBannerView.swift, LeagueDetailViewModel.swift, LeagueDetailView+Standings.swift | 2026-03-31 |
 
-## Recommended Queue (2026-03-31)
+## Recommended Queue (2026-03-31, updated 13:30)
 
-<!-- Priority order (2026-03-31 audit): PYR-108 (Records wall, 2pts, completes V3 milestone), PYR-103 (Shared tension, 2pts, Todo), PYR-111 (Rival tracking, 3pts, Todo), PYR-94 (Stats widget, 2pts, Homepage), PYR-100 (Chat backend, 5pts, unblocks PYR-101), PYR-110 (Social push, 2pts) -->
+<!-- Priority order (2026-03-31 whatnext audit): PYR-103 IN PROGRESS, PYR-108 (Records wall, 2pts, completes C&S V3 milestone), PYR-94 (Stats widget, 2pts, completes Homepage V3 milestone), PYR-100 (Chat backend, 5pts, unblocks PYR-101), PYR-111 (Rival tracking, 3pts, Todo), PYR-110 (Social push, 2pts). Also: PYR-189 needs Figma first; PYR-215/216/217 need refinement. -->
 
 ## Recently Completed
 

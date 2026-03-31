@@ -99,6 +99,22 @@ final class LeagueDetailViewModel: ObservableObject {
         return nil
     }
 
+    var tensionMoments: [TensionMoment] {
+        guard isDeadlinePassed() else { return [] }
+        let grouped = Dictionary(grouping: lockedPicks.values, by: \.teamId)
+        return grouped.compactMap { teamId, picks in
+            guard picks.count >= 2 else { return nil }
+            return TensionMoment(
+                teamId: teamId,
+                teamName: picks[0].teamName,
+                pickCount: picks.count
+            )
+        }
+        .sorted { $0.pickCount > $1.pickCount }
+        .prefix(3)
+        .map { $0 }
+    }
+
     init(
         league: League,
         standingsService: StandingsServiceProtocol = StandingsService(),
