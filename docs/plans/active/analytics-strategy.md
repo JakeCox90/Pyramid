@@ -11,14 +11,14 @@
 
 | Factor | Details |
 |--------|---------|
-| **Privacy** | Privacy-first, no PII collection, GDPR-compliant by default. No ATT prompt needed. |
+| **Privacy** | Privacy-focused design with no direct identifiers by default; vendor positions the product as GDPR-friendly. Actual GDPR compliance, consent/notice requirements, and ATT prompt obligations depend on our specific implementation and jurisdictions and must be confirmed by legal/privacy review before launch. |
 | **iOS SDK** | Native Swift SDK, lightweight (~200KB), SwiftUI lifecycle hooks |
 | **Cost** | Free tier: 100K signals/month. Pro: €9/month for 1M signals. |
 | **Server-side** | REST API for Edge Function events |
 | **Dashboards** | Built-in funnels, retention cohorts, and custom queries |
 | **Supabase** | No native integration, but REST API works from Edge Functions |
 
-**Why:** For a launch-phase app with <1K users, TelemetryDeck gives us funnels and retention without GDPR consent complexity. Privacy-first means no ATT prompt (which tanks opt-in rates), and the Swift SDK is purpose-built for iOS. Upgrade path to PostHog if we outgrow it.
+**Why:** For a launch-phase app with <1K users, TelemetryDeck likely reduces some GDPR consent and ATT complexity compared with more invasive analytics, while still giving us funnels and retention. Final decisions on consent banners, privacy notices, and ATT prompts must be made by legal/privacy stakeholders before implementation. The Swift SDK is purpose-built for iOS. Upgrade path to PostHog if we outgrow it.
 
 ### Option B: PostHog (Cloud)
 
@@ -139,17 +139,17 @@ Benefits of enum-based events:
 _shared/analytics.ts
   ├── trackEvent(name: string, properties: Record<string, unknown>)
   └── // Sends to TelemetryDeck/PostHog REST API
-       // Fire-and-forget — never blocks the main response
+       // Best-effort await with short timeout (~500ms)
 ```
 
-Called from Edge Functions after the primary operation succeeds. Analytics failures are logged but never cause user-facing errors.
+Called from Edge Functions after the primary operation succeeds. Each analytics call is awaited with a short timeout (500ms) wrapped in a `try/catch` — this ensures the Deno runtime doesn't drop the outbound request when the function returns, while keeping latency impact minimal. Analytics failures are logged but never cause user-facing errors or retries.
 
 ### Privacy Implementation
 
 #### If TelemetryDeck (Recommended)
-- No ATT prompt needed — TelemetryDeck doesn't use IDFA
-- No consent banner needed — no PII is collected
-- User ID is a SHA-256 hash of Supabase user ID (one-way, non-reversible)
+- TelemetryDeck doesn't use IDFA, so ATT prompt is likely not required — confirm with legal review
+- User ID is a SHA-256 hash of Supabase user ID (one-way, non-reversible). Note: hashed user IDs are pseudonymous personal data under GDPR — privacy notice and legal basis still required even without direct PII
+- Consent banner may not be needed depending on jurisdiction and implementation — legal review required before launch
 - App Privacy Nutrition Label: "Analytics — Not Linked to You"
 
 #### If PostHog
