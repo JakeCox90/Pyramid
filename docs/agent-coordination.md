@@ -7,7 +7,7 @@
 
 | Ticket | Branch | Agent | Status | Key Files | Started |
 |--------|--------|-------|--------|-----------|---------|
-| PYR-213 | feature/PYR-213-token-freshness-ci | Other agent | In Review | scripts/generate-tokens.js, .github/workflows/ | 2026-03-31 |
+| — | — | — | No active work | — | — |
 
 ## Recommended Queue (2026-03-31)
 
@@ -17,6 +17,7 @@
 
 | Ticket | Branch | PR | Merged |
 |--------|--------|----|--------|
+| PYR-213 | feature/PYR-213-figma-token-source | #144 | 2026-03-31 |
 | PYR-198 | feature/PYR-198-verify-prod-deploy | #143 | 2026-03-31 |
 | PYR-209 | feature/PYR-209-uptime-monitoring | #145 | 2026-03-31 |
 | PYR-210 | feature/PYR-210-ios-client-update | #142 | 2026-03-31 |
