@@ -198,9 +198,7 @@ struct HomeView: View {
                     matchCardEmpty()
                 }
 
-                if !viewModel.isEliminated(in: league) {
-                    playersRemainingCard(for: league)
-                }
+                playersRemainingCard(for: league)
 
                 previousPicksSection(for: league)
             }
