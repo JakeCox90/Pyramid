@@ -97,6 +97,11 @@ extension LeagueDetailView {
                 if viewModel.isCurrentUserEliminated {
                     spectatorBanner
                 }
+                if !viewModel.tensionMoments.isEmpty {
+                    TensionBannerView(
+                        moments: viewModel.tensionMoments
+                    )
+                }
                 if viewModel.members.isEmpty {
                     emptyMembersView
                 } else {
