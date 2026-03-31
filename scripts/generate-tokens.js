@@ -49,7 +49,7 @@ const MISSING_TOKEN_FALLBACKS = {
 
 function deepMerge(target, source) {
     for (const [key, val] of Object.entries(source)) {
-        if (val && typeof val === 'object' && !val.value) {
+        if (val && typeof val === 'object' && val.value === undefined) {
             if (!target[key]) target[key] = {};
             deepMerge(target[key], val);
         } else if (!target[key]) {
@@ -71,6 +71,9 @@ function loadFromCache() {
         const match = ref.match(/^\{palette\.([^.]+)\.([^}]+)\}$/);
         if (!match) return ref;
         const [, colorName, shade] = match;
+        if (!palette[colorName] || palette[colorName][shade] === undefined) {
+            throw new Error(`Palette ref not found: ${ref} — check primitive.palette.json is current`);
+        }
         return palette[colorName][shade];
     }
 
@@ -271,7 +274,7 @@ function generateThemeColors(semanticColor) {
     lines.push(`${indent8}enum Content {`);
 
     lines.push(`${indent12}enum Text {`);
-    const contentText = semanticColor.content.text;
+    const contentText = semanticColor.content?.text ?? {};
     for (const name of ['default', 'subtle', 'contrast', 'disabled']) {
         if (contentText[name]) {
             lines.push(generateColorToken(name, contentText[name].light.value, contentText[name].dark.value, indent16));
@@ -280,7 +283,7 @@ function generateThemeColors(semanticColor) {
     lines.push(`${indent12}}`);
 
     lines.push(`${indent12}enum Link {`);
-    const contentLink = semanticColor.content.link;
+    const contentLink = semanticColor.content?.link ?? {};
     for (const name of ['resting', 'pressed', 'contrast', 'disabled']) {
         if (contentLink[name]) {
             lines.push(generateColorToken(name, contentLink[name].light.value, contentLink[name].dark.value, indent16));
@@ -294,7 +297,7 @@ function generateThemeColors(semanticColor) {
     lines.push(`${indent8}enum Surface {`);
 
     lines.push(`${indent12}enum Background {`);
-    const surfaceBg = semanticColor.surface.background;
+    const surfaceBg = semanticColor.surface?.background ?? {};
     for (const name of ['container', 'elevated', 'highlight', 'page', 'disabled', 'transparent']) {
         if (surfaceBg[name]) {
             lines.push(generateColorToken(name, surfaceBg[name].light.value, surfaceBg[name].dark.value, indent16));
@@ -303,7 +306,7 @@ function generateThemeColors(semanticColor) {
     lines.push(`${indent12}}`);
 
     lines.push(`${indent12}enum Overlay {`);
-    const surfaceOverlay = semanticColor.surface.overlay;
+    const surfaceOverlay = semanticColor.surface?.overlay ?? {};
     for (const name of ['default', 'heavy']) {
         if (surfaceOverlay[name]) {
             lines.push(generateColorToken(name, surfaceOverlay[name].light.value, surfaceOverlay[name].dark.value, indent16));
@@ -312,7 +315,7 @@ function generateThemeColors(semanticColor) {
     lines.push(`${indent12}}`);
 
     lines.push(`${indent12}enum Skeleton {`);
-    const surfaceSkeleton = semanticColor.surface.skeleton;
+    const surfaceSkeleton = semanticColor.surface?.skeleton ?? {};
     for (const name of ['default', 'heavy']) {
         if (surfaceSkeleton[name]) {
             lines.push(generateColorToken(name, surfaceSkeleton[name].light.value, surfaceSkeleton[name].dark.value, indent16));
@@ -463,6 +466,9 @@ function generateThemeTypography(typography) {
         const interName = interFontNameMap[style.fontWeight];
         if (!interName) {
             throw new Error(`No Inter font mapped for weight: ${style.fontWeight}`);
+        }
+        if (typeof style.fontSize !== 'number' || style.fontSize < 1 || style.fontSize > 200) {
+            throw new Error(`Invalid fontSize ${style.fontSize} for style "${name}"`);
         }
         lines.push(`        static let ${name} = Font.custom("${interName}", size: ${style.fontSize})`);
     }

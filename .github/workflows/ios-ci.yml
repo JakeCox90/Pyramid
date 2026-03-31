@@ -274,7 +274,7 @@ jobs:
           if ! git diff --exit-code ios/Pyramid/Sources/Shared/DesignSystem/ThemeColors.swift \
                ios/Pyramid/Sources/Shared/DesignSystem/ThemeSpacing.swift \
                ios/Pyramid/Sources/Shared/DesignSystem/ThemeTypography.swift; then
-            echo "::error::Generated token files are stale vs Figma. Run 'FIGMA_TOKEN=... node scripts/generate-tokens.js' and commit."
+            echo "::error::Generated token files are stale vs Figma. Set FIGMA_TOKEN env var and run 'node scripts/generate-tokens.js', then commit."
             exit 1
           fi
 

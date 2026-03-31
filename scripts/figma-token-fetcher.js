@@ -10,6 +10,8 @@
 const https = require('https');
 
 const FILE_KEY = 'D0hIZP7fHnn37d8EfXGJoM';
+const REQUEST_TIMEOUT_MS = 15000;
+const MAX_RESPONSE_BYTES = 50 * 1024 * 1024; // 50 MB
 
 // Collection IDs (from Figma file)
 const COLLECTION_IDS = {
@@ -20,6 +22,19 @@ const COLLECTION_IDS = {
     fonts: 'VariableCollectionId:5510:123',
 };
 
+// Swift identifier allowlist — reject anything that could inject code
+const SWIFT_IDENTIFIER_RE = /^[a-zA-Z][a-zA-Z0-9]*$/;
+
+function assertValidIdentifier(name, context) {
+    if (!SWIFT_IDENTIFIER_RE.test(name)) {
+        throw new Error(
+            `Invalid identifier "${name}" from ${context} — ` +
+            'must match /^[a-zA-Z][a-zA-Z0-9]*$/. ' +
+            'This may indicate a malformed Figma variable name.'
+        );
+    }
+}
+
 // ─── HTTP fetch ─────────────────────────────────────────────────────────────
 
 function fetchFigmaVariables(token) {
@@ -28,13 +43,22 @@ function fetchFigmaVariables(token) {
             hostname: 'api.figma.com',
             path: `/v1/files/${FILE_KEY}/variables/local`,
             headers: { 'X-FIGMA-TOKEN': token },
+            rejectUnauthorized: true,
         };
-        https.get(options, (res) => {
+        const req = https.get(options, (res) => {
             let data = '';
-            res.on('data', (chunk) => { data += chunk; });
+            let bytes = 0;
+            res.on('data', (chunk) => {
+                bytes += chunk.length;
+                if (bytes > MAX_RESPONSE_BYTES) {
+                    req.destroy(new Error(`Figma API response exceeded ${MAX_RESPONSE_BYTES} bytes`));
+                    return;
+                }
+                data += chunk;
+            });
             res.on('end', () => {
                 if (res.statusCode !== 200) {
-                    reject(new Error(`Figma API ${res.statusCode}: ${data.slice(0, 200)}`));
+                    reject(new Error(`Figma API returned status ${res.statusCode}`));
                     return;
                 }
                 try {
@@ -44,7 +68,11 @@ function fetchFigmaVariables(token) {
                 }
             });
             res.on('error', reject);
-        }).on('error', reject);
+        });
+        req.on('error', reject);
+        req.setTimeout(REQUEST_TIMEOUT_MS, () => {
+            req.destroy(new Error(`Figma API request timed out after ${REQUEST_TIMEOUT_MS}ms`));
+        });
     });
 }
 
@@ -52,7 +80,10 @@ function fetchFigmaVariables(token) {
 
 function resolveValue(value, allVariables, visited = new Set()) {
     if (value && typeof value === 'object' && value.type === 'VARIABLE_ALIAS') {
-        if (visited.has(value.id)) return null; // circular
+        if (visited.has(value.id)) {
+            console.warn(`[warn] Circular alias detected at variable ID ${value.id} — skipping`);
+            return null;
+        }
         visited.add(value.id);
         const target = allVariables[value.id];
         if (!target) return null; // remote/external alias — skip
@@ -64,7 +95,10 @@ function resolveValue(value, allVariables, visited = new Set()) {
 
 function resolveValueForMode(value, modeId, allVariables, visited = new Set()) {
     if (value && typeof value === 'object' && value.type === 'VARIABLE_ALIAS') {
-        if (visited.has(value.id)) return null;
+        if (visited.has(value.id)) {
+            console.warn(`[warn] Circular alias detected at variable ID ${value.id} — skipping`);
+            return null;
+        }
         visited.add(value.id);
         const target = allVariables[value.id];
         if (!target) return null; // remote/external alias — skip
@@ -78,6 +112,9 @@ function resolveValueForMode(value, modeId, allVariables, visited = new Set()) {
 // ─── Color conversion ───────────────────────────────────────────────────────
 
 function figmaColorToHex(color) {
+    if (!color || typeof color.r !== 'number') {
+        throw new Error(`figmaColorToHex received invalid color: ${JSON.stringify(color)}`);
+    }
     const r = Math.round(color.r * 255);
     const g = Math.round(color.g * 255);
     const b = Math.round(color.b * 255);
@@ -108,6 +145,14 @@ function getModeIds(collectionId, collections) {
     return result;
 }
 
+function validateCollections(collections) {
+    for (const [name, id] of Object.entries(COLLECTION_IDS)) {
+        if (!collections[id]) {
+            console.warn(`[warn] Expected Figma collection "${name}" (${id}) not found — tokens in this category will be empty`);
+        }
+    }
+}
+
 // ─── Build palette (Primitives collection) ──────────────────────────────────
 
 function buildPalette(allVariables, collections) {
@@ -120,11 +165,13 @@ function buildPalette(allVariables, collections) {
         const parts = v.name.split('/');
         if (parts[0] !== 'Palette' || parts.length !== 3) continue;
 
-        const colorName = parts[1].charAt(0).toLowerCase() + parts[1].slice(1);
-        // Convert camelCase: "BlackTint" → "blackTint"
-        const camelName = colorName.replace(/([A-Z])/g, (match, p1, offset) =>
-            offset === 0 ? p1.toLowerCase() : p1
-        );
+        // Convert to camelCase: "BlackTint" → "blackTint", "Black Tint" → "blackTint"
+        const camelName = parts[1]
+            .split(/\s+/)
+            .map((word, i) => i === 0
+                ? word.charAt(0).toLowerCase() + word.slice(1)
+                : word.charAt(0).toUpperCase() + word.slice(1))
+            .join('');
         const shade = parts[2];
 
         if (!palette[camelName]) palette[camelName] = {};
@@ -189,8 +236,11 @@ function buildSemanticColors(allVariables, collections) {
         const lightHex = figmaColorToHex(lightVal);
         const darkHex = figmaColorToHex(darkVal);
 
-        // Build nested structure
+        // Build nested structure — validate each key as a Swift identifier
         const keys = parts.map((p) => p.charAt(0).toLowerCase() + p.slice(1));
+        for (const key of keys) {
+            assertValidIdentifier(key, `Colour variable "${v.name}"`);
+        }
 
         let obj = semantic;
         for (let i = 0; i < keys.length - 1; i++) {
@@ -217,6 +267,7 @@ function buildSpacing(allVariables, collections) {
         if (v.resolvedType !== 'FLOAT') continue;
         const modeId = Object.keys(v.valuesByMode)[0];
         const resolved = resolveValue(v.valuesByMode[modeId], allVariables);
+        if (resolved === null) continue;
         // Name format: "0", "10", "20", etc.
         spacing.space[v.name] = { default: { value: resolved } };
     }
@@ -234,6 +285,7 @@ function buildBorders(allVariables, collections) {
         if (v.resolvedType !== 'FLOAT') continue;
         const modeId = Object.keys(v.valuesByMode)[0];
         const resolved = resolveValue(v.valuesByMode[modeId], allVariables);
+        if (resolved === null) continue;
         // Name format: "Radius/Default", "Radius/0", "Radius/10"
         const parts = v.name.split('/');
         if (parts[0] === 'Radius' && parts.length === 2) {
@@ -254,6 +306,7 @@ function buildFonts(allVariables, collections) {
     for (const v of vars) {
         const modeId = Object.keys(v.valuesByMode)[0];
         const resolved = resolveValue(v.valuesByMode[modeId], allVariables);
+        if (resolved === null) continue;
         const parts = v.name.split('/');
 
         if (parts[0] === 'Font Family' && parts.length === 2) {
@@ -282,7 +335,16 @@ async function fetchTokens(figmaToken) {
     }
 
     const response = await fetchFigmaVariables(figmaToken);
+
+    if (!response.meta || !response.meta.variables) {
+        throw new Error(
+            'Unexpected Figma API response — missing meta.variables. ' +
+            'This may indicate a permissions error or an API change.'
+        );
+    }
+
     const { variables: allVariables, variableCollections: collections } = response.meta;
+    validateCollections(collections);
 
     return {
         palette: buildPalette(allVariables, collections),
