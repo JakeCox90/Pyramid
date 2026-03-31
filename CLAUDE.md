@@ -68,6 +68,20 @@ If you encounter a decision marked GATE:
 - No direct DB writes from iOS client — all mutations via Edge Functions
 - No secrets in source code — use environment variables only
 
+## Engineering Principles
+
+### Fix the system, not the symptom
+When a bug exists because of a structural problem (duplication, missing validation, hardcoded values), fix the structure first. Patching the symptom guarantees the same bug class will recur. If the structural fix is too large for the current task, flag it explicitly — don't silently defer it.
+
+### New infrastructure must be reviewed before merge
+CI workflows, deployment scripts, and monitoring run unattended. Bugs in these are silent and compounding (partial deploys, missed alerts, cost overruns). Any new workflow or significant workflow change gets a code review pass before the PR is raised — not after.
+
+### No hardcoded lists that duplicate filesystem state
+If the filesystem already knows something (which functions exist, which test classes exist, which files to process), derive the list from the filesystem or a single manifest. Never maintain a parallel list in a workflow file, script, or config that must be manually kept in sync. Examples:
+- Edge Function deployment reads from `supabase/functions/manifest.json`
+- Snapshot PR workflow reads from `ios/snapshot-manifest.json`
+- When adding a new function/test/resource, there should be exactly ONE place to register it
+
 ## Branch Strategy
 - main — production, protected, requires 1 approval
 - feature/* — all feature work

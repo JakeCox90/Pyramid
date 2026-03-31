@@ -1,0 +1,24 @@
+{
+  "_comment": "UI test grouping manifest. Source of truth for which test classes run in CI and how they're parallelised. ios-ci.yml reads this file — add new test classes here, not in the workflow.",
+  "groups": [
+    {
+      "name": "Auth",
+      "tests": [
+        "PyramidUITests/PyramidUITests",
+        "PyramidUITests/AuthFlowUITests"
+      ]
+    },
+    {
+      "name": "League",
+      "tests": [
+        "PyramidUITests/CreateLeagueUITests"
+      ]
+    },
+    {
+      "name": "Picks",
+      "tests": [
+        "PyramidUITests/SubmitPickUITests"
+      ]
+    }
+  ]
+}

@@ -120,11 +120,34 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             | xcpretty
 
-  ui-test-auth:
-    name: UI Tests (Auth)
+  # ── UI test matrix ──────────────────────────────────────────────────────────
+  # Reads test groups from ios/ui-test-manifest.json so new test classes are
+  # picked up automatically. Add new tests to the manifest, not here.
+
+  ui-test-matrix:
+    name: Prepare UI Test Matrix
     needs: build
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Read manifest
+        id: set-matrix
+        run: |
+          MATRIX=$(jq -c '{include: [.groups[] | {name: .name, tests: (.tests | join(" "))}]}' ios/ui-test-manifest.json)
+          echo "matrix=$MATRIX" >> "$GITHUB_OUTPUT"
+
+  ui-test:
+    name: UI Tests (${{ matrix.name }})
+    needs: [build, ui-test-matrix]
     runs-on: macos-14
     timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.ui-test-matrix.outputs.matrix) }}
 
     steps:
       - name: Checkout
@@ -139,90 +162,24 @@ jobs:
           name: derived-data
           path: ios/DerivedData/Build/Products
 
-      - name: UI Test — Auth
+      - name: UI Test — ${{ matrix.name }}
         working-directory: ios
         env:
           UI_TEST_EMAIL: ${{ secrets.UI_TEST_EMAIL }}
           UI_TEST_PASSWORD: ${{ secrets.UI_TEST_PASSWORD }}
         run: |
           set -o pipefail
+          ONLY_TESTING_ARGS=""
+          for test_class in ${{ matrix.tests }}; do
+            ONLY_TESTING_ARGS="$ONLY_TESTING_ARGS -only-testing:$test_class"
+          done
+
           xcodebuild test-without-building \
             -project Pyramid.xcodeproj \
             -scheme Pyramid \
             -destination "platform=iOS Simulator,name=iPhone 16,OS=18.2" \
             -derivedDataPath DerivedData \
-            -only-testing:PyramidUITests/PyramidUITests \
-            -only-testing:PyramidUITests/AuthFlowUITests \
-            CODE_SIGNING_ALLOWED=NO \
-            | xcpretty
-
-  ui-test-league:
-    name: UI Tests (League)
-    needs: build
-    runs-on: macos-14
-    timeout-minutes: 10
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode_16.2.app
-
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: derived-data
-          path: ios/DerivedData/Build/Products
-
-      - name: UI Test — League
-        working-directory: ios
-        env:
-          UI_TEST_EMAIL: ${{ secrets.UI_TEST_EMAIL }}
-          UI_TEST_PASSWORD: ${{ secrets.UI_TEST_PASSWORD }}
-        run: |
-          set -o pipefail
-          xcodebuild test-without-building \
-            -project Pyramid.xcodeproj \
-            -scheme Pyramid \
-            -destination "platform=iOS Simulator,name=iPhone 16,OS=18.2" \
-            -derivedDataPath DerivedData \
-            -only-testing:PyramidUITests/CreateLeagueUITests \
-            CODE_SIGNING_ALLOWED=NO \
-            | xcpretty
-
-  ui-test-picks:
-    name: UI Tests (Picks)
-    needs: build
-    runs-on: macos-14
-    timeout-minutes: 10
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode_16.2.app
-
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: derived-data
-          path: ios/DerivedData/Build/Products
-
-      - name: UI Test — Picks
-        working-directory: ios
-        env:
-          UI_TEST_EMAIL: ${{ secrets.UI_TEST_EMAIL }}
-          UI_TEST_PASSWORD: ${{ secrets.UI_TEST_PASSWORD }}
-        run: |
-          set -o pipefail
-          xcodebuild test-without-building \
-            -project Pyramid.xcodeproj \
-            -scheme Pyramid \
-            -destination "platform=iOS Simulator,name=iPhone 16,OS=18.2" \
-            -derivedDataPath DerivedData \
-            -only-testing:PyramidUITests/SubmitPickUITests \
+            $ONLY_TESTING_ARGS \
             CODE_SIGNING_ALLOWED=NO \
             | xcpretty
 
