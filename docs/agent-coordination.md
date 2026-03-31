@@ -11,7 +11,7 @@
 
 ## Recommended Queue (2026-03-31)
 
-<!-- Priority order: PYR-103 (Shared tension, 2pts, Todo), PYR-111 (Rival tracking, 3pts, Todo), PYR-100 (Chat backend, 5pts, Backlog), PYR-94 (Stats widget, 2pts, Backlog), PYR-108 (Records wall, 2pts, Backlog) -->
+<!-- Priority order (2026-03-31 audit): PYR-108 (Records wall, 2pts, completes V3 milestone), PYR-103 (Shared tension, 2pts, Todo), PYR-111 (Rival tracking, 3pts, Todo), PYR-94 (Stats widget, 2pts, Homepage), PYR-100 (Chat backend, 5pts, unblocks PYR-101), PYR-110 (Social push, 2pts) -->
 
 ## Recently Completed
 
