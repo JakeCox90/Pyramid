@@ -9,7 +9,7 @@ name: Deploy Edge Functions (Production)
 #
 # Required GitHub Secrets:
 #   SUPABASE_ACCESS_TOKEN     — Supabase Management API token (shared with dev)
-#   SUPABASE_PROJECT_REF_PROD — Production project ref (cracvbokmvryhhclzxxw)
+#   SUPABASE_PROJECT_REF_PROD — Production project ref
 
 on:
   workflow_dispatch:
@@ -54,7 +54,14 @@ jobs:
 
       - uses: supabase/setup-cli@v1
         with:
-          version: latest
+          version: 1.207.9
+
+      - name: Validate project ref
+        run: |
+          if [ -z "$PROJECT_REF" ]; then
+            echo "::error::SUPABASE_PROJECT_REF_PROD secret is not set"
+            exit 1
+          fi
 
       - name: Set production environment secrets
         if: inputs.dry_run == false
@@ -88,18 +95,30 @@ jobs:
             update-league
             validate-league-content
             leave-league
+            get-league-stats
           )
 
+          FAILED=()
           for fn in "${USER_FUNCTIONS[@]}"; do
             if [ "$DRY_RUN" = "true" ]; then
               echo "[DRY RUN] Would deploy $fn (user-facing)"
             else
               echo "Deploying $fn (user-facing) to production..."
-              supabase functions deploy "$fn" \
+              if ! supabase functions deploy "$fn" \
                 --no-verify-jwt \
-                --project-ref "$PROJECT_REF"
+                --project-ref "$PROJECT_REF"; then
+                echo "::error::Failed to deploy $fn"
+                FAILED+=("$fn")
+              fi
             fi
           done
+
+          if [ ${#FAILED[@]} -gt 0 ]; then
+            echo "::error::Failed to deploy user-facing functions: ${FAILED[*]}"
+            exit 1
+          fi
+
+          echo "USER_COUNT=${#USER_FUNCTIONS[@]}" >> "$GITHUB_ENV"
 
       - name: Deploy service-role Edge Functions
         env:
@@ -120,18 +139,30 @@ jobs:
             sync-odds
             get-head-to-head
             generate-gameweek-story
+            health
           )
 
+          FAILED=()
           for fn in "${SERVICE_FUNCTIONS[@]}"; do
             if [ "$DRY_RUN" = "true" ]; then
               echo "[DRY RUN] Would deploy $fn (service-role)"
             else
               echo "Deploying $fn (service-role) to production..."
-              supabase functions deploy "$fn" \
+              if ! supabase functions deploy "$fn" \
                 --no-verify-jwt \
-                --project-ref "$PROJECT_REF"
+                --project-ref "$PROJECT_REF"; then
+                echo "::error::Failed to deploy $fn"
+                FAILED+=("$fn")
+              fi
             fi
           done
+
+          if [ ${#FAILED[@]} -gt 0 ]; then
+            echo "::error::Failed to deploy service-role functions: ${FAILED[*]}"
+            exit 1
+          fi
+
+          echo "SERVICE_COUNT=${#SERVICE_FUNCTIONS[@]}" >> "$GITHUB_ENV"
 
       - name: Tag successful deployment
         if: inputs.dry_run == false
@@ -158,5 +189,5 @@ jobs:
             echo "**Tag:** ${TAG:-unknown}" >> "$GITHUB_STEP_SUMMARY"
           fi
           echo "**Commit:** $(git rev-parse --short HEAD)" >> "$GITHUB_STEP_SUMMARY"
-          echo "**User-facing functions:** 12" >> "$GITHUB_STEP_SUMMARY"
-          echo "**Service-role functions:** 10" >> "$GITHUB_STEP_SUMMARY"
+          echo "**User-facing functions:** ${USER_COUNT:-unknown}" >> "$GITHUB_STEP_SUMMARY"
+          echo "**Service-role functions:** ${SERVICE_COUNT:-unknown}" >> "$GITHUB_STEP_SUMMARY"

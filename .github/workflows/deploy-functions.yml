@@ -3,6 +3,10 @@ name: Deploy Edge Functions (Dev)
 # ─── Automatic dev deployment ─────────────────────────────────────────────────
 # Deploys to the DEV Supabase project on every push to main.
 # For production deployment, use deploy-functions-prod.yml (manual trigger).
+#
+# Required GitHub Secrets:
+#   SUPABASE_ACCESS_TOKEN    — Supabase Management API token
+#   SUPABASE_PROJECT_REF_DEV — Dev project ref
 
 on:
   workflow_dispatch:
@@ -15,19 +19,28 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF_DEV }}
     steps:
       - uses: actions/checkout@v4
 
       - uses: supabase/setup-cli@v1
         with:
-          version: latest
+          version: 1.207.9
+
+      - name: Validate project ref
+        run: |
+          if [ -z "$PROJECT_REF" ]; then
+            echo "::error::SUPABASE_PROJECT_REF_DEV secret is not set"
+            exit 1
+          fi
 
       - name: Set Edge Function secrets
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
         run: |
-          supabase secrets set ENVIRONMENT=dev --project-ref qvmzmeizluqcdkcjsqyd
-          supabase secrets set SENTRY_DSN_EDGE=${{ secrets.SENTRY_DSN_EDGE_DEV }} --project-ref qvmzmeizluqcdkcjsqyd
+          supabase secrets set ENVIRONMENT=dev --project-ref "$PROJECT_REF"
+          supabase secrets set SENTRY_DSN_EDGE=${{ secrets.SENTRY_DSN_EDGE_DEV }} --project-ref "$PROJECT_REF"
 
       - name: Deploy user-facing Edge Functions
         env:
@@ -37,10 +50,40 @@ jobs:
         # HS256 (anon/service-role keys), but user JWTs are signed with ES256.
         # Auth is enforced internally via getUser() in each function.
         run: |
-          for fn in create-league join-league join-paid-league submit-pick get-wallet top-up request-withdrawal register-device-token update-profile update-league validate-league-content leave-league reset-dev-data; do
+          USER_FUNCTIONS=(
+            create-league
+            join-league
+            join-paid-league
+            submit-pick
+            get-wallet
+            top-up
+            request-withdrawal
+            register-device-token
+            update-profile
+            update-league
+            validate-league-content
+            leave-league
+            get-league-stats
+          )
+
+          # Dev-only functions (never deployed to prod)
+          DEV_ONLY_FUNCTIONS=(
+            reset-dev-data
+          )
+
+          FAILED=()
+          for fn in "${USER_FUNCTIONS[@]}" "${DEV_ONLY_FUNCTIONS[@]}"; do
             echo "Deploying $fn (user-facing)..."
-            supabase functions deploy "$fn" --no-verify-jwt --project-ref qvmzmeizluqcdkcjsqyd
+            if ! supabase functions deploy "$fn" --no-verify-jwt --project-ref "$PROJECT_REF"; then
+              echo "::error::Failed to deploy $fn"
+              FAILED+=("$fn")
+            fi
           done
+
+          if [ ${#FAILED[@]} -gt 0 ]; then
+            echo "::error::Failed to deploy: ${FAILED[*]}"
+            exit 1
+          fi
 
       - name: Deploy service-role Edge Functions
         env:
@@ -49,7 +92,30 @@ jobs:
         # --no-verify-jwt is required because these use service-role key auth
         # (checked internally via requireServiceRole()), not gateway JWT.
         run: |
-          for fn in settle-picks credit-winnings distribute-prizes refund-stake process-dispute-window poll-live-scores sync-fixtures sync-odds get-head-to-head generate-gameweek-story; do
+          SERVICE_FUNCTIONS=(
+            settle-picks
+            credit-winnings
+            distribute-prizes
+            refund-stake
+            process-dispute-window
+            poll-live-scores
+            sync-fixtures
+            sync-odds
+            get-head-to-head
+            generate-gameweek-story
+            health
+          )
+
+          FAILED=()
+          for fn in "${SERVICE_FUNCTIONS[@]}"; do
             echo "Deploying $fn (service-role)..."
-            supabase functions deploy "$fn" --no-verify-jwt --project-ref qvmzmeizluqcdkcjsqyd
+            if ! supabase functions deploy "$fn" --no-verify-jwt --project-ref "$PROJECT_REF"; then
+              echo "::error::Failed to deploy $fn"
+              FAILED+=("$fn")
+            fi
           done
+
+          if [ ${#FAILED[@]} -gt 0 ]; then
+            echo "::error::Failed to deploy: ${FAILED[*]}"
+            exit 1
+          fi
