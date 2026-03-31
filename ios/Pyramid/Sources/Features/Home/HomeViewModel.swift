@@ -70,17 +70,20 @@ final class HomeViewModel: ObservableObject {
             }
             updatePolling()
             startCountdown()
-            // Build gameweek summary and auto-show if first time
-            gameweekSummaryItems = buildSummaryItems()
-            if gameweekPhase == .finished,
-               !gameweekSummaryItems.isEmpty,
-               let gwId = homeData?.gameweek?.id {
-                let key = "gw_summary_seen_\(gwId)"
-                if !UserDefaults.standard.bool(forKey: key) {
-                    UserDefaults.standard.set(true, forKey: key)
-                    summaryStartIndex = 0
-                    showGameweekSummary = true
+            // Build gameweek summary only when all fixtures are finished
+            if gameweekPhase == .finished {
+                gameweekSummaryItems = buildSummaryItems()
+                if !gameweekSummaryItems.isEmpty,
+                   let gwId = homeData?.gameweek?.id {
+                    let key = "gw_summary_seen_\(gwId)"
+                    if !UserDefaults.standard.bool(forKey: key) {
+                        UserDefaults.standard.set(true, forKey: key)
+                        summaryStartIndex = 0
+                        showGameweekSummary = true
+                    }
                 }
+            } else {
+                gameweekSummaryItems = []
             }
         } catch {
             errorMessage = AppError.from(error).userMessage

@@ -147,7 +147,7 @@ struct HomeView: View {
     ) -> some View {
         ScrollView(showsIndicators: false) {
             VStack(spacing: Theme.Spacing.s40) {
-                // Post-settlement: show result card
+                // Post-settlement: result card (additive, not replacing)
                 if let summaryItem = viewModel
                     .gameweekSummaryItems
                     .first(where: { $0.leagueId == league.id }) {
@@ -156,8 +156,10 @@ struct HomeView: View {
                             for: league.id
                         )
                     }
-                // Pre-settlement: existing cards
-                } else if viewModel.isEliminated(in: league) {
+                }
+
+                // Pick / elimination / empty state
+                if viewModel.isEliminated(in: league) {
                     eliminationSection(for: league)
                 } else if let context = viewModel
                     .currentPick(for: league) {
