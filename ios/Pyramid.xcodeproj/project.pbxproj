@@ -101,6 +101,7 @@
 		508CD6D3C84DE0221564892B /* testColorSwatches.1.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E17140FEE103E9672F07FDF /* testColorSwatches.1.png */; };
 		5333C5A849111C688BBCCD20 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2633AE9B5F6EF75C4868CB74 /* main.swift */; };
 		5379AD328873AD0A7E3EF7DF /* TokenBrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B7B7EE506977472E2FA0242 /* TokenBrowserView.swift */; };
+		540E5D387B523E0EDB46CC30 /* GameweekSummaryView+Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C40A24F72A335507D540FC7 /* GameweekSummaryView+Card.swift */; };
 		542A7613949BFC1D0A22C757 /* ComponentBrowserView+ElementTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DAC05BC5BA55104D3B6D399 /* ComponentBrowserView+ElementTab.swift */; };
 		553CCC1211CF89A3583EE94E /* Inter-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D4AF1884F1347AC43C09AC4D /* Inter-Regular.ttf */; };
 		56C22940504502DFFEBBB4BE /* Pick.swift in Sources */ = {isa = PBXBuildFile; fileRef = F15233A6AC65D121675A236F /* Pick.swift */; };
@@ -448,6 +449,7 @@
 		765A7BEA9430F7062517F93F /* GoogleGLogo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleGLogo.swift; sourceTree = "<group>"; };
 		78BB3FBB25799F8EF69DF142 /* testDefault.1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = testDefault.1.png; sourceTree = "<group>"; };
 		7AB86047F9178A4FF08B9548 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		7C40A24F72A335507D540FC7 /* GameweekSummaryView+Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GameweekSummaryView+Card.swift"; sourceTree = "<group>"; };
 		7C88D6C6E49C97E4FB9C23E5 /* SubmitPickUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitPickUITests.swift; sourceTree = "<group>"; };
 		7CD91D4AEDDE7F6518970506 /* TokenBrowserView+Icons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TokenBrowserView+Icons.swift"; sourceTree = "<group>"; };
 		7D757D47291D1C44C4B425D6 /* PickCardSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickCardSnapshotTests.swift; sourceTree = "<group>"; };
@@ -901,6 +903,7 @@
 			children = (
 				867651BC7C343A6E89E0BBA5 /* GameweekResultCard.swift */,
 				F4F2E6124D33A4A9EC7E5468 /* GameweekSummaryView.swift */,
+				7C40A24F72A335507D540FC7 /* GameweekSummaryView+Card.swift */,
 				7AB86047F9178A4FF08B9548 /* HomeView.swift */,
 				F7E4339ED333DEEBFEE64C0C /* HomeView+Countdown.swift */,
 				9A05EDE8BA20565E478CE62E /* HomeView+Elimination.swift */,
@@ -1487,6 +1490,7 @@
 				7848A34BDAA8AAA23A0AA62F /* GameweekStoryViewModel+Cards.swift in Sources */,
 				1A87C939E98933875F47034D /* GameweekStoryViewModel.swift in Sources */,
 				D1193DA717A1BB904FE5D4A8 /* GameweekSummaryItem.swift in Sources */,
+				540E5D387B523E0EDB46CC30 /* GameweekSummaryView+Card.swift in Sources */,
 				FF43378EF15DABB14C303A57 /* GameweekSummaryView.swift in Sources */,
 				2E15854077E5DD6DDE3174EE /* GoogleGLogo.swift in Sources */,
 				D12C5F5A9B89E14E8900B3C6 /* HomeData.swift in Sources */,
