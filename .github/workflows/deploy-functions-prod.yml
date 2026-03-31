@@ -88,6 +88,7 @@ jobs:
             update-league
             validate-league-content
             leave-league
+            get-league-stats
           )
 
           for fn in "${USER_FUNCTIONS[@]}"; do
@@ -120,6 +121,7 @@ jobs:
             sync-odds
             get-head-to-head
             generate-gameweek-story
+            health
           )
 
           for fn in "${SERVICE_FUNCTIONS[@]}"; do
@@ -158,5 +160,5 @@ jobs:
             echo "**Tag:** ${TAG:-unknown}" >> "$GITHUB_STEP_SUMMARY"
           fi
           echo "**Commit:** $(git rev-parse --short HEAD)" >> "$GITHUB_STEP_SUMMARY"
-          echo "**User-facing functions:** 12" >> "$GITHUB_STEP_SUMMARY"
-          echo "**Service-role functions:** 10" >> "$GITHUB_STEP_SUMMARY"
+          echo "**User-facing functions:** 13" >> "$GITHUB_STEP_SUMMARY"
+          echo "**Service-role functions:** 11" >> "$GITHUB_STEP_SUMMARY"

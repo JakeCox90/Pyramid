@@ -37,7 +37,7 @@ jobs:
         # HS256 (anon/service-role keys), but user JWTs are signed with ES256.
         # Auth is enforced internally via getUser() in each function.
         run: |
-          for fn in create-league join-league join-paid-league submit-pick get-wallet top-up request-withdrawal register-device-token update-profile update-league validate-league-content leave-league reset-dev-data; do
+          for fn in create-league join-league join-paid-league submit-pick get-wallet top-up request-withdrawal register-device-token update-profile update-league validate-league-content leave-league get-league-stats reset-dev-data; do
             echo "Deploying $fn (user-facing)..."
             supabase functions deploy "$fn" --no-verify-jwt --project-ref qvmzmeizluqcdkcjsqyd
           done
@@ -49,7 +49,7 @@ jobs:
         # --no-verify-jwt is required because these use service-role key auth
         # (checked internally via requireServiceRole()), not gateway JWT.
         run: |
-          for fn in settle-picks credit-winnings distribute-prizes refund-stake process-dispute-window poll-live-scores sync-fixtures sync-odds get-head-to-head generate-gameweek-story; do
+          for fn in settle-picks credit-winnings distribute-prizes refund-stake process-dispute-window poll-live-scores sync-fixtures sync-odds get-head-to-head generate-gameweek-story health; do
             echo "Deploying $fn (service-role)..."
             supabase functions deploy "$fn" --no-verify-jwt --project-ref qvmzmeizluqcdkcjsqyd
           done
