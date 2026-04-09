@@ -38,25 +38,9 @@ struct MatchCarouselCard: View {
         )
     }
 
-    // fill_255PQ5: gradient 225deg, stops 0% → 72%
+    // fill_255PQ5: gradient 225deg, stops 0% → 72% — see MatchCardBackground
     private var cardBackground: some View {
-        ZStack {
-            Theme.Color.Surface.Background.page
-            LinearGradient(
-                stops: [
-                    .init(
-                        color: Theme.Color.Match.Gradient.purpleStart,
-                        location: 0.0
-                    ),
-                    .init(
-                        color: Theme.Color.Match.Gradient.purpleEnd,
-                        location: 0.72
-                    )
-                ],
-                startPoint: .topTrailing,
-                endPoint: .bottomLeading
-            )
-        }
+        MatchCardBackground()
     }
 
     private var cardOverlay: some View {
