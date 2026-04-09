@@ -56,7 +56,7 @@ extension MatchCard {
             )
             .font(Theme.Typography.label02)
             .foregroundStyle(
-                Color.white.opacity(0.3)
+                Theme.Color.Content.Text.tertiary
             )
             .multilineTextAlignment(.center)
             .frame(width: 225)

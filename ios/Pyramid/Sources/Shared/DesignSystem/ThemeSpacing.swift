@@ -45,9 +45,9 @@ extension Theme {
             let x: CGFloat
             let y: CGFloat
         }
-        static let sm = Style(color: .black.opacity(0.06), radius: 2, x: 0, y: 1)
-        static let md = Style(color: .black.opacity(0.10), radius: 8, x: 0, y: 2)
-        static let lg = Style(color: .black.opacity(0.12), radius: 16, x: 0, y: 4)
+        static let sm = Style(color: Theme.Color.Shadow.sm, radius: 2, x: 0, y: 1)
+        static let md = Style(color: Theme.Color.Shadow.md, radius: 8, x: 0, y: 2)
+        static let lg = Style(color: Theme.Color.Shadow.lg, radius: 16, x: 0, y: 4)
     }
 }
 

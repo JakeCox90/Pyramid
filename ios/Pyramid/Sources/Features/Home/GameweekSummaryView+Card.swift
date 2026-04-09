@@ -191,7 +191,7 @@ extension GameweekSummaryView {
         _ item: GameweekSummaryItem
     ) -> Color {
         item.result == .survived
-            ? .green.opacity(0.6)
-            : .red.opacity(0.6)
+            ? Theme.Color.Status.Success.resting.opacity(0.6)
+            : Theme.Color.Status.Error.resting.opacity(0.6)
     }
 }

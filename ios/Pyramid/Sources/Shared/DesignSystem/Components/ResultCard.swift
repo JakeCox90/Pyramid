@@ -32,7 +32,7 @@ struct ResultCard: View {
                 )
         )
         .shadow(
-            color: .black.opacity(0.2),
+            color: Theme.Color.Shadow.drop,
             radius: 8, x: 0, y: 4
         )
     }
