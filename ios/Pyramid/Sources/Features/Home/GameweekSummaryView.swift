@@ -16,7 +16,7 @@ struct GameweekSummaryView: View {
     var body: some View {
         ZStack {
             // Dimmed background — tap to dismiss
-            Color.black.opacity(appeared ? 0.7 : 0)
+            Theme.Color.Surface.Overlay.heavy.opacity(appeared ? 1 : 0)
                 .ignoresSafeArea()
                 .onTapGesture { dismiss() }
 

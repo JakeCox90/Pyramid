@@ -209,7 +209,7 @@ extension MatchCard {
             size: 140
         )
         .shadow(
-            color: .black.opacity(0.4),
+            color: Theme.Color.Shadow.heavy,
             radius: 12, x: 0, y: 4
         )
         .padding(.top, 12)

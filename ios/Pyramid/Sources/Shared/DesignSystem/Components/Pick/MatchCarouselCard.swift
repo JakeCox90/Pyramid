@@ -33,7 +33,7 @@ struct MatchCarouselCard: View {
                 )
         )
         .shadow(
-            color: .black.opacity(0.25),
+            color: Theme.Color.Shadow.drop,
             radius: 12, x: 0, y: 4
         )
     }

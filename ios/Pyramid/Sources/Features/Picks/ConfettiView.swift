@@ -10,7 +10,7 @@ struct ConfettiView: View {
         Theme.Color.Status.Success.resting,
         Theme.Color.Primary.resting,
         Theme.Color.Status.Warning.resting,
-        .white
+        Theme.Color.Confetti.particle
     ]
 
     var body: some View {
@@ -33,7 +33,7 @@ struct ConfettiView: View {
             .onAppear {
                 particles = (0..<30).map { _ in
                     ConfettiParticle(
-                        color: colors.randomElement() ?? .white,
+                        color: colors.randomElement() ?? Theme.Color.Confetti.particle,
                         size: CGFloat.random(in: 4...8),
                         x: CGFloat.random(in: -150...150),
                         startY: CGFloat.random(in: -20...20),

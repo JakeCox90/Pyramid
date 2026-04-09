@@ -80,3 +80,65 @@ extension Theme.Color.Border {
         dark: Theme.rgbaUIColor(255, 255, 255, 0.1)
     )
 }
+
+// MARK: - Shadow Tokens
+
+extension Theme.Color {
+    enum Shadow {
+        /// Small shadow — card edges, subtle depth
+        static let sm = Theme.color(
+            light: Theme.rgbaUIColor(0, 0, 0, 0.06),
+            dark: Theme.rgbaUIColor(0, 0, 0, 0.06)
+        )
+        /// Medium shadow — elevated cards
+        static let md = Theme.color(
+            light: Theme.rgbaUIColor(0, 0, 0, 0.10),
+            dark: Theme.rgbaUIColor(0, 0, 0, 0.10)
+        )
+        /// Large shadow — modals, sheets
+        static let lg = Theme.color(
+            light: Theme.rgbaUIColor(0, 0, 0, 0.12),
+            dark: Theme.rgbaUIColor(0, 0, 0, 0.12)
+        )
+        /// Drop shadow on floating cards
+        static let drop = Theme.color(
+            light: Theme.rgbaUIColor(0, 0, 0, 0.25),
+            dark: Theme.rgbaUIColor(0, 0, 0, 0.25)
+        )
+        /// Heavy drop shadow
+        static let heavy = Theme.color(
+            light: Theme.rgbaUIColor(0, 0, 0, 0.4),
+            dark: Theme.rgbaUIColor(0, 0, 0, 0.4)
+        )
+    }
+}
+
+// MARK: - Confetti
+
+extension Theme.Color {
+    enum Confetti {
+        /// Confetti particle colour — white
+        static let particle = Theme.color(light: "FFFFFF", dark: "FFFFFF")
+    }
+}
+
+// MARK: - Card Surface Tokens
+
+extension Theme.Color.Surface {
+    /// White card face (e.g. pick carousel flip)
+    static let cardFace = Theme.color(light: "FFFFFF", dark: "FFFFFF")
+}
+
+// MARK: - Story Tokens
+
+extension Theme.Color {
+    enum Story {
+        /// Progress bar track — white 20%
+        static let progressTrack = Theme.color(
+            light: Theme.rgbaUIColor(255, 255, 255, 0.2),
+            dark: Theme.rgbaUIColor(255, 255, 255, 0.2)
+        )
+        /// Story text — always white on dark story backgrounds
+        static let text = Theme.color(light: "FFFFFF", dark: "FFFFFF")
+    }
+}

@@ -38,7 +38,7 @@ struct Toast: View {
             RoundedRectangle(cornerRadius: Theme.Radius.default)
         )
         .shadow(
-            color: .black.opacity(0.3),
+            color: Theme.Color.Shadow.drop,
             radius: 8, y: 4
         )
         .padding(.horizontal, Theme.Spacing.s40)

@@ -130,7 +130,7 @@ struct ColorTokenRow: View {
                 .overlay(
                     RoundedRectangle(cornerRadius: Theme.Radius.r10)
                         .strokeBorder(
-                            Color.white.opacity(0.2),
+                            Theme.Color.Border.default,
                             lineWidth: 1
                         )
                 )
