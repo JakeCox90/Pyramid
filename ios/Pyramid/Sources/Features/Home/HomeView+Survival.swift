@@ -3,7 +3,7 @@ import SwiftUI
 // MARK: - Survival Section
 
 extension HomeView {
-    /// Shows a SurvivalCard for a league the user survived in,
+    /// Shows an OutcomeCard for a league the user survived in,
     /// used in the homepage per-league content when the last GW
     /// result was a survival.
     @ViewBuilder
@@ -13,7 +13,7 @@ extension HomeView {
         if let result = viewModel.survivalResult(
             for: league
         ) {
-            SurvivalCard.from(result: result)
+            OutcomeCard.from(result: result, variant: .survived)
         } else {
             // Survived but match data hasn't loaded yet
             survivalFallback(for: league)

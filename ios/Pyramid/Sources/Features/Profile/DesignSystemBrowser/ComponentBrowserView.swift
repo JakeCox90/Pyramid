@@ -7,7 +7,6 @@ enum ComponentTab: String, CaseIterable {
     case card = "Card"
     case confetti = "Confetti"
     case detailSheet = "Detail Sheet"
-    case eliminationCard = "Elimination"
     case emojiPicker = "Emoji Picker"
     case emptyState = "Empty State"
     case flag = "Flag"
@@ -23,7 +22,7 @@ enum ComponentTab: String, CaseIterable {
     case playersLeft = "Players Left"
     case pulsingDot = "Pulsing Dot"
     case resultCard = "Result Card"
-    case survivalCard = "Survival"
+    case outcomeCard = "Outcome"
     case teamBadge = "Team Badge"
     case teamsUsed = "Teams Used"
     case toast = "Toast"
@@ -128,7 +127,7 @@ struct ComponentBrowserView: View {
         case .card: CardDemo()
         case .confetti: ConfettiDemo()
         case .detailSheet: DetailSheetDemo()
-        case .eliminationCard: EliminationCardDemo()
+        case .outcomeCard: OutcomeCardDemo()
         case .emojiPicker: EmojiPickerDemo()
         case .emptyState: EmptyStateDemo()
         case .flag: FlagDemo()
@@ -144,7 +143,6 @@ struct ComponentBrowserView: View {
         case .playersLeft: PlayersRemainingDemo()
         case .pulsingDot: PulsingDotDemo()
         case .resultCard: ResultCardDemo()
-        case .survivalCard: SurvivalCardDemo()
         case .teamBadge: TeamBadgeDemo()
         case .teamsUsed: TeamsUsedPillDemo()
         case .toast: ToastDemo()

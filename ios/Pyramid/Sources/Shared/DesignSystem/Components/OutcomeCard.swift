@@ -1,9 +1,15 @@
 import SwiftUI
 
-/// A celebratory card displayed when the user has survived a gameweek.
-/// Shows the match result that confirmed survival. Green-themed
-/// counterpart to `EliminationCard`.
-struct SurvivalCard: View {
+/// Displays a match outcome — survival or elimination — as a dramatic
+/// full-height card.  Replaces the former `SurvivalCard` and
+/// `EliminationCard`, which were structurally identical.
+struct OutcomeCard: View {
+    enum Variant {
+        case survived
+        case eliminated
+    }
+
+    let variant: Variant
     let leagueName: String
     let gameweekName: String
     let pickedTeamName: String
@@ -38,27 +44,82 @@ struct SurvivalCard: View {
         .overlay(
             RoundedRectangle(cornerRadius: 24)
                 .strokeBorder(
-                    survivalGreen.opacity(0.3),
+                    accentColor.opacity(0.3),
                     lineWidth: 1
                 )
         )
     }
 }
 
+// MARK: - Variant-driven properties
+
+private extension OutcomeCard {
+    var accentColor: Color {
+        switch variant {
+        case .survived:
+            Theme.Color.Match.Pill.positive
+        case .eliminated:
+            Theme.Color.Match.Pill.negative
+        }
+    }
+
+    var headerIcon: String {
+        switch variant {
+        case .survived: "checkmark.seal.fill"
+        case .eliminated: "xmark.seal.fill"
+        }
+    }
+
+    var headerLabel: String {
+        switch variant {
+        case .survived: "SURVIVED"
+        case .eliminated: "ELIMINATED"
+        }
+    }
+
+    var pickIcon: String {
+        switch variant {
+        case .survived: "checkmark.circle.fill"
+        case .eliminated: "xmark.circle.fill"
+        }
+    }
+
+    var backgroundGradient: some View {
+        let topColor: Color = switch variant {
+        case .survived:
+            Theme.Color.Match.Gradient.liveStart
+        case .eliminated:
+            Theme.Color.Elimination.accent
+        }
+        return LinearGradient(
+            stops: [
+                .init(color: topColor, location: 0.0),
+                .init(
+                    color: Theme.Color.Surface
+                        .Background.page,
+                    location: 0.72
+                )
+            ],
+            startPoint: .topTrailing,
+            endPoint: .bottomLeading
+        )
+    }
+}
+
 // MARK: - Subviews
 
-private extension SurvivalCard {
+private extension OutcomeCard {
     var headerSection: some View {
         VStack(spacing: Theme.Spacing.s10) {
-            Image(systemName: "checkmark.seal.fill")
+            Image(systemName: headerIcon)
                 .font(.system(size: 56))
-                .foregroundStyle(survivalGreen)
+                .foregroundStyle(accentColor)
                 .padding(.top, Theme.Spacing.s60)
 
-            Text("SURVIVED")
+            Text(headerLabel)
                 .font(Theme.Typography.overline)
                 .tracking(2)
-                .foregroundStyle(survivalGreen)
+                .foregroundStyle(accentColor)
 
             Text(leagueName)
                 .font(Theme.Typography.h3)
@@ -74,6 +135,7 @@ private extension SurvivalCard {
 
     var scoreSection: some View {
         HStack(spacing: 0) {
+            // Home side
             HStack(spacing: Theme.Spacing.s20) {
                 TeamBadge(
                     teamName: homeTeamName,
@@ -89,6 +151,7 @@ private extension SurvivalCard {
             }
             .frame(maxWidth: .infinity)
 
+            // Score
             HStack(spacing: Theme.Spacing.s10) {
                 pickIndicator(isHome: true)
                 Text("\(homeScore)")
@@ -111,6 +174,7 @@ private extension SurvivalCard {
                 pickIndicator(isHome: false)
             }
 
+            // Away side
             HStack(spacing: Theme.Spacing.s20) {
                 Spacer()
                 Text(awayTeamShort)
@@ -132,11 +196,9 @@ private extension SurvivalCard {
     @ViewBuilder
     func pickIndicator(isHome: Bool) -> some View {
         if pickedHome == isHome {
-            Image(
-                systemName: "checkmark.circle.fill"
-            )
-            .font(.system(size: 14))
-            .foregroundStyle(survivalGreen)
+            Image(systemName: pickIcon)
+                .font(.system(size: 14))
+                .foregroundStyle(accentColor)
         }
     }
 
@@ -158,9 +220,9 @@ private extension SurvivalCard {
 
     var footerPill: some View {
         HStack(spacing: Theme.Spacing.s10) {
-            Image(systemName: "checkmark.circle.fill")
+            Image(systemName: pickIcon)
                 .font(.system(size: 14))
-            Text("SURVIVED")
+            Text(headerLabel)
                 .font(Theme.Typography.label01)
         }
         .foregroundStyle(
@@ -173,52 +235,27 @@ private extension SurvivalCard {
             .vertical, Theme.Spacing.s20
         )
         .background(
-            Capsule().fill(survivalGreen)
+            Capsule().fill(accentColor)
         )
         .padding(.bottom, Theme.Spacing.s60)
     }
 }
 
-// MARK: - Colours
-
-private extension SurvivalCard {
-    var survivalGreen: Color {
-        Theme.Color.Match.Pill.positive
-    }
-
-    var backgroundGradient: some View {
-        LinearGradient(
-            stops: [
-                .init(
-                    color: Theme.Color.Match
-                        .Gradient.liveStart,
-                    location: 0.0
-                ),
-                .init(
-                    color: Theme.Color.Surface
-                        .Background.page,
-                    location: 0.72
-                )
-            ],
-            startPoint: .topTrailing,
-            endPoint: .bottomLeading
-        )
-    }
-}
-
 // MARK: - Factory from LeagueResult
 
-extension SurvivalCard {
+extension OutcomeCard {
     static func from(
-        result: LeagueResult
-    ) -> SurvivalCard {
+        result: LeagueResult,
+        variant: Variant
+    ) -> OutcomeCard {
         let pickedTeamLogo: String?
         if result.pickedHome {
             pickedTeamLogo = result.homeTeamLogo
         } else {
             pickedTeamLogo = result.awayTeamLogo
         }
-        return SurvivalCard(
+        return OutcomeCard(
+            variant: variant,
             leagueName: result.leagueName,
             gameweekName: result.gameweekName,
             pickedTeamName: result.teamName,
