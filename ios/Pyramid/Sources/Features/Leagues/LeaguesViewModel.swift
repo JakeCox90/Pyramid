@@ -3,8 +3,15 @@ import SwiftUI
 @MainActor
 final class LeaguesViewModel: ObservableObject {
     @Published var leagues: [League] = []
+    @Published var activeLeagueCount: Int = 0
     @Published var isLoading = false
     @Published var errorMessage: String?
+
+    static let maxActiveLeagues = 5
+
+    var isAtLeagueCap: Bool {
+        activeLeagueCount >= Self.maxActiveLeagues
+    }
 
     private let leagueService: LeagueServiceProtocol
 
@@ -16,7 +23,10 @@ final class LeaguesViewModel: ObservableObject {
         isLoading = true
         errorMessage = nil
         do {
-            leagues = try await leagueService.fetchMyLeagues()
+            async let leaguesTask = leagueService.fetchMyLeagues()
+            async let countTask = leagueService.fetchActiveLeagueCount()
+            leagues = try await leaguesTask
+            activeLeagueCount = try await countTask
         } catch {
             errorMessage = AppError.from(error).userMessage
         }
@@ -24,7 +34,6 @@ final class LeaguesViewModel: ObservableObject {
     }
 
     func leagueAdded(_ response: CreateLeagueResponse) async {
-        // Refresh full list to pick up the newly created league
         await fetchLeagues()
     }
 }

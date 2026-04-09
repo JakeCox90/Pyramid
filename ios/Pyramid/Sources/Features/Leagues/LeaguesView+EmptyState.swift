@@ -41,22 +41,40 @@ extension LeaguesView {
             }
 
             VStack(spacing: Theme.Spacing.s30) {
+                if viewModel.isAtLeagueCap {
+                    Text(
+                        "You've reached the maximum of "
+                        + "\(LeaguesViewModel.maxActiveLeagues)"
+                        + " active leagues. You can join more "
+                        + "once a league completes or "
+                        + "you're eliminated."
+                    )
+                    .font(Theme.Typography.overline)
+                    .foregroundStyle(
+                        Theme.Color.Content.Text.disabled
+                    )
+                    .multilineTextAlignment(.center)
+                }
+
                 Button("Browse Free Leagues") {
                     showBrowseLeagues = true
                 }
                 .themed(.primary)
+                .disabled(viewModel.isAtLeagueCap)
                 .accessibilityIdentifier(AccessibilityID.Leagues.browseButton)
 
                 Button("Create a League") {
                     showCreateLeague = true
                 }
                 .themed(.secondary)
+                .disabled(viewModel.isAtLeagueCap)
                 .accessibilityIdentifier(AccessibilityID.Leagues.createButton)
 
                 Button("Join with Code") {
                     showJoinLeague = true
                 }
                 .themed(.secondary)
+                .disabled(viewModel.isAtLeagueCap)
                 .accessibilityIdentifier(AccessibilityID.Leagues.joinButton)
             }
             .padding(.horizontal, Theme.Spacing.s40)

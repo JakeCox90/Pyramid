@@ -27,6 +27,13 @@ struct LeaguesView: View {
                 if !viewModel.leagues.isEmpty {
                     ToolbarItem(placement: .primaryAction) {
                         Menu {
+                            if viewModel.isAtLeagueCap {
+                                Text(
+                                    "You've reached the maximum of "
+                                    + "\(LeaguesViewModel.maxActiveLeagues)"
+                                    + " active leagues"
+                                )
+                            }
                             Button {
                                 showBrowseLeagues = true
                             } label: {
@@ -35,6 +42,7 @@ struct LeaguesView: View {
                                     systemImage: Theme.Icon.League.members
                                 )
                             }
+                            .disabled(viewModel.isAtLeagueCap)
                             Button {
                                 showCreateLeague = true
                             } label: {
@@ -43,6 +51,7 @@ struct LeaguesView: View {
                                     systemImage: Theme.Icon.League.create
                                 )
                             }
+                            .disabled(viewModel.isAtLeagueCap)
                             Button {
                                 showJoinLeague = true
                             } label: {
@@ -51,6 +60,7 @@ struct LeaguesView: View {
                                     systemImage: Theme.Icon.League.join
                                 )
                             }
+                            .disabled(viewModel.isAtLeagueCap)
                         } label: {
                             Image(systemName: Theme.Icon.Navigation.add)
                         }
