@@ -29,14 +29,10 @@ struct LeaderboardRowView: View {
     }
 
     private var avatarView: some View {
-        Circle()
-            .fill(Theme.Color.Surface.Background.container)
-            .frame(width: 36, height: 36)
-            .overlay(
-                Text(avatarInitial)
-                    .font(Theme.Typography.caption)
-                    .foregroundStyle(Theme.Color.Content.Text.subtle)
-            )
+        Avatar(
+            name: entry.displayName ?? "?",
+            size: .custom(36)
+        )
     }
 
     private var nameAndStats: some View {
@@ -95,7 +91,4 @@ struct LeaderboardRowView: View {
         return Theme.Color.Surface.Background.container
     }
 
-    private var avatarInitial: String {
-        entry.displayName?.first.map(String.init) ?? "?"
-    }
 }

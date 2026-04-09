@@ -1,0 +1,58 @@
+# Project Configuration — Agent Framework
+
+project:
+  name: "Pyramid"
+  team_key: "PYR"
+  description: "Premier League Last Man Standing iOS app"
+
+# Tooling
+tooling:
+  task_tracker: linear
+  documentation: notion
+  design: figma
+  ci: github_actions
+
+# Platform
+platform:
+  primary: ios
+  language: swift
+  backend: supabase
+  test_command: "xcodebuild test -project ios/Pyramid.xcodeproj -scheme Pyramid -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' -resultBundlePath TestResults"
+  build_command: "xcodebuild build -project ios/Pyramid.xcodeproj -scheme Pyramid -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest'"
+  lint_command: "cd ios && swiftlint --strict"
+
+# Active agents
+agents:
+  - orchestrator
+  - architect
+  - qa
+  - ios
+  - backend
+  - pm
+  - design
+  - compliance
+  - refactor
+
+# Branch strategy
+branches:
+  main: main
+  prefix_feature: "feature/"
+  prefix_fix: "fix/"
+  prefix_chore: "chore/"
+
+# AI platforms
+ai_platforms:
+  claude_code: true
+  copilot: true
+
+# External agents
+external_agents:
+  copilot_cloud_agent: true
+  codex: false
+  other: []
+
+# Task completion behaviour
+workflow:
+  done_status: "In Review"
+  require_pr_review: true
+  min_approvals: 1

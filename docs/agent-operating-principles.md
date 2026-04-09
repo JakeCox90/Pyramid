@@ -144,7 +144,7 @@ Every ticket must carry a complexity score (1–5). This prevents oversized task
 | 4 | Split into subtasks before assigning — no agent should receive a score-4 ticket |
 | 5 | Requires human design input or Architect review before execution |
 
-The PM agent scores tickets at creation. The Orchestrator validates scores during its pre-flight check before spawning execution agents. See `agents/pm/CLAUDE-pm.md` for the full scoring rubric.
+The PM agent scores tickets at creation. The Orchestrator validates scores during its pre-flight check before spawning execution agents. See `agents/pm/CLAUDE.md` for the full scoring rubric.
 
 ---
 

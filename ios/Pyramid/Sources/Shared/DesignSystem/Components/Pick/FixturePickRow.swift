@@ -38,25 +38,9 @@ struct FixturePickRow: View {
         )
     }
 
-    // fill_CRMJ7P: gradient 225deg, 0% → 72%
+    // fill_CRMJ7P: gradient 225deg, 0% → 72% — see MatchCardBackground
     var cardBackground: some View {
-        ZStack {
-            Theme.Color.Surface.Background.page
-            LinearGradient(
-                stops: [
-                    .init(
-                        color: Theme.Color.Match.Gradient.purpleStart,
-                        location: 0.0
-                    ),
-                    .init(
-                        color: Theme.Color.Match.Gradient.purpleEnd,
-                        location: 0.72
-                    )
-                ],
-                startPoint: .topTrailing,
-                endPoint: .bottomLeading
-            )
-        }
+        MatchCardBackground()
     }
 
     private var cardContent: some View {

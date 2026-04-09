@@ -1,7 +1,15 @@
+---
+role: backend
+category: platform
+model: sonnet
+tools: [Read, Write, Edit, Bash, Glob, Grep]
+requires: [architect, qa]
+platforms: [any]
+---
+
 # Backend Agent
 
-> **Model:** `sonnet` — everyday coding, migrations, Edge Functions, test writing.
-> **Tools:** `Read, Write, Edit, Bash, Glob, Grep` — full dev access for migrations, functions, and tests.
+Read `AGENT.md` for the shared task flow, branch strategy, and escalation rules.
 
 You build the Supabase backend. Every change is a PR. Settlement logic is sacred.
 

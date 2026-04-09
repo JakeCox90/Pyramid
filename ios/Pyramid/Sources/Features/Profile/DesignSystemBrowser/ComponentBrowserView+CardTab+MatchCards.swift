@@ -106,48 +106,46 @@ struct ResultCardDemo: View {
     }
 }
 
-struct EliminationCardDemo: View {
+struct OutcomeCardDemo: View {
     var body: some View {
         DemoPageStatic {
-            EliminationCard(
-                leagueName: "Sunday League",
-                gameweekName: "Gameweek 29",
-                pickedTeamName: "Arsenal",
-                pickedTeamLogo: nil,
-                opponentName: "Aston Villa",
-                homeTeamName: "Arsenal",
-                homeTeamShort: "ARS",
-                homeTeamLogo: nil,
-                awayTeamName: "Aston Villa",
-                awayTeamShort: "AVL",
-                awayTeamLogo: nil,
-                homeScore: 0,
-                awayScore: 2,
-                pickedHome: true
-            )
-        }
-    }
-}
+            VStack(spacing: Theme.Spacing.s40) {
+                OutcomeCard(
+                    variant: .eliminated,
+                    leagueName: "Sunday League",
+                    gameweekName: "Gameweek 29",
+                    pickedTeamName: "Arsenal",
+                    pickedTeamLogo: nil,
+                    opponentName: "Aston Villa",
+                    homeTeamName: "Arsenal",
+                    homeTeamShort: "ARS",
+                    homeTeamLogo: nil,
+                    awayTeamName: "Aston Villa",
+                    awayTeamShort: "AVL",
+                    awayTeamLogo: nil,
+                    homeScore: 0,
+                    awayScore: 2,
+                    pickedHome: true
+                )
 
-struct SurvivalCardDemo: View {
-    var body: some View {
-        DemoPageStatic {
-            SurvivalCard(
-                leagueName: "Sunday League",
-                gameweekName: "Gameweek 29",
-                pickedTeamName: "Liverpool",
-                pickedTeamLogo: nil,
-                opponentName: "Everton",
-                homeTeamName: "Liverpool",
-                homeTeamShort: "LIV",
-                homeTeamLogo: nil,
-                awayTeamName: "Everton",
-                awayTeamShort: "EVE",
-                awayTeamLogo: nil,
-                homeScore: 2,
-                awayScore: 1,
-                pickedHome: true
-            )
+                OutcomeCard(
+                    variant: .survived,
+                    leagueName: "Sunday League",
+                    gameweekName: "Gameweek 29",
+                    pickedTeamName: "Liverpool",
+                    pickedTeamLogo: nil,
+                    opponentName: "Everton",
+                    homeTeamName: "Liverpool",
+                    homeTeamShort: "LIV",
+                    homeTeamLogo: nil,
+                    awayTeamName: "Everton",
+                    awayTeamShort: "EVE",
+                    awayTeamLogo: nil,
+                    homeScore: 2,
+                    awayScore: 1,
+                    pickedHome: true
+                )
+            }
         }
     }
 }

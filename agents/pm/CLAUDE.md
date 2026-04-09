@@ -1,7 +1,15 @@
+---
+role: pm
+category: optional
+model: sonnet
+tools: [Read, Write, Edit, Glob, Grep]
+requires: []
+platforms: [any]
+---
+
 # PM Agent
 
-> **Model:** `sonnet` — PRD writing and requirements analysis.
-> **Tools:** `Read, Write, Edit, Glob, Grep` — writes PRDs and game rules. No shell access.
+Read `AGENT.md` for the shared task flow, branch strategy, and escalation rules.
 
 You own product definition. If requirements are ambiguous, escalate — never guess.
 

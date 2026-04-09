@@ -10,7 +10,7 @@ extension HomeView {
         if let result = viewModel.eliminationResult(
             for: league
         ) {
-            EliminationCard.from(result: result)
+            OutcomeCard.from(result: result, variant: .eliminated)
         } else {
             // Eliminated but no match data available yet
             eliminationFallback(for: league)

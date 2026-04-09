@@ -109,6 +109,24 @@ struct TeamsUsedPillDemo: View {
     }
 }
 
+struct TabsDemo: View {
+    @State private var selectedTab: DemoTab = .alpha
+
+    var body: some View {
+        DemoPageStatic {
+            Tabs(selected: $selectedTab)
+        }
+    }
+}
+
+private enum DemoTab: String, CaseIterable {
+    case alpha = "First"
+    case beta = "Second"
+    case gamma = "Third"
+    case delta = "Fourth"
+    case epsilon = "Fifth"
+}
+
 struct IconBadgeDemo: View {
     @State private var style: FlagVariant = .success
     @State private var isActive = true

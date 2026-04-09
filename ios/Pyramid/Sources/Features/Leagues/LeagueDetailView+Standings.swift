@@ -22,47 +22,7 @@ extension LeagueDetailView {
     // MARK: - Tab Picker
 
     private var tabPicker: some View {
-        HStack(spacing: Theme.Spacing.s10) {
-            ForEach(
-                LeagueDetailTab.allCases,
-                id: \.self
-            ) { tab in
-                Button {
-                    withAnimation(
-                        .easeInOut(duration: 0.2)
-                    ) {
-                        selectedTab = tab
-                    }
-                } label: {
-                    Text(tab.rawValue)
-                        .font(Theme.Typography.label01)
-                        .foregroundStyle(
-                            selectedTab == tab
-                                ? Theme.Color.Content
-                                    .Text.default
-                                : Theme.Color.Content
-                                    .Text.subtle
-                        )
-                        .padding(
-                            .horizontal,
-                            Theme.Spacing.s30
-                        )
-                        .padding(
-                            .vertical,
-                            Theme.Spacing.s20
-                        )
-                        .background(
-                            selectedTab == tab
-                                ? Theme.Color.Surface
-                                    .Background.highlight
-                                : Color.clear
-                        )
-                        .clipShape(Capsule())
-                }
-            }
-        }
-        .padding(.horizontal, Theme.Spacing.s40)
-        .frame(maxWidth: .infinity, alignment: .leading)
+        Tabs(selected: $selectedTab)
     }
 
     // MARK: - Tab Content
@@ -123,17 +83,11 @@ extension LeagueDetailView {
                 Text("GW Recap")
                     .font(Theme.Typography.body)
             }
-            .foregroundStyle(
-                Theme.color(
-                    light: "FFC758", dark: "FFC758"
-                )
-            )
+            .foregroundStyle(Theme.Color.Accent.gold)
             .padding(.horizontal, Theme.Spacing.s40)
             .padding(.vertical, Theme.Spacing.s20)
             .background(
-                Theme.color(
-                    light: "FFC758", dark: "FFC758"
-                ).opacity(0.1)
+                Theme.Color.Accent.gold.opacity(0.1)
             )
             .clipShape(Capsule())
         }

@@ -34,7 +34,8 @@ extension LeagueDetailView {
            let fixture = viewModel.eliminationFixture,
            let gwName = viewModel.eliminationGameweekName {
             let pickedHome = pick.teamId == fixture.homeTeamId
-            EliminationCard(
+            OutcomeCard(
+                variant: .eliminated,
                 leagueName: viewModel.league.name,
                 gameweekName: gwName,
                 pickedTeamName: pick.teamName,

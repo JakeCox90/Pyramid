@@ -59,7 +59,7 @@ final class FlagSnapshotTests: XCTestCase {
     }
 
     func testLiveFlag() {
-        let view = LiveFlag()
+        let view = Flag.live
             .preferredColorScheme(.dark)
 
         assertSnapshot(

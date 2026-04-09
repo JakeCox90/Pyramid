@@ -8,10 +8,6 @@ struct MemberRow: View {
     let fixture: Fixture?
     let deadlinePassed: Bool
 
-    @State private var livePulse = false
-    @Environment(\.accessibilityReduceMotion)
-    private var reduceMotion
-
     private let avatarSize: CGFloat = 36
 
     var body: some View {
@@ -48,35 +44,12 @@ struct MemberRow: View {
         .accessibilityLabel(statusAccessibilityLabel)
     }
 
-    @ViewBuilder private var avatarImage: some View {
-        if let urlString = member.profiles.avatarUrl,
-           let url = URL(string: urlString) {
-            AsyncImage(url: url) { phase in
-                switch phase {
-                case .success(let image):
-                    image
-                        .resizable()
-                        .scaledToFill()
-                case .failure, .empty:
-                    avatarFallback
-                @unknown default:
-                    avatarFallback
-                }
-            }
-            .frame(width: avatarSize, height: avatarSize)
-            .clipShape(Circle())
-        } else {
-            avatarFallback
-        }
-    }
-
-    private var avatarFallback: some View {
-        Text(member.profiles.displayLabel.prefix(1).uppercased())
-            .font(Theme.Typography.subhead)
-            .foregroundStyle(Theme.Color.Content.Text.subtle)
-            .frame(width: avatarSize, height: avatarSize)
-            .background(Theme.Color.Surface.Background.container)
-            .clipShape(Circle())
+    private var avatarImage: some View {
+        Avatar(
+            name: member.profiles.displayLabel,
+            imageURL: member.profiles.avatarUrl,
+            size: .custom(avatarSize)
+        )
     }
 
     @ViewBuilder private var statusBadge: some View {
@@ -141,19 +114,7 @@ struct MemberRow: View {
         VStack(alignment: .trailing, spacing: 2) {
             HStack(spacing: Theme.Spacing.s10) {
                 if isLive {
-                    Circle()
-                        .fill(Theme.Color.Status.Error.resting)
-                        .frame(width: 6, height: 6)
-                        .scaleEffect(reduceMotion ? 1.0 : (livePulse ? 1.4 : 1.0))
-                        .animation(
-                            reduceMotion
-                                ? nil
-                                : .easeInOut(duration: 1).repeatForever(autoreverses: true),
-                            value: livePulse
-                        )
-                        .onAppear {
-                            if !reduceMotion { livePulse = true }
-                        }
+                    PulsingDot()
                         .accessibilityLabel("Live match in progress")
                 }
                 Text("\(homeScore) - \(awayScore)")

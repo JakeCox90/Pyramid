@@ -75,6 +75,9 @@ struct Flag: View {
     let label: String
     let variant: FlagVariant
 
+    /// Convenience factory — live match indicator
+    static var live: Flag { Flag(label: "LIVE", variant: .live) }
+
     var body: some View {
         HStack(spacing: 6) {
             if variant.showDot {

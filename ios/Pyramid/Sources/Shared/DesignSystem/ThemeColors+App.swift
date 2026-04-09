@@ -62,6 +62,15 @@ extension Theme.Color.Content.Text {
     )
 }
 
+// MARK: - Accent Tokens
+
+extension Theme.Color {
+    enum Accent {
+        /// Warm amber/gold — GW recap button, highlight accents
+        static let gold = Theme.color(light: "FFC758", dark: "FFC758")
+    }
+}
+
 // MARK: - Extended Border Tokens
 
 extension Theme.Color.Border {

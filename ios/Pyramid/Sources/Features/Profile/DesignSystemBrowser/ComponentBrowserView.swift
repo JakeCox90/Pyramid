@@ -7,7 +7,6 @@ enum ComponentTab: String, CaseIterable {
     case card = "Card"
     case confetti = "Confetti"
     case detailSheet = "Detail Sheet"
-    case eliminationCard = "Elimination"
     case emojiPicker = "Emoji Picker"
     case emptyState = "Empty State"
     case flag = "Flag"
@@ -23,7 +22,8 @@ enum ComponentTab: String, CaseIterable {
     case playersLeft = "Players Left"
     case pulsingDot = "Pulsing Dot"
     case resultCard = "Result Card"
-    case survivalCard = "Survival"
+    case outcomeCard = "Outcome"
+    case tabs = "Tabs"
     case teamBadge = "Team Badge"
     case teamsUsed = "Teams Used"
     case toast = "Toast"
@@ -35,87 +35,8 @@ struct ComponentBrowserView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            tabPicker
+            Tabs(selected: $selectedTab)
             tabContent
-        }
-    }
-
-    // MARK: - Tab Picker
-
-    private var tabPicker: some View {
-        ScrollViewReader { proxy in
-            ScrollView(
-                .horizontal,
-                showsIndicators: false
-            ) {
-                HStack(spacing: Theme.Spacing.s20) {
-                    ForEach(
-                        ComponentTab.allCases,
-                        id: \.self
-                    ) { tab in
-                        Button {
-                            withAnimation(
-                                .easeInOut(
-                                    duration: 0.2
-                                )
-                            ) {
-                                selectedTab = tab
-                            }
-                        } label: {
-                            Text(tab.rawValue)
-                                .font(
-                                    Theme.Typography
-                                        .label01
-                                )
-                                .foregroundStyle(
-                                    selectedTab == tab
-                                        ? Theme.Color
-                                            .Content
-                                            .Text
-                                            .default
-                                        : Theme.Color
-                                            .Content
-                                            .Text
-                                            .subtle
-                                )
-                                .padding(
-                                    .horizontal,
-                                    Theme.Spacing.s30
-                                )
-                                .padding(
-                                    .vertical,
-                                    Theme.Spacing.s20
-                                )
-                                .background(
-                                    selectedTab == tab
-                                        ? Theme.Color
-                                            .Surface
-                                            .Background
-                                            .highlight
-                                        : Color.clear
-                                )
-                                .clipShape(Capsule())
-                        }
-                        .id(tab)
-                    }
-                }
-                .padding(
-                    .horizontal,
-                    Theme.Spacing.s40
-                )
-                .padding(
-                    .vertical, Theme.Spacing.s20
-                )
-            }
-            .onChange(
-                of: selectedTab
-            ) { newTab in
-                withAnimation {
-                    proxy.scrollTo(
-                        newTab, anchor: .center
-                    )
-                }
-            }
         }
     }
 
@@ -128,7 +49,7 @@ struct ComponentBrowserView: View {
         case .card: CardDemo()
         case .confetti: ConfettiDemo()
         case .detailSheet: DetailSheetDemo()
-        case .eliminationCard: EliminationCardDemo()
+        case .outcomeCard: OutcomeCardDemo()
         case .emojiPicker: EmojiPickerDemo()
         case .emptyState: EmptyStateDemo()
         case .flag: FlagDemo()
@@ -144,7 +65,7 @@ struct ComponentBrowserView: View {
         case .playersLeft: PlayersRemainingDemo()
         case .pulsingDot: PulsingDotDemo()
         case .resultCard: ResultCardDemo()
-        case .survivalCard: SurvivalCardDemo()
+        case .tabs: TabsDemo()
         case .teamBadge: TeamBadgeDemo()
         case .teamsUsed: TeamsUsedPillDemo()
         case .toast: ToastDemo()
