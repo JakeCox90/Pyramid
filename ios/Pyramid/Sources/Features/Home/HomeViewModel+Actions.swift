@@ -163,8 +163,33 @@ extension HomeViewModel {
     func updatePolling() {
         if hasLiveFixtures {
             startPolling()
+        } else if gameweekPhase == .finished {
+            startFinishedPolling()
         } else {
             stopPolling()
+        }
+    }
+
+    /// Slow poll (every 5 minutes) while the gameweek is
+    /// finished, waiting for the next gameweek to appear.
+    private func startFinishedPolling() {
+        stopPolling()
+        pollingTask = Task { [weak self] in
+            while !Task.isCancelled {
+                try? await Task.sleep(
+                    nanoseconds: 300_000_000_000
+                )
+                guard !Task.isCancelled,
+                      let self
+                else { return }
+                await self.load()
+                // If load() transitioned us out of finished,
+                // stop — updatePolling() was already called
+                // inside load() and set the correct state.
+                if self.gameweekPhase != .finished {
+                    break
+                }
+            }
         }
     }
 
