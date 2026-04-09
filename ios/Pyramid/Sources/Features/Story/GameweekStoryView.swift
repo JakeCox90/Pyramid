@@ -47,11 +47,11 @@ struct GameweekStoryView: View {
         } label: {
             Image(systemName: "xmark")
                 .font(.system(size: 14, weight: .bold))
-                .foregroundStyle(Theme.Color.Story.text)
+                .foregroundStyle(Theme.Color.Content.Text.contrast)
                 .frame(width: 30, height: 30)
                 .background(
                     Circle()
-                        .fill(Theme.Color.Story.progressTrack)
+                        .fill(Theme.Color.Surface.Background.highlight)
                 )
         }
         .accessibilityLabel("Close recap")

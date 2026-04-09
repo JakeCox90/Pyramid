@@ -122,23 +122,4 @@ extension Theme.Color {
     }
 }
 
-// MARK: - Card Surface Tokens
 
-extension Theme.Color.Surface {
-    /// White card face (e.g. pick carousel flip)
-    static let cardFace = Theme.color(light: "FFFFFF", dark: "FFFFFF")
-}
-
-// MARK: - Story Tokens
-
-extension Theme.Color {
-    enum Story {
-        /// Progress bar track — white 20%
-        static let progressTrack = Theme.color(
-            light: Theme.rgbaUIColor(255, 255, 255, 0.2),
-            dark: Theme.rgbaUIColor(255, 255, 255, 0.2)
-        )
-        /// Story text — always white on dark story backgrounds
-        static let text = Theme.color(light: "FFFFFF", dark: "FFFFFF")
-    }
-}
