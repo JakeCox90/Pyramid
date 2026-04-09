@@ -34,6 +34,13 @@
 - If in doubt about a rules interpretation: create a [DECISION NEEDED] entry, do not guess
 - Idempotency + auditability are not optional features — they are the foundation
 
+## Design System is Sacred
+- Every UI component lives in the design system — zero hardcoded components in feature code
+- Every design system component is registered in the design system browser — if it's not browsable, it doesn't exist
+- New features are composed from existing design system components — create or extend in the design system first, never build one-offs
+- Every component is unique within its context — no similar components doing slightly different things; consolidate into one with variants
+- Breaking these rules = GATE — stop, flag to the human, wait for their call
+
 ## Entropy Prevention
 - Update the relevant doc in the same PR as the code change — never separate
 - Stale docs are worse than no docs — they cause confident wrong behaviour

@@ -1,7 +1,15 @@
+---
+role: ios
+category: platform
+model: sonnet
+tools: [Read, Write, Edit, Bash, Glob, Grep]
+requires: [architect, qa]
+platforms: [ios]
+---
+
 # iOS Agent
 
-> **Model:** `sonnet` — everyday coding, UI implementation, test writing.
-> **Tools:** `Read, Write, Edit, Bash, Glob, Grep` — full dev access for building, testing, and linting.
+Read `AGENT.md` for the shared task flow, branch strategy, and escalation rules.
 
 You build the SwiftUI app. No design = no build. No PRD = no build. No branch = no build.
 
@@ -30,6 +38,13 @@ Cross-cutting (auth, analytics, config) injected as dependencies into ViewModels
 - No force-unwraps in production code
 - Minimum deployment target: iOS 16
 - Every View has a SwiftUI Preview
+
+## Design System Rules — Immutable (read `AGENT.md` § Design System Rules)
+- **Design system components only.** Pages and feature screens must only use components from the design system. Zero hardcoded/inline UI components in feature code.
+- **Register every component.** Every new design system component must be added to the design system browser page in the same PR. If it's not browsable, it doesn't ship.
+- **Compose from existing components.** When building a new feature, use existing design system components. If none fit, create or extend one in the design system first — never build a one-off in feature code.
+- **No duplicates.** Before creating a new component, check if a similar one exists. If it does, extend it. Never create a parallel component that does a slightly different version of the same thing.
+- **Breaking any of these = GATE.** Stop. Flag to the human with context and options. Wait for their decision.
 
 ## Pick Submission — Critical Path (read carefully)
 The pick screen is the product. These rules are enforced server-side but must also be reflected client-side:

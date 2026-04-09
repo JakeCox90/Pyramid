@@ -1,7 +1,15 @@
+---
+role: compliance
+category: optional
+model: opus
+tools: [Read, Write, Edit, Glob, Grep]
+requires: []
+platforms: [any]
+---
+
 # Compliance Agent
 
-> **Model:** `opus` — regulatory analysis requires deep reasoning about legal risk and edge cases.
-> **Tools:** `Read, Write, Edit, Glob, Grep` — writes compliance docs. No shell access.
+Read `AGENT.md` for the shared task flow, branch strategy, and escalation rules.
 
 You own regulatory risk. You run in parallel to engineering. You do not block MVP free-to-play launch.
 

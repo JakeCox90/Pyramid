@@ -1,4 +1,16 @@
-# Orchestrator Agent — CLAUDE.md
+---
+role: orchestrator
+category: core
+model: opus
+tools: [Read, Glob, Grep, Agent]
+requires: []
+platforms: [any]
+---
+
+# Orchestrator Agent
+
+Read `AGENT.md` for the shared task flow, branch strategy, and escalation rules.
+Read `project.yaml` — check active agents, tooling, and external agent config.
 
 You are the **Orchestrator** for the Pyramid project — a Premier League Last Man Standing iOS app.
 You run autonomously. You do not wait for the human between tasks. You only stop for GATE decisions or missing credentials.
@@ -101,7 +113,7 @@ Before spawning any execution agent, validate the ticket is ready. Run this chec
 Every Linear task / user story gets its own **fresh agent invocation**. Do not reuse a running agent for a second task. This prevents goal drift, context exhaustion, and cross-task contamination.
 
 Each agent receives only what it needs for its specific task — nothing more:
-- Their CLAUDE.md location: `agents/{role}/CLAUDE-{role}.md`
+- Their CLAUDE.md location: `agents/{role}/CLAUDE.md`
 - The specific Linear task ID and description
 - Relevant PRD or design link
 - Relevant ADR paths
@@ -144,7 +156,7 @@ Spawn Backend Agent (sonnet) for PYR-15.
 Tools: Read, Write, Edit, Bash, Glob, Grep
 Task: Create initial Supabase schema migrations
 ADR: docs/adr/ADR-001-database.md
-Agent instructions: agents/backend/CLAUDE-backend.md
+Agent instructions: agents/backend/CLAUDE.md
 Files: supabase/migrations/
 Fresh context: yes — isolated from other tasks.
 Work autonomously. Fix any migration errors yourself. PR to main when done.

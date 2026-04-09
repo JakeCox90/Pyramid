@@ -124,4 +124,4 @@ These rules apply to every line of iOS code written for Pyramid:
 - [SwiftUI documentation](https://developer.apple.com/documentation/swiftui)
 - [Supabase Swift SDK](https://github.com/supabase/supabase-swift)
 - ADR-001 (Supabase backend) — this ADR assumes Supabase as backend
-- agents/ios/CLAUDE-ios.md — iOS agent rules
+- agents/ios/CLAUDE.md — iOS agent rules

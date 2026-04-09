@@ -10,6 +10,10 @@ This is a real product with real users and real money (staking). Quality, securi
 - **Notion**: Strategy docs, PRDs, decision log, daily status
 - **Figma**: All UI designs before any iOS engineering starts
 
+## Framework
+- `AGENT.md` — shared playbook (task flow, behaviour rules, escalation protocol)
+- `project.yaml` — project configuration (tooling, platform, active agents)
+
 ## Agent Instructions
 Each agent has its own CLAUDE.md in agents/{role}/CLAUDE.md. Read yours before starting work.
 - Orchestrator: agents/orchestrator/CLAUDE.md (opus)
@@ -20,7 +24,7 @@ Each agent has its own CLAUDE.md in agents/{role}/CLAUDE.md. Read yours before s
 - Backend: agents/backend/CLAUDE.md (sonnet)
 - QA: agents/qa/CLAUDE.md (sonnet)
 - Compliance: agents/compliance/CLAUDE.md (opus)
-- Refactor: agents/refactor/CLAUDE-refactor.md (sonnet)
+- Refactor: agents/refactor/CLAUDE.md (sonnet)
 
 ## Key Docs
 - Agent operating principles: docs/agent-operating-principles.md
