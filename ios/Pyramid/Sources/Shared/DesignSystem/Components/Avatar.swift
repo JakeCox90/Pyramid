@@ -2,21 +2,23 @@ import SwiftUI
 
 // MARK: - Avatar
 
-enum AvatarSize {
+enum AvatarSize: Hashable {
     case small, medium, large
+    case custom(CGFloat)
 
     var dimension: CGFloat {
         switch self {
         case .small: return 32
         case .medium: return 44
         case .large: return 64
+        case .custom(let size): return size
         }
     }
 
     var font: Font {
         switch self {
         case .small: return Theme.Typography.overline
-        case .medium: return Theme.Typography.caption
+        case .medium, .custom: return Theme.Typography.caption
         case .large: return Theme.Typography.subhead
         }
     }

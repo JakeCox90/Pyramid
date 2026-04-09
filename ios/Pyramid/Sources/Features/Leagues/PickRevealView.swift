@@ -232,41 +232,11 @@ struct PickRevealCard: View {
         }
     }
 
-    @ViewBuilder private var avatarView: some View {
-        if let urlString = member.profiles.avatarUrl,
-           let url = URL(string: urlString) {
-            AsyncImage(url: url) { phase in
-                switch phase {
-                case .success(let image):
-                    image
-                        .resizable()
-                        .scaledToFill()
-                case .failure, .empty:
-                    avatarFallback
-                @unknown default:
-                    avatarFallback
-                }
-            }
-            .frame(width: avatarSize, height: avatarSize)
-            .clipShape(Circle())
-        } else {
-            avatarFallback
-        }
-    }
-
-    private var avatarFallback: some View {
-        Text(
-            member.profiles.displayLabel
-                .prefix(1).uppercased()
+    private var avatarView: some View {
+        Avatar(
+            name: member.profiles.displayLabel,
+            imageURL: member.profiles.avatarUrl,
+            size: .small
         )
-        .font(Theme.Typography.overline)
-        .foregroundStyle(
-            Theme.Color.Content.Text.subtle
-        )
-        .frame(width: avatarSize, height: avatarSize)
-        .background(
-            Theme.Color.Surface.Background.container
-        )
-        .clipShape(Circle())
     }
 }
