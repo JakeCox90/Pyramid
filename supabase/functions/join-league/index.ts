@@ -11,6 +11,7 @@ import { getServiceClient, responseHeaders } from "../_shared/supabase.ts";
 import { checkRateLimit, rateLimitResponse } from "../_shared/rate-limit.ts";
 import { isAlphanumeric } from "../_shared/validation.ts";
 import { createLogger } from "../_shared/logger.ts";
+import { getActiveLeagueCount, isAtLeagueCap } from "../_shared/league-cap.ts";
 
 interface LeaguePreview {
   league_id: string;
@@ -139,6 +140,22 @@ Deno.serve(async (req) => {
     const code = body.code?.trim().toUpperCase();
     if (!code || code.length !== 6 || !isAlphanumeric(code)) {
       return errorResponse("Invalid join code format", "INVALID_CODE", 400, origin);
+    }
+
+    // Check 5-league cap
+    try {
+      const activeCount = await getActiveLeagueCount(db, user.id);
+      if (isAtLeagueCap(activeCount)) {
+        return errorResponse(
+          "You've reached the maximum of 5 active leagues. You can join more once a league completes or you're eliminated.",
+          "LEAGUE_CAP_REACHED",
+          409,
+          origin
+        );
+      }
+    } catch (capError) {
+      log.error("Failed to check league cap", capError);
+      return errorResponse("Failed to check league memberships", "FETCH_FAILED", 500, origin);
     }
 
     // Look up league

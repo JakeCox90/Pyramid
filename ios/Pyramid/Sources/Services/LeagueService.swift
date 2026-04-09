@@ -103,6 +103,7 @@ protocol LeagueServiceProtocol: Sendable {
     func previewLeague(code: String) async throws -> LeaguePreview
     func joinLeague(code: String) async throws -> JoinLeagueResponse
     func fetchMyLeagues() async throws -> [League]
+    func fetchActiveLeagueCount() async throws -> Int
     func fetchOpenLeagues() async throws -> [BrowseLeague]
     func updateLeague(
         leagueId: String,
@@ -197,6 +198,25 @@ final class LeagueService: LeagueServiceProtocol {
             } else {
                 return leagues.filter { $0.type == .free }
             }
+        } catch {
+            throw LeagueServiceError.fetchFailed(error.localizedDescription)
+        }
+    }
+
+    func fetchActiveLeagueCount() async throws -> Int {
+        do {
+            let userId = try await client.auth.session.user.id.uuidString
+
+            let rows: [LeagueMemberRow] = try await client
+                .from("league_members")
+                .select("league_id, leagues!inner(status)")
+                .eq("user_id", value: userId)
+                .in("status", values: ["active", "alive"])
+                .in("leagues.status", values: ["pending", "active"])
+                .execute()
+                .value
+
+            return rows.count
         } catch {
             throw LeagueServiceError.fetchFailed(error.localizedDescription)
         }
