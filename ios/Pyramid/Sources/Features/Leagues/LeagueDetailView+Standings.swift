@@ -123,17 +123,11 @@ extension LeagueDetailView {
                 Text("GW Recap")
                     .font(Theme.Typography.body)
             }
-            .foregroundStyle(
-                Theme.color(
-                    light: "FFC758", dark: "FFC758"
-                )
-            )
+            .foregroundStyle(Theme.Color.Accent.gold)
             .padding(.horizontal, Theme.Spacing.s40)
             .padding(.vertical, Theme.Spacing.s20)
             .background(
-                Theme.color(
-                    light: "FFC758", dark: "FFC758"
-                ).opacity(0.1)
+                Theme.Color.Accent.gold.opacity(0.1)
             )
             .clipShape(Capsule())
         }
