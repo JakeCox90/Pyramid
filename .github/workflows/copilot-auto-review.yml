@@ -1,7 +1,7 @@
 name: Copilot Auto Review
 
 on:
-  pull_request_target:
+  pull_request:
     types: [opened, reopened, synchronize, ready_for_review]
 
 permissions:
@@ -45,7 +45,7 @@ jobs:
               await requestReview();
               core.info('Requested Copilot review.');
             } catch (error) {
-              if (error.status === 422) {
+              if (error.status === 422 || error.status === 403) {
                 core.info(`Copilot reviewer request skipped: ${error.message}`);
               } else {
                 throw error;
@@ -56,7 +56,7 @@ jobs:
               await addAssignee();
               core.info('Assigned Copilot to the pull request.');
             } catch (error) {
-              if (error.status === 422) {
+              if (error.status === 422 || error.status === 403) {
                 core.info(`Copilot assignment skipped: ${error.message}`);
               } else {
                 throw error;
