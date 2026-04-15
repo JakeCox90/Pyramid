@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   request-copilot-review:
-    if: github.event.pull_request.user.login != 'copilot'
+    if: ${{ !(github.event.pull_request.user.type == 'Bot' && contains(github.event.pull_request.user.login, 'copilot')) }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
